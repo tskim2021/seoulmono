@@ -73,8 +73,8 @@ function ImageUploader({ currentUrl, onUploaded }: { currentUrl: string; onUploa
   const uploadMut = trpc.admin.uploadImage.useMutation();
 
   const handleFile = useCallback(async (file: File) => {
-    if (!file.type.startsWith("image/")) { toast.error("이미지 파일만 업로드 가능합니다."); return; }
-    if (file.size > 5 * 1024 * 1024) { toast.error("파일 크기는 5MB 이하여야 합니다."); return; }
+    if (!file.type.startsWith("image/")) { toast.error("画像ファイルのみアップロードできます。"); return; }
+    if (file.size > 5 * 1024 * 1024) { toast.error("ファイルサイズは5MB以下にしてください。"); return; }
     setUploading(true);
     try {
       const reader = new FileReader();
@@ -88,9 +88,9 @@ function ImageUploader({ currentUrl, onUploaded }: { currentUrl: string; onUploa
       });
       const { url } = await uploadMut.mutateAsync({ base64, fileName: file.name, contentType: file.type });
       onUploaded(url);
-      toast.success("이미지가 업로드되었습니다.");
+      toast.success("画像をアップロードしました。");
     } catch (e) {
-      toast.error("이미지 업로드에 실패했습니다.");
+      toast.error("画像のアップロードに失敗しました。");
     } finally {
       setUploading(false);
     }
@@ -115,21 +115,21 @@ function ImageUploader({ currentUrl, onUploaded }: { currentUrl: string; onUploa
         {uploading ? (
           <div className="flex items-center justify-center gap-2 py-2">
             <Loader2 className="w-5 h-5 animate-spin text-primary" />
-            <span className="text-sm text-muted-foreground">업로드 중...</span>
+            <span className="text-sm text-muted-foreground">アップロード中...</span>
           </div>
         ) : currentUrl ? (
           <div className="flex items-center gap-3">
-            <img src={currentUrl} alt="미리보기" className="w-16 h-16 object-cover rounded-lg border" />
+            <img src={currentUrl} alt="プレビュー" className="w-16 h-16 object-cover rounded-lg border" />
             <div className="flex-1 text-left">
               <p className="text-sm font-medium truncate max-w-[300px]">{currentUrl.split("/").pop()}</p>
-              <p className="text-xs text-muted-foreground">클릭하여 변경</p>
+              <p className="text-xs text-muted-foreground">クリックして変更</p>
             </div>
           </div>
         ) : (
           <div className="py-2">
             <Upload className="w-8 h-8 mx-auto text-muted-foreground mb-2" />
-            <p className="text-sm text-muted-foreground">클릭 또는 드래그하여 이미지 업로드</p>
-            <p className="text-xs text-muted-foreground mt-1">JPG, PNG, WebP (5MB 이하)</p>
+            <p className="text-sm text-muted-foreground">クリックまたはドラッグして画像をアップロード</p>
+            <p className="text-xs text-muted-foreground mt-1">JPG, PNG, WebP (5MB以下)</p>
           </div>
         )}
         <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={(e) => { const f = e.target.files?.[0]; if (f) handleFile(f); e.target.value = ""; }} />
@@ -137,7 +137,7 @@ function ImageUploader({ currentUrl, onUploaded }: { currentUrl: string; onUploa
       <Input
         value={currentUrl}
         onChange={(e) => onUploaded(e.target.value)}
-        placeholder="또는 이미지 URL을 직접 입력하세요"
+        placeholder="または画像URLを直接入力してください"
         className="text-xs"
       />
     </div>
@@ -154,8 +154,8 @@ function MultiImageUploader({ images, onImagesChange }: { images: string[]; onIm
 
   const handleFiles = useCallback(async (files: FileList | File[]) => {
     const validFiles = Array.from(files).filter(f => {
-      if (!f.type.startsWith("image/")) { toast.error(`${f.name}: 이미지 파일만 업로드 가능합니다.`); return false; }
-      if (f.size > 5 * 1024 * 1024) { toast.error(`${f.name}: 파일 크기는 5MB 이하여야 합니다.`); return false; }
+      if (!f.type.startsWith("image/")) { toast.error(`${f.name}: 画像ファイルのみアップロードできます。`); return false; }
+      if (f.size > 5 * 1024 * 1024) { toast.error(`${f.name}: ファイルサイズは5MB以下にしてください。`); return false; }
       return true;
     });
     if (validFiles.length === 0) return;
@@ -173,9 +173,9 @@ function MultiImageUploader({ images, onImagesChange }: { images: string[]; onIm
         newUrls.push(url);
       }
       onImagesChange([...images, ...newUrls]);
-      toast.success(`${newUrls.length}개 이미지가 업로드되었습니다.`);
+      toast.success(`${newUrls.length}枚の画像をアップロードしました。`);
     } catch {
-      toast.error("이미지 업로드에 실패했습니다.");
+      toast.error("画像のアップロードに失敗しました。");
     } finally {
       setUploading(false);
     }
@@ -212,8 +212,8 @@ function MultiImageUploader({ images, onImagesChange }: { images: string[]; onIm
   return (
     <div className="space-y-3">
       <div className="flex items-center justify-between">
-        <label className="text-sm font-medium">상품 이미지 ({images.length}개)</label>
-        <span className="text-xs text-muted-foreground">드래그하여 순서 변경 | 첫 번째 이미지가 대표 이미지</span>
+        <label className="text-sm font-medium">商品画像 ({images.length}枚)</label>
+        <span className="text-xs text-muted-foreground">ドラッグして順序を変更 | 1枚目の画像がメイン画像</span>
       </div>
       {/* 기존 이미지 그리드 */}
       {images.length > 0 && (
@@ -229,21 +229,21 @@ function MultiImageUploader({ images, onImagesChange }: { images: string[]; onIm
                 idx === 0 ? "border-primary ring-2 ring-primary/20" : "border-border"
               } ${dragIdx === idx ? "opacity-50 scale-95" : ""}`}
             >
-              <img src={url} alt={`상품 이미지 ${idx + 1}`} className="w-full h-full object-cover" />
+              <img src={url} alt={`商品画像 ${idx + 1}`} className="w-full h-full object-cover" />
               {idx === 0 && (
-                <div className="absolute top-0.5 left-0.5 bg-primary text-primary-foreground text-[10px] px-1.5 py-0.5 rounded font-medium">대표</div>
+                <div className="absolute top-0.5 left-0.5 bg-primary text-primary-foreground text-[10px] px-1.5 py-0.5 rounded font-medium">メイン</div>
               )}
               <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors flex items-center justify-center gap-1 opacity-0 group-hover:opacity-100">
                 {idx > 0 && (
-                  <button onClick={() => moveImage(idx, idx - 1)} className="w-6 h-6 rounded-full bg-white/90 flex items-center justify-center hover:bg-white" title="앞으로">
+                  <button onClick={() => moveImage(idx, idx - 1)} className="w-6 h-6 rounded-full bg-white/90 flex items-center justify-center hover:bg-white" title="前へ">
                     <ChevronLeft className="w-3.5 h-3.5" />
                   </button>
                 )}
-                <button onClick={() => removeImage(idx)} className="w-6 h-6 rounded-full bg-destructive text-white flex items-center justify-center hover:bg-destructive/80" title="삭제">
+                <button onClick={() => removeImage(idx)} className="w-6 h-6 rounded-full bg-destructive text-white flex items-center justify-center hover:bg-destructive/80" title="削除">
                   <X className="w-3.5 h-3.5" />
                 </button>
                 {idx < images.length - 1 && (
-                  <button onClick={() => moveImage(idx, idx + 1)} className="w-6 h-6 rounded-full bg-white/90 flex items-center justify-center hover:bg-white" title="뒤로">
+                  <button onClick={() => moveImage(idx, idx + 1)} className="w-6 h-6 rounded-full bg-white/90 flex items-center justify-center hover:bg-white" title="後ろへ">
                     <ChevronRight className="w-3.5 h-3.5" />
                   </button>
                 )}
@@ -263,13 +263,13 @@ function MultiImageUploader({ images, onImagesChange }: { images: string[]; onIm
         {uploading ? (
           <div className="flex items-center justify-center gap-2 py-2">
             <Loader2 className="w-5 h-5 animate-spin text-primary" />
-            <span className="text-sm text-muted-foreground">업로드 중...</span>
+            <span className="text-sm text-muted-foreground">アップロード中...</span>
           </div>
         ) : (
           <div className="py-1">
             <ImagePlus className="w-7 h-7 mx-auto text-muted-foreground mb-1.5" />
-            <p className="text-sm text-muted-foreground">클릭 또는 드래그하여 이미지 추가 (여러 장 선택 가능)</p>
-            <p className="text-xs text-muted-foreground mt-0.5">JPG, PNG, WebP (5MB 이하)</p>
+            <p className="text-sm text-muted-foreground">クリックまたはドラッグして画像を追加 (複数選択可)</p>
+            <p className="text-xs text-muted-foreground mt-0.5">JPG, PNG, WebP (5MB以下)</p>
           </div>
         )}
         <input ref={fileInputRef} type="file" accept="image/*" multiple className="hidden" onChange={(e) => { if (e.target.files) handleFiles(e.target.files); e.target.value = ""; }} />
@@ -290,9 +290,9 @@ function ContentAIGenerateButton({ productId, productName, productDescription, o
     onSuccess: (result) => {
       if (result.success && result.content) {
         onGenerated(result.content);
-        toast.success("AI가 상품 상세 설명을 생성했습니다.");
+        toast.success("AIが商品詳細説明を生成しました。");
       } else {
-        toast.error(result.error || "AI 생성에 실패했습니다.");
+        toast.error(result.error || "AI生成に失敗しました。");
       }
     },
     onError: (err) => toast.error(err.message),
@@ -306,7 +306,7 @@ function ContentAIGenerateButton({ productId, productName, productDescription, o
       className="h-7 text-xs"
       disabled={disabled || generateMut.isPending}
       onClick={() => {
-        if (!productName.trim()) { toast.error("상품명을 먼저 입력해주세요."); return; }
+        if (!productName.trim()) { toast.error("先に商品名を入力してください。"); return; }
         generateMut.mutate({
           productId: productId ?? 0,
           productName,
@@ -315,9 +315,9 @@ function ContentAIGenerateButton({ productId, productName, productDescription, o
       }}
     >
       {generateMut.isPending ? (
-        <><Loader2 className="w-3 h-3 mr-1 animate-spin" /> AI 생성 중...</>
+        <><Loader2 className="w-3 h-3 mr-1 animate-spin" /> AI生成中...</>
       ) : (
-        <><Sparkles className="w-3 h-3 mr-1" /> AI 상세 설명 생성</>
+        <><Sparkles className="w-3 h-3 mr-1" /> AI詳細説明を生成</>
       )}
     </Button>
   );
@@ -348,9 +348,9 @@ export function AdminLayout({ children }: { children: ReactNode }) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="text-center">
-          <h2 className="text-xl font-bold mb-2">로그인이 필요합니다</h2>
-          <p className="text-muted-foreground mb-4">로그인 페이지로 이동합니다.</p>
-          <Button variant="outline" onClick={() => setLocation("/login")}>로그인하러 가기</Button>
+          <h2 className="text-xl font-bold mb-2">ログインが必要です</h2>
+          <p className="text-muted-foreground mb-4">ログインページへ移動します。</p>
+          <Button variant="outline" onClick={() => setLocation("/login")}>ログインへ</Button>
         </div>
       </div>
     );
@@ -360,11 +360,11 @@ export function AdminLayout({ children }: { children: ReactNode }) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="text-center">
-          <h2 className="text-xl font-bold mb-2">접근 권한이 없습니다</h2>
+          <h2 className="text-xl font-bold mb-2">アクセス権限がありません</h2>
           <p className="text-muted-foreground mb-4">
-            관리자만 접근할 수 있습니다. (현재 계정: {user.name ?? "-"})
+            管理者のみアクセスできます。(現在のアカウント: {user.name ?? "-"})
           </p>
-          <Button variant="outline" onClick={() => setLocation("/login")}>다른 계정으로 로그인</Button>
+          <Button variant="outline" onClick={() => setLocation("/login")}>別のアカウントでログイン</Button>
         </div>
       </div>
     );
@@ -372,100 +372,100 @@ export function AdminLayout({ children }: { children: ReactNode }) {
 
   const navGroups = [
     {
-      label: "메인",
+      label: "メイン",
       items: [
-        { href: "/admin", icon: LayoutDashboard, label: "대시보드" },
+        { href: "/admin", icon: LayoutDashboard, label: "ダッシュボード" },
       ]
     },
     {
-      label: "쇼핑몰 관리",
+      label: "ショップ管理",
       items: [
-        { href: "/admin/categories", icon: FolderTree, label: "카테고리 관리" },
-        { href: "/admin/products", icon: ShoppingBag, label: "상품 관리" },
-        { href: "/admin/orders", icon: Package, label: "주문 관리" },
-        { href: "/admin/orders/spreadsheet", icon: Package, label: "주문 관리 (스프레드시트)" },
-        { href: "/admin/refunds", icon: RotateCcw, label: "환불 관리" },
-        { href: "/admin/carts", icon: ShoppingCart, label: "장바구니 현황" },
-        { href: "/admin/banners", icon: Image, label: "배너 관리" },
-        { href: "/admin/coupons", icon: Ticket, label: "쿠폰 관리" },
-        { href: "/admin/promo-codes", icon: Tag, label: "프로모코드 관리" },
+        { href: "/admin/categories", icon: FolderTree, label: "カテゴリー管理" },
+        { href: "/admin/products", icon: ShoppingBag, label: "商品管理" },
+        { href: "/admin/orders", icon: Package, label: "注文管理" },
+        { href: "/admin/orders/spreadsheet", icon: Package, label: "注文管理 (スプレッドシート)" },
+        { href: "/admin/refunds", icon: RotateCcw, label: "返金管理" },
+        { href: "/admin/carts", icon: ShoppingCart, label: "カート状況" },
+        { href: "/admin/banners", icon: Image, label: "バナー管理" },
+        { href: "/admin/coupons", icon: Ticket, label: "クーポン管理" },
+        { href: "/admin/promo-codes", icon: Tag, label: "プロモコード管理" },
       ]
     },
     {
-      label: "배송 관리",
+      label: "配送管理",
       items: [
-        { href: "/admin/shipping-dashboard", icon: BarChart3, label: "배송 현황 대시보드" },
-        { href: "/admin/shipping-policy", icon: Settings2, label: "배송비 정책" },
+        { href: "/admin/shipping-dashboard", icon: BarChart3, label: "配送状況ダッシュボード" },
+        { href: "/admin/shipping-policy", icon: Settings2, label: "送料ポリシー" },
       ]
     },
     {
-      label: "회원 관리",
+      label: "会員管理",
       items: [
-        { href: "/admin/users", icon: Users, label: "회원 관리" },
-        { href: "/admin/point-history", icon: History, label: "포인트 내역" },
-        { href: "/admin/point-settings", icon: Settings2, label: "포인트 설정" },
+        { href: "/admin/users", icon: Users, label: "会員管理" },
+        { href: "/admin/point-history", icon: History, label: "ポイント履歴" },
+        { href: "/admin/point-settings", icon: Settings2, label: "ポイント設定" },
       ]
     },
     {
-      label: "고객 문의",
+      label: "お問い合わせ",
       items: [
-        { href: "/admin/inquiries", icon: MessageSquareText, label: "1:1 문의 관리" },
+        { href: "/admin/inquiries", icon: MessageSquareText, label: "お問い合わせ管理" },
       ]
     },
     {
-      label: "커뮤니티 관리",
+      label: "コミュニティ管理",
       items: [
-        { href: "/admin/boards", icon: FileText, label: "게시판 관리" },
-        { href: "/admin/product-qna", icon: HelpCircle, label: "상품 Q&A 관리" },
-        { href: "/admin/reviews", icon: MessageCircle, label: "리뷰 관리" },
-        { href: "/admin/news", icon: Newspaper, label: "뉴스 관리" },
-        { href: "/admin/news-settings", icon: Zap, label: "뉴스 자동생성 설정" },
-        { href: "/admin/info-board-auto", icon: Bot, label: "정보나눔 AI 자동글" },
-        { href: "/admin/discussion-auto", icon: Bot, label: "토론광장 AI 자동글" },
+        { href: "/admin/boards", icon: FileText, label: "掲示板管理" },
+        { href: "/admin/product-qna", icon: HelpCircle, label: "商品Q&A管理" },
+        { href: "/admin/reviews", icon: MessageCircle, label: "レビュー管理" },
+        { href: "/admin/news", icon: Newspaper, label: "ニュース管理" },
+        { href: "/admin/news-settings", icon: Zap, label: "ニュース自動生成設定" },
+        { href: "/admin/info-board-auto", icon: Bot, label: "情報共有 AI自動投稿" },
+        { href: "/admin/discussion-auto", icon: Bot, label: "ディスカッション広場 AI自動投稿" },
       ]
     },
     {
-      label: "AI 상담사",
+      label: "AIアシスタント",
       items: [
-        { href: "/admin/chatbot/settings", icon: Settings2, label: "기본 설정" },
-        { href: "/admin/chatbot/categories", icon: FolderTree, label: "카테고리 관리" },
-        { href: "/admin/chatbot/qna", icon: MessageSquareText, label: "문답 관리" },
-        { href: "/admin/chatbot/conversations", icon: History, label: "대화 이력" },
+        { href: "/admin/chatbot/settings", icon: Settings2, label: "基本設定" },
+        { href: "/admin/chatbot/categories", icon: FolderTree, label: "カテゴリー管理" },
+        { href: "/admin/chatbot/qna", icon: MessageSquareText, label: "Q&A管理" },
+        { href: "/admin/chatbot/conversations", icon: History, label: "会話履歴" },
       ]
     },
     {
-      label: "결제 관리",
+      label: "決済管理",
       items: [
-        { href: "/admin/payment-management", icon: DollarSign, label: "무통장 입금 관리" },
-        { href: "/admin/payment-settings", icon: CreditCard, label: "결제 수단 설정" },
-        { href: "/admin/pricing-settings", icon: DollarSign, label: "엔화 가격 변환" },
+        { href: "/admin/payment-management", icon: DollarSign, label: "銀行振込管理" },
+        { href: "/admin/payment-settings", icon: CreditCard, label: "決済手段設定" },
+        { href: "/admin/pricing-settings", icon: DollarSign, label: "円価格変換" },
       ]
     },
     {
-      label: "설정",
+      label: "設定",
       items: [
-        { href: "/admin/review-settings", icon: Star, label: "리뷰 포인트 설정" },
-        { href: "/admin/email-template", icon: Mail, label: "이메일 템플릿" },
-        { href: "/admin/smtp-settings", icon: Mail, label: "SMTP 메일 설정" },
-        { href: "/admin/email-logs", icon: History, label: "이메일 발송 이력" },
-        { href: "/admin/faq", icon: HelpCircle, label: "FAQ 관리" },
-        { href: "/admin/gnu-api-sync", icon: Globe, label: "외부 API 연동" },
-        { href: "/admin/api-settings", icon: Key, label: "API 키 설정" },
+        { href: "/admin/review-settings", icon: Star, label: "レビューポイント設定" },
+        { href: "/admin/email-template", icon: Mail, label: "メールテンプレート" },
+        { href: "/admin/smtp-settings", icon: Mail, label: "SMTPメール設定" },
+        { href: "/admin/email-logs", icon: History, label: "メール送信履歴" },
+        { href: "/admin/faq", icon: HelpCircle, label: "FAQ管理" },
+        { href: "/admin/gnu-api-sync", icon: Globe, label: "外部API連携" },
+        { href: "/admin/api-settings", icon: Key, label: "APIキー設定" },
       ]
     },
     {
-      label: "통계",
+      label: "統計",
       items: [
-        { href: "/admin/visitor-stats", icon: Eye, label: "접속자 통계" },
-        { href: "/admin/keywords", icon: BarChart3, label: "검색어 통계" },
-        { href: "/admin/action-logs", icon: ClipboardList, label: "관리자 처리 이력" },
+        { href: "/admin/visitor-stats", icon: Eye, label: "アクセス統計" },
+        { href: "/admin/keywords", icon: BarChart3, label: "検索キーワード統計" },
+        { href: "/admin/action-logs", icon: ClipboardList, label: "管理者操作履歴" },
       ]
     },
     {
-      label: "대량 업로드",
+      label: "一括アップロード",
       items: [
-        { href: "/admin/excel-upload/products", icon: Upload, label: "상품 엑셀 업로드" },
-        { href: "/admin/excel-upload/tracking", icon: Truck, label: "운송장 엑셀 업로드" },
+        { href: "/admin/excel-upload/products", icon: Upload, label: "商品Excelアップロード" },
+        { href: "/admin/excel-upload/tracking", icon: Truck, label: "追跡番号Excelアップロード" },
       ]
     },
   ];
@@ -493,7 +493,7 @@ export function AdminLayout({ children }: { children: ReactNode }) {
             <div className="w-6 h-6 rounded bg-primary flex items-center justify-center">
               <span className="text-primary-foreground font-bold text-[9px]">YC</span>
             </div>
-            <span className="font-serif font-semibold text-xs">관리자 패널</span>
+            <span className="font-serif font-semibold text-xs">管理パネル</span>
           </Link>
           <button className="lg:hidden p-0.5 hover:bg-accent rounded" onClick={() => setSidebarOpen(false)}>
             <X className="w-4 h-4" />
@@ -531,13 +531,13 @@ export function AdminLayout({ children }: { children: ReactNode }) {
           <div className="flex-1" />
           <a href="/" target="_blank" rel="noopener noreferrer" className="shrink-0 gap-1.5 px-2.5 py-1 rounded text-xs text-foreground bg-background border border-input hover:bg-accent transition-colors" style={{ display: 'inline-flex', alignItems: 'center', alignSelf: 'center' }}>
             <ExternalLink className="w-3 h-3" />
-            <span style={{ marginLeft: '6px' }}>쇼핑몰 바로가기</span>
+            <span style={{ marginLeft: '6px' }}>ショップへ</span>
           </a>
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }} className="text-xs text-muted-foreground">
             <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center">
               <span className="text-primary text-[10px] font-bold">{user?.name?.[0] ?? "A"}</span>
             </div>
-            <span className="hidden sm:inline">{user?.name ?? "관리자"}</span>
+            <span className="hidden sm:inline">{user?.name ?? "管理者"}</span>
           </div>
         </header>
         <main className="flex-1 p-4 lg:p-5 w-full">{children}</main>
@@ -568,15 +568,15 @@ function DashboardHome() {
     setShowReport(true);
   };
   const statCards = [
-    { label: "총 회원", value: stats?.totalUsers ?? 0, icon: Users, color: "text-blue-600 bg-blue-50" },
-    { label: "총 주문", value: stats?.totalOrders ?? 0, icon: Package, color: "text-purple-600 bg-purple-50" },
-    { label: "총 상품", value: stats?.totalProducts ?? 0, icon: ShoppingBag, color: "text-emerald-600 bg-emerald-50" },
-    { label: "총 매출", value: formatPrice(stats?.totalRevenue ?? 0), icon: DollarSign, color: "text-amber-600 bg-amber-50" },
+    { label: "総会員数", value: stats?.totalUsers ?? 0, icon: Users, color: "text-blue-600 bg-blue-50" },
+    { label: "総注文数", value: stats?.totalOrders ?? 0, icon: Package, color: "text-purple-600 bg-purple-50" },
+    { label: "総商品数", value: stats?.totalProducts ?? 0, icon: ShoppingBag, color: "text-emerald-600 bg-emerald-50" },
+    { label: "総売上", value: formatPrice(stats?.totalRevenue ?? 0), icon: DollarSign, color: "text-amber-600 bg-amber-50" },
   ];
 
   return (
     <div>
-      <h1 className="text-2xl font-bold mb-6">대시보드</h1>
+      <h1 className="text-2xl font-bold mb-6">ダッシュボード</h1>
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
         {statCards.map(s => (
           <div key={s.label} className="bg-card border rounded-xl p-5 elegant-shadow">
@@ -594,43 +594,43 @@ function DashboardHome() {
         {/* 통관검사 대기 알림 */}
         <div className="bg-card border border-rose-200 dark:border-rose-800 rounded-xl p-5 elegant-shadow">
           <h3 className="font-semibold mb-3 flex items-center gap-2 text-rose-600">
-            <AlertCircle className="w-4 h-4" /> 통관검사 ({stats?.customsHoldCount ?? 0})
+            <AlertCircle className="w-4 h-4" /> 通関検査 ({stats?.customsHoldCount ?? 0})
           </h3>
           {(stats?.customsHoldCount ?? 0) > 0 ? (
             <div>
-              <p className="text-sm text-rose-600 font-medium mb-2">통관 검사 대기 중인 주문이 있습니다</p>
+              <p className="text-sm text-rose-600 font-medium mb-2">通関検査待ちの注文があります</p>
               <Link href="/admin/orders?status=customs_hold">
-                <Button variant="outline" size="sm" className="text-rose-600 border-rose-300 hover:bg-rose-50">통관검사 주문 보기</Button>
+                <Button variant="outline" size="sm" className="text-rose-600 border-rose-300 hover:bg-rose-50">通関検査の注文を見る</Button>
               </Link>
             </div>
           ) : (
-            <p className="text-sm text-muted-foreground">통관 검사 대기 건이 없습니다</p>
+            <p className="text-sm text-muted-foreground">通関検査待ちの注文はありません</p>
           )}
         </div>
 
         {/* 재고 부족 알림 */}
         <div className="bg-card border rounded-xl p-5 elegant-shadow">
           <h3 className="font-semibold mb-3 flex items-center gap-2 text-destructive">
-            <AlertCircle className="w-4 h-4" /> 재고 부족 ({lowStockOptions?.length ?? 0})
+            <AlertCircle className="w-4 h-4" /> 在庫不足 ({lowStockOptions?.length ?? 0})
           </h3>
           {lowStockOptions && lowStockOptions.length > 0 ? (
             <div className="space-y-2 max-h-40 overflow-y-auto">
               {lowStockOptions.slice(0, 3).map((opt, idx) => (
                 <div key={idx} className="p-2 bg-secondary/30 rounded-lg text-sm">
                   <div className="font-medium truncate">{opt.optionName}: {opt.optionValue}</div>
-                  <div className="text-xs text-muted-foreground">재고 {opt.stock}개</div>
+                  <div className="text-xs text-muted-foreground">在庫 {opt.stock}個</div>
                 </div>
               ))}
             </div>
           ) : (
-            <p className="text-sm text-muted-foreground">재고 부족 상품이 없습니다</p>
+            <p className="text-sm text-muted-foreground">在庫不足の商品はありません</p>
           )}
         </div>
 
         {/* 신규 주문 알림 */}
         <div className="bg-card border rounded-xl p-5 elegant-shadow">
           <h3 className="font-semibold mb-3 flex items-center gap-2 text-primary">
-            <Package className="w-4 h-4" /> 신규 주문 ({recentOrders?.total ?? 0})
+            <Package className="w-4 h-4" /> 新規注文 ({recentOrders?.total ?? 0})
           </h3>
           {recentOrders && recentOrders.orders.length > 0 ? (
             <div className="space-y-2 max-h-40 overflow-y-auto">
@@ -644,14 +644,14 @@ function DashboardHome() {
               ))}
             </div>
           ) : (
-            <p className="text-sm text-muted-foreground">신규 주문이 없습니다</p>
+            <p className="text-sm text-muted-foreground">新規注文はありません</p>
           )}
         </div>
 
         {/* 고객 문의 알림 */}
         <div className="bg-card border rounded-xl p-5 elegant-shadow">
           <h3 className="font-semibold mb-3 flex items-center gap-2 text-amber-600">
-            <HelpCircle className="w-4 h-4" /> 고객 문의 ({recentPosts?.total ?? 0})
+            <HelpCircle className="w-4 h-4" /> お問い合わせ ({recentPosts?.total ?? 0})
           </h3>
           {recentPosts && recentPosts.posts.length > 0 ? (
             <div className="space-y-2 max-h-40 overflow-y-auto">
@@ -665,7 +665,7 @@ function DashboardHome() {
               ))}
             </div>
           ) : (
-            <p className="text-sm text-muted-foreground">신규 문의가 없습니다</p>
+            <p className="text-sm text-muted-foreground">新規のお問い合わせはありません</p>
           )}
         </div>
       </div>
@@ -673,7 +673,7 @@ function DashboardHome() {
       {/* Low Stock Alert (old) - remove */}
       {false && lowStockOptions && (lowStockOptions?.length ?? 0) > 0 && (
         <div className="bg-destructive/10 border border-destructive/30 rounded-xl p-5 mb-6">
-          <h3 className="font-semibold mb-3 flex items-center gap-2 text-destructive"><AlertCircle className="w-4 h-4" /> 재고 부족 알림 ({lowStockOptions?.length ?? 0}건)</h3>
+          <h3 className="font-semibold mb-3 flex items-center gap-2 text-destructive"><AlertCircle className="w-4 h-4" /> 在庫不足アラート ({lowStockOptions?.length ?? 0}件)</h3>
           <div className="space-y-2 max-h-40 overflow-y-auto">
               {lowStockOptions?.map((opt, idx) => (
               <div key={idx} className="flex items-center justify-between p-2 bg-background rounded-lg text-sm">
@@ -681,7 +681,7 @@ function DashboardHome() {
                   <span className="font-medium">{opt.optionName}: {opt.optionValue}</span>
                   <span className="text-xs text-muted-foreground ml-2">(Product ID: {opt.productId})</span>
                 </div>
-                <Badge variant="destructive" className="text-xs">재고 {opt.stock}개</Badge>
+                <Badge variant="destructive" className="text-xs">在庫 {opt.stock}個</Badge>
               </div>
             ))}
           </div>
@@ -693,7 +693,7 @@ function DashboardHome() {
         <div className="flex items-center justify-between mb-4">
           <h3 className="font-semibold text-lg flex items-center gap-2">
             <BarChart3 className="w-5 h-5 text-primary" />
-            AI 매출 리포트
+            AI売上レポート
           </h3>
           <div className="flex items-center gap-2">
             <Select value={reportPeriod} onValueChange={(v: any) => setReportPeriod(v)}>
@@ -701,14 +701,14 @@ function DashboardHome() {
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="daily">일간</SelectItem>
-                <SelectItem value="weekly">주간</SelectItem>
-                <SelectItem value="monthly">월간</SelectItem>
+                <SelectItem value="daily">日次</SelectItem>
+                <SelectItem value="weekly">週次</SelectItem>
+                <SelectItem value="monthly">月次</SelectItem>
               </SelectContent>
             </Select>
             <Button onClick={handleGenerateReport} disabled={generateReport.isPending}>
               {generateReport.isPending ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Calendar className="w-4 h-4 mr-2" />}
-              리포트 생성
+              レポートを生成
             </Button>
           </div>
         </div>
@@ -716,29 +716,29 @@ function DashboardHome() {
           <div className="space-y-4">
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
               <div className="bg-muted/50 rounded-lg p-4">
-                <div className="text-sm text-muted-foreground mb-1">총 매출</div>
+                <div className="text-sm text-muted-foreground mb-1">総売上</div>
                 <div className="text-xl font-bold price-text">{formatPrice(generateReport.data.totalRevenue)}</div>
               </div>
               <div className="bg-muted/50 rounded-lg p-4">
-                <div className="text-sm text-muted-foreground mb-1">총 주문</div>
-                <div className="text-xl font-bold">{generateReport.data.totalOrders}건</div>
+                <div className="text-sm text-muted-foreground mb-1">総注文数</div>
+                <div className="text-xl font-bold">{generateReport.data.totalOrders}件</div>
               </div>
               <div className="bg-muted/50 rounded-lg p-4">
-                <div className="text-sm text-muted-foreground mb-1">평균 주문액</div>
+                <div className="text-sm text-muted-foreground mb-1">平均注文額</div>
                 <div className="text-xl font-bold price-text">{formatPrice(generateReport.data.avgOrderValue)}</div>
               </div>
               <div className="bg-muted/50 rounded-lg p-4">
-                <div className="text-sm text-muted-foreground mb-1">완료율</div>
+                <div className="text-sm text-muted-foreground mb-1">完了率</div>
                 <div className="text-xl font-bold">{generateReport.data.totalOrders > 0 ? Math.round((generateReport.data.completedOrders / generateReport.data.totalOrders) * 100) : 0}%</div>
               </div>
             </div>
             <div className="bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
-              <h4 className="font-semibold mb-2 flex items-center gap-2"><TrendingUp className="w-4 h-4" /> AI 분석 인사이트</h4>
+              <h4 className="font-semibold mb-2 flex items-center gap-2"><TrendingUp className="w-4 h-4" /> AI分析インサイト</h4>
               <div className="text-sm whitespace-pre-wrap">{typeof generateReport.data.aiInsights === 'string' ? generateReport.data.aiInsights : JSON.stringify(generateReport.data.aiInsights)}</div>
             </div>
             {generateReport.data.topProducts.length > 0 && (
               <div>
-                <h4 className="font-semibold mb-2">상위 판매 상품</h4>
+                <h4 className="font-semibold mb-2">売れ筋商品</h4>
                 <div className="space-y-2">
                   {generateReport.data.topProducts.map((p: any, idx: number) => (
                     <div key={idx} className="flex items-center justify-between p-3 bg-muted/30 rounded-lg">
@@ -748,7 +748,7 @@ function DashboardHome() {
                       </div>
                       <div className="text-right">
                         <div className="font-semibold price-text">{formatPrice(p.revenue)}</div>
-                        <div className="text-xs text-muted-foreground">{p.count}개 판매</div>
+                        <div className="text-xs text-muted-foreground">{p.count}個販売</div>
                       </div>
                     </div>
                   ))}
@@ -763,9 +763,9 @@ function DashboardHome() {
 
       <div className="grid lg:grid-cols-2 gap-6 mt-6">
         <div className="bg-card border rounded-xl p-6 elegant-shadow">
-          <h3 className="font-semibold mb-4 flex items-center gap-2"><Package className="w-4 h-4" /> 최근 주문</h3>
+          <h3 className="font-semibold mb-4 flex items-center gap-2"><Package className="w-4 h-4" /> 最近の注文</h3>
           {(stats?.recentOrders ?? []).length === 0 ? (
-            <p className="text-sm text-muted-foreground text-center py-8">주문이 없습니다</p>
+            <p className="text-sm text-muted-foreground text-center py-8">注文がありません</p>
           ) : (
             <div className="space-y-2">
               {stats!.recentOrders.map((order: any) => (
@@ -775,9 +775,9 @@ function DashboardHome() {
                       <div className="flex items-center gap-1.5">
                         <p className="text-sm font-medium font-mono">{formatOrderNumber(order.orderNumber)}</p>
                         {order.source === "seoulmono" ? (
-                          <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-blue-100 text-blue-700 border border-blue-200">쇼핑몰</span>
+                          <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-blue-100 text-blue-700 border border-blue-200">ショップ</span>
                         ) : (
-                          <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-orange-100 text-orange-700 border border-orange-200">{order.source ?? "기타"}</span>
+                          <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-orange-100 text-orange-700 border border-orange-200">{order.source ?? "その他"}</span>
                         )}
                       </div>
                       <p className="text-xs text-muted-foreground">{formatDate(order.createdAt)}</p>
@@ -794,13 +794,13 @@ function DashboardHome() {
         </div>
 
         <div className="bg-card border rounded-xl p-6 elegant-shadow">
-          <h3 className="font-semibold mb-4 flex items-center gap-2"><TrendingUp className="w-4 h-4" /> 빠른 링크</h3>
+          <h3 className="font-semibold mb-4 flex items-center gap-2"><TrendingUp className="w-4 h-4" /> クイックリンク</h3>
           <div className="grid grid-cols-2 gap-3">
             {[
-              { label: "상품 등록", href: "/admin/products?action=create", icon: Plus },
-              { label: "주문 관리", href: "/admin/orders", icon: Package },
-              { label: "회원 관리", href: "/admin/users", icon: Users },
-              { label: "게시판 관리", href: "/admin/boards", icon: FileText },
+              { label: "商品登録", href: "/admin/products?action=create", icon: Plus },
+              { label: "注文管理", href: "/admin/orders", icon: Package },
+              { label: "会員管理", href: "/admin/users", icon: Users },
+              { label: "掲示板管理", href: "/admin/boards", icon: FileText },
             ].map(link => (
               <Link key={link.href} href={link.href}>
                 <div className="flex items-center gap-2 p-3 rounded-lg border hover:bg-accent/40 transition-colors text-sm">
@@ -819,8 +819,8 @@ function DashboardHome() {
 // ─── Dashboard Charts ───
 const PIE_COLORS = ["#8b5e3c", "#a67c5b", "#c9a882", "#e2cdb0", "#6b4226", "#d4a574", "#b8860b"];
 const STATUS_LABELS: Record<string, string> = {
-  pending: "대기", paid: "결제완료", preparing: "준비중", shipping: "배송중",
-  delivered: "배송완료", cancelled: "취소", refunded: "환불",
+  pending: "待機", paid: "支払い済み", preparing: "準備中", shipping: "配送中",
+  delivered: "配送完了", cancelled: "キャンセル", refunded: "返金",
 };
 
 function DashboardCharts() {
@@ -849,11 +849,11 @@ function DashboardCharts() {
       {/* Daily Sales Line Chart */}
       <div className="bg-card border rounded-xl p-6 elegant-shadow">
         <h3 className="font-semibold mb-4 flex items-center gap-2">
-          <TrendingUp className="w-4 h-4" /> 일별 매출 추이 (30일)
+          <TrendingUp className="w-4 h-4" /> 日別売上推移 (30日)
         </h3>
         {(!dailySales || dailySales.length === 0) ? (
           <div className="flex items-center justify-center h-[250px] text-sm text-muted-foreground">
-            아직 주문 데이터가 없습니다
+            まだ注文データがありません
           </div>
         ) : (
           <ResponsiveContainer width="100%" height={250}>
@@ -863,12 +863,12 @@ function DashboardCharts() {
                 const d = new Date(v);
                 return `${d.getMonth()+1}/${d.getDate()}`;
               }} />
-              <YAxis tick={{ fontSize: 11 }} tickFormatter={(v) => v >= 10000 ? `${(v/10000).toFixed(0)}만` : v.toLocaleString()} />
+              <YAxis tick={{ fontSize: 11 }} tickFormatter={(v) => v >= 10000 ? `${(v/10000).toFixed(0)}万` : v.toLocaleString()} />
               <Tooltip formatter={chartTooltipFormatter} labelFormatter={(v) => {
                 const d = new Date(v);
                 return `${d.getFullYear()}.${d.getMonth()+1}.${d.getDate()}`;
               }} />
-              <Line type="monotone" dataKey="revenue" stroke="#8b5e3c" strokeWidth={2} dot={{ r: 3 }} name="매출액" />
+              <Line type="monotone" dataKey="revenue" stroke="#8b5e3c" strokeWidth={2} dot={{ r: 3 }} name="売上額" />
             </LineChart>
           </ResponsiveContainer>
         )}
@@ -877,11 +877,11 @@ function DashboardCharts() {
       {/* Order Status Pie Chart */}
       <div className="bg-card border rounded-xl p-6 elegant-shadow">
         <h3 className="font-semibold mb-4 flex items-center gap-2">
-          <BarChart3 className="w-4 h-4" /> 주문 상태 분포
+          <BarChart3 className="w-4 h-4" /> 注文ステータス分布
         </h3>
         {pieData.length === 0 ? (
           <div className="flex items-center justify-center h-[250px] text-sm text-muted-foreground">
-            아직 주문 데이터가 없습니다
+            まだ注文データがありません
           </div>
         ) : (
           <ResponsiveContainer width="100%" height={250}>
@@ -901,15 +901,15 @@ function DashboardCharts() {
       {catSales && catSales.length > 0 && (
         <div className="bg-card border rounded-xl p-6 elegant-shadow lg:col-span-2">
           <h3 className="font-semibold mb-4 flex items-center gap-2">
-            <Tag className="w-4 h-4" /> 카테고리별 매출
+            <Tag className="w-4 h-4" /> カテゴリー別売上
           </h3>
           <ResponsiveContainer width="100%" height={280}>
             <BarChart data={catSales} layout="vertical">
               <CartesianGrid strokeDasharray="3 3" stroke="#e5e5e5" />
-              <XAxis type="number" tick={{ fontSize: 11 }} tickFormatter={(v) => v >= 10000 ? `${(v/10000).toFixed(0)}만` : v.toLocaleString()} />
+              <XAxis type="number" tick={{ fontSize: 11 }} tickFormatter={(v) => v >= 10000 ? `${(v/10000).toFixed(0)}万` : v.toLocaleString()} />
               <YAxis type="category" dataKey="categoryName" width={100} tick={{ fontSize: 12 }} />
               <Tooltip formatter={chartTooltipFormatter} />
-              <Bar dataKey="revenue" fill="#8b5e3c" radius={[0, 4, 4, 0]} name="매출액" />
+              <Bar dataKey="revenue" fill="#8b5e3c" radius={[0, 4, 4, 0]} name="売上額" />
             </BarChart>
           </ResponsiveContainer>
         </div>
@@ -919,26 +919,26 @@ function DashboardCharts() {
       <div className="bg-card border rounded-xl p-6 elegant-shadow lg:col-span-2">
         <div className="flex items-center justify-between mb-4">
           <h3 className="font-semibold flex items-center gap-2">
-            <TrendingUp className="w-4 h-4" /> 매출 추이 (30일)
+            <TrendingUp className="w-4 h-4" /> 売上推移 (30日)
           </h3>
           <div className="flex gap-2">
-            <Button size="sm" variant={period === "daily" ? "default" : "outline"} onClick={() => setPeriod("daily")}>일별</Button>
-            <Button size="sm" variant={period === "weekly" ? "default" : "outline"} onClick={() => setPeriod("weekly")}>주별</Button>
-            <Button size="sm" variant={period === "monthly" ? "default" : "outline"} onClick={() => setPeriod("monthly")}>월별</Button>
+            <Button size="sm" variant={period === "daily" ? "default" : "outline"} onClick={() => setPeriod("daily")}>日別</Button>
+            <Button size="sm" variant={period === "weekly" ? "default" : "outline"} onClick={() => setPeriod("weekly")}>週別</Button>
+            <Button size="sm" variant={period === "monthly" ? "default" : "outline"} onClick={() => setPeriod("monthly")}>月別</Button>
           </div>
         </div>
         {(!salesTrend || salesTrend.length === 0) ? (
           <div className="flex items-center justify-center h-[280px] text-sm text-muted-foreground">
-            아직 매출 데이터가 없습니다
+            まだ売上データがありません
           </div>
         ) : (
           <ResponsiveContainer width="100%" height={280}>
             <LineChart data={salesTrend}>
               <CartesianGrid strokeDasharray="3 3" stroke="#e5e5e5" />
               <XAxis dataKey="date" tick={{ fontSize: 11 }} />
-              <YAxis tick={{ fontSize: 11 }} tickFormatter={(v) => v >= 10000 ? `${(v/10000).toFixed(0)}만` : v.toLocaleString()} />
+              <YAxis tick={{ fontSize: 11 }} tickFormatter={(v) => v >= 10000 ? `${(v/10000).toFixed(0)}万` : v.toLocaleString()} />
               <Tooltip formatter={chartTooltipFormatter} />
-              <Line type="monotone" dataKey="sales" stroke="#10b981" strokeWidth={2} dot={{ r: 3 }} name="매출액" />
+              <Line type="monotone" dataKey="sales" stroke="#10b981" strokeWidth={2} dot={{ r: 3 }} name="売上額" />
             </LineChart>
           </ResponsiveContainer>
         )}
@@ -947,11 +947,11 @@ function DashboardCharts() {
       {/* 인기 상품 TOP 10 */}
       <div className="bg-card border rounded-xl p-6 elegant-shadow">
         <h3 className="font-semibold mb-4 flex items-center gap-2">
-          <Star className="w-4 h-4" /> 인기 상품 TOP 10
+          <Star className="w-4 h-4" /> 人気商品 TOP 10
         </h3>
         {(!topProducts || topProducts.length === 0) ? (
           <div className="flex items-center justify-center h-[280px] text-sm text-muted-foreground">
-            아직 판매 데이터가 없습니다
+            まだ販売データがありません
           </div>
         ) : (
           <div className="space-y-2 max-h-[280px] overflow-y-auto">
@@ -961,7 +961,7 @@ function DashboardCharts() {
                   <Badge variant={idx < 3 ? "default" : "secondary"} className="text-xs">{idx + 1}</Badge>
                   <div>
                     <div className="font-medium text-sm">{p.productName}</div>
-                    <div className="text-xs text-muted-foreground">판매 {p.totalQuantity}개 · 주문 {p.orderCount}건</div>
+                    <div className="text-xs text-muted-foreground">販売 {p.totalQuantity}個 · 注文 {p.orderCount}件</div>
                   </div>
                 </div>
                 <div className="text-right">
@@ -976,11 +976,11 @@ function DashboardCharts() {
       {/* 신규 회원 추이 */}
       <div className="bg-card border rounded-xl p-6 elegant-shadow">
         <h3 className="font-semibold mb-4 flex items-center gap-2">
-          <Users className="w-4 h-4" /> 신규 회원 추이 (30일)
+          <Users className="w-4 h-4" /> 新規会員推移 (30日)
         </h3>
         {(!newUsersTrend || newUsersTrend.length === 0) ? (
           <div className="flex items-center justify-center h-[280px] text-sm text-muted-foreground">
-            아직 회원 데이터가 없습니다
+            まだ会員データがありません
           </div>
         ) : (
           <ResponsiveContainer width="100%" height={280}>
@@ -995,7 +995,7 @@ function DashboardCharts() {
                 const d = new Date(v);
                 return `${d.getFullYear()}.${d.getMonth()+1}.${d.getDate()}`;
               }} />
-              <Bar dataKey="count" fill="#3b82f6" radius={[4, 4, 0, 0]} name="신규 회원" />
+              <Bar dataKey="count" fill="#3b82f6" radius={[4, 4, 0, 0]} name="新規会員" />
             </BarChart>
           </ResponsiveContainer>
         )}
@@ -1012,14 +1012,14 @@ function AdminCategories() {
   const [editItem, setEditItem] = useState<any>(null);
   const [form, setForm] = useState({ name: "", slug: "", description: "", parentId: null as number | null, isActive: 1, sortOrder: 0 });
 
-  const createMut = trpc.admin.createCategory.useMutation({ onSuccess: () => { utils.admin.categories.invalidate(); setDialogOpen(false); toast.success("카테고리가 생성되었습니다."); } });
-  const updateMut = trpc.admin.updateCategory.useMutation({ onSuccess: () => { utils.admin.categories.invalidate(); setDialogOpen(false); toast.success("카테고리가 수정되었습니다."); } });
-  const deleteMut = trpc.admin.deleteCategory.useMutation({ onSuccess: () => { utils.admin.categories.invalidate(); toast.success("카테고리가 삭제되었습니다."); } });
+  const createMut = trpc.admin.createCategory.useMutation({ onSuccess: () => { utils.admin.categories.invalidate(); setDialogOpen(false); toast.success("カテゴリーを作成しました。"); } });
+  const updateMut = trpc.admin.updateCategory.useMutation({ onSuccess: () => { utils.admin.categories.invalidate(); setDialogOpen(false); toast.success("カテゴリーを更新しました。"); } });
+  const deleteMut = trpc.admin.deleteCategory.useMutation({ onSuccess: () => { utils.admin.categories.invalidate(); toast.success("カテゴリーを削除しました。"); } });
 
   const openCreate = () => { setEditItem(null); setForm({ name: "", slug: "", description: "", parentId: null, isActive: 1, sortOrder: 0 }); setDialogOpen(true); };
   const openEdit = (c: any) => { setEditItem(c); setForm({ name: c.name, slug: c.slug, description: c.description ?? "", parentId: c.parentId, isActive: c.isActive, sortOrder: c.sortOrder }); setDialogOpen(true); };
   const handleSave = () => {
-    if (!form.name || !form.slug) { toast.error("이름과 슬러그를 입력해주세요."); return; }
+    if (!form.name || !form.slug) { toast.error("名前とスラッグを入力してください。"); return; }
     if (editItem) { updateMut.mutate({ id: editItem.id, ...form }); }
     else { createMut.mutate(form); }
   };
@@ -1027,13 +1027,13 @@ function AdminCategories() {
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold">카테고리 관리</h1>
-        <Button onClick={openCreate} size="sm"><Plus className="w-4 h-4 mr-1" /> 카테고리 추가</Button>
+        <h1 className="text-2xl font-bold">カテゴリー管理</h1>
+        <Button onClick={openCreate} size="sm"><Plus className="w-4 h-4 mr-1" /> カテゴリーを追加</Button>
       </div>
       <div className="bg-card border rounded-xl overflow-hidden elegant-shadow">
         <table className="w-full">
           <thead><tr className="bg-secondary/50 text-xs text-muted-foreground">
-            <th className="text-left py-3 px-4">ID</th><th className="text-left py-3 px-4">이름</th><th className="text-left py-3 px-4">슬러그</th><th className="text-center py-3 px-4">상위</th><th className="text-center py-3 px-4">순서</th><th className="text-center py-3 px-4">상태</th><th className="text-center py-3 px-4">관리</th>
+            <th className="text-left py-3 px-4">ID</th><th className="text-left py-3 px-4">名前</th><th className="text-left py-3 px-4">スラッグ</th><th className="text-center py-3 px-4">親</th><th className="text-center py-3 px-4">順序</th><th className="text-center py-3 px-4">ステータス</th><th className="text-center py-3 px-4">操作</th>
           </tr></thead>
           <tbody className="divide-y">
             {(cats ?? []).map((c: any) => (
@@ -1043,44 +1043,44 @@ function AdminCategories() {
                 <td className="py-3 px-4 text-sm text-muted-foreground font-mono">{c.slug}</td>
                 <td className="py-3 px-4 text-sm text-center">{c.parentId ? cats?.find((p: any) => p.id === c.parentId)?.name ?? c.parentId : "-"}</td>
                 <td className="py-3 px-4 text-sm text-center">{c.sortOrder}</td>
-                <td className="py-3 px-4 text-center"><Badge variant={c.isActive ? "default" : "secondary"} className="text-[10px]">{c.isActive ? "활성" : "비활성"}</Badge></td>
+                <td className="py-3 px-4 text-center"><Badge variant={c.isActive ? "default" : "secondary"} className="text-[10px]">{c.isActive ? "有効" : "無効"}</Badge></td>
                 <td className="py-3 px-4 text-center">
                   <div className="flex items-center justify-center gap-1">
                     <Button variant="ghost" size="sm" onClick={() => openEdit(c)}><Pencil className="w-3.5 h-3.5" /></Button>
-                    <Button variant="ghost" size="sm" className="text-destructive" onClick={() => { if (confirm("삭제하시겠습니까?")) deleteMut.mutate({ id: c.id }); }}><Trash2 className="w-3.5 h-3.5" /></Button>
+                    <Button variant="ghost" size="sm" className="text-destructive" onClick={() => { if (confirm("削除しますか？")) deleteMut.mutate({ id: c.id }); }}><Trash2 className="w-3.5 h-3.5" /></Button>
                   </div>
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
-        {(cats ?? []).length === 0 && <p className="text-center py-8 text-sm text-muted-foreground">카테고리가 없습니다</p>}
+        {(cats ?? []).length === 0 && <p className="text-center py-8 text-sm text-muted-foreground">カテゴリーがありません</p>}
       </div>
 
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent className="sm:max-w-md">
-          <DialogHeader><DialogTitle>{editItem ? "카테고리 수정" : "카테고리 추가"}</DialogTitle><DialogDescription>카테고리 정보를 입력하세요.</DialogDescription></DialogHeader>
+          <DialogHeader><DialogTitle>{editItem ? "カテゴリーの編集" : "カテゴリーの追加"}</DialogTitle><DialogDescription>カテゴリー情報を入力してください。</DialogDescription></DialogHeader>
           <div className="space-y-3">
-            <div><label className="text-sm font-medium">이름 *</label><Input value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} placeholder="카테고리 이름" /></div>
-            <div><label className="text-sm font-medium">슬러그 *</label><Input value={form.slug} onChange={e => setForm(f => ({ ...f, slug: e.target.value }))} placeholder="category-slug" /></div>
-            <div><label className="text-sm font-medium">설명</label><Input value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} placeholder="설명 (선택)" /></div>
+            <div><label className="text-sm font-medium">名前 *</label><Input value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} placeholder="カテゴリー名" /></div>
+            <div><label className="text-sm font-medium">スラッグ *</label><Input value={form.slug} onChange={e => setForm(f => ({ ...f, slug: e.target.value }))} placeholder="category-slug" /></div>
+            <div><label className="text-sm font-medium">説明</label><Input value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} placeholder="説明 (任意)" /></div>
             <div className="grid grid-cols-2 gap-3">
-              <div><label className="text-sm font-medium">상위 카테고리</label>
+              <div><label className="text-sm font-medium">親カテゴリー</label>
                 <select className="w-full border rounded-lg px-3 py-2 text-sm bg-background" value={form.parentId ?? ""} onChange={e => setForm(f => ({ ...f, parentId: e.target.value ? Number(e.target.value) : null }))}>
-                  <option value="">없음 (최상위)</option>
+                  <option value="">なし (最上位)</option>
                   {(cats ?? []).filter((c: any) => c.id !== editItem?.id).map((c: any) => <option key={c.id} value={c.id}>{c.name}</option>)}
                 </select>
               </div>
-              <div><label className="text-sm font-medium">정렬 순서</label><Input type="number" value={form.sortOrder} onChange={e => setForm(f => ({ ...f, sortOrder: Number(e.target.value) }))} /></div>
+              <div><label className="text-sm font-medium">表示順</label><Input type="number" value={form.sortOrder} onChange={e => setForm(f => ({ ...f, sortOrder: Number(e.target.value) }))} /></div>
             </div>
             <div className="flex items-center gap-2">
               <input type="checkbox" checked={form.isActive === 1} onChange={e => setForm(f => ({ ...f, isActive: e.target.checked ? 1 : 0 }))} />
-              <label className="text-sm">활성화</label>
+              <label className="text-sm">有効化</label>
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setDialogOpen(false)}>취소</Button>
-            <Button onClick={handleSave} disabled={createMut.isPending || updateMut.isPending}>{editItem ? "수정" : "생성"}</Button>
+            <Button variant="outline" onClick={() => setDialogOpen(false)}>キャンセル</Button>
+            <Button onClick={handleSave} disabled={createMut.isPending || updateMut.isPending}>{editItem ? "更新" : "作成"}</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -1122,14 +1122,14 @@ function AdminProducts() {
   // 인라인 특가 편집
   const [inlineEditingId, setInlineEditingId] = useState<number | null>(null);
   const [inlineSalePrice, setInlineSalePrice] = useState<string>("");
-  const inlineUpdateMut = trpc.product.update.useMutation({ onSuccess: () => { utils.admin.products.invalidate(); setInlineEditingId(null); toast.success("특가가 수정되었습니다."); } });
+  const inlineUpdateMut = trpc.product.update.useMutation({ onSuccess: () => { utils.admin.products.invalidate(); setInlineEditingId(null); toast.success("特価を更新しました。"); } });
 
-  const bulkDeleteMut = trpc.bulkActions.deleteProducts.useMutation({ onSuccess: () => { utils.admin.products.invalidate(); setSelectedIds([]); toast.success("선택된 상품이 삭제되었습니다."); } });
-  const bulkUpdateStatusMut = trpc.bulkActions.updateProductsStatus.useMutation({ onSuccess: () => { utils.admin.products.invalidate(); setSelectedIds([]); toast.success("상태가 변경되었습니다."); } });
-  const bulkUpdateCategoryMut = trpc.bulkActions.updateProductsCategory.useMutation({ onSuccess: () => { utils.admin.products.invalidate(); setSelectedIds([]); toast.success("카테고리가 변경되었습니다."); } });
-  const bulkUpdatePointRateMut = trpc.bulkActions.updateProductsPointRate.useMutation({ onSuccess: (d) => { utils.admin.products.invalidate(); setSelectedIds([]); toast.success(`${d.count}개 상품의 포인트 적립률이 변경되었습니다.`); } });
-  const bulkUpdateFlagsMut = trpc.bulkActions.updateProductsFlags.useMutation({ onSuccess: (d) => { utils.admin.products.invalidate(); setSelectedIds([]); toast.success(`${d.count}개 상품의 플래그가 변경되었습니다.`); } });
-  const bulkUpdateSalePriceMut = trpc.bulkActions.updateProductsSalePrice.useMutation({ onSuccess: (d) => { utils.admin.products.invalidate(); setSelectedIds([]); setBulkSalePrice(""); toast.success(`${d.count}개 상품의 특가가 설정되었습니다.`); } });
+  const bulkDeleteMut = trpc.bulkActions.deleteProducts.useMutation({ onSuccess: () => { utils.admin.products.invalidate(); setSelectedIds([]); toast.success("選択した商品を削除しました。"); } });
+  const bulkUpdateStatusMut = trpc.bulkActions.updateProductsStatus.useMutation({ onSuccess: () => { utils.admin.products.invalidate(); setSelectedIds([]); toast.success("ステータスを変更しました。"); } });
+  const bulkUpdateCategoryMut = trpc.bulkActions.updateProductsCategory.useMutation({ onSuccess: () => { utils.admin.products.invalidate(); setSelectedIds([]); toast.success("カテゴリーを変更しました。"); } });
+  const bulkUpdatePointRateMut = trpc.bulkActions.updateProductsPointRate.useMutation({ onSuccess: (d) => { utils.admin.products.invalidate(); setSelectedIds([]); toast.success(`${d.count}件の商品のポイント付与率を変更しました。`); } });
+  const bulkUpdateFlagsMut = trpc.bulkActions.updateProductsFlags.useMutation({ onSuccess: (d) => { utils.admin.products.invalidate(); setSelectedIds([]); toast.success(`${d.count}件の商品のフラグを変更しました。`); } });
+  const bulkUpdateSalePriceMut = trpc.bulkActions.updateProductsSalePrice.useMutation({ onSuccess: (d) => { utils.admin.products.invalidate(); setSelectedIds([]); setBulkSalePrice(""); toast.success(`${d.count}件の商品の特価を設定しました。`); } });
   const batchSortMut = trpc.product.adminBatchUpdateSortOrder.useMutation({ onSuccess: () => utils.admin.products.invalidate() });
 
   // 드래그 상태
@@ -1167,7 +1167,7 @@ function AdminProducts() {
     setLocalProducts(reordered.map((p, i) => ({ ...p, sortOrder: i * 10 })));
     setDragRowIdx(null); setDragOverIdx(null);
     batchSortMut.mutate(updates);
-    toast.success("노출순위가 저장되었습니다");
+    toast.success("表示順位を保存しました");
   };
   const handleRowDragEnd = () => { setDragRowIdx(null); setDragOverIdx(null); };
 
@@ -1180,7 +1180,7 @@ function AdminProducts() {
     else setSelectedIds([...selectedIds, id]);
   };
   const handleBulkAction = () => {
-    if (selectedIds.length === 0) { toast.error("상품을 선택해주세요."); return; }
+    if (selectedIds.length === 0) { toast.error("商品を選択してください。"); return; }
     if (bulkAction === "delete") bulkDeleteMut.mutate({ productIds: selectedIds });
     else if (bulkAction.startsWith("status:")) bulkUpdateStatusMut.mutate({ productIds: selectedIds, status: bulkAction.split(":")[1] as any });
     else if (bulkAction.startsWith("category:")) bulkUpdateCategoryMut.mutate({ productIds: selectedIds, categoryId: parseInt(bulkAction.split(":")[1]) });
@@ -1192,15 +1192,15 @@ function AdminProducts() {
       bulkUpdateFlagsMut.mutate({ productIds: selectedIds, flag: parts[1] as "isFeatured" | "isNew" | "isBest", value: parseInt(parts[2]) as 0 | 1 });
     } else if (bulkAction === "salePrice") {
       const price = bulkSalePrice ? Number(bulkSalePrice) : null;
-      if (price !== null && price < 0) { toast.error("특가는 0원 이상이어야 합니다."); return; }
+      if (price !== null && price < 0) { toast.error("特価は0円以上にしてください。"); return; }
       bulkUpdateSalePriceMut.mutate({ productIds: selectedIds, salePrice: price });
     }
     setBulkAction("");
   };
 
-  const createMut = trpc.product.create.useMutation({ onSuccess: () => { utils.admin.products.invalidate(); setPageMode("list"); toast.success("상품이 등록되었습니다."); } });
-  const updateMut = trpc.product.update.useMutation({ onSuccess: () => { utils.admin.products.invalidate(); setPageMode("list"); toast.success("상품이 수정되었습니다."); } });
-  const deleteMut = trpc.admin.deleteProduct.useMutation({ onSuccess: () => { utils.admin.products.invalidate(); toast.success("상품이 삭제되었습니다."); } });
+  const createMut = trpc.product.create.useMutation({ onSuccess: () => { utils.admin.products.invalidate(); setPageMode("list"); toast.success("商品を登録しました。"); } });
+  const updateMut = trpc.product.update.useMutation({ onSuccess: () => { utils.admin.products.invalidate(); setPageMode("list"); toast.success("商品を更新しました。"); } });
+  const deleteMut = trpc.admin.deleteProduct.useMutation({ onSuccess: () => { utils.admin.products.invalidate(); toast.success("商品を削除しました。"); } });
 
   const openCreate = () => {
     setEditItem(null);
@@ -1223,14 +1223,14 @@ function AdminProducts() {
     setPageMode("form");
   };
   const handleSave = () => {
-    if (!form.name || !form.slug || !form.categoryId) { toast.error("필수 항목을 입력해주세요."); return; }
+    if (!form.name || !form.slug || !form.categoryId) { toast.error("必須項目を入力してください。"); return; }
     // Validate options
     for (const og of optionGroups) {
-      if (!og.name.trim()) { toast.error("옵션 그룹명을 입력해주세요."); return; }
-      if (og.values.length === 0) { toast.error(`"${og.name}" 옵션에 값을 추가해주세요.`); return; }
+      if (!og.name.trim()) { toast.error("オプショングループ名を入力してください。"); return; }
+      if (og.values.length === 0) { toast.error(`「${og.name}」オプションに値を追加してください。`); return; }
       for (const v of og.values) {
-        if (!v.value.trim()) { toast.error("옵션값을 입력해주세요."); return; }
-        if (v.price < 0) { toast.error("옵션 판매금액은 0 이상이어야 합니다."); return; }
+        if (!v.value.trim()) { toast.error("オプション値を入力してください。"); return; }
+        if (v.price < 0) { toast.error("オプション販売金額は0以上にしてください。"); return; }
       }
     }
     const options = optionGroups.length > 0 ? optionGroups.map((og, i) => ({ name: og.name, values: og.values, isRequired: og.isRequired, sortOrder: i })) : undefined;
@@ -1256,16 +1256,16 @@ function AdminProducts() {
     return (
       <div>
         <div className="flex items-center gap-3 mb-6">
-          <Button variant="ghost" size="sm" onClick={() => setPageMode("list")}><ArrowLeft className="w-4 h-4 mr-1" /> 목록으로</Button>
-          <h1 className="text-2xl font-bold">{editItem ? "상품 수정" : "상품 등록"}</h1>
+          <Button variant="ghost" size="sm" onClick={() => setPageMode("list")}><ArrowLeft className="w-4 h-4 mr-1" /> 一覧へ</Button>
+          <h1 className="text-2xl font-bold">{editItem ? "商品の編集" : "商品登録"}</h1>
         </div>
         <div className="space-y-4 max-w-5xl">
 
           {/* ── 카테고리 ── */}
           <div className="border rounded-xl p-5 bg-card">
-            <label className="text-sm font-semibold block mb-3">카테고리</label>
+            <label className="text-sm font-semibold block mb-3">カテゴリー</label>
             <select className="w-full border rounded-lg px-3 py-2 text-sm bg-background" value={form.categoryId} onChange={e => setForm(f => ({ ...f, categoryId: Number(e.target.value) }))}>
-              <option value={0}>선택</option>
+              <option value={0}>選択</option>
               {(cats ?? []).map((c: any) => <option key={c.id} value={c.id}>{c.name}</option>)}
             </select>
           </div>
@@ -1275,43 +1275,43 @@ function AdminProducts() {
 
             {/* 왼쪽: 상품명·가격·재고 */}
             <div className="border rounded-xl p-5 bg-card space-y-4">
-              <p className="text-sm font-semibold text-muted-foreground border-b pb-2">상품명 · 가격 · 재고</p>
+              <p className="text-sm font-semibold text-muted-foreground border-b pb-2">商品名 · 価格 · 在庫</p>
 
               <div>
-                <label className="text-sm font-medium">상품명 *</label>
-                <Input value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} placeholder="상품 이름" />
+                <label className="text-sm font-medium">商品名 *</label>
+                <Input value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} placeholder="商品名" />
               </div>
               <div>
-                <label className="text-sm font-medium">슬러그 (영문·관리용) *</label>
+                <label className="text-sm font-medium">スラッグ (英字・管理用) *</label>
                 <Input value={form.slug} onChange={e => setForm(f => ({ ...f, slug: e.target.value }))} placeholder="product-slug" />
               </div>
               <div>
-                <label className="text-sm font-medium">간단설명 (상품명 아래 표시)</label>
-                <Input value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} placeholder="상품 간단 설명" />
+                <label className="text-sm font-medium">簡易説明 (商品名の下に表示)</label>
+                <Input value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} placeholder="商品の簡易説明" />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-sm font-medium">정가 (₩ · 판매가격) *</label>
+                  <label className="text-sm font-medium">定価 (円 · 販売価格) *</label>
                   <Input type="number" value={form.price} onChange={e => setForm(f => ({ ...f, price: Number(e.target.value) }))} />
                 </div>
                 <div>
-                  <label className="text-sm font-medium">할인가 (₩ · 판매가)</label>
-                  <Input type="number" value={form.salePrice ?? ""} onChange={e => setForm(f => ({ ...f, salePrice: e.target.value ? Number(e.target.value) : null }))} placeholder="없으면 비워두세요" />
+                  <label className="text-sm font-medium">割引価格 (円 · 販売価格)</label>
+                  <Input type="number" value={form.salePrice ?? ""} onChange={e => setForm(f => ({ ...f, salePrice: e.target.value ? Number(e.target.value) : null }))} placeholder="なければ空欄のままにしてください" />
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-sm font-medium">재고</label>
+                  <label className="text-sm font-medium">在庫</label>
                   <Input type="number" value={form.stock} onChange={e => setForm(f => ({ ...f, stock: Number(e.target.value) }))} />
                 </div>
                 <div>
-                  <label className="text-sm font-medium">포인트 적립</label>
+                  <label className="text-sm font-medium">ポイント付与</label>
                   <div className="flex items-center gap-1">
                     <select className="border rounded-lg px-2 py-2 text-sm bg-background w-16 shrink-0" value={form.pointRateType} onChange={e => setForm(f => ({ ...f, pointRateType: e.target.value as "percent" | "fixed" }))}>
                       <option value="percent">%</option>
-                      <option value="fixed">원</option>
+                      <option value="fixed">円</option>
                     </select>
                     <Input type="number" min={0} max={form.pointRateType === "percent" ? 100 : 999999} value={form.pointRate} onChange={e => setForm(f => ({ ...f, pointRate: Number(e.target.value) }))} />
                   </div>
@@ -1320,44 +1320,44 @@ function AdminProducts() {
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-sm font-medium">상태</label>
+                  <label className="text-sm font-medium">ステータス</label>
                   <select className="w-full border rounded-lg px-3 py-2 text-sm bg-background" value={form.status} onChange={e => setForm(f => ({ ...f, status: e.target.value }))}>
-                    <option value="active">판매중</option><option value="inactive">비활성</option><option value="soldout">품절</option>
+                    <option value="active">販売中</option><option value="inactive">無効</option><option value="soldout">品切れ</option>
                   </select>
                 </div>
                 <div>
-                  <label className="text-sm font-medium">최소 구매 등급</label>
+                  <label className="text-sm font-medium">最低購入ランク</label>
                   <select className="w-full border rounded-lg px-3 py-2 text-sm bg-background" value={form.minGrade} onChange={e => setForm(f => ({ ...f, minGrade: e.target.value as any }))}>
-                    <option value="bronze">브론즈 (모든 회원)</option>
-                    <option value="silver">실버 이상</option>
-                    <option value="gold">골드 이상</option>
-                    <option value="vip">VIP 이상</option>
-                    <option value="vvip">VVIP 전용</option>
+                    <option value="bronze">ブロンズ (全会員)</option>
+                    <option value="silver">シルバー以上</option>
+                    <option value="gold">ゴールド以上</option>
+                    <option value="vip">VIP以上</option>
+                    <option value="vvip">VVIP限定</option>
                   </select>
                 </div>
               </div>
 
               <div>
-                <label className="text-sm font-medium block mb-2">상품 뱃지</label>
+                <label className="text-sm font-medium block mb-2">商品バッジ</label>
                 <div className="flex flex-wrap gap-4">
-                  <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={form.isFeatured === 1} onChange={e => setForm(f => ({ ...f, isFeatured: e.target.checked ? 1 : 0 }))} /> 추천</label>
-                  <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={form.isNew === 1} onChange={e => setForm(f => ({ ...f, isNew: e.target.checked ? 1 : 0 }))} /> 신상품</label>
-                  <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={form.isBest === 1} onChange={e => setForm(f => ({ ...f, isBest: e.target.checked ? 1 : 0 }))} /> 베스트</label>
+                  <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={form.isFeatured === 1} onChange={e => setForm(f => ({ ...f, isFeatured: e.target.checked ? 1 : 0 }))} /> おすすめ</label>
+                  <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={form.isNew === 1} onChange={e => setForm(f => ({ ...f, isNew: e.target.checked ? 1 : 0 }))} /> 新商品</label>
+                  <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={form.isBest === 1} onChange={e => setForm(f => ({ ...f, isBest: e.target.checked ? 1 : 0 }))} /> ベスト</label>
                   <label className="flex items-center gap-2 text-sm text-rose-600">
                     <input type="checkbox" className="accent-rose-600" checked={(form as any).noDiscount === 1} onChange={e => setForm(f => ({ ...f, noDiscount: e.target.checked ? 1 : 0 } as any))} />
-                    할인 제외
-                    <span className="text-xs text-muted-foreground font-normal">(쿠폰·특가 적용 안 됨)</span>
+                    割引対象外
+                    <span className="text-xs text-muted-foreground font-normal">(クーポン・特価が適用されません)</span>
                   </label>
                 </div>
               </div>
 
               <div>
-                <label className="text-sm font-medium">노출 순위 <span className="font-normal text-muted-foreground text-xs">0이 기본, 양수(10, 100...)일수록 하위 노출</span></label>
+                <label className="text-sm font-medium">表示順位 <span className="font-normal text-muted-foreground text-xs">0が基本、正の数(10, 100...)ほど下位に表示</span></label>
                 <Input type="number" value={form.sortOrder} onChange={e => setForm(f => ({ ...f, sortOrder: Number(e.target.value) }))} placeholder="0" />
               </div>
 
               <div>
-                <label className="text-sm font-medium">해시태그 (엔터로 추가)</label>
+                <label className="text-sm font-medium">ハッシュタグ (Enterで追加)</label>
                 <div className="space-y-2 mt-1">
                   <div className="flex flex-wrap gap-2">
                     {form.hashtags.map((tag, i) => (
@@ -1367,7 +1367,7 @@ function AdminProducts() {
                     ))}
                   </div>
                   <Input
-                    placeholder="해시태그를 입력하고 엔터를 누르세요"
+                    placeholder="ハッシュタグを入力してEnterを押してください"
                     onKeyDown={e => {
                       if (e.key === 'Enter') {
                         e.preventDefault();
@@ -1395,15 +1395,15 @@ function AdminProducts() {
           {/* ── 상품 옵션 ── */}
           <div className="border rounded-xl p-5 bg-card">
             <div className="flex items-center justify-between mb-3">
-              <label className="text-sm font-semibold">상품 옵션</label>
-              <Button type="button" variant="outline" size="sm" onClick={addOptionGroup}><Plus className="w-3.5 h-3.5 mr-1" /> 옵션 그룹 추가</Button>
+              <label className="text-sm font-semibold">商品オプション</label>
+              <Button type="button" variant="outline" size="sm" onClick={addOptionGroup}><Plus className="w-3.5 h-3.5 mr-1" /> オプショングループを追加</Button>
             </div>
-            {optionGroups.length === 0 && <p className="text-xs text-muted-foreground">옵션이 없습니다. 사이즈, 색상 등의 옵션을 추가하면 옵션별 판매금액을 설정할 수 있습니다.</p>}
+            {optionGroups.length === 0 && <p className="text-xs text-muted-foreground">オプションがありません。サイズ、色などのオプションを追加すると、オプションごとに販売金額を設定できます。</p>}
             <div className="space-y-4">
               {optionGroups.map((group, gi) => (
                 <div key={gi} className="border rounded-lg p-3 bg-secondary/30">
                   <div className="flex items-center gap-2 mb-3">
-                    <Input className="flex-1 h-8 text-sm font-medium" placeholder="옵션명 (예: 사이즈, 색상)" value={group.name} onChange={e => updateOptionGroupName(gi, e.target.value)} />
+                    <Input className="flex-1 h-8 text-sm font-medium" placeholder="オプション名 (例: サイズ、色)" value={group.name} onChange={e => updateOptionGroupName(gi, e.target.value)} />
                     <Button type="button" variant="ghost" size="sm" className="text-destructive h-8 px-2" onClick={() => removeOptionGroup(gi)}><Trash2 className="w-3.5 h-3.5" /></Button>
                   </div>
                   <div className="space-y-2">
@@ -1412,14 +1412,14 @@ function AdminProducts() {
                     </div>
                     {group.values.map((v, vi) => (
                       <div key={vi} className="grid grid-cols-[1fr_1fr_100px_80px_32px] gap-2 items-center">
-                        <Input className="h-8 text-sm" placeholder="옵션값 (예: S, M, L)" value={v.value} onChange={e => updateOptionValue(gi, vi, "value", e.target.value)} />
+                        <Input className="h-8 text-sm" placeholder="オプション値 (例: S, M, L)" value={v.value} onChange={e => updateOptionValue(gi, vi, "value", e.target.value)} />
                         <Input className="h-8 text-sm" placeholder="English (e.g. S, M, L)" value={v.englishValue ?? ""} onChange={e => updateOptionValue(gi, vi, "englishValue", e.target.value)} />
                         <Input className="h-8 text-sm text-right" type="number" min={0} value={v.price} onChange={e => updateOptionValue(gi, vi, "price", Number(e.target.value))} />
                         <Input className="h-8 text-sm text-right" type="number" min={0} value={v.stock ?? 100} onChange={e => updateOptionValue(gi, vi, "stock", Number(e.target.value))} />
                         <Button type="button" variant="ghost" size="sm" className="h-8 w-8 p-0 text-muted-foreground hover:text-destructive" onClick={() => removeOptionValue(gi, vi)} disabled={group.values.length <= 1}><X className="w-3.5 h-3.5" /></Button>
                       </div>
                     ))}
-                    <Button type="button" variant="ghost" size="sm" className="text-xs h-7" onClick={() => addOptionValue(gi)}><Plus className="w-3 h-3 mr-1" /> 옵션값 추가</Button>
+                    <Button type="button" variant="ghost" size="sm" className="text-xs h-7" onClick={() => addOptionValue(gi)}><Plus className="w-3 h-3 mr-1" /> オプション値を追加</Button>
                   </div>
                 </div>
               ))}
@@ -1429,7 +1429,7 @@ function AdminProducts() {
           {/* ── 상세 설명 ── */}
           <div className="border rounded-xl p-5 bg-card">
             <div className="flex items-center justify-between mb-3">
-              <label className="text-sm font-semibold">상세 설명</label>
+              <label className="text-sm font-semibold">詳細説明</label>
               <ContentAIGenerateButton
                 productId={editItem?.id}
                 productName={form.name}
@@ -1449,8 +1449,8 @@ function AdminProducts() {
           )}
         </div>
         <div className="flex gap-2 mt-6 justify-end max-w-5xl">
-          <Button variant="outline" onClick={() => setPageMode("list")}>취소</Button>
-          <Button onClick={handleSave} disabled={createMut.isPending || updateMut.isPending}>{editItem ? "수정 저장" : "상품 등록"}</Button>
+          <Button variant="outline" onClick={() => setPageMode("list")}>キャンセル</Button>
+          <Button onClick={handleSave} disabled={createMut.isPending || updateMut.isPending}>{editItem ? "更新を保存" : "商品を登録"}</Button>
         </div>
       </div>
     );
@@ -1459,34 +1459,34 @@ function AdminProducts() {
   return (
     <div>
       <div className="flex items-center justify-between mb-6 flex-wrap gap-3">
-        <h1 className="text-2xl font-bold">상품 관리 <span className="text-base font-normal text-muted-foreground">({data?.total ?? 0})</span></h1>
-        <Button onClick={openCreate} size="sm"><Plus className="w-4 h-4 mr-1" /> 상품 등록</Button>
+        <h1 className="text-2xl font-bold">商品管理 <span className="text-base font-normal text-muted-foreground">({data?.total ?? 0})</span></h1>
+        <Button onClick={openCreate} size="sm"><Plus className="w-4 h-4 mr-1" /> 商品登録</Button>
       </div>
 
       <div className="mb-4 flex items-center gap-3 flex-wrap">
         <div className="relative max-w-sm flex-1">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-          <Input className="pl-9" placeholder="상품명 검색..." value={search} onChange={e => { setSearch(e.target.value); setPage(1); }} />
+          <Input className="pl-9" placeholder="商品名で検索..." value={search} onChange={e => { setSearch(e.target.value); setPage(1); }} />
         </div>
         <select className="border rounded-lg px-3 py-2 text-sm bg-background" value={filterParentCategoryId ?? ""} onChange={e => { const v = e.target.value ? Number(e.target.value) : undefined; setFilterParentCategoryId(v); setFilterCategoryId(undefined); setPage(1); }}>
-          <option value="">1차 카테고리 (전체)</option>
+          <option value="">第1カテゴリー (すべて)</option>
           {parentCats.map((c: any) => <option key={c.id} value={c.id}>{c.name}</option>)}
         </select>
         <select className="border rounded-lg px-3 py-2 text-sm bg-background" value={filterCategoryId ?? ""} onChange={e => { setFilterCategoryId(e.target.value ? Number(e.target.value) : undefined); setPage(1); }} disabled={!filterParentCategoryId}>
-          <option value="">2차 카테고리 (전체)</option>
+          <option value="">第2カテゴリー (すべて)</option>
           {subCatsOf(filterParentCategoryId).map((c: any) => <option key={c.id} value={c.id}>{c.name}</option>)}
         </select>
         <select className="border rounded-lg px-3 py-2 text-sm bg-background" value={sort} onChange={e => { setSort(e.target.value); setPage(1); }}>
-          <option value="newest">등록순 (최신)</option>
-          <option value="sortOrder_asc">노출순위 (낮은순, -100이 최상위)</option>
-          <option value="sortOrder_desc">노출순위 (높은순)</option>
-          <option value="name_asc">이름순 ↑</option>
-          <option value="name_desc">이름순 ↓</option>
-          <option value="price_asc">가격 낮은순</option>
-          <option value="price_desc">가격 높은순</option>
+          <option value="newest">登録順 (新しい順)</option>
+          <option value="sortOrder_asc">表示順位 (低い順、-100が最上位)</option>
+          <option value="sortOrder_desc">表示順位 (高い順)</option>
+          <option value="name_asc">名前順 ↑</option>
+          <option value="name_desc">名前順 ↓</option>
+          <option value="price_asc">価格の安い順</option>
+          <option value="price_desc">価格の高い順</option>
         </select>
         <select className="border rounded-lg px-3 py-2 text-sm bg-background" value={limit} onChange={e => { setLimit(Number(e.target.value)); setPage(1); }}>
-          <option value={10}>10개</option>
+          <option value={10}>10件</option>
           <option value={20}>20개</option>
           <option value={50}>50개</option>
           <option value={100}>100개</option>
