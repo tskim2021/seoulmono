@@ -1,7 +1,10 @@
 import crypto from "crypto";
 import type { Request, Response, NextFunction } from "express";
 
-const JWT_SECRET = process.env.JWT_SECRET || "order-system-secret-key-2024";
+const JWT_SECRET = process.env.JWT_SECRET;
+if (!JWT_SECRET || JWT_SECRET.length < 32) {
+  throw new Error("JWT_SECRET must contain at least 32 characters");
+}
 
 interface TokenPayload {
   mb_id: string;

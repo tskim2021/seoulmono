@@ -7,13 +7,13 @@ import {
 const BASE = import.meta.env.BASE_URL;
 
 const DEFAULTS: FooterConfig = {
-  company: "seoulmono",
-  ceo: "김미희",
-  address: "경기도 양주시 화합로1710번길 12, B218호(옥정동, 양주옥정 듀클래스 I)",
+  company: "ソウルモノ",
+  ceo: "キム・ミヒ",
+  address: "韓国 京畿道 楊州市 和合路1710番キル12 B218号（玉井洞・楊州玉井デュクラスI）",
   business_num: "597-51-00016",
   tel: "010-2051-5692",
   online_num: "2024-서울중랑-1470",
-  privacy: "김미희",
+  privacy: "キム・ミヒ",
   cs_tel: "010-2051-5692",
   cs_hours: "平日 10:00 ~ 18:00",
   cs_lunch: "昼休み : 12:00 ~ 13:00 日曜・祝日休業",

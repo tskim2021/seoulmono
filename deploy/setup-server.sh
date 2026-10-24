@@ -1,63 +1,54 @@
 #!/usr/bin/env bash
-# サーバー (Ubuntu/Debian, root) で実行: bash deploy/setup-server.sh
-# 初回セットアップ + ビルド + nginx + SSL (Let's Encrypt)
+# Ubuntu/Debian: CERTBOT_EMAIL=you@example.com bash deploy/setup-server.sh
 set -euo pipefail
-
-DOMAIN="seoulmono.com"
-EMAIL="${CERTBOT_EMAIL:?CERTBOT_EMAIL を指定してください (例: CERTBOT_EMAIL=you@example.com)}"
-APP_DIR="/var/www/seoulmono"
+DOMAIN=seoulmono.com
+EMAIL="${CERTBOT_EMAIL:?CERTBOT_EMAIL is required}"
+APP_DIR=/var/www/seoulmono
 REPO_DIR="$(cd "$(dirname "$0")/.." && pwd)"
-
-export DEBIAN_FRONTEND=noninteractive
-apt-get update -y
-apt-get install -y nginx certbot python3-certbot-nginx curl git rsync build-essential mariadb-server ufw
-
-# Node 24 + pnpm + pm2
+export DEBIAN_FRONTEND=noninteractive CI=true
+apt-get update
+apt-get install -y nginx certbot python3-certbot-nginx curl git rsync build-essential mariadb-server
 if ! command -v node >/dev/null || [ "$(node -v | cut -d. -f1 | tr -d v)" -lt 24 ]; then
   curl -fsSL https://deb.nodesource.com/setup_24.x | bash -
   apt-get install -y nodejs
 fi
-npm i -g pnpm pm2
-
-# アプリ配置
+npm install -g pnpm@10.34.8 pm2
 mkdir -p "$APP_DIR"
-[ "$REPO_DIR" = "$APP_DIR" ] || rsync -a --delete --exclude node_modules --exclude .git --exclude .env "$REPO_DIR/" "$APP_DIR/"
+if [ "$REPO_DIR" != "$APP_DIR" ]; then
+  rsync -a --exclude node_modules --exclude .git --exclude '.env*' --exclude uploads "$REPO_DIR/" "$APP_DIR/"
+fi
 cd "$APP_DIR"
-
-# .env (初回のみ生成。DB パスワード/JWT は自動生成)
 if [ ! -f .env ]; then
+  umask 077
   cp deploy/env.example .env
-  DBPASS="$(openssl rand -hex 16)"; JWT="$(openssl rand -hex 32)"
+  DBPASS="$(openssl rand -hex 24)"
+  JWT="$(openssl rand -hex 32)"
   sed -i "s/^MYSQL_PASSWORD=.*/MYSQL_PASSWORD=$DBPASS/; s/^JWT_SECRET=.*/JWT_SECRET=$JWT/" .env
   mysql -e "CREATE DATABASE IF NOT EXISTS seoulmono CHARACTER SET utf8mb4;
-            CREATE USER IF NOT EXISTS 'seoulmono'@'127.0.0.1' IDENTIFIED BY '$DBPASS';
-            GRANT ALL ON seoulmono.* TO 'seoulmono'@'127.0.0.1'; FLUSH PRIVILEGES;"
-  chmod 600 .env
-  echo ">>> .env を生成しました。SMTP/Stripe 等を編集してください: $APP_DIR/.env"
+    CREATE USER IF NOT EXISTS 'seoulmono'@'127.0.0.1' IDENTIFIED BY '$DBPASS';
+    GRANT ALL ON seoulmono.* TO 'seoulmono'@'127.0.0.1';"
 fi
-
-# ビルド
+chmod 600 .env
+# Only missing tables are created; existing records are preserved.
+mysql seoulmono < deploy/schema.sql
 pnpm install --frozen-lockfile
 pnpm --filter @workspace/shop run build
 pnpm --filter @workspace/order-system run build
 pnpm --filter @workspace/api-server run build
-
-# PM2
-pm2 startOrReload deploy/ecosystem.config.cjs
+pm2 startOrReload deploy/ecosystem.config.cjs --update-env
 pm2 save
-pm2 startup systemd -u root --hp /root >/dev/null || true
-
-# nginx
-cp deploy/nginx.conf /etc/nginx/sites-available/seoulmono
+pm2 startup systemd -u root --hp /root
+# Keep existing HTTPS configuration on subsequent deployments.
+if [ ! -f /etc/nginx/sites-available/seoulmono ]; then
+  cp deploy/nginx.conf /etc/nginx/sites-available/seoulmono
+fi
 ln -sf /etc/nginx/sites-available/seoulmono /etc/nginx/sites-enabled/seoulmono
-rm -f /etc/nginx/sites-enabled/default
-nginx -t && systemctl reload nginx
-
-# ファイアウォール
-ufw allow OpenSSH >/dev/null; ufw allow 'Nginx Full' >/dev/null; ufw --force enable >/dev/null
-
-# SSL (DNS が このサーバーを向いていること)
+nginx -t
+systemctl reload nginx
+if command -v ufw >/dev/null && ufw status | grep -q 'Status: active'; then
+  ufw allow 'Nginx Full'
+fi
 certbot --nginx -d "$DOMAIN" -d "www.$DOMAIN" --non-interactive --agree-tos -m "$EMAIL" --redirect
-systemctl list-timers | grep -q certbot && echo "certbot 自動更新: 有効"
-
-echo "完了: https://$DOMAIN"
+systemctl enable --now certbot.timer
+curl --retry 10 --retry-connrefused --retry-delay 1 --max-time 5 --fail --silent --show-error "https://$DOMAIN/api/healthz"
+printf '\nReady: https://%s\n' "$DOMAIN"

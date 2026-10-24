@@ -182,7 +182,7 @@ export default function Privacy() {
           <p style={{ margin: "0 0 6px", fontSize: 12, fontWeight: 700, color: "#8B5E3C", letterSpacing: "0.12em", textTransform: "uppercase" }}>Legal</p>
           <h1 style={{ margin: "0 0 8px", fontSize: 28, fontWeight: 900, color: "#1a1a1a", letterSpacing: "-0.5px" }}>プライバシーポリシー</h1>
           <p style={{ margin: 0, fontSize: 13, color: "#888" }}>
-            seoulmonoプライバシーポリシーです。&nbsp;·&nbsp;施行日: 2024年7月1日
+            ソウルモノプライバシーポリシーです。&nbsp;·&nbsp;施行日: 2024年7月1日
           </p>
         </div>
       </div>

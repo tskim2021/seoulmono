@@ -179,7 +179,7 @@ router.get("/shop/home", async (req, res) => {
     }
 
     const [catRows] = await pool.query<RowDataPacket[]>(
-      `SELECT ca_id, ca_name FROM g5_shop_category WHERE ca_use=1 AND LENGTH(ca_id)=2 AND ca_id != 'ZZ' ORDER BY ca_order, ca_id`
+      `SELECT ca_id, ca_name FROM g5_shop_category WHERE ca_use=1 AND LENGTH(ca_id) IN (2,3) AND ca_id != 'ZZ' ORDER BY ca_order, ca_id`
     );
 
     res.json({
@@ -367,7 +367,7 @@ router.get("/shop/lowest", async (req, res) => {
   }
 });
 
-router.post("/shop/seed-demo", async (req, res) => {
+router.post("/shop/seed-demo", authMiddleware, adminMiddleware, async (req, res) => {
   try {
     const GROUPBUY = ['1777631000','1777630705','1777438390'];
     const TODAYDEAL = ['1777631089','1777631182','1777428102'];
@@ -428,7 +428,7 @@ router.get("/shop/categories", async (_req, res) => {
       `SELECT c.ca_id, c.ca_name, c.ca_order, COALESCE(ci.image_url, '') AS ca_img
        FROM g5_shop_category c
        LEFT JOIN seoulmono_category_images ci ON c.ca_id = ci.ca_id
-       WHERE c.ca_use = '1' AND LENGTH(c.ca_id) = 2 AND c.ca_id != 'ZZ'
+       WHERE c.ca_use = '1' AND NOT EXISTS (SELECT 1 FROM g5_shop_category parent WHERE parent.ca_use=1 AND LENGTH(parent.ca_id)<LENGTH(c.ca_id) AND c.ca_id LIKE CONCAT(parent.ca_id, '%')) AND c.ca_id != 'ZZ'
        ORDER BY c.ca_order, c.ca_id`
     );
     res.json({
@@ -845,12 +845,12 @@ router.get("/shop/section-config", async (req, res) => {
 router.get("/shop/footer-config", async (req, res) => {
   const HARD_DEFAULTS = {
     company: "ソウルモノ",
-    ceo: "김미희",
-    address: "경기도 양주시 화합로1710번길 12, B218호(옥정동, 양주옥정 듀클래스 I)",
+    ceo: "キム・ミヒ",
+    address: "韓国 京畿道 楊州市 和合路1710番キル12 B218号（玉井洞・楊州玉井デュクラスI）",
     business_num: "597-51-00016",
     tel: "010-2124-5201",
     online_num: "",
-    privacy: "김미희",
+    privacy: "キム・ミヒ",
     cs_tel: "010-2124-5201",
     cs_hours: "平日 : 10:00 ~ 18:00",
     cs_lunch: "昼休み : 12:00 ~ 13:00  日曜・祝日休業",

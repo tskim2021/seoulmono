@@ -14,7 +14,7 @@ const TYPE_LABELS: Record<string, string> = {
 
 const TYPE_BANNERS: Record<string, { sub: string; title: string; bg: string; color: string; badge?: string }> = {
   "4": { sub: "会員登録後、1回だけご購入いただける特別特典", title: "初回購入100円キャンペーン", bg: "linear-gradient(135deg,#d4889a 0%,#eab0bc 100%)", color: "#fff", badge: "お一人様1回" },
-  "3": { sub: "seoulmonoが厳選した、お客様満足度の高い人気商品", title: "MD PICK", bg: "linear-gradient(135deg,#1565a8 0%,#2196f3 100%)", color: "#fff", badge: "MDおすすめ" },
+  "3": { sub: "ソウルモノが厳選した、お客様満足度の高い人気商品", title: "MD PICK", bg: "linear-gradient(135deg,#1565a8 0%,#2196f3 100%)", color: "#fff", badge: "MDおすすめ" },
   "13": { sub: "みんなで買えばもっとお得な共同購入商品", title: "共同購入", bg: "linear-gradient(135deg,#8e44ad 0%,#c39bd3 100%)", color: "#fff", badge: "🤝 共同購入" },
   "5": { sub: "飲食店・給食向け大容量商品コレクション", title: "大容量業務用食材", bg: "linear-gradient(135deg,#2c6e49 0%,#52b788 100%)", color: "#fff", badge: "🍳 食材" },
 };
@@ -429,6 +429,7 @@ export default function List() {
             flex-direction: column !important;
             gap: 12px !important;
           }
+          .list-layout > div { width: 100%; min-width: 0; }
           /* 사이드바: 줄바꿈 칩 메뉴 (overflow 없음) */
           .list-sidebar {
             display: block !important;

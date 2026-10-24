@@ -309,8 +309,8 @@ export default function Checkout() {
       const isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
       const orderInfo: Record<string, string> = {
         site_cd: kcpConfig.site_cd,
-        site_name: "seoulmono",
-        shop_name: "seoulmono",
+        site_name: "ソウルモノ",
+        shop_name: "ソウルモノ",
         pay_method: isMobile ? "CARD" : "100000000000",
         ordr_idxx: prep.order_id,
         good_name: orderName.slice(0, 100),

@@ -49,7 +49,7 @@ export default function B2BPage() {
             管理者ログイン
           </h1>
           <p style={{ margin: "8px 0 0", fontSize: 13, color: "rgba(255,255,255,0.45)" }}>
-            seoulmono 管理者専用ページです
+            ソウルモノ 管理者専用ページです
           </p>
         </div>
 

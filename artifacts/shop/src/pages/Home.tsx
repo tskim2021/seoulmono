@@ -35,14 +35,14 @@ function HeroSection() {
       <div className="container py-14 md:py-20">
         <div className="max-w-2xl">
           <span className="inline-block mb-4 text-xs font-semibold px-3 py-1 rounded-full" style={{ background: "rgba(139,94,60,0.12)", color: "#5C3317" }}>
-            seoulmono公式ストア
+            ソウルモノ公式ストア
           </span>
           <h1 className="text-3xl md:text-5xl font-bold tracking-tight mb-4 leading-tight" style={{ color: "#3A1A00" }}>
             良い価格、良い商品<br />
-            <span style={{ color: "#8B5E3C" }}>seoulmono</span>でたっぷりお買い物
+            <span style={{ color: "#8B5E3C" }}>ソウルモノ</span>でたっぷりお買い物
           </h1>
           <p className="text-base md:text-lg mb-8 leading-relaxed max-w-lg" style={{ color: "#7A5C3C" }}>
-            seoulmonoならではの特別な商品をご覧ください。<br />
+            ソウルモノならではの特別な商品をご覧ください。<br />
             良い製品だけを厳選しました。
           </p>
           <div className="flex flex-wrap gap-3">
@@ -157,10 +157,10 @@ function PromoBannerSection() {
         <div className="shrink-0 flex flex-col items-center justify-center w-20 h-16 rounded-lg border-2 border-dashed border-yellow-600/40 bg-white/40 text-center px-1">
           <span className="text-xs font-bold text-yellow-900 leading-tight">1000円</span>
           <span className="text-[9px] text-yellow-800 leading-tight">ショッピングポイント進呈</span>
-          <span className="text-[8px] text-yellow-700 mt-0.5 leading-tight">seoulmono</span>
+          <span className="text-[8px] text-yellow-700 mt-0.5 leading-tight">ソウルモノ</span>
         </div>
         <div className="flex-1 min-w-0">
-          <p className="text-xs text-yellow-800 font-medium mb-0.5">seoulmonoのお買い物特典</p>
+          <p className="text-xs text-yellow-800 font-medium mb-0.5">ソウルモノのお買い物特典</p>
           <p className="text-base font-extrabold text-yellow-900 leading-tight">KakaoTalkチャンネル<br />友だち追加</p>
         </div>
         <div className="shrink-0 w-12 h-12 rounded-full flex items-center justify-center" style={{ background: "#FEE500", border: "2px solid #3A2020" }}>
@@ -405,8 +405,8 @@ export default function Home() {
             />
             <div className="border-t border-border/40" />
             <ProductSection
-              title="seoulmonoブランド"
-              subtitle="seoulmonoでしか出会えない特別な商品"
+              title="ソウルモノブランド"
+              subtitle="ソウルモノでしか出会えない特別な商品"
               items={homeData?.brand}
               isLoading={loading}
               viewAllHref="/products?type=brand"

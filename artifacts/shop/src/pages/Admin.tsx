@@ -891,7 +891,7 @@ function GiftPackageManager({ authHeaders, toast }: {
 
           <div>
             <label style={{ fontSize: 12, fontWeight: 700, color: "#555", display: "block", marginBottom: 6 }}>パッケージ名 *</label>
-            <input style={inp()} value={editing.name} onChange={e => setEditing(p => p ? { ...p, name: e.target.value } : p)} placeholder="例: seoulmono お菓子ぎっしりギフトセット" />
+            <input style={inp()} value={editing.name} onChange={e => setEditing(p => p ? { ...p, name: e.target.value } : p)} placeholder="例: ソウルモノ お菓子ぎっしりギフトセット" />
           </div>
 
           <div>
@@ -3251,9 +3251,9 @@ interface FooterCfg {
 }
 
 const FOOTER_DEFAULTS: FooterCfg = {
-  company: "주식회사 와이앤에이치에스", ceo: "윤석민",
-  address: "서울특별시 중랑구 용마산로 536(망우동)", business_num: "429-81-03401",
-  tel: "", online_num: "", privacy: "윤석민",
+  company: "株式会社ワイエヌエイチエス", ceo: "ユン・ソクミン",
+  address: "韓国 ソウル特別市 中浪区 龍馬山路536（忘憂洞）", business_num: "429-81-03401",
+  tel: "", online_num: "", privacy: "ユン・ソクミン",
   cs_tel: "", cs_hours: "平日 : 10:00~ 18:00",
   cs_lunch: "昼休み : 12:00 ~ 13:00 日曜 / 祝日休業",
   bank_name: "", bank_num: "", bank_holder: "",
@@ -3628,17 +3628,17 @@ function FooterConfigManager({ authHeaders, toast }: {
       <Card style={{ marginBottom: 20 }}>
         <h3 style={{ fontSize: 15, fontWeight: 800, color: "#333", margin: "0 0 20px", paddingBottom: 12, borderBottom: "1px solid #f0f0f0" }}>事業者基本情報</h3>
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
-          {field("法人名", "company", "주식회사 와이앤에이치에스")}
-          {field("代表者", "ceo", "윤석민")}
+          {field("法人名", "company", "株式会社ワイエヌエイチエス")}
+          {field("代表者", "ceo", "ユン・ソクミン")}
           {field("事業者登録番号", "business_num", "429-81-03401")}
           {field("電話番号", "tel", "02-0000-0000")}
           <div style={{ gridColumn: "1 / -1" }}>
-            {field("住所", "address", "서울특별시 중랑구 용마산로 536(망우동)")}
+            {field("住所", "address", "韓国 ソウル特別市 中浪区 龍馬山路536（忘憂洞）")}
           </div>
           <div style={{ gridColumn: "1 / -1" }}>
             {field("通信販売業届出番号", "online_num", "第0000-ソウル中浪-0000号")}
           </div>
-          {field("個人情報管理責任者", "privacy", "윤석민")}
+          {field("個人情報管理責任者", "privacy", "ユン・ソクミン")}
         </div>
       </Card>
 
@@ -3658,7 +3658,7 @@ function FooterConfigManager({ authHeaders, toast }: {
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 16 }}>
           {field("銀行名", "bank_name", "三菱UFJ銀行")}
           {field("口座番号", "bank_num", "000000-00-000000")}
-          {field("口座名義", "bank_holder", "주식회사 와이앤에이치에스")}
+          {field("口座名義", "bank_holder", "株式会社ワイエヌエイチエス")}
         </div>
       </Card>
 
@@ -3836,7 +3836,7 @@ export default function Admin() {
         <div style={{ padding: "20px 16px 12px", borderBottom: "1px solid #f0f0f0" }}>
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
             <div>
-              <p style={{ fontSize: 14, fontWeight: 800, color: "#8B5E3C", margin: 0 }}>seoulmono 管理者</p>
+              <p style={{ fontSize: 14, fontWeight: 800, color: "#8B5E3C", margin: 0 }}>ソウルモノ 管理者</p>
               <p style={{ fontSize: 11, color: "#aaa", margin: "2px 0 0" }}>{user.mb_name}</p>
             </div>
             <button onClick={() => setSidebarOpen(false)} style={{ background: "none", border: "none", cursor: "pointer", color: "#aaa", display: "none" }} className="sidebar-close">

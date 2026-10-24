@@ -142,7 +142,7 @@ export default function ProductsScreen() {
     queryFn: () => api.get<any>("/shop/categories"),
   });
 
-  const { data, isLoading, isFetchingNextPage } = useQuery({
+  const { data, isLoading, isFetching } = useQuery({
     queryKey: ["items", selCat, query],
     queryFn: () =>
       api.get<any>(
@@ -225,7 +225,7 @@ export default function ProductsScreen() {
           columnWrapperStyle={{ gap: 12 }}
           contentContainerStyle={{ padding: 16, gap: 12, paddingBottom: 100 }}
           showsVerticalScrollIndicator={false}
-          ListFooterComponent={isFetchingNextPage ? <ActivityIndicator color={colors.primary} /> : null}
+          ListFooterComponent={isFetching && !isLoading ? <ActivityIndicator color={colors.primary} /> : null}
         />
       )}
     </View>

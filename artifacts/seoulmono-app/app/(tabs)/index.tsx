@@ -203,7 +203,7 @@ function BannerCarousel({ banners }: { banners: any[] }) {
                 <Image source={{ uri: imgUrl }} style={{ width: W, height: 200 }} contentFit="cover" />
               ) : (
                 <LinearGradient colors={["#8B5E3C", "#5C3317"]} style={{ width: W, height: 200, alignItems: "center", justifyContent: "center" }}>
-                  <Text style={{ color: "#fff", fontSize: 24, fontWeight: "700" }}>seoulmono</Text>
+                  <Text style={{ color: "#fff", fontSize: 24, fontWeight: "700" }}>ソウルモノ</Text>
                 </LinearGradient>
               )}
             </View>
@@ -267,7 +267,7 @@ export default function HomeScreen() {
   return (
     <View style={[styles.root, { backgroundColor: colors.background }]}>
       <View style={[styles.header, { paddingTop: insets.top + 10, backgroundColor: "#5C3D2E" }]}>
-        <Text style={styles.logo}>seoulmono</Text>
+        <Text style={styles.logo}>ソウルモノ</Text>
         <Pressable onPress={() => router.push("/(tabs)/products")} style={styles.searchBtn}>
           <Feather name="search" size={16} color="rgba(255,255,255,0.7)" />
           <Text style={styles.searchPlaceholder}>商品を検索...</Text>

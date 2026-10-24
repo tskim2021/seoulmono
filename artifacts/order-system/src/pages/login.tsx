@@ -32,7 +32,7 @@ export default function Login() {
     <div className="min-h-screen flex items-center justify-center bg-slate-50">
       <div className="w-full max-w-md px-8 py-12 bg-white rounded-2xl shadow-lg">
         <div className="mb-8 flex flex-col items-center">
-          <img src={`${import.meta.env.BASE_URL}logo.png`} alt="ソウルモノ ロゴ" style={{ height: 64, marginBottom: 16, objectFit: "contain" }} />
+          <img src={`${import.meta.env.BASE_URL}seoulmono-logo.svg`} alt="ソウルモノ ロゴ" style={{ height: 64, marginBottom: 16, objectFit: "contain" }} />
           <h2 className="text-3xl font-bold text-slate-900 mb-2 tracking-tight">管理者ログイン</h2>
           <p className="text-slate-500">管理者アカウントでログインしてください。</p>
         </div>

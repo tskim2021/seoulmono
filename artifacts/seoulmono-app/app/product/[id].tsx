@@ -49,7 +49,7 @@ export default function ProductDetailScreen() {
 
   // APIが { item: {...} } または直接 {...} のどちらの形式でも処理
   const item = data?.item ?? data;
-  const images = (item?.images ?? [])
+  const images: string[] = (item?.images ?? [])
     .map((img: string) => getImageUrl(img))
     .filter((u: string | null): u is string => u !== null);
 

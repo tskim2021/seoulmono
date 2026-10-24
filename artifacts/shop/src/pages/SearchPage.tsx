@@ -6,8 +6,8 @@ const HISTORY_KEY = "seoulmono_search_history";
 const MAX_HISTORY = 10;
 
 const RECOMMENDED = [
-  "사조 참치", "비비고 만두", "먹꾸먹꾸", "햇반", "신라면",
-  "마일드참치", "오뚜기 진라면", "종합전병세트", "고추참치", "1kg",
+  "サジョ ツナ", "ビビゴ 餃子", "モックモック", "ヘッバン", "辛ラーメン",
+  "マイルドツナ", "オットギ ジンラーメン", "煎餅詰め合わせ", "唐辛子ツナ", "1kg",
 ];
 
 function getHistory(): string[] {

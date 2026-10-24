@@ -4,7 +4,7 @@ import { Package, ShoppingCart, Clock, Users, LayoutDashboard, LogOut, Menu, X, 
 import { useState, useEffect } from "react";
 import { useCart } from "../store/cart";
 import { cn } from "../lib/utils";
-import seoulmonoLogo from "@assets/seoulmono_logo.png";
+import seoulmonoLogo from "@assets/seoulmono_logo.svg";
 
 type NavLink = {
   href: string;

@@ -698,16 +698,6 @@ interface Address {
   ma_default: boolean;
 }
 
-function loadDaumPostcodeScript(): Promise<void> {
-  return new Promise(resolve => {
-    if ((window as any).daum?.Postcode) { resolve(); return; }
-    const s = document.createElement("script");
-    s.src = "https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js";
-    s.onload = () => resolve();
-    document.head.appendChild(s);
-  });
-}
-
 function AddressSection() {
   const [addresses, setAddresses] = useState<Address[]>([]);
   const [loading, setLoading] = useState(true);
@@ -715,9 +705,6 @@ function AddressSection() {
   const [isNew, setIsNew] = useState(false);
   const [saving, setSaving] = useState(false);
   const [toast, setToast] = useState<{ msg: string; type: "success" | "error" } | null>(null);
-  const [showPostcode, setShowPostcode] = useState(false);
-  const postcodeRef = useRef<HTMLDivElement>(null);
-  const postcodeInitRef = useRef(false);
 
   const load = () => {
     setLoading(true);
@@ -725,47 +712,23 @@ function AddressSection() {
       .then(d => setAddresses(d.addresses || [])).catch(() => {}).finally(() => setLoading(false));
   };
 
-  useEffect(() => { load(); loadDaumPostcodeScript().catch(() => {}); }, []);
+  useEffect(() => { load(); }, []);
 
-  // 주소 검색창 embed
-  useEffect(() => {
-    if (!showPostcode || !postcodeRef.current) return;
-    if (postcodeInitRef.current) return;
-    postcodeInitRef.current = true;
-
-    const initWidget = () => {
-      if (!postcodeRef.current) return;
-      postcodeRef.current.innerHTML = "";
-      new (window as any).daum.Postcode({
-        oncomplete: (data: any) => {
-          setEditing(prev => ({
-            ...prev,
-            ma_zip1: data.zonecode || "",
-            ma_addr1: data.roadAddress || data.jibunAddress || "",
-            ma_addr2: "",
-          } as any));
-          setShowPostcode(false);
-          postcodeInitRef.current = false;
-        },
-        onclose: () => {
-          setShowPostcode(false);
-          postcodeInitRef.current = false;
-        },
-        width: "100%",
-        height: 400,
-      }).embed(postcodeRef.current);
-    };
-
-    if ((window as any).daum?.Postcode) {
-      initWidget();
-    } else {
-      loadDaumPostcodeScript().then(initWidget);
+  const openPostcode = async () => {
+    const zipcode = (editing?.ma_zip1 || "").replace(/\D/g, "");
+    if (zipcode.length !== 7) {
+      setToast({ msg: "7桁の郵便番号を入力してください", type: "error" });
+      return;
     }
-  }, [showPostcode]);
-
-  const openPostcode = () => {
-    postcodeInitRef.current = false;
-    setShowPostcode(true);
+    try {
+      const response = await fetch(`https://zipcloud.ibsnet.co.jp/api/search?zipcode=${zipcode}`);
+      const data = await response.json();
+      const address = data.results?.[0];
+      if (!address) throw new Error("該当する住所が見つかりません。住所を直接入力してください。");
+      setEditing(previous => ({ ...previous, ma_zip1: zipcode, ma_addr1: `${address.address1}${address.address2}${address.address3}` }));
+    } catch (error) {
+      setToast({ msg: error instanceof Error ? error.message : "住所検索に失敗しました", type: "error" });
+    }
   };
 
   const handleSave = async () => {
@@ -778,7 +741,7 @@ function AddressSection() {
       const data = await res.json();
       if (!res.ok) { setToast({ msg: data.error || "保存に失敗しました", type: "error" }); return; }
       setToast({ msg: isNew ? "お届け先を追加しました" : "更新しました", type: "success" });
-      setEditing(null); setIsNew(false); setShowPostcode(false); load();
+      setEditing(null); setIsNew(false); load();
     } finally { setSaving(false); }
   };
 
@@ -796,8 +759,8 @@ function AddressSection() {
   const startNew = () => {
     setEditing({ ma_name: "", ma_hp: "", ma_zip1: "", ma_zip2: "", ma_addr1: "", ma_addr2: "", ma_addr3: "", ma_default: false });
     setIsNew(true);
-    setShowPostcode(false);
-    postcodeInitRef.current = false;
+
+
   };
 
   const ef = (k: keyof Address) => (e: React.ChangeEvent<HTMLInputElement>) => setEditing(prev => ({ ...prev, [k]: e.target.value } as any));
@@ -819,30 +782,19 @@ function AddressSection() {
             <label style={{ display: "block", fontSize: 12, color: "#555", marginBottom: 6, fontWeight: 600 }}>郵便番号 / ご住所 *</label>
             <div style={{ display: "flex", gap: 8, marginBottom: 8 }}>
               <input
-                type="text" readOnly value={editing.ma_zip1 || ""}
+                type="text" inputMode="numeric" maxLength={8} value={editing.ma_zip1 || ""} onChange={ef("ma_zip1")}
                 placeholder="郵便番号"
                 style={{ flex: "0 0 120px", border: "1.5px solid #e0e0e0", borderRadius: 8, padding: "9px 12px", fontSize: 13, background: "#fafafa", boxSizing: "border-box" }}
               />
               <button
                 type="button"
-                onClick={() => showPostcode ? (setShowPostcode(false), postcodeInitRef.current = false) : openPostcode()}
+                onClick={openPostcode}
                 style={{ flex: 1, height: 40, background: "#8B5E3C", border: "none", borderRadius: 8, color: "#fff", fontSize: 13, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}
               >
                 <MapPin size={14} />
-                {showPostcode ? "閉じる" : "住所検索"}
+                住所検索
               </button>
             </div>
-
-            {/* 임베드 주소 검색창 */}
-            {showPostcode && (
-              <div style={{ border: "2px solid #8B5E3C", borderRadius: 10, overflow: "hidden", marginBottom: 8 }}>
-                <div style={{ background: "#8B5E3C", padding: "8px 14px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                  <span style={{ fontSize: 13, fontWeight: 700, color: "#fff" }}>住所検索</span>
-                  <button type="button" onClick={() => { setShowPostcode(false); postcodeInitRef.current = false; }} style={{ background: "none", border: "none", color: "#fff", cursor: "pointer", fontSize: 18, lineHeight: 1 }}>×</button>
-                </div>
-                <div ref={postcodeRef} style={{ width: "100%", height: 400 }} />
-              </div>
-            )}
 
             <input
               type="text"
@@ -863,7 +815,7 @@ function AddressSection() {
               style={{ flex: 1, height: 42, background: "#8B5E3C", border: "none", borderRadius: 8, color: "#fff", fontSize: 14, fontWeight: 700, cursor: "pointer" }}>
               {saving ? "保存中..." : "保存"}
             </button>
-            <button onClick={() => { setEditing(null); setIsNew(false); setShowPostcode(false); postcodeInitRef.current = false; }}
+            <button onClick={() => { setEditing(null); setIsNew(false); }}
               style={{ height: 42, background: "#fff", border: "1px solid #ddd", borderRadius: 8, color: "#888", fontSize: 14, padding: "0 16px", cursor: "pointer" }}>
               キャンセル
             </button>

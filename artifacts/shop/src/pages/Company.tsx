@@ -28,23 +28,23 @@ export default function Company() {
               <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 28 }}>
                 <img
                   src={`${BASE}fogo_round.png`}
-                  alt="seoulmono ロゴ"
+                  alt="ソウルモノ ロゴ"
                   style={{ width: 88, height: 88, objectFit: "contain", borderRadius: "50%", background: "#fff", padding: 8, boxShadow: "0 4px 20px rgba(0,0,0,0.12)" }}
                   onError={e => { (e.target as HTMLImageElement).style.display = "none"; }}
                 />
                 <div>
                   <p style={{ margin: "0 0 2px", fontSize: 13, color: "#8B5E3C", fontWeight: 600, letterSpacing: "0.1em" }}>良い価格、良い商品</p>
                   <p style={{ margin: 0, fontSize: 36, fontWeight: 900, color: "#1a1a1a", letterSpacing: "-1px", lineHeight: 1.1 }}>
-                    seoulmono
+                    ソウルモノ
                   </p>
                 </div>
               </div>
               <h1 style={{ margin: "0 0 12px", fontSize: 28, fontWeight: 800, color: "#1a1a1a", letterSpacing: "-0.5px", lineHeight: 1.3 }}>
-                seoulmono
+                ソウルモノ
               </h1>
               <p style={{ margin: 0, fontSize: 15, color: "#555", lineHeight: 1.7, maxWidth: 400 }}>
                 良い価格、良い商品をお客様にお届けするために<br/>
-                毎日努力を続けるseoulmonoです。
+                毎日努力を続けるソウルモノです。
               </p>
             </div>
 
@@ -60,7 +60,7 @@ export default function Company() {
               }}>
                 <img
                   src={`${BASE}cat_40.png`}
-                  alt="seoulmono 商品"
+                  alt="ソウルモノ 商品"
                   style={{ width: "100%", height: "100%", objectFit: "cover" }}
                   onError={e => {
                     const el = e.target as HTMLImageElement;
@@ -90,13 +90,13 @@ export default function Company() {
         {/* 본문 */}
         <div style={{ maxWidth: 760, lineHeight: 1.95, color: "#444", fontSize: 15.5 }}>
           <p style={{ margin: "0 0 20px" }}>
-            韓国・京畿道楊州市で設立された<strong style={{ color: "#8B5E3C" }}>seoulmono</strong>は、食品流通の中心を担うために誕生しました。
+            韓国・京畿道楊州市で設立された<strong style={{ color: "#8B5E3C" }}>ソウルモノ</strong>は、食品流通の中心を担うために誕生しました。
             私たちは常に、品質・誠意・信頼を何よりも大切にする企業を目指してきました。
           </p>
           <p style={{ margin: "0 0 20px" }}>
             迅速かつ正確な流通システムでサービスを提供し、自社PB商品の流通に注力して、
             お客様に安心してお選びいただけるプレミアム流通専門企業へと成長しました。
-            seoulmonoは単なる流通を超えて、<strong>良い商品を適正な価格で</strong>お客様にお届けするという
+            ソウルモノは単なる流通を超えて、<strong>良い商品を適正な価格で</strong>お客様にお届けするという
             使命感を持って全力を尽くしています。
           </p>
           <p style={{ margin: "0 0 20px" }}>
@@ -104,9 +104,9 @@ export default function Company() {
             差別化された競争力を備えています。
           </p>
           <p style={{ margin: "0 0 20px" }}>
-            seoulmonoはこれまで培ってきたノウハウと、
+            ソウルモノはこれまで培ってきたノウハウと、
             正確で迅速な流通システムでお客様にサービスを提供します。
-            流通業の新しい基準を創ろうとするseoulmonoの「流通の終着点は、結局お客様の信頼」という
+            流通業の新しい基準を創ろうとするソウルモノの「流通の終着点は、結局お客様の信頼」という
             原則を証明してまいります。
           </p>
           <p style={{ margin: 0, fontWeight: 600, color: "#1a1a1a" }}>
@@ -122,7 +122,7 @@ export default function Company() {
 
           <div style={{ marginBottom: 36, textAlign: "center" }}>
             <p style={{ margin: "0 0 4px", fontSize: 12, fontWeight: 700, color: "#8B5E3C", letterSpacing: "0.12em", textTransform: "uppercase" }}>Core Values</p>
-            <h2 style={{ margin: 0, fontSize: 22, fontWeight: 800, color: "#1a1a1a" }}>seoulmonoの価値観</h2>
+            <h2 style={{ margin: 0, fontSize: 22, fontWeight: 800, color: "#1a1a1a" }}>ソウルモノの価値観</h2>
           </div>
 
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 20 }}>
@@ -204,13 +204,13 @@ export default function Company() {
           display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: "8px 40px",
         }}>
           {[
-            ["法人名", "seoulmono"],
-            ["代表取締役", "김미희"],
-            ["事業所所在地", "경기도 양주시 화합로1710번길 12, B218호(옥정동, 양주옥정 듀클래스 I)"],
+            ["法人名", "ソウルモノ"],
+            ["代表取締役", "キム・ミヒ"],
+            ["事業所所在地", "韓国 京畿道 楊州市 和合路1710番キル12 B218号（玉井洞・楊州玉井デュクラスI）"],
             ["事業者登録番号", "597-51-00016"],
             ["電話番号", "010-2051-5692"],
             ["通信販売業届出番号", "2024-서울중랑-1470"],
-            ["個人情報管理責任者", "김미희"],
+            ["個人情報管理責任者", "キム・ミヒ"],
           ].map(([label, value]) => (
             <div key={label} style={{ display: "flex", gap: 12, padding: "10px 0", borderBottom: "1px solid #eef3ef" }}>
               <span style={{ fontSize: 13, color: "#888", fontWeight: 600, whiteSpace: "nowrap", minWidth: 130 }}>{label}</span>

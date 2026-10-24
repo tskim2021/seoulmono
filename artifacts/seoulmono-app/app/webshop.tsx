@@ -74,7 +74,7 @@ export default function WebShopScreen() {
           <Feather name="arrow-left" size={22} color={colors.foreground} />
         </Pressable>
         <Text style={[styles.title, { color: colors.foreground }]}>
-          seoulmono
+          ソウルモノ
         </Text>
         <Pressable
           style={styles.backBtn}

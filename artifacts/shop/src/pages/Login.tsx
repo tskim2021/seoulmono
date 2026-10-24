@@ -51,7 +51,7 @@ export default function Login() {
         {/* 로고 */}
         <div style={{ textAlign: "center", marginBottom: 32 }}>
           <p style={{ margin: "0 0 4px", fontSize: 11, fontWeight: 700, color: BROWN, letterSpacing: "0.12em", textTransform: "uppercase" }}>Welcome</p>
-          <h1 style={{ margin: 0, fontSize: 28, fontWeight: 900, color: BROWN_DARK, letterSpacing: "-0.5px" }}>seoulmono</h1>
+          <h1 style={{ margin: 0, fontSize: 28, fontWeight: 900, color: BROWN_DARK, letterSpacing: "-0.5px" }}>ソウルモノ</h1>
           <p style={{ margin: "4px 0 0", fontSize: 14, color: "#999" }}>ログインしてショッピングを始めましょう</p>
         </div>
 

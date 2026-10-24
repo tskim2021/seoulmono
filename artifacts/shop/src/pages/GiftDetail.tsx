@@ -39,7 +39,7 @@ const GUIDE_STEPS = [
   { n: "1", Icon: Gift,     title: "ギフトパッケージを選ぶ", desc: "お気に入りのギフトパッケージをお選びください",        color: "#8B5E3C" },
   { n: "2", Icon: PenLine,  title: "メッセージ作成",     desc: "受取人様への温かいメッセージをご記入ください", color: "#8B5E3C" },
   { n: "3", Icon: Share2,   title: "リンクを送る",       desc: "KakaoTalkやSMSでギフトリンクを送りましょう",      color: "#8B5E3C" },
-  { n: "4", Icon: Truck,    title: "seoulmonoが配送",   desc: "受取人様が住所を入力するとすぐに発送します",  color: "#8B5E3C" },
+  { n: "4", Icon: Truck,    title: "ソウルモノが配送",   desc: "受取人様が住所を入力するとすぐに発送します",  color: "#8B5E3C" },
 ];
 
 const USE_CASES = [
@@ -367,7 +367,7 @@ export default function GiftDetailPage() {
           {/* 헤더 */}
           <p style={{ margin: "0 0 4px", fontSize: 12, color: "#8B5E3C", fontWeight: 700, textAlign: "center", letterSpacing: "0.08em", textTransform: "uppercase" }}>Gift Guide</p>
           <h2 style={{ margin: "0 0 6px", fontSize: 22, fontWeight: 900, color: "#111", textAlign: "center", letterSpacing: "-0.5px", lineHeight: 1.3 }}>
-            こんな日は、seoulmonoで
+            こんな日は、ソウルモノで
           </h2>
           <p style={{ margin: "0 0 26px", fontSize: 13, color: "#999", textAlign: "center" }}>悩む時間は短く、想いは深く</p>
 

@@ -5,7 +5,7 @@ const ROWS: { label: string; value: string[] }[] = [
   { label: "電話番号", value: ["03-6825-5531"] },
   { label: "メールアドレス", value: ["cs@seoulmono.com"] },
   { label: "ホームページ", value: ["https://seoulmono.com"] },
-  { label: "サイト名", value: ["seoulmono"] },
+  { label: "サイト名", value: ["ソウルモノ"] },
   { label: "商品の販売価格", value: ["商品ごとに表示"] },
   { label: "商品以外の必要料金", value: [
     "配送料：3,000円（40,000円以上のご注文で送料無料）",
@@ -39,7 +39,7 @@ export default function Tokushoho() {
           <p style={{ margin: "0 0 6px", fontSize: 12, fontWeight: 700, color: "#8B5E3C", letterSpacing: "0.12em", textTransform: "uppercase" }}>Legal</p>
           <h1 style={{ margin: "0 0 8px", fontSize: 28, fontWeight: 900, color: "#1a1a1a", letterSpacing: "-0.5px" }}>特定商取引法に基づく表記</h1>
           <p style={{ margin: 0, fontSize: 13, color: "#888" }}>
-            seoulmono（seoulmono.com）における特定商取引法に基づく表示です。
+            ソウルモノ（seoulmono.com）における特定商取引法に基づく表示です。
           </p>
         </div>
       </div>

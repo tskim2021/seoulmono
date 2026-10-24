@@ -113,7 +113,7 @@ export default function RootLayout() {
   if (!fontsLoaded && !fontError) {
     return (
       <View style={styles.splash}>
-        <Text style={styles.splashTitle}>seoulmono</Text>
+        <Text style={styles.splashTitle}>ソウルモノ</Text>
         <Text style={styles.splashSub}>良い商品を、納得の価格で</Text>
       </View>
     );

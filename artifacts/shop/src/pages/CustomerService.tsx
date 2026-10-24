@@ -99,7 +99,7 @@ export default function CustomerServicePage() {
         <div className="page-wrap">
           <p style={{ margin: "0 0 4px", fontSize: 11, fontWeight: 700, color: "#8B5E3C", letterSpacing: "0.15em", textTransform: "uppercase" }}>Customer Service</p>
           <h1 style={{ margin: "0 0 8px", fontSize: 30, fontWeight: 900, color: "#1a1a1a", letterSpacing: "-0.5px" }}>お客様センター</h1>
-          <p style={{ margin: 0, fontSize: 13, color: "#888" }}>seoulmonoお客様センターのご案内・お知らせです。</p>
+          <p style={{ margin: 0, fontSize: 13, color: "#888" }}>ソウルモノお客様センターのご案内・お知らせです。</p>
         </div>
       </div>
 
@@ -207,7 +207,7 @@ export default function CustomerServicePage() {
                     <h2 style={{ margin: 0, fontSize: 18, fontWeight: 800, color: "#1a1a1a" }}>{detail.title}</h2>
                   </div>
                   <div style={{ display: "flex", gap: 16, fontSize: 12, color: "#888" }}>
-                    <span>seoulmonoお客様センター</span>
+                    <span>ソウルモノお客様センター</span>
                     <span>{fmtDate(detail.created_at)}</span>
                   </div>
                 </div>

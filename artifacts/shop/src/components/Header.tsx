@@ -199,7 +199,7 @@ export default function Header() {
               className="px-4 py-2 rounded-lg flex items-center justify-center"
               style={{ backgroundColor: '#5C3D2E' }}
             >
-              <span className="font-extrabold text-base text-white tracking-wide">seoulmono</span>
+              <span className="font-extrabold text-base text-white tracking-wide">ソウルモノ</span>
             </div>
           </a>
 

@@ -50,3 +50,16 @@ Thumbs.db
 .replit
 .replitignore
 **/.replit-artifact
+
+# Deployment secrets and runtime files
+.env
+.env.*
+!.env.example
+**/uploads/
+*.apk
+*.aab
+*.ipa
+*.keystore
+*.jks
+**/google-services.json
+**/GoogleService-Info.plist

@@ -59,7 +59,7 @@ export default function LoginScreen() {
 
       <ScrollView contentContainerStyle={styles.body} keyboardShouldPersistTaps="handled">
         <View style={styles.logoWrap}>
-          <Text style={[styles.logo, { color: colors.primary }]}>seoulmono</Text>
+          <Text style={[styles.logo, { color: colors.primary }]}>ソウルモノ</Text>
           <Text style={[styles.logoSub, { color: colors.mutedForeground }]}>良い商品を、納得の価格で</Text>
         </View>
 

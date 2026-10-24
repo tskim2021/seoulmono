@@ -97,7 +97,7 @@ export default function PartnershipPage() {
             </div>
             <h1 style={{ margin: "0 0 8px", fontSize: 26, fontWeight: 900, letterSpacing: "-0.5px" }}>広告 / 提携のお問い合わせ</h1>
             <p style={{ margin: 0, fontSize: 14, color: "rgba(255,255,255,0.8)", lineHeight: 1.7 }}>
-              seoulmonoと一緒に成長するパートナーをお待ちしています。<br />
+              ソウルモノと一緒に成長するパートナーをお待ちしています。<br />
               広告、提携、共同購入など、さまざまな形で協力いたします。
             </p>
           </div>

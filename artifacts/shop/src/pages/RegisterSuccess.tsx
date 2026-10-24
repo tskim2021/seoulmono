@@ -45,7 +45,7 @@ export default function RegisterSuccess() {
           <span style={{ color: "#8B5E3C" }}>{name}</span> 様、
         </p>
         <p style={{ margin: "0 0 32px", fontSize: 17, color: "#333" }}>
-          seoulmonoへのご登録ありがとうございます 🎉
+          ソウルモノへのご登録ありがとうございます 🎉
         </p>
 
         <p style={{ margin: "0 0 28px", fontSize: 13, color: "#888", lineHeight: 1.6 }}>

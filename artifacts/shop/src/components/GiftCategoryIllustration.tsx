@@ -145,7 +145,7 @@ function OilBanner() {
       <rect x="138" y="56" width="84" height="110" rx="10" fill="#f5fff8" />
       <rect x="138" y="56" width="84" height="36" rx="10" fill="#1a8a50" />
       <rect x="138" y="80" width="84" height="12" fill="#1a8a50" />
-      <text x="180" y="77" textAnchor="middle" fontSize="11" fontWeight="900" fill="#fff" fontFamily="sans-serif">seoulmono</text>
+      <text x="180" y="77" textAnchor="middle" fontSize="11" fontWeight="900" fill="#fff" fontFamily="sans-serif">ソウルモノ</text>
       <text x="180" y="103" textAnchor="middle" fontSize="10" fontWeight="800" fill="#0d5c2e" fontFamily="sans-serif">ごま油</text>
       <text x="180" y="117" textAnchor="middle" fontSize="9" fontWeight="700" fill="#8B5E3C" fontFamily="sans-serif">330ml × 3本</text>
       <text x="180" y="130" textAnchor="middle" fontSize="8" fontWeight="600" fill="#999" fontFamily="sans-serif">PREMIUM</text>
@@ -336,11 +336,11 @@ export default function GiftCategoryIllustration({
         }}>
           <img
             src={`${BASE}fogo_round.png`}
-            alt="seoulmono"
+            alt="ソウルモノ"
             style={{ width: 18, height: 18, borderRadius: "50%", objectFit: "cover" }}
           />
           <span style={{ fontSize: 10, fontWeight: 800, color: "rgba(255,255,255,0.95)", letterSpacing: "0.02em" }}>
-            seoulmono
+            ソウルモノ
           </span>
         </div>
       )}

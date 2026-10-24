@@ -120,7 +120,7 @@ export default function GiftCartPage() {
 
   const handleKakao = () => {
     if (!result) return;
-    const msg = encodeURIComponent(`seoulmonoからギフトが届きました!\nお届け先を入力してください:\n${result.url}`);
+    const msg = encodeURIComponent(`ソウルモノからギフトが届きました!\nお届け先を入力してください:\n${result.url}`);
     window.open(`https://open.kakao.com/o/share?text=${msg}`, "_blank");
   };
 

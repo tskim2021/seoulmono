@@ -228,7 +228,7 @@ export default function CategoryPage() {
           }}>
             <div>
               <p style={{ margin: "0 0 4px", fontSize: 10, color: "#8B5E3C", fontWeight: 600 }}>
-                seoulmonoで商品をご購入後、レビューを投稿すると
+                ソウルモノで商品をご購入後、レビューを投稿すると
               </p>
               <p style={{ margin: 0, fontSize: 16, fontWeight: 800, color: "#8B5E3C" }}>
                 レビューで1000ポイント進呈

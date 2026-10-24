@@ -10,6 +10,7 @@ import List from "@/pages/List";
 import Item from "@/pages/Item";
 import Cart from "@/pages/Cart";
 import Login from "@/pages/Login";
+import Admin from "@/pages/Admin";
 import Register from "@/pages/Register";
 import RegisterSuccess from "@/pages/RegisterSuccess";
 
@@ -132,6 +133,7 @@ function App() {
     <WouterRouter base={(() => { const p = window.location.pathname; return (p === "/shop" || p.startsWith("/shop/")) ? "/shop" : ""; })()}>
       <AuthProvider>
         <Switch>
+          <Route path="/admin" component={Admin} />
           <Route path="/checkout" component={Checkout} />
           <Route path="/payment/success" component={PaymentSuccess} />
           <Route path="/payment/fail" component={PaymentFail} />

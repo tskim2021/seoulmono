@@ -55,7 +55,7 @@ export default function GroupBuy() {
             みんなで買えばもっとお得に!
           </h1>
           <p style={{ margin: 0, fontSize: 14, color: "rgba(255,255,255,0.8)" }}>
-            共同購入特価でお届けするseoulmono厳選商品
+            共同購入特価でお届けするソウルモノ厳選商品
           </p>
         </div>
       </div>

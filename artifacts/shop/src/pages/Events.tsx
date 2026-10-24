@@ -52,7 +52,7 @@ export default function EventsPage() {
       </div>
 
       <h1 style={{ fontSize: 26, fontWeight: 800, color: "#111", marginBottom: 8 }}>イベント</h1>
-      <p style={{ fontSize: 14, color: "#888", marginBottom: 36 }}>seoulmonoのさまざまなイベントをチェックしてください</p>
+      <p style={{ fontSize: 14, color: "#888", marginBottom: 36 }}>ソウルモノのさまざまなイベントをチェックしてください</p>
 
       {loading && (
         <div style={{ textAlign: "center", padding: "80px 0", color: "#bbb" }}>読み込み中…</div>

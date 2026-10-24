@@ -18,11 +18,11 @@ if (Number.isNaN(port) || port <= 0) {
 
 const FOOTER_SEED: Record<string, string> = {
   footer_company: "株式会社ワイエヌエイチエス",
-  footer_ceo: "윤석민",
-  footer_address: "서울특별시 중랑구 용마산로 536 (망우동)",
+  footer_ceo: "ユン・ソクミン",
+  footer_address: "韓国 ソウル特別市 中浪区 龍馬山路536（忘憂洞）",
   footer_business_num: "429-81-03401",
   footer_online_num: "2024-서울중랑-1470",
-  footer_privacy: "윤석민",
+  footer_privacy: "ユン・ソクミン",
   footer_tel: "010-2051-5692",
   footer_cs_tel: "010-2051-5692",
   footer_cs_hours: "平日 : 10:00 ~ 18:00",
@@ -57,12 +57,7 @@ async function seedFooterDefaults() {
   }
 }
 
-app.listen(port, async (err) => {
-  if (err) {
-    logger.error({ err }, "Error listening on port");
-    process.exit(1);
-  }
-
+app.listen(port, "127.0.0.1", async () => {
   logger.info({ port }, "Server listening");
   await initTempPwTable();
   await seedFooterDefaults();

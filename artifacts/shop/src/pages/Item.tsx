@@ -754,7 +754,7 @@ function ExchangeSection() {
     { icon: <Package size={22} color="#8B5E3C" />, title: "ケース単位でのご購入で追加割引", desc: "商品に表示されているケース単位ごとに割引が自動で適用されます。" },
     { icon: <Gift size={22} color="#8B5E3C" />, title: "自分で作るギフトセット", desc: "追加で組み合わせてギフトセットを作りたい場合は「DIYギフトセット」をご利用ください。" },
     { icon: <Truck size={22} color="#8B5E3C" />, title: "40,000円以上で送料無料", desc: "40,000円以上のご購入で送料無料。それ以外は送料4,000円がかかります。" },
-    { icon: <Shield size={22} color="#8B5E3C" />, title: "安心してご購入ください", desc: "複数のセラーが集まるプラットフォームではなく、自社で物流を運営し、直接仕入れて販売するseoulmonoです。" },
+    { icon: <Shield size={22} color="#8B5E3C" />, title: "安心してご購入ください", desc: "複数のセラーが集まるプラットフォームではなく、自社で物流を運営し、直接仕入れて販売するソウルモノです。" },
     { icon: <Users size={22} color="#8B5E3C" />, title: "大容量は別途お問い合わせ", desc: "法人・団体でのご購入の場合は、別途ご連絡いただければ指定日の出荷が可能です。" },
     { icon: <Clock size={22} color="#8B5E3C" />, title: "賞味期限のご案内", desc: "賞味期限が1か月未満の商品は「賞味期限間近」として別途割引価格で販売します。" },
   ];
@@ -787,7 +787,7 @@ function ExchangeSection() {
         <div className="cs-contact-grid">
           {[
             { icon: <Phone size={20} color="#8B5E3C" />, title: "お電話でのお問い合わせ", lines: ["月~土曜日", "午前7時 ~ 午後6時", "1644-1107"] },
-            { icon: <MessageCircle size={20} color="#8B5E3C" />, title: "KakaoTalkでのお問い合わせ", lines: ["月~土 午前7時 ~ 午後6時", "日・祝日 午前7時 ~ 午後1時", "KakaoTalkで「seoulmono」を検索"] },
+            { icon: <MessageCircle size={20} color="#8B5E3C" />, title: "KakaoTalkでのお問い合わせ", lines: ["月~土 午前7時 ~ 午後6時", "日・祝日 午前7時 ~ 午後1時", "KakaoTalkで「ソウルモノ」を検索"] },
             { icon: <Home size={20} color="#8B5E3C" />, title: "ウェブサイトからのお問い合わせ", lines: ["365日", "ログイン > マイページ > お問い合わせ", "営業時間内に順次回答"] },
           ].map((c, i) => (
             <div key={i} style={{ background: "#fafafa", borderRadius: 14, padding: "22px 16px", textAlign: "center", border: "1px solid #f0f0f0" }}>
