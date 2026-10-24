@@ -38,7 +38,7 @@ export default function MyPriceAlerts() {
       <div className="bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-xl p-4 mb-6">
         <p className="text-sm text-blue-900 dark:text-blue-200">
           <Bell className="w-4 h-4 inline mr-1" />
-          お気に入りに入れた商品の価格が変動すると（値上げ・値下げとも）このページに表示されます。
+          위시리스트에 담긴 상품의 가격이 변동되면(인상·인하 모두) 이 페이지에 표시됩니다.
         </p>
       </div>
 
@@ -47,7 +47,7 @@ export default function MyPriceAlerts() {
           <Bell className="w-16 h-16 mx-auto mb-4 text-muted-foreground opacity-20" />
           <h3 className="text-lg font-semibold mb-2">登録された価格アラートはありません</h3>
           <p className="text-sm text-muted-foreground mb-4">
-            お気に入りに商品を追加すると、価格変動時に自動でアラートが登録されます
+            위시리스트에 상품을 추가하면 가격 변동 시 자동으로 알림이 등록됩니다
           </p>
           <Link href="/wishlist">
             <Button>お気に入りを見る</Button>
@@ -80,19 +80,19 @@ export default function MyPriceAlerts() {
                     <div className="flex items-start gap-2 mb-2 flex-wrap">
                       <Link href={productHref(alert.product?.slug)}>
                         <h3 className="font-semibold text-base hover:text-primary transition-colors line-clamp-1">
-                          {alert.product?.name || "商品情報なし"}
+                          {alert.product?.name || "상품 정보 없음"}
                         </h3>
                       </Link>
                       {hasChanged && isDown && (
                         <Badge className="bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300 border-0 text-xs shrink-0">
                           <TrendingDown className="w-3 h-3 mr-1" />
-                          値下げ
+                          가격 인하
                         </Badge>
                       )}
                       {hasChanged && isUp && (
                         <Badge className="bg-rose-100 text-rose-700 dark:bg-rose-900/40 dark:text-rose-300 border-0 text-xs shrink-0">
                           <TrendingUp className="w-3 h-3 mr-1" />
-                          値上げ
+                          가격 인상
                         </Badge>
                       )}
                     </div>

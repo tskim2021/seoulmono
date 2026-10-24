@@ -48,10 +48,10 @@ export default function InfoBoardList() {
     const now = new Date();
     const diffMs = now.getTime() - d.getTime();
     const diffH = Math.floor(diffMs / 3600000);
-    if (diffH < 1) return "たった今";
-    if (diffH < 24) return `${diffH}時間前`;
+    if (diffH < 1) return "방금 전";
+    if (diffH < 24) return `${diffH}시간 전`;
     const diffD = Math.floor(diffH / 24);
-    if (diffD < 3) return `${diffD}日前`;
+    if (diffD < 3) return `${diffD}일 전`;
     return `${String(d.getMonth() + 1).padStart(2, "0")}/${String(d.getDate()).padStart(2, "0")}`;
   };
 
@@ -78,14 +78,14 @@ export default function InfoBoardList() {
                 <Link href="/info-board/write">
                   <Button size="sm" className="gap-1.5">
                     <PenLine className="w-4 h-4" />
-                    投稿する
+                    글쓰기
                   </Button>
                 </Link>
               ) : (
                 <a href={getLoginUrl()}>
                   <Button variant="outline" size="sm" className="gap-1.5">
                     <PenLine className="w-4 h-4" />
-                    ログインして投稿
+                    로그인 후 글쓰기
                   </Button>
                 </a>
               )}
@@ -104,7 +104,7 @@ export default function InfoBoardList() {
                   : "bg-white border border-border text-muted-foreground hover:border-green-500 hover:text-green-700"
               }`}
             >
-              すべて
+              전체
             </button>
             {categories.map((cat: any) => (
               <button
@@ -124,9 +124,9 @@ export default function InfoBoardList() {
           {/* 검색 + 통계 */}
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-4">
             <p className="text-sm text-muted-foreground">
-              全 <span className="font-semibold text-foreground">{data?.total ?? 0}</span>件
+              총 <span className="font-semibold text-foreground">{data?.total ?? 0}</span>개의 글
               {search && (
-                <span className="ml-1.5 text-green-700">· &ldquo;{search}&rdquo; の検索結果</span>
+                <span className="ml-1.5 text-green-700">· &ldquo;{search}&rdquo; 검색 결과</span>
               )}
             </p>
             <form onSubmit={handleSearch} className="flex gap-2">
@@ -215,7 +215,7 @@ export default function InfoBoardList() {
                             </div>
                             {/* 모바일 메타 */}
                             <div className="flex items-center gap-1.5 text-xs text-muted-foreground md:hidden">
-                              <span>{post.userName || "匿名"}</span>
+                              <span>{post.userName || "익명"}</span>
                               <span>·</span>
                               <span>{formatDate(post.createdAt)}</span>
                               <span>·</span>
@@ -227,7 +227,7 @@ export default function InfoBoardList() {
 
                         {/* 작성자 */}
                         <td className="py-3.5 px-4 text-sm text-muted-foreground text-center hidden md:table-cell">
-                          <span className="max-w-[80px] truncate block mx-auto">{post.userName || "匿名"}</span>
+                          <span className="max-w-[80px] truncate block mx-auto">{post.userName || "익명"}</span>
                         </td>
 
                         {/* 날짜 */}
@@ -250,7 +250,7 @@ export default function InfoBoardList() {
                     <td colSpan={5} className="py-20 text-center">
                       <BookOpen className="w-10 h-10 text-muted-foreground/20 mx-auto mb-3" />
                       <p className="text-sm text-muted-foreground">
-                        {search ? `「${search}」の検索結果がありません。` : "登録された投稿がありません。"}
+                        {search ? `"${search}" 검색 결과가 없습니다.` : "登録された投稿がありません。"}
                       </p>
                       <p className="text-xs text-muted-foreground/60 mt-1">最初の情報をシェアしてみましょう！</p>
                     </td>
@@ -268,7 +268,7 @@ export default function InfoBoardList() {
                 <Link href="/info-board/write">
                   <Button size="sm" className="gap-1.5">
                     <PenLine className="w-3.5 h-3.5" />
-                    投稿する
+                    글쓰기
                   </Button>
                 </Link>
               </div>

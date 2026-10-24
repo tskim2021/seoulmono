@@ -51,27 +51,27 @@ export default function MyRestockAlerts() {
                   </Link>
                   {alert.optionName && alert.optionValue && (
                     <p className="text-sm text-muted-foreground mt-1">
-                      オプション: {alert.optionName} - {alert.optionValue}
+                      옵션: {alert.optionName} - {alert.optionValue}
                     </p>
                   )}
                   <div className="flex items-center gap-2 mt-2">
                     {alert.isNotified ? (
                       <Badge variant="default" className="gap-1">
                         <Bell className="w-3 h-3" />
-                        通知送信済み
+                        알림 발송됨
                       </Badge>
                     ) : (
                       <Badge variant="secondary" className="gap-1">
                         <Bell className="w-3 h-3" />
-                        待機中
+                        대기 중
                       </Badge>
                     )}
                     <span className="text-xs text-muted-foreground">
-                      申込日: {new Date(alert.createdAt).toLocaleDateString()}
+                      신청일: {new Date(alert.createdAt).toLocaleDateString()}
                     </span>
                     {alert.notifiedAt && (
                       <span className="text-xs text-muted-foreground">
-                        通知日: {new Date(alert.notifiedAt).toLocaleDateString()}
+                        알림일: {new Date(alert.notifiedAt).toLocaleDateString()}
                       </span>
                     )}
                   </div>

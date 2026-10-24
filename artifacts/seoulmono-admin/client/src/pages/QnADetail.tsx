@@ -7,7 +7,7 @@ import { useSEO } from "@/hooks/useSEO";
 
 function formatDate(d: string | Date | null | undefined) {
   if (!d) return "";
-  return new Date(d).toLocaleDateString("ja-JP", { year: "numeric", month: "2-digit", day: "2-digit" })
+  return new Date(d).toLocaleDateString("ko-KR", { year: "numeric", month: "2-digit", day: "2-digit" })
     .replace(/\. /g, ".").replace(/\.$/, "");
 }
 
@@ -21,8 +21,8 @@ export default function QnADetail({ postId }: { postId: number }) {
   );
 
   useSEO({
-    title: post ? `Q&A: ${post.title}` : "商品Q&A",
-    description: post?.content ?? "商品Q&A詳細",
+    title: post ? `Q&A: ${post.title}` : "상품 Q&A",
+    description: post?.content ?? "상품 Q&A 상세",
   });
 
   if (postLoading) {
@@ -93,19 +93,19 @@ export default function QnADetail({ postId }: { postId: number }) {
                 <h1 className="text-base font-semibold">{p.title}</h1>
                 {p.isAnswered ? (
                   <span className="inline-flex items-center gap-1 text-xs font-medium text-green-600 bg-green-50 border border-green-200 rounded-full px-2 py-0.5">
-                    <CheckCircle2 className="w-3 h-3" />回答済み
+                    <CheckCircle2 className="w-3 h-3" />답변완료
                   </span>
                 ) : (
                   <span className="inline-flex items-center gap-1 text-xs font-medium text-orange-500 bg-orange-50 border border-orange-200 rounded-full px-2 py-0.5">
-                    <Clock className="w-3 h-3" />待機中
+                    <Clock className="w-3 h-3" />대기중
                   </span>
                 )}
               </div>
               <p className="text-sm text-foreground whitespace-pre-wrap leading-relaxed">{p.content}</p>
               <div className="flex items-center gap-3 mt-3 text-xs text-muted-foreground">
-                <span className="flex items-center gap-1"><User className="w-3 h-3" />{p.authorName ?? p.userName ?? "匿名"}</span>
+                <span className="flex items-center gap-1"><User className="w-3 h-3" />{p.authorName ?? p.userName ?? "익명"}</span>
                 <span className="flex items-center gap-1"><Calendar className="w-3 h-3" />{formatDate(p.createdAt)}</span>
-                {comments.length > 0 && <span className="flex items-center gap-1"><MessageCircle className="w-3 h-3" />{comments.length}件の回答</span>}
+                {comments.length > 0 && <span className="flex items-center gap-1"><MessageCircle className="w-3 h-3" />{comments.length}개의 답변</span>}
               </div>
             </div>
           </div>
@@ -122,7 +122,7 @@ export default function QnADetail({ postId }: { postId: number }) {
                   <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-emerald-100 text-emerald-700 text-xs font-bold shrink-0 mt-0.5">A</span>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-2">
-                      <span className="text-sm font-medium">{comment.isAdmin ? "管理者" : (comment.userName ?? "匿名")}</span>
+                      <span className="text-sm font-medium">{comment.isAdmin ? "管理者" : (comment.userName ?? "익명")}</span>
                       <span className="text-xs text-muted-foreground">{formatDate(comment.createdAt)}</span>
                     </div>
                     <p className="text-sm whitespace-pre-wrap leading-relaxed">{comment.content}</p>
@@ -144,7 +144,7 @@ export default function QnADetail({ postId }: { postId: number }) {
             onClick={() => navigate("/community/qna")}
             className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
           >
-            <ChevronLeft className="w-4 h-4" />一覧へ
+            <ChevronLeft className="w-4 h-4" />목록으로
           </button>
         </div>
       </div>

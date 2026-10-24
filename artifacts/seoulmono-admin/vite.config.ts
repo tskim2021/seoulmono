@@ -4,7 +4,7 @@ import path from "node:path";
 import { defineConfig } from "vite";
 
 export default defineConfig({
-  // seoulmono-admin 는 seoulmono.com/admin/ 아래에서 서비스된다.
+  // sorosoro-admin2 는 seoulmono.com/admin/ 아래에서 서비스된다.
   base: "/admin/",
   plugins: [react(), tailwindcss()],
   resolve: {

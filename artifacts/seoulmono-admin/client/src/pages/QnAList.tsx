@@ -86,7 +86,7 @@ export default function QnAList() {
                 onChange={e => setOnlyUnanswered(e.target.checked)}
                 className="w-4 h-4 accent-stone-700"
               />
-              未回答のみ表示
+              미답변만 보기
             </label>
 
             <input
@@ -100,14 +100,14 @@ export default function QnAList() {
               type="submit"
               className="flex items-center gap-2 px-5 py-2 rounded text-sm font-semibold bg-stone-700 text-white hover:bg-stone-800 transition-colors"
             >
-              <Search className="w-3.5 h-3.5" />検索
+              <Search className="w-3.5 h-3.5" />검색하기
             </button>
           </form>
         </div>
 
         {/* 총 개수 */}
         <div className="border-l-4 border-stone-600 bg-stone-50 dark:bg-stone-900/30 px-4 py-2.5 mb-4 text-sm text-stone-700 dark:text-stone-300">
-          全 <strong>{(data?.total ?? 0).toLocaleString()}</strong>件のQ&amp;Aが登録されています。
+          총 <strong>{(data?.total ?? 0).toLocaleString()}</strong>개의 Q&amp;A가 등록되어 있습니다.
         </div>
 
         {/* 테이블 */}
@@ -146,7 +146,7 @@ export default function QnAList() {
                 posts.map((post: any, idx: number) => {
                   const rowNum = (data?.total ?? 0) - ((page - 1) * LIMIT) - idx;
                   const dateStr = post.createdAt
-                    ? new Date(post.createdAt).toLocaleDateString("ja-JP", { year: "numeric", month: "2-digit", day: "2-digit" }).replace(/\. /g, ".").replace(/\.$/, "")
+                    ? new Date(post.createdAt).toLocaleDateString("ko-KR", { year: "numeric", month: "2-digit", day: "2-digit" }).replace(/\. /g, ".").replace(/\.$/, "")
                     : "";
                   return (
                     <tr key={post.id} className="hover:bg-accent/30 transition-colors cursor-pointer" onClick={() => navigate(`/community/qna/${post.id}`)}>
@@ -174,7 +174,7 @@ export default function QnAList() {
                         )}
                       </td>
                       <td className="py-3 px-3 text-center text-sm text-muted-foreground hidden md:table-cell truncate max-w-[90px]">
-                        {post.isSecret ? "非公開" : (post.displayName || (post.userName ?? "匿名"))}
+                        {post.isSecret ? "非公開" : (post.displayName || (post.userName ?? "익명"))}
                       </td>
                       <td className="py-3 px-3 text-center text-xs text-muted-foreground hidden sm:table-cell whitespace-nowrap">
                         {dateStr}
@@ -182,11 +182,11 @@ export default function QnAList() {
                       <td className="py-3 px-3 text-center hidden sm:table-cell" onClick={e => e.stopPropagation()}>
                         {post.isAnswered ? (
                           <span className="inline-flex items-center gap-1 text-xs font-medium text-green-600">
-                            <CheckCircle2 className="w-3.5 h-3.5" />回答済み
+                            <CheckCircle2 className="w-3.5 h-3.5" />답변완료
                           </span>
                         ) : (
                           <span className="inline-flex items-center gap-1 text-xs font-medium text-orange-500">
-                            <MessageCircle className="w-3.5 h-3.5" />待機中
+                            <MessageCircle className="w-3.5 h-3.5" />대기중
                           </span>
                         )}
                       </td>

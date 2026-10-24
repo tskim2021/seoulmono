@@ -55,13 +55,13 @@ export const shippingMonitorRouter = router({
       const delayedList = delayedShipments
         .map(
           (s) =>
-            `- 注文番号: ${s.orderNumber}, 追跡番号: ${s.trackingNumber}, 最終更新: ${s.updatedAt?.toLocaleDateString("ja-JP")}`
+            `- 주문번호: ${s.orderNumber}, 운송장: ${s.trackingNumber}, 마지막 업데이트: ${s.updatedAt?.toLocaleDateString("ko-KR")}`
         )
         .join("\n");
 
       await notifyOwner({
-        title: `⚠️ 配送遅延アラート: ${delayedShipments.length}件`,
-        content: `7日以上更新のない配送が見つかりました。\n\n${delayedList}\n\nお客様からのお問い合わせに備え、配送業者へ確認が必要です。`,
+        title: `⚠️ 배송 지연 알림: ${delayedShipments.length}건`,
+        content: `7일 이상 업데이트가 없는 배송 건이 발견되었습니다.\n\n${delayedList}\n\n고객 문의에 대비하여 택배사에 확인이 필요합니다.`,
       });
 
       console.log(

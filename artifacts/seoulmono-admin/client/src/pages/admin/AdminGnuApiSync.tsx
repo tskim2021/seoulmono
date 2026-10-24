@@ -14,11 +14,11 @@ function TimeAgo({ iso }: { iso: string | null }) {
   const d = new Date(iso);
   const diff = Math.floor((Date.now() - d.getTime()) / 1000);
   let label = "";
-  if (diff < 60) label = `${diff}秒前`;
-  else if (diff < 3600) label = `${Math.floor(diff / 60)}分前`;
-  else if (diff < 86400) label = `${Math.floor(diff / 3600)}時間前`;
-  else label = `${Math.floor(diff / 86400)}日前`;
-  return <span className="text-xs text-muted-foreground" title={d.toLocaleString("ja-JP")}>{label} ({d.toLocaleString("ja-JP")})</span>;
+  if (diff < 60) label = `${diff}초 전`;
+  else if (diff < 3600) label = `${Math.floor(diff / 60)}분 전`;
+  else if (diff < 86400) label = `${Math.floor(diff / 3600)}시간 전`;
+  else label = `${Math.floor(diff / 86400)}일 전`;
+  return <span className="text-xs text-muted-foreground" title={d.toLocaleString("ko-KR")}>{label} ({d.toLocaleString("ko-KR")})</span>;
 }
 
 export default function AdminGnuApiSync() {
@@ -30,16 +30,16 @@ export default function AdminGnuApiSync() {
     onError: (e) => toast.error(e.message),
   });
   const syncOrdersMut = trpc.admin.syncGnuApiOrders.useMutation({
-    onSuccess: (d) => { toast.success(`注文の同期が完了しました — 新規 ${d.synced}件、更新 ${d.updated}件`); refetchStatus(); },
-    onError: (e) => toast.error(`注文の同期に失敗しました: ${e.message}`),
+    onSuccess: (d) => { toast.success(`주문 동기화 완료 — 신규 ${d.synced}건, 업데이트 ${d.updated}건`); refetchStatus(); },
+    onError: (e) => toast.error(`주문 동기화 실패: ${e.message}`),
   });
   const syncProductsMut = trpc.admin.syncGnuApiProducts.useMutation({
-    onSuccess: (d) => { toast.success(`商品の同期が完了しました — カテゴリー ${d.categories}件、商品 ${d.products}件`); refetchStatus(); },
-    onError: (e) => toast.error(`商品の同期に失敗しました: ${e.message}`),
+    onSuccess: (d) => { toast.success(`상품 동기화 완료 — 카테고리 ${d.categories}개, 상품 ${d.products}개`); refetchStatus(); },
+    onError: (e) => toast.error(`상품 동기화 실패: ${e.message}`),
   });
   const syncMembersMut = trpc.admin.syncGnuApiMembers.useMutation({
-    onSuccess: (d) => { toast.success(`会員の同期が完了しました — 新規 ${d.synced}名`); refetchStatus(); },
-    onError: (e) => toast.error(`会員の同期に失敗しました: ${e.message}`),
+    onSuccess: (d) => { toast.success(`회원 동기화 완료 — 신규 ${d.synced}명`); refetchStatus(); },
+    onError: (e) => toast.error(`회원 동기화 실패: ${e.message}`),
   });
 
   const [form, setForm] = useState({ baseUrl: "", token: "", enabled: false });
@@ -62,13 +62,13 @@ export default function AdminGnuApiSync() {
           <div className="text-sm">
             <p className="font-semibold text-blue-800 dark:text-blue-300 mb-1">ショップ(グヌボード) ↔ 管理画面 API連携方式</p>
             <p className="text-blue-700 dark:text-blue-400 mb-2">
-              MySQLへ直接接続せず、PHP APIファイルを通じて注文・商品・会員を同期します。
-              配送処理時には、ショップ(グヌボード)にも自動で逆反映されます。
+              MySQL 직접 연결 없이 PHP API 파일을 통해 주문·상품·회원을 동기화합니다.
+              배송 처리 시 탈모1 그누보드에도 자동으로 역반영됩니다.
             </p>
             <ol className="list-decimal list-inside space-y-1 text-blue-700 dark:text-blue-400">
               <li>下からPHPファイル4つをダウンロード</li>
-              <li>ショップサーバーの <code className="bg-blue-100 dark:bg-blue-900 px-1 rounded">/page/</code> ディレクトリにアップロード</li>
-              <li>ショップのPHP環境変数に <code className="bg-blue-100 dark:bg-blue-900 px-1 rounded">TALMO2_API_TOKEN</code> を設定</li>
+              <li>ショップサーバーの <code className="bg-blue-100 dark:bg-blue-900 px-1 rounded">/page/</code> 디렉토리에 업로드</li>
+              <li>ショップのPHP環境変数に <code className="bg-blue-100 dark:bg-blue-900 px-1 rounded">TALMO2_API_TOKEN</code> 決済管理</li>
               <li>下のAPI URLと同じトークンを入力して保存</li>
             </ol>
           </div>
@@ -82,14 +82,14 @@ export default function AdminGnuApiSync() {
           <h2 className="text-base font-semibold">ショップにアップロードするPHPファイル</h2>
         </div>
         <p className="text-sm text-muted-foreground mb-3">
-          下記4つのファイルをショップサーバーの <strong>/page/</strong> ディレクトリにアップロードしてください。
+          아래 4개 파일을 탈모1 서버 <strong>/page/</strong> 디렉토리에 업로드하세요.
         </p>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
           {[
-            { name: "talmo2_orders.php", desc: "注文一覧提供API" },
-            { name: "talmo2_products.php", desc: "商品・カテゴリー提供API" },
-            { name: "talmo2_members.php", desc: "会員情報提供API" },
-            { name: "talmo2_update_shipment.php", desc: "配送逆反映受信API" },
+            { name: "talmo2_orders.php", desc: "주문 목록 제공 API" },
+            { name: "talmo2_products.php", desc: "상품·카테고리 제공 API" },
+            { name: "talmo2_members.php", desc: "회원 정보 제공 API" },
+            { name: "talmo2_update_shipment.php", desc: "배송 역반영 수신 API" },
           ].map(f => (
             <div key={f.name} className="flex items-center gap-3 p-3 border rounded-lg bg-muted/30">
               <div className="w-8 h-8 rounded bg-orange-100 dark:bg-orange-900/30 flex items-center justify-center text-orange-600 text-xs font-bold shrink-0">PHP</div>
@@ -101,7 +101,7 @@ export default function AdminGnuApiSync() {
           ))}
         </div>
         <p className="text-xs text-muted-foreground mt-3">
-          ※ ファイルの場所: プロジェクト内 <code className="bg-muted px-1 rounded">artifacts/shop/gnuboard-api-files/</code>
+          ※ 파일 위치: 프로젝트 내 <code className="bg-muted px-1 rounded">artifacts/shop/gnuboard-api-files/</code>
         </p>
       </div>
 
@@ -145,20 +145,20 @@ export default function AdminGnuApiSync() {
               checked={form.enabled}
               onChange={e => setForm(f => ({ ...f, enabled: e.target.checked }))}
             />
-            自動ポーリング同期を有効化 (配送処理時にショップへ自動で逆反映)
+            자동 폴링 동기화 활성화 (배송 처리 시 탈모1에 자동 역반영)
           </label>
         </div>
 
         <div className="flex gap-2 mt-4">
           <Button size="sm" onClick={() => saveMut.mutate(form)} disabled={saveMut.isPending}>
             {saveMut.isPending ? <Loader2 className="w-4 h-4 mr-1 animate-spin" /> : <Save className="w-4 h-4 mr-1" />}
-            設定を保存
+            설정 저장
           </Button>
           {isConfigured && (
             <Button size="sm" variant="outline" asChild>
               <a href={`${form.baseUrl}/talmo2_orders.php?token=${form.token}&limit=1`} target="_blank" rel="noopener noreferrer">
                 <ExternalLink className="w-4 h-4 mr-1" />
-                接続テスト
+                연결 테스트
               </a>
             </Button>
           )}
@@ -174,7 +174,7 @@ export default function AdminGnuApiSync() {
           </div>
           <Button size="sm" variant="outline" onClick={() => refetchStatus()} disabled={statusLoading}>
             <RefreshCw className={`w-3 h-3 mr-1 ${statusLoading ? "animate-spin" : ""}`} />
-            再読み込み
+            새로고침
           </Button>
         </div>
 
@@ -197,7 +197,7 @@ export default function AdminGnuApiSync() {
         {status?.enabled && (
           <div className="flex items-center gap-2 text-emerald-600 text-sm">
             <CheckCircle2 className="w-4 h-4" />
-            自動同期が有効です — 配送処理時にショップへ自動反映されます
+            자동 동기화 활성화됨 — 배송 처리 시 탈모1에 자동 반영
           </div>
         )}
       </div>
@@ -209,7 +209,7 @@ export default function AdminGnuApiSync() {
           <h2 className="text-base font-semibold">手動同期</h2>
         </div>
         <p className="text-sm text-muted-foreground mb-4">
-          設定の保存後、手動ですぐに同期できます。注文は最終同期以降の変更分のみ取得します。
+          설정 저장 후 수동으로 즉시 동기화할 수 있습니다. 주문은 마지막 동기화 이후 변경분만 가져옵니다.
         </p>
         <div className="flex flex-wrap gap-2">
           <Button
@@ -219,7 +219,7 @@ export default function AdminGnuApiSync() {
             disabled={!isConfigured || anyLoading}
           >
             {syncOrdersMut.isPending ? <Loader2 className="w-4 h-4 mr-1 animate-spin" /> : <Package className="w-4 h-4 mr-1" />}
-            注文を同期
+            주문 동기화
           </Button>
           <Button
             size="sm"
@@ -228,7 +228,7 @@ export default function AdminGnuApiSync() {
             disabled={!isConfigured || anyLoading}
           >
             {syncProductsMut.isPending ? <Loader2 className="w-4 h-4 mr-1 animate-spin" /> : <ShoppingBag className="w-4 h-4 mr-1" />}
-            商品を同期
+            상품 동기화
           </Button>
           <Button
             size="sm"
@@ -237,14 +237,14 @@ export default function AdminGnuApiSync() {
             disabled={!isConfigured || anyLoading}
           >
             {syncMembersMut.isPending ? <Loader2 className="w-4 h-4 mr-1 animate-spin" /> : <Users className="w-4 h-4 mr-1" />}
-            会員を同期
+            회원 동기화
           </Button>
         </div>
 
         {anyLoading && (
           <div className="mt-3 flex items-center gap-2 text-sm text-muted-foreground">
             <Loader2 className="w-4 h-4 animate-spin" />
-            同期中... (データ量によっては数分かかる場合があります)
+            동기화 진행 중... (데이터 양에 따라 수 분 소요될 수 있습니다)
           </div>
         )}
       </div>

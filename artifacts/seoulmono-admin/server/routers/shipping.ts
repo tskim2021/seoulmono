@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { protectedProcedure, adminProcedure, publicProcedure, router } from "../_core/trpc";
 import * as db from "../db";
+import * as g5stats from "../g5stats";
 import { getTrackingInfo, mapStatusToSystem, registerTracking } from "../_core/17trackApi";
 import { getKoreaPostTracking, mapKoreaPostStatus } from "../_core/koreaPostApi";
 import { getShiptrackTracking, isCjKorexNumber } from "../_core/shiptrackApi";
@@ -108,7 +109,7 @@ async function performShipmentRefresh(
   }
 
   if (!trackingInfo && !koreaPostInfo && !shiptrackInfo) {
-    return { success: false, eventsCount: 0, delivered: false, message: "配送情報をまだ取得できません。追跡番号の登録直後は、情報が反映されるまで時間がかかる場合があります。" };
+    return { success: false, eventsCount: 0, delivered: false, message: "배송 정보를 아직 조회할 수 없습니다. 운송장이 등록된 직후에는 정보가 반영되기까지 시간이 걸릴 수 있습니다." };
   }
 
   const existingHistory = shipment.history || [];
@@ -136,8 +137,8 @@ async function performShipmentRefresh(
         try {
           const { notifyOwner } = await import("../_core/notification");
           await notifyOwner({
-            title: "⚠️ 通関検査を検知",
-            content: `注文番号: ${order.orderNumber}\n追跡番号: ${shipment.trackingNumber}\n税関: ${ci.customsOffice}\n通関番号: ${ci.customsNumber}\n\n通関検査の対象であることが確認されました。`,
+            title: "⚠️ 통관검사 감지",
+            content: `주문번호: ${order.orderNumber}\n운송장: ${shipment.trackingNumber}\n세관: ${ci.customsOffice}\n통관번호: ${ci.customsNumber}\n\n통관검사 대상으로 확인되었습니다.`,
           });
         } catch (e) {
           console.error("[refreshTracking] Failed to notify owner:", e);
@@ -231,8 +232,8 @@ async function performShipmentRefresh(
     await db.createNotification(
       userId,
       "order",
-      "配送が完了しました",
-      `注文番号: ${order.orderNumber}。商品はいかがでしたか？レビューをお寄せください！`,
+      "배송이 완료되었습니다",
+      `주문번호: ${order.orderNumber}. 상품은 어떠셨나요? 리뷰를 작성해주세요!`,
       `/mypage/orders/${order.id}`
     );
 
@@ -244,15 +245,15 @@ async function performShipmentRefresh(
       const { sendEmail, generateReviewRequestEmail } = await import("../_core/email");
       const reviewUrl = `${process.env.VITE_OAUTH_PORTAL_URL || 'https://app.manus.im'}/mypage/orders/${order.id}`;
       const emailHtml = generateReviewRequestEmail({
-        customerName: user.name || "お客様",
+        customerName: user.name || "고객",
         orderNumber: order.orderNumber,
-        productName: firstProduct.productName + (items.length > 1 ? ` 他${items.length - 1}点` : ""),
+        productName: firstProduct.productName + (items.length > 1 ? ` 외 ${items.length - 1}건` : ""),
         reviewUrl,
       });
 
       await sendEmail({
         to: user.email,
-        subject: "配送が完了しました！レビューをお寄せください 💜",
+        subject: "배송이 완료되었습니다! 리뷰를 작성해주세요 💜",
         html: emailHtml,
       });
     }
@@ -264,7 +265,7 @@ async function performShipmentRefresh(
 export const shippingRouter = router({
   // ─── Public / User ───
   carriers: publicProcedure.query(async () => {
-    return db.getActiveCarriers();
+    return g5stats.getActiveCarriers();
   }),
 
   trackOrder: protectedProcedure.input(z.object({ orderId: z.number() })).query(async ({ ctx, input }) => {
@@ -288,7 +289,7 @@ export const shippingRouter = router({
     const order = await db.getOrderById(input.orderId);
     if (!order || order.userId !== ctx.user.id) throw new TRPCError({ code: "NOT_FOUND" });
     const shipment = await db.getShipmentWithCarrier(input.orderId);
-    if (!shipment) throw new TRPCError({ code: "NOT_FOUND", message: "配送情報がありません。" });
+    if (!shipment) throw new TRPCError({ code: "NOT_FOUND", message: "배송 정보가 없습니다." });
     return performShipmentRefresh(shipment, order, ctx.user.id);
   }),
 
@@ -335,7 +336,7 @@ export const shippingRouter = router({
   })).mutation(async ({ ctx, input }) => {
     const order = await db.getOrderById(input.orderId);
     if (!order || order.userId !== ctx.user.id) throw new TRPCError({ code: "NOT_FOUND" });
-    if (order.status !== "delivered") throw new TRPCError({ code: "BAD_REQUEST", message: "配送完了した注文のみ返品・交換を申請できます。" });
+    if (order.status !== "delivered") throw new TRPCError({ code: "BAD_REQUEST", message: "배송 완료된 주문만 반품/교환 신청이 가능합니다." });
     const id = await db.createReturnRequest({
       orderId: input.orderId,
       userId: ctx.user.id,
@@ -344,7 +345,7 @@ export const shippingRouter = router({
       detailReason: input.detailReason ?? null,
       images: input.images ?? null,
     });
-    await db.createNotification(ctx.user.id, "order", `${input.type === "return" ? "返品" : "交換"}の申請を受け付けました`, `注文番号: ${order.orderNumber}`, `/mypage/orders/${order.id}`);
+    await db.createNotification(ctx.user.id, "order", `${input.type === "return" ? "반품" : "교환"} 신청이 접수되었습니다`, `주문번호: ${order.orderNumber}`, `/mypage/orders/${order.id}`);
     return { success: true, id };
   }),
 
@@ -360,12 +361,12 @@ export const shippingRouter = router({
         freeShipping: policy.freeShippingThreshold === 0,
         baseFee: policy.baseFee,
         freeShippingThreshold: policy.freeShippingThreshold,
-        carrier: "国際配送",
+        carrier: "국제배송",
         estimatedDays: EMS_ESTIMATED_DAYS,
         policyName: policy.name,
       };
     }
-    return { freeShipping: true, baseFee: 0, freeShippingThreshold: 0, carrier: "国際配送", estimatedDays: EMS_ESTIMATED_DAYS, policyName: "基本" };
+    return { freeShipping: true, baseFee: 0, freeShippingThreshold: 0, carrier: "국제배송", estimatedDays: EMS_ESTIMATED_DAYS, policyName: "기본" };
   }),
 
   // ─── Admin ───
@@ -414,10 +415,10 @@ export const shippingRouter = router({
     if (!order) throw new TRPCError({ code: "NOT_FOUND" });
     if (input.orderItemId) {
       const existing = await db.getShipmentByOrderItemId(input.orderItemId);
-      if (existing) throw new TRPCError({ code: "BAD_REQUEST", message: "すでに追跡番号が登録されている商品です。" });
+      if (existing) throw new TRPCError({ code: "BAD_REQUEST", message: "이미 운송장이 등록된 상품입니다." });
     } else {
       const existingShipment = await db.getShipmentByOrderId(input.orderId);
-      if (existingShipment && !existingShipment.orderItemId) throw new TRPCError({ code: "BAD_REQUEST", message: "すでに追跡番号が登録されている注文です。" });
+      if (existingShipment && !existingShipment.orderItemId) throw new TRPCError({ code: "BAD_REQUEST", message: "이미 운송장이 등록된 주문입니다." });
     }
     
     // 택배사 선택: 직접 지정 → 추적번호 패턴 자동 감지 → 첫 번째 활성 택배사
@@ -434,7 +435,7 @@ export const shippingRouter = router({
       }
       if (!selectedCarrier) selectedCarrier = carriers[0];
     }
-    if (!selectedCarrier) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "配送業者が設定されていません。管理者 > 配送設定で配送業者を登録してください。" });
+    if (!selectedCarrier) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "택배사가 설정되지 않았습니다. 관리자 > 배송 설정에서 택배사를 등록해주세요." });
     
     const shippingType = isIntl ? "international" : "domestic";
     const defaultDays = isIntl ? EMS_ESTIMATED_DAYS : 1;
@@ -460,7 +461,7 @@ export const shippingRouter = router({
     
     const carrierName = selectedCarrier.name;
     // 알림 발송
-    await db.createNotification(order.userId, "order", "商品を発送しました", `注文番号 ${order.orderNumber} - ${carrierName} ${input.trackingNumber}`, `/mypage/orders/${order.id}`);
+    await db.createNotification(order.userId, "order", "상품이 발송되었습니다", `주문번호 ${order.orderNumber} - ${carrierName} ${input.trackingNumber}`, `/mypage/orders/${order.id}`);
     
     // 배송 시작 이메일 발송
     const user = await db.getUserById(order.userId);
@@ -468,22 +469,22 @@ export const shippingRouter = router({
       try {
         const { sendEmail, generateEmailTemplate } = await import("../_core/email");
         const emailHtml = await generateEmailTemplate({
-          title: "商品を発送しました",
+          title: "상품이 발송되었습니다",
           content: `
-            <p>${user.name || "お客様"}様、いつもご利用ありがとうございます。</p>
-            <p>ご注文の商品を発送いたしました。</p>
+            <p>${user.name || "고객"}님, 안녕하세요.</p>
+            <p>주문하신 상품이 발송되었습니다.</p>
             <table style="width:100%;border-collapse:collapse;margin:16px 0;">
-              <tr><td style="padding:8px;border:1px solid #eee;background:#f9f9f9;width:120px;">注文番号</td><td style="padding:8px;border:1px solid #eee;">${order.orderNumber}</td></tr>
-              <tr><td style="padding:8px;border:1px solid #eee;background:#f9f9f9;">配送業者</td><td style="padding:8px;border:1px solid #eee;">${carrierName}</td></tr>
-              <tr><td style="padding:8px;border:1px solid #eee;background:#f9f9f9;">追跡番号</td><td style="padding:8px;border:1px solid #eee;font-family:monospace;">${input.trackingNumber}</td></tr>
-              <tr><td style="padding:8px;border:1px solid #eee;background:#f9f9f9;">配送予定日</td><td style="padding:8px;border:1px solid #eee;">${estimatedDate.toLocaleDateString('ja-JP')}</td></tr>
+              <tr><td style="padding:8px;border:1px solid #eee;background:#f9f9f9;width:120px;">주문번호</td><td style="padding:8px;border:1px solid #eee;">${order.orderNumber}</td></tr>
+              <tr><td style="padding:8px;border:1px solid #eee;background:#f9f9f9;">택배사</td><td style="padding:8px;border:1px solid #eee;">${carrierName}</td></tr>
+              <tr><td style="padding:8px;border:1px solid #eee;background:#f9f9f9;">운송장번호</td><td style="padding:8px;border:1px solid #eee;font-family:monospace;">${input.trackingNumber}</td></tr>
+              <tr><td style="padding:8px;border:1px solid #eee;background:#f9f9f9;">예상 배송일</td><td style="padding:8px;border:1px solid #eee;">${estimatedDate.toLocaleDateString('ko-KR')}</td></tr>
             </table>
-            <p>マイページで配送状況をご確認いただけます。</p>
+            <p>마이페이지에서 배송 현황을 확인하실 수 있습니다.</p>
           `,
         });
         await sendEmail({
           to: user.email,
-          subject: `[発送のお知らせ] ご注文番号 ${order.orderNumber} - ${carrierName}`,
+          subject: `[배송시작] 주문번호 ${order.orderNumber} - ${carrierName}`,
           html: emailHtml,
         });
       } catch (e) {
@@ -520,15 +521,15 @@ export const shippingRouter = router({
   })).mutation(async ({ input }) => {
     const carriers = await db.getActiveCarriers();
     const emsCarrier = carriers.find(c => c.code === "ems" || c.code === "epost_ems");
-    if (!emsCarrier) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "配送業者が設定されていません。" });
+    if (!emsCarrier) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "택배사가 설정되지 않았습니다." });
     
     const results: { orderId: number; success: boolean; error?: string }[] = [];
     for (const s of input.shipments) {
       try {
         const order = await db.getOrderById(s.orderId);
-        if (!order) { results.push({ orderId: s.orderId, success: false, error: "注文が見つかりません。" }); continue; }
+        if (!order) { results.push({ orderId: s.orderId, success: false, error: "주문을 찾을 수 없습니다." }); continue; }
         const existing = await db.getShipmentByOrderId(s.orderId);
-        if (existing) { results.push({ orderId: s.orderId, success: false, error: "すでに追跡番号が登録されています。" }); continue; }
+        if (existing) { results.push({ orderId: s.orderId, success: false, error: "이미 운송장이 등록되어 있습니다." }); continue; }
         // 운송장 번호 패턴 기반 shippingType 자동 감지
         const bulkShippingType = isInternationalTrackingNumber(s.trackingNumber) ? 'international' : 'international'; // 기본값 international
         await db.createShipment({
@@ -542,7 +543,7 @@ export const shippingRouter = router({
         // 17track에 등록
         await registerTracking(s.trackingNumber);
         await db.updateOrderStatus(s.orderId, "shipping");
-        await db.createNotification(order.userId, "order", "商品を発送しました（国際配送）", `注文番号 ${order.orderNumber} の商品を発送しました。追跡番号: ${s.trackingNumber}`, `/mypage/orders/${order.id}`);
+        await db.createNotification(order.userId, "order", "상품이 발송되었습니다 (국제배송)", `주문번호 ${order.orderNumber}의 상품이 발송되었습니다. 운송장: ${s.trackingNumber}`, `/mypage/orders/${order.id}`);
         results.push({ orderId: s.orderId, success: true });
       } catch (e: any) {
         results.push({ orderId: s.orderId, success: false, error: e.message });
@@ -566,7 +567,7 @@ export const shippingRouter = router({
       await db.updateOrderStatus(shipment.orderId, "delivered");
       const order = await db.getOrderById(shipment.orderId);
       if (order) {
-        await db.createNotification(order.userId, "order", "配送が完了しました", `注文番号 ${order.orderNumber} の配送が完了しました。ぜひレビューをお寄せください！`, `/mypage/orders/${order.id}`);
+        await db.createNotification(order.userId, "order", "배송이 완료되었습니다", `주문번호 ${order.orderNumber}의 배송이 완료되었습니다. 리뷰를 작성해보세요!`, `/mypage/orders/${order.id}`);
         
         const user = await db.getUserById(order.userId);
         const items = await db.getOrderItems(order.id);
@@ -576,15 +577,15 @@ export const shippingRouter = router({
           const { sendEmail, generateReviewRequestEmail } = await import("../_core/email");
           const reviewUrl = `${process.env.VITE_OAUTH_PORTAL_URL || 'https://app.manus.im'}/mypage/orders/${order.id}`;
           const emailHtml = generateReviewRequestEmail({
-            customerName: user.name || "お客様",
+            customerName: user.name || "고객",
             orderNumber: order.orderNumber,
-            productName: firstProduct.productName + (items.length > 1 ? ` 他${items.length - 1}点` : ""),
+            productName: firstProduct.productName + (items.length > 1 ? ` 외 ${items.length - 1}건` : ""),
             reviewUrl,
           });
           
           await sendEmail({
             to: user.email,
-            subject: "配送が完了しました！レビューをお寄せください 💜",
+            subject: "배송이 완료되었습니다! 리뷰를 작성해주세요 💜",
             html: emailHtml,
           });
         }
@@ -601,7 +602,7 @@ export const shippingRouter = router({
   })).mutation(async ({ input }) => {
     const { shipmentId, ...data } = input;
     const shipment = await db.getShipmentById(shipmentId);
-    if (!shipment) throw new TRPCError({ code: "NOT_FOUND", message: "配送情報が見つかりません。" });
+    if (!shipment) throw new TRPCError({ code: "NOT_FOUND", message: "배송 정보를 찾을 수 없습니다." });
     
     // 운송장 번호가 변경된 경우 17track에 재등록 및 shippingType 자동 감지
     if (data.trackingNumber && data.trackingNumber !== shipment.trackingNumber) {
@@ -672,7 +673,7 @@ export const shippingRouter = router({
     if (!order) throw new TRPCError({ code: "NOT_FOUND" });
     
     const shipment = await db.getShipmentWithCarrier(input.orderId);
-    if (!shipment) throw new TRPCError({ code: "NOT_FOUND", message: "配送情報がありません。" });
+    if (!shipment) throw new TRPCError({ code: "NOT_FOUND", message: "배송 정보가 없습니다." });
     
     // 운송장 번호 패턴 기반 shippingType 자동 보정
     if (needsKoreaPostCrawling(shipment.trackingNumber) && shipment.shippingType !== 'international') {
@@ -710,7 +711,7 @@ export const shippingRouter = router({
     }
 
     if (!trackingInfo && !koreaPostInfo && !shiptrackInfoAdmin) {
-      return { success: false, eventsCount: 0, delivered: false, message: "配送情報をまだ取得できません。" };
+      return { success: false, eventsCount: 0, delivered: false, message: "배송 정보를 아직 조회할 수 없습니다." };
     }
     
     const existingHistory = shipment.history || [];
@@ -739,8 +740,8 @@ export const shippingRouter = router({
           try {
             const { notifyOwner } = await import("../_core/notification");
             await notifyOwner({
-              title: "⚠️ 通関検査を検知",
-              content: `注文番号: ${order.orderNumber}\n追跡番号: ${shipment.trackingNumber}\n税関: ${ci.customsOffice}\n通関番号: ${ci.customsNumber}`,
+              title: "⚠️ 통관검사 감지",
+              content: `주문번호: ${order.orderNumber}\n운송장: ${shipment.trackingNumber}\n세관: ${ci.customsOffice}\n통관번호: ${ci.customsNumber}`,
             });
           } catch (e) { console.error("[adminRefreshTracking] Notify failed:", e); }
         }
@@ -816,7 +817,7 @@ export const shippingRouter = router({
     // 배송 완료 감지
     if (newStatus === "delivered" && order.status !== "delivered") {
       await db.updateOrderStatus(input.orderId, "delivered");
-      await db.createNotification(order.userId, "order", "配送が完了しました", `注文番号: ${order.orderNumber}。レビューをお寄せください！`, `/mypage/orders/${order.id}`);
+      await db.createNotification(order.userId, "order", "배송이 완료되었습니다", `주문번호: ${order.orderNumber}. 리뷰를 작성해주세요!`, `/mypage/orders/${order.id}`);
     }
     
     return { success: true, eventsCount: addedCount, delivered: newStatus === "delivered" };
@@ -877,7 +878,7 @@ export const shippingRouter = router({
       try {
         const shipment = await db.getShipmentById(shipmentId);
         if (!shipment) {
-          results.push({ shipmentId, orderId: 0, success: false, eventsCount: 0, error: "配送情報が見つかりません。" });
+          results.push({ shipmentId, orderId: 0, success: false, eventsCount: 0, error: "배송 정보를 찾을 수 없습니다." });
           continue;
         }
 
@@ -913,7 +914,7 @@ export const shippingRouter = router({
         }
 
         if (!trackingInfo && !koreaPostInfo) {
-          results.push({ shipmentId, orderId: shipment.orderId, success: false, eventsCount: 0, error: "配送情報を取得できません。" });
+          results.push({ shipmentId, orderId: shipment.orderId, success: false, eventsCount: 0, error: "배송 정보를 조회할 수 없습니다." });
           continue;
         }
 
@@ -980,8 +981,8 @@ export const shippingRouter = router({
             await db.createNotification(
               order.userId,
               "order",
-              "配送が完了しました",
-              `注文番号: ${order.orderNumber}。商品はいかがでしたか？レビューをお寄せください！`,
+              "배송이 완료되었습니다",
+              `주문번호: ${order.orderNumber}. 상품은 어떠셨나요? 리뷰를 작성해주세요!`,
               `/mypage/orders/${order.id}`
             );
           }
@@ -995,8 +996,8 @@ export const shippingRouter = router({
             await db.createNotification(
               order.userId,
               "order",
-              "通関検査のお知らせ",
-              `注文番号 ${order.orderNumber}: お客様のご注文商品が通関検査の対象となりました。`,
+              "통관검사 안내",
+              `주문번호 ${order.orderNumber}: 고객님의 주문 상품이 통관검사 대상으로 선정되었습니다.`,
               `/mypage/orders/${order.id}`
             );
           }
@@ -1041,18 +1042,18 @@ export const shippingRouter = router({
     await db.updateReturnRequest(id, data);
     const order = await db.getOrderById(request.orderId);
     const statusMessages: Record<string, string> = {
-      approved: "返品・交換のご依頼が承認されました。",
-      collecting: "返品の回収を進めています。",
-      collected: "返品商品を回収しました。",
-      completed: "返品・交換の処理が完了しました。",
-      rejected: "返品・交換のご依頼はお受けできませんでした。",
+      approved: "반품/교환 요청이 승인되었습니다.",
+      collecting: "반품 수거가 진행 중입니다.",
+      collected: "반품 상품이 수거되었습니다.",
+      completed: "반품/교환 처리가 완료되었습니다.",
+      rejected: "반품/교환 요청이 거절되었습니다.",
     };
     if (statusMessages[input.status]) {
-      await db.createNotification(request.userId, "order", statusMessages[input.status], `注文番号: ${order?.orderNumber ?? ""}`, `/mypage/orders/${request.orderId}`);
+      await db.createNotification(request.userId, "order", statusMessages[input.status], `주문번호: ${order?.orderNumber ?? ""}`, `/mypage/orders/${request.orderId}`);
     }
     if (input.status === "completed" && request.type === "return" && input.refundAmount) {
       await db.updateOrderStatus(request.orderId, "refunded");
-      await db.addPoints(request.userId, input.refundAmount, "refund", `返品返金 (注文 ${order?.orderNumber})`, request.orderId);
+      await db.addPoints(request.userId, input.refundAmount, "refund", `반품 환불 (주문 ${order?.orderNumber})`, request.orderId);
     }
     return { success: true };
   }),
@@ -1091,7 +1092,7 @@ export const shippingRouter = router({
     confirm: z.boolean(),
   })).mutation(async ({ ctx, input }) => {
     const shipment = await db.getShipmentById(input.shipmentId);
-    if (!shipment) throw new TRPCError({ code: "NOT_FOUND", message: "配送情報が見つかりません。" });
+    if (!shipment) throw new TRPCError({ code: "NOT_FOUND", message: "\ubc30\uc1a1\uc744 \ucc3e\uc744 \uc218 \uc5c6\uc2b5\ub2c8\ub2e4." });
     await db.updateShipmentCustomsConfirm(input.shipmentId, {
       customsConfirmed: input.confirm ? 1 : 0,
       customsConfirmedAt: input.confirm ? new Date() : undefined,

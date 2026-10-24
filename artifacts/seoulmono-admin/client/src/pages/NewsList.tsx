@@ -18,9 +18,9 @@ const SECTION_COLORS: Record<string, string> = {
 };
 
 const SECTION_LABELS: Record<string, string> = {
-  domestic: "国内",
-  international: "海外",
-  research: "研究",
+  domestic: "국내",
+  international: "해외",
+  research: "연구",
 };
 
 export default function NewsList() {
@@ -63,11 +63,11 @@ export default function NewsList() {
     const now = new Date();
     const diff = now.getTime() - d.getTime();
     const hours = Math.floor(diff / (1000 * 60 * 60));
-    if (hours < 1) return "たった今";
-    if (hours < 24) return `${hours}時間前`;
+    if (hours < 1) return "방금 전";
+    if (hours < 24) return `${hours}시간 전`;
     const days = Math.floor(hours / 24);
-    if (days < 7) return `${days}日前`;
-    return d.toLocaleDateString("ja-JP", { year: "numeric", month: "short", day: "numeric" });
+    if (days < 7) return `${days}일 전`;
+    return d.toLocaleDateString("ko-KR", { year: "numeric", month: "short", day: "numeric" });
   };
 
   const stripMarkdown = (text: string) => {
@@ -108,7 +108,7 @@ export default function NewsList() {
               className="rounded-full"
               onClick={() => handleCategoryChange(undefined)}
             >
-              すべてのカテゴリー
+              전체 카테고리
             </Button>
             {categories.map((cat: any) => (
               <Button

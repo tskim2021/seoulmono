@@ -70,13 +70,13 @@ export default function MyPage() {
                 <h3 className="font-bold text-amber-900 dark:text-amber-200">レビュー投稿待ち</h3>
                 <p className="text-xs text-amber-700 dark:text-amber-400">
                   {isPointEnabled ? (
-                    <>レビュー投稿で最大 <strong>{totalPossiblePoints.toLocaleString()}P</strong> 獲得！</>
+                    <>レビュー投稿で最大 <strong>{totalPossiblePoints.toLocaleString()}P</strong> 적립!</>
                   ) : "ご購入商品のレビューをお寄せください"}
                 </p>
               </div>
             </div>
             <Badge variant="secondary" className="bg-amber-500/20 text-amber-700 dark:text-amber-300 border-amber-300">
-              {reviewPending!.length}件
+              {reviewPending!.length}건
             </Badge>
           </div>
           <div className="space-y-2">
@@ -91,13 +91,13 @@ export default function MyPage() {
                   {isPointEnabled && (
                     <div className="flex items-center gap-1 mt-0.5">
                       <Gift className="w-3 h-3 text-amber-500" />
-                      <span className="text-xs text-amber-600 dark:text-amber-400 font-medium">テキスト {textPoints}P + フォト {photoPoints}P</span>
+                      <span className="text-xs text-amber-600 dark:text-amber-400 font-medium">텍스트 {textPoints}P + 포토 {photoPoints}P</span>
                     </div>
                   )}
                 </div>
                 <Link href={`/mypage/orders/${order.orderId}`}>
                   <Button size="sm" className="text-xs h-7 gap-1 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white border-0 flex-shrink-0">
-                    <Star className="w-3 h-3" />レビューを書く
+                    <Star className="w-3 h-3" />리뷰작성
                   </Button>
                 </Link>
               </div>
@@ -114,7 +114,7 @@ export default function MyPage() {
         {(ordersData?.orders ?? []).length === 0 ? (
           <div className="text-center py-8 text-muted-foreground">
             <ShoppingBag className="w-10 h-10 mx-auto mb-2 opacity-20" />
-            <p className="text-sm">注文履歴はありません</p>
+            <p className="text-sm">注文履歴がありません</p>
           </div>
         ) : (
           <div className="space-y-2">

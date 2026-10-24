@@ -11,7 +11,7 @@ import { getLoginUrl } from "@/const";
 import { useSEO } from "@/hooks/useSEO";
 
 export default function Cart() {
-  useSEO({ title: "カート", description: "カートに入れた商品をご確認ください。", noindex: true });
+  useSEO({ title: "カートに入れる", description: "カートに入れた商品をご確認ください。", noindex: true });
   const { isAuthenticated, loading } = useAuth();
   const [, navigate] = useLocation();
   const { data: items, isLoading } = trpc.cart.list.useQuery(undefined, { enabled: isAuthenticated });
@@ -51,12 +51,12 @@ export default function Cart() {
   return (
     <Layout>
       <div className="container py-8">
-        <h1 className="text-2xl font-bold mb-8">カート</h1>
+        <h1 className="text-2xl font-bold mb-8">カートに入れる</h1>
 
         {cartItems.length === 0 ? (
           <div className="text-center py-20">
             <ShoppingCart className="w-16 h-16 mx-auto mb-4 text-muted-foreground opacity-30" />
-            <h2 className="text-lg font-semibold mb-2">カートは空です</h2>
+            <h2 className="text-lg font-semibold mb-2">カートが空です</h2>
             <p className="text-muted-foreground text-sm mb-6">お気に入りの商品を入れてみましょう</p>
             <Button asChild variant="outline"><Link href="/products">買い物を続ける</Link></Button>
           </div>
@@ -65,7 +65,7 @@ export default function Cart() {
             {/* Items */}
             <div className="lg:col-span-2 space-y-4">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-sm text-muted-foreground">合計 {cartItems.length}点</span>
+                <span className="text-sm text-muted-foreground">총 {cartItems.length}개 상품</span>
                 <Button variant="ghost" size="sm" className="text-destructive text-xs" onClick={() => clearCart.mutate()}>すべて削除</Button>
               </div>
               {cartItems.map(item => {
@@ -116,16 +116,16 @@ export default function Cart() {
                   <div className="flex justify-between"><span className="text-muted-foreground">商品金額</span><span className="price-text">{formatPrice(subtotal)}</span></div>
                   <div className="flex justify-between"><span className="text-muted-foreground">送料</span><span className="price-text">{shippingFee === 0 ? "無料" : formatPrice(shippingFee)}</span></div>
                   {benefit && benefit.freeShippingThreshold > 0 && subtotal < benefit.freeShippingThreshold && (
-                    <p className="text-xs text-muted-foreground">あと{formatPrice(benefit.freeShippingThreshold - subtotal)}のご購入で送料無料</p>
+                    <p className="text-xs text-muted-foreground">{formatPrice(benefit.freeShippingThreshold - subtotal)} 더 구매시 무료배송</p>
                   )}
                   <Separator />
-                  <div className="flex justify-between font-bold text-base"><span>お支払い合計</span><span className="text-primary price-text">{formatPrice(total)}</span></div>
+                  <div className="flex justify-between font-bold text-base"><span>累計決済金額</span><span className="text-primary price-text">{formatPrice(total)}</span></div>
                   {benefit && (
-                    <p className="text-xs text-muted-foreground mt-2">付与予定ポイント: {benefit.pointRate}%</p>
+                    <p className="text-xs text-muted-foreground mt-2">적립 예정 포인트: {benefit.pointRate}%</p>
                   )}
                 </div>
                 <Button className="w-full mt-6" size="lg" onClick={() => navigate("/checkout")}>
-                  注文する <ArrowRight className="w-4 h-4 ml-1" />
+                  주문하기 <ArrowRight className="w-4 h-4 ml-1" />
                 </Button>
               </div>
             </div>

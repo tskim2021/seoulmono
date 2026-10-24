@@ -23,13 +23,13 @@ export const paymentRouter = {
       // 주문 소유권 확인
       const order = await db.getOrderById(input.orderId);
       if (!order || order.userId !== ctx.user.id) {
-        throw new TRPCError({ code: "FORBIDDEN", message: "注文情報が見つかりません。" });
+        throw new TRPCError({ code: "FORBIDDEN", message: "주문 정보를 찾을 수 없습니다." });
       }
 
       // 이미 결제 정보가 있는지 확인
       const existingPayment = await db.getPaymentByOrderId(input.orderId);
       if (existingPayment) {
-        throw new TRPCError({ code: "BAD_REQUEST", message: "すでにお支払い情報が登録されています。" });
+        throw new TRPCError({ code: "BAD_REQUEST", message: "이미 결제 정보가 등록되어 있습니다." });
       }
 
       // 자동 취소 시간 설정 조회
@@ -54,15 +54,15 @@ export const paymentRouter = {
       // 입금 계좌 정보 조회
       const bankAccount = await db.getBankAccountById(input.bankAccountId);
       if (!bankAccount) {
-        throw new TRPCError({ code: "NOT_FOUND", message: "お振込先口座情報が見つかりません。" });
+        throw new TRPCError({ code: "NOT_FOUND", message: "입금 계좌 정보를 찾을 수 없습니다." });
       }
 
       // 1. 인앱 알림 발송
       await db.createNotification(
         ctx.user.id,
         "order",
-        "お振込先のご案内",
-        `注文番号 ${order.orderNumber} のお振込先口座をお送りしました。${autoCancelHours}時間以内にお振込みください。`,
+        "입금 계좌 안내",
+        `주문번호 ${order.orderNumber}의 입금 계좌가 발송되었습니다. ${autoCancelHours}시간 이내에 입금해주세요.`,
         `/orders/${order.id}`
       );
 
@@ -70,54 +70,54 @@ export const paymentRouter = {
       if (ctx.user.email) {
         await sendEmail({
           to: ctx.user.email,
-          subject: `[ソウルモノ] ご注文 ${order.orderNumber} お振込のご案内`,
+          subject: `[탈모학교] 주문 ${order.orderNumber} 입금 안내`,
           html: await generateEmailTemplate({
-            title: "お振込先のご案内",
+            title: "입금 계좌 안내",
             content: `
-              <p>いつもご利用ありがとうございます。${ctx.user.name || "お客様"}様</p>
-              <p>ご注文を正常に承りました。</p>
-              <p>下記の口座に<strong>${autoCancelHours}時間以内</strong>にお振込みいただくと、確認後に商品を発送いたします。</p>
+              <p>안녕하세요, ${ctx.user.name || "고객"}님.</p>
+              <p>주문이 정상적으로 접수되었습니다.</p>
+              <p>아래 계좌로 <strong>${autoCancelHours}시간 이내</strong>에 입금해주시면 확인 후 상품을 발송해드립니다.</p>
               
               <div style="background: #fef3c7; border: 2px solid #f59e0b; border-radius: 8px; padding: 20px; margin: 20px 0;">
-                <h3 style="margin: 0 0 15px 0; color: #92400e;">📌 お振込情報</h3>
+                <h3 style="margin: 0 0 15px 0; color: #92400e;">📌 입금 정보</h3>
                 <table style="width: 100%; border-collapse: collapse;">
                   <tr style="border-bottom: 1px solid #fbbf24;">
-                    <td style="padding: 8px 0; color: #78350f; font-weight: 600;">ご注文番号</td>
+                    <td style="padding: 8px 0; color: #78350f; font-weight: 600;">주문번호</td>
                     <td style="padding: 8px 0; text-align: right; color: #92400e;">${order.orderNumber}</td>
                   </tr>
                   <tr style="border-bottom: 1px solid #fbbf24;">
-                    <td style="padding: 8px 0; color: #78350f; font-weight: 600;">お振込先口座</td>
+                    <td style="padding: 8px 0; color: #78350f; font-weight: 600;">입금 계좌</td>
                     <td style="padding: 8px 0; text-align: right; color: #92400e;">${bankAccount.bankName} ${bankAccount.accountNumber}</td>
                   </tr>
                   <tr style="border-bottom: 1px solid #fbbf24;">
-                    <td style="padding: 8px 0; color: #78350f; font-weight: 600;">口座名義</td>
+                    <td style="padding: 8px 0; color: #78350f; font-weight: 600;">예금주</td>
                     <td style="padding: 8px 0; text-align: right; color: #92400e;">${bankAccount.accountHolder}</td>
                   </tr>
                   <tr style="border-bottom: 1px solid #fbbf24;">
-                    <td style="padding: 8px 0; color: #78350f; font-weight: 600;">お振込金額</td>
-                    <td style="padding: 8px 0; text-align: right; color: #92400e; font-size: 18px; font-weight: 700;">${order.totalAmount.toLocaleString()}円</td>
+                    <td style="padding: 8px 0; color: #78350f; font-weight: 600;">입금 금액</td>
+                    <td style="padding: 8px 0; text-align: right; color: #92400e; font-size: 18px; font-weight: 700;">${order.totalAmount.toLocaleString()}원</td>
                   </tr>
                   <tr style="border-bottom: 1px solid #fbbf24;">
-                    <td style="padding: 8px 0; color: #78350f; font-weight: 600;">お振込名義</td>
+                    <td style="padding: 8px 0; color: #78350f; font-weight: 600;">입금자명</td>
                     <td style="padding: 8px 0; text-align: right; color: #92400e;">${input.depositorName}</td>
                   </tr>
                   <tr>
-                    <td style="padding: 8px 0; color: #78350f; font-weight: 600;">お振込期限</td>
-                    <td style="padding: 8px 0; text-align: right; color: #dc2626; font-weight: 700;">${expiresAt.toLocaleString("ja-JP")}</td>
+                    <td style="padding: 8px 0; color: #78350f; font-weight: 600;">입금 기한</td>
+                    <td style="padding: 8px 0; text-align: right; color: #dc2626; font-weight: 700;">${expiresAt.toLocaleString("ko-KR")}</td>
                   </tr>
                 </table>
               </div>
               
               <div style="background: #fee2e2; border-left: 4px solid #dc2626; padding: 15px; margin: 20px 0;">
                 <p style="margin: 0; color: #7f1d1d; font-size: 14px;">
-                  <strong>⚠️ ご注意</strong><br/>
-                  • お振込期限（<strong>${autoCancelHours}時間</strong>）内にご入金がない場合、ご注文は自動的にキャンセルされます。<br/>
-                  • お振込名義がご注文者名と異なる場合、確認が遅れることがあります。<br/>
-                  • ご入金の確認まで1〜2営業日かかる場合があります。
+                  <strong>⚠️ 주의사항</strong><br/>
+                  • 입금 기한(<strong>${autoCancelHours}시간</strong>) 내 미입금 시 자동으로 주문이 취소됩니다.<br/>
+                  • 입금자명이 주문자명과 다른 경우 확인이 지연될 수 있습니다.<br/>
+                  • 입금 확인까지 1~2 영업일 소요될 수 있습니다.
                 </p>
               </div>
             `,
-            actionText: "ご注文詳細を見る",
+            actionText: "주문 상세 보기",
             actionUrl: `${process.env.VITE_APP_URL}/orders/${order.id}`,
           }),
         });
@@ -229,7 +229,7 @@ export const paymentRouter = {
       const payment = await db.confirmPayment(input.paymentId, ctx.user.id, input.memo);
 
       if (!payment) {
-        throw new TRPCError({ code: "NOT_FOUND", message: "お支払い情報が見つかりません。" });
+        throw new TRPCError({ code: "NOT_FOUND", message: "결제 정보를 찾을 수 없습니다." });
       }
 
       // 주문 및 사용자 정보 조회
@@ -243,8 +243,8 @@ export const paymentRouter = {
       await db.createNotification(
         order.userId,
         "order",
-        "ご入金を確認しました",
-        `注文番号 ${order.orderNumber} のご入金を確認し、商品の準備を開始します。`,
+        "입금이 확인되었습니다",
+        `주문번호 ${order.orderNumber}의 입금이 확인되어 상품 준비를 시작합니다.`,
         `/orders/${order.id}`
       );
 
@@ -252,34 +252,34 @@ export const paymentRouter = {
       if (user.email) {
         await sendEmail({
           to: user.email,
-          subject: `[ソウルモノ] ご注文 ${order.orderNumber} ご入金確認完了`,
+          subject: `[탈모학교] 주문 ${order.orderNumber} 입금 확인 완료`,
           html: await generateEmailTemplate({
-            title: "ご入金を確認しました",
+            title: "입금이 확인되었습니다",
             content: `
-              <p>いつもご利用ありがとうございます。${user.name || "お客様"}様</p>
-              <p>ご注文商品のご入金を確認いたしました。</p>
+              <p>안녕하세요, ${user.name || "고객"}님.</p>
+              <p>주문하신 상품의 입금이 확인되었습니다.</p>
               
               <div style="background: #d1fae5; border: 2px solid #10b981; border-radius: 8px; padding: 20px; margin: 20px 0;">
-                <h3 style="margin: 0 0 15px 0; color: #065f46;">✅ ご入金確認完了</h3>
+                <h3 style="margin: 0 0 15px 0; color: #065f46;">✅ 입금 확인 완료</h3>
                 <table style="width: 100%; border-collapse: collapse;">
                   <tr style="border-bottom: 1px solid #6ee7b7;">
-                    <td style="padding: 8px 0; color: #065f46; font-weight: 600;">ご注文番号</td>
+                    <td style="padding: 8px 0; color: #065f46; font-weight: 600;">주문번호</td>
                     <td style="padding: 8px 0; text-align: right; color: #047857;">${order.orderNumber}</td>
                   </tr>
                   <tr style="border-bottom: 1px solid #6ee7b7;">
-                    <td style="padding: 8px 0; color: #065f46; font-weight: 600;">ご入金確認日時</td>
-                    <td style="padding: 8px 0; text-align: right; color: #047857;">${payment.confirmedAt?.toLocaleString("ja-JP")}</td>
+                    <td style="padding: 8px 0; color: #065f46; font-weight: 600;">입금 확인 시간</td>
+                    <td style="padding: 8px 0; text-align: right; color: #047857;">${payment.confirmedAt?.toLocaleString("ko-KR")}</td>
                   </tr>
                   <tr>
-                    <td style="padding: 8px 0; color: #065f46; font-weight: 600;">お振込金額</td>
-                    <td style="padding: 8px 0; text-align: right; color: #047857; font-size: 18px; font-weight: 700;">${payment.depositAmount?.toLocaleString()}円</td>
+                    <td style="padding: 8px 0; color: #065f46; font-weight: 600;">입금 금액</td>
+                    <td style="padding: 8px 0; text-align: right; color: #047857; font-size: 18px; font-weight: 700;">${payment.depositAmount?.toLocaleString()}원</td>
                   </tr>
                 </table>
               </div>
               
-              <p style="color: #374151;">現在商品を準備中で、まもなく発送を開始いたします。<br/>発送時に改めてお知らせいたします。</p>
+              <p style="color: #374151;">현재 상품 준비 중이며, 곧 배송이 시작됩니다.<br/>배송 시작 시 다시 알려드리겠습니다.</p>
             `,
-            actionText: "ご注文詳細を見る",
+            actionText: "주문 상세 보기",
             actionUrl: `${process.env.VITE_APP_URL}/orders/${order.id}`,
           }),
         });
@@ -302,7 +302,7 @@ export const paymentRouter = {
       await db.logAdminAction({
         adminId: ctx.user.id, adminName: ctx.user.name || ctx.user.email || `admin#${ctx.user.id}`,
         action: "payment.confirm", entityType: "order", entityId: order.id,
-        description: `注文 #${order.orderNumber} 入金確認 (${payment.depositAmount?.toLocaleString()}円)`,
+        description: `주문 #${order.orderNumber} 입금 확인 (${payment.depositAmount?.toLocaleString()}원)`,
         detail: { orderId: order.id, orderNumber: order.orderNumber, paymentId: input.paymentId, amount: payment.depositAmount },
       });
 
@@ -314,7 +314,7 @@ export const paymentRouter = {
     .input(z.object({ paymentId: z.number() }))
     .mutation(async ({ input }) => {
       const payment = await db.cancelPaymentConfirmation(input.paymentId);
-      if (!payment) throw new TRPCError({ code: "NOT_FOUND", message: "お支払い情報が見つかりません。" });
+      if (!payment) throw new TRPCError({ code: "NOT_FOUND", message: "결제 정보를 찾을 수 없습니다." });
       return { success: true };
     }),
 

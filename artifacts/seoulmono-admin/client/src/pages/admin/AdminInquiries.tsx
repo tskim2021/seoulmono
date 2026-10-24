@@ -100,14 +100,14 @@ export default function AdminInquiries() {
       <div className="flex items-center gap-2">
         <MessageSquareText className="w-5 h-5 text-primary" />
         <h1 className="text-xl font-bold">お問い合わせ管理</h1>
-        {total > 0 && <Badge variant="secondary">{total}件</Badge>}
+        {total > 0 && <Badge variant="secondary">{total}건</Badge>}
       </div>
 
       {selectedPost ? (
         /* ── 상세 뷰 ── */
         <div className="space-y-4">
           <Button variant="ghost" size="sm" onClick={() => setSelectedPost(null)}>
-            <ChevronLeft className="w-4 h-4 mr-1" />一覧へ
+            <ChevronLeft className="w-4 h-4 mr-1" />목록으로
           </Button>
 
           {/* 문의 내용 */}
@@ -117,8 +117,8 @@ export default function AdminInquiries() {
                 <div>
                   <CardTitle className="text-base">{selectedPost.title}</CardTitle>
                   <p className="text-xs text-muted-foreground mt-1">
-                    {selectedPost.userName ?? "不明"} · {formatDateTime(selectedPost.createdAt)}
-                    {selectedPost.replyEmail && <> · 返信先メールアドレス: {selectedPost.replyEmail}</>}
+                    {selectedPost.userName ?? "알 수 없음"} · {formatDateTime(selectedPost.createdAt)}
+                    {selectedPost.replyEmail && <> · 답변받을 이메일: {selectedPost.replyEmail}</>}
                   </p>
                 </div>
                 {selectedPost.needsHuman
@@ -148,13 +148,13 @@ export default function AdminInquiries() {
           {/* 답변 목록 */}
           <div className="space-y-3">
             <h2 className="text-sm font-semibold text-muted-foreground">
-              回答履歴 {replies.length > 0 && `(${replies.length}件)`}
+              답변 내역 {replies.length > 0 && `(${replies.length}건)`}
             </h2>
             {repliesLoading ? (
               <div className="text-sm text-muted-foreground py-4 text-center">読み込み中...</div>
             ) : replies.length === 0 ? (
               <div className="text-sm text-muted-foreground py-4 text-center bg-secondary/30 rounded-lg">
-                まだ回答がありません
+                아직 답변이 없습니다
               </div>
             ) : (
               replies.map((reply: any) => (
@@ -174,7 +174,7 @@ export default function AdminInquiries() {
                           <Pencil className="w-3.5 h-3.5" />
                         </Button>
                         <Button variant="ghost" size="icon" className="h-7 w-7 text-destructive hover:text-destructive"
-                          onClick={() => { if (confirm("この回答を削除しますか？")) deleteReply.mutate({ id: reply.id, postId: selectedPost.id }); }}>
+                          onClick={() => { if (confirm("이 답변을 삭제하시겠습니까?")) deleteReply.mutate({ id: reply.id, postId: selectedPost.id }); }}>
                           <Trash2 className="w-3.5 h-3.5" />
                         </Button>
                       </div>
@@ -189,11 +189,11 @@ export default function AdminInquiries() {
                         />
                         <div className="flex gap-2 justify-end">
                           <Button variant="ghost" size="sm" onClick={() => setEditReply(null)}>
-                            <X className="w-3.5 h-3.5 mr-1" />キャンセル
+                            <X className="w-3.5 h-3.5 mr-1" />취소
                           </Button>
                           <Button size="sm" onClick={() => updateReply.mutate({ id: editReply.id, content: editReply.content })}
                             disabled={updateReply.isPending}>
-                            保存
+                            저장
                           </Button>
                         </div>
                       </div>
@@ -297,7 +297,7 @@ export default function AdminInquiries() {
                   ) : posts.length === 0 ? (
                     <TableRow>
                       <TableCell colSpan={6} className="text-center py-12 text-muted-foreground">
-                        {search ? `「${search}」の検索結果がありません` : "お問い合わせがありません"}
+                        {search ? `"${search}" 검색 결과가 없습니다` : "お問い合わせがありません"}
                       </TableCell>
                     </TableRow>
                   ) : (

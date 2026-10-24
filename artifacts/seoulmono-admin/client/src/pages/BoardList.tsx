@@ -26,8 +26,8 @@ export default function BoardList({ slugProp }: { slugProp?: string } = {}) {
   const { data: board, isLoading: boardLoading } = trpc.community.boardBySlug.useQuery({ slug: slug! });
 
   useSEO({
-    title: board?.name ? `${board.name} 掲示板` : "コミュニティ",
-    description: board?.description ?? `ソウルモノ コミュニティ掲示板`,
+    title: board?.name ? `${board.name} 게시판` : "커뮤니티",
+    description: board?.description ?? `탈모학교 커뮤니티 게시판`,
   });
   const queryInput = useMemo(() => ({
     boardId: board?.id ?? 0,
@@ -45,7 +45,7 @@ export default function BoardList({ slugProp }: { slugProp?: string } = {}) {
     setPage(1);
   };
 
-  const boardTypeLabel: Record<string, string> = { free: "自由掲示板", review: "お客様レビュー", qna: "Q&A", notice: "お知らせ" };
+  const boardTypeLabel: Record<string, string> = { free: "자유게시판", review: "고객 리뷰", qna: "Q&A", notice: "공지사항" };
 
   return (
     <Layout>
@@ -54,7 +54,7 @@ export default function BoardList({ slugProp }: { slugProp?: string } = {}) {
         <div className="flex items-center gap-2 text-sm text-muted-foreground mb-6">
           <Link href="/" className="hover:text-foreground">ホーム</Link>
           <span>/</span>
-          <span className="text-foreground font-medium">{board?.name ?? boardTypeLabel[slug!] ?? "掲示板"}</span>
+          <span className="text-foreground font-medium">{board?.name ?? boardTypeLabel[slug!] ?? "게시판"}</span>
         </div>
 
 
@@ -72,7 +72,7 @@ export default function BoardList({ slugProp }: { slugProp?: string } = {}) {
             </form>
             {isAuthenticated && board?.boardType !== "notice" && (
               <Button size="sm" onClick={() => navigate(`/community/${slug}/write`)}>
-                <PenSquare className="w-4 h-4 mr-1" />投稿する
+                <PenSquare className="w-4 h-4 mr-1" />글쓰기
               </Button>
             )}
           </div>
@@ -126,7 +126,7 @@ export default function BoardList({ slugProp }: { slugProp?: string } = {}) {
                         )}
                       </Link>
                     </td>
-                    <td className="py-3 px-4 text-sm text-muted-foreground hidden md:table-cell truncate max-w-[100px]">{post.userName ?? "匿名"}</td>
+                    <td className="py-3 px-4 text-sm text-muted-foreground hidden md:table-cell truncate max-w-[100px]">{post.userName ?? "익명"}</td>
                     <td className="py-3 px-4 text-xs text-muted-foreground text-center hidden md:table-cell">{formatDate(post.createdAt)}</td>
                     <td className="py-3 px-4 text-xs text-muted-foreground text-center hidden sm:table-cell">{post.viewCount}</td>
                   </tr>

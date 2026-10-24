@@ -38,7 +38,7 @@ import {
   discussionAutoLogs, type DiscussionAutoLog, type InsertDiscussionAutoLog
 } from "../drizzle/schema";
 import { ENV } from './_core/env';
-// === seoulmono-admin: 그누보드5(kapp_s001) 어댑터 ===
+// === sorosoro-admin2: 그누보드5(kapp_s001) 어댑터 ===
 import {
   g5GetMemberByEmailOrId,
   g5GetMemberById,
@@ -861,7 +861,7 @@ export async function saveAddressFromOrder(userId: number, data: {
   const count = existing.length + 1;
   await db.insert(addresses).values({
     userId,
-    name: `お届け先 ${count}`,
+    name: `배송지 ${count}`,
     recipient: data.recipientName,
     phone: data.recipientPhone,
     zipCode: data.zipCode,
@@ -982,7 +982,7 @@ const OD_STATUS_TO_CODE: Record<string, string> = {
   "취소": "cancelled", "반품": "cancelled", "주문취소": "cancelled",
   "배송완료": "delivered", "구매확정": "delivered",
   "배송중": "shipping",
-  "상품준비중": "preparing", "배송준비중": "preparing",
+  "상품준비중": "preparing", "배송준비중": "preparing", "배송준비": "preparing", "처리중": "preparing",
   "입금확인": "paid", "결제완료": "paid",
   "주문접수": "pending",
 };
@@ -993,7 +993,7 @@ function mapOdStatus(s: string | null | undefined): string {
 const CODE_TO_OD_STATUS: Record<string, string[]> = {
   pending: ["주문", "입금대기", "주문접수"],
   paid: ["입금확인", "결제완료"],
-  preparing: ["상품준비중", "배송준비중"],
+  preparing: ["상품준비중", "배송준비중", "배송준비", "처리중"],
   shipping: ["배송중"],
   delivered: ["배송완료", "구매확정"],
   cancelled: ["취소", "반품", "주문취소"],
@@ -1020,13 +1020,13 @@ export async function getOrderById(id: number | string) {
     memo: row.od_memo || "",
     adminNotes: row.od_shop_memo || "",
     couponName: null as string | null,
-    source: "seoulmono",
+    source: "sorosoro",
   };
 }
 
 export async function getOrderItems(orderId: number | string) {
   const rows = await g5q<any>(
-    "SELECT ct_id, it_id, it_name, ct_qty, ct_price, ct_option, ct_cancel_status FROM g5_shop_cart WHERE od_id = ?",
+    "SELECT c.ct_id, c.it_id, c.it_name, c.ct_qty, c.ct_price, c.ct_option, c.ct_cancel_status, i.it_img1, i.it_name_ja FROM g5_shop_cart c LEFT JOIN g5_shop_item i ON i.it_id = c.it_id WHERE c.od_id = ?",
     [orderId]
   );
   return rows.map((r: any) => ({
@@ -1034,6 +1034,9 @@ export async function getOrderItems(orderId: number | string) {
     orderId,
     productId: r.it_id ? Number(r.it_id) : null,
     productName: r.it_name,
+    productNameJa: r.it_name_ja || null,
+    // thumbnail served by the shop API (/api/product-image/<folder>/<file>); it_img1 is stored as "<folder>/<file>"
+    productThumbnail: r.it_img1 ? (/^(https?:|\/)/.test(String(r.it_img1)) ? String(r.it_img1) : "/api/product-image/" + String(r.it_img1)) + (String(r.it_img1).includes("?") ? "" : "?w=120") : null,
     quantity: Number(r.ct_qty) || 1,
     price: Number(r.ct_price) || 0,
     options: r.ct_option || null,
@@ -1042,7 +1045,7 @@ export async function getOrderItems(orderId: number | string) {
     product: {
       id: r.it_id ? Number(r.it_id) : null,
       name: r.it_name,
-      thumbnail: null as string | null,
+      thumbnail: r.it_img1 ? (/^(https?:|\/)/.test(String(r.it_img1)) ? String(r.it_img1) : "/api/product-image/" + String(r.it_img1)) + (String(r.it_img1).includes("?") ? "" : "?w=120") : (null as string | null),
       slug: r.it_id ? String(r.it_id) : null,
       noDiscount: 0,
     },
@@ -1189,7 +1192,7 @@ export async function uncancelOrderItem(orderId: number, itemId: number, newStat
 
   const allItems = await getOrderItems(orderId);
   const item = allItems.find(i => i.id === itemId);
-  if (!item || !item.cancelledAt) throw new Error("この商品はキャンセル状態ではありません。");
+  if (!item || !item.cancelledAt) throw new Error("해당 상품이 취소 상태가 아닙니다.");
 
   // 아이템 복원: cancelledAt 제거 + 해당 아이템의 itemStatus만 변경
   await db.update(orderItems)
@@ -1283,7 +1286,7 @@ export async function getAllOrders(
   if (noTrackingNumber) {
     where.push("od_status = ?");
     params.push("배송중");
-    where.push("(od_tno IS NULL OR od_tno = '')");
+    where.push("(od_invoice IS NULL OR od_invoice = '')");
   } else if (status && status !== "partial_cancel") {
     const parts = status.split(",").map((s) => s.trim()).filter(Boolean);
     const odValues = parts.flatMap((p) => CODE_TO_OD_STATUS[p] ?? []);
@@ -1306,7 +1309,7 @@ export async function getAllOrders(
   else if (sortAsc) orderSql = "ORDER BY od_time ASC";
 
   const rows = await g5q<any>(
-    `SELECT od_id, mb_id, od_name, od_email, od_hp, od_status, od_receipt_price, od_cart_price, od_send_cost, od_coupon, od_time, od_tno, od_delivery_company, od_shop_memo FROM g5_shop_order ${whereSql} ${orderSql} LIMIT ? OFFSET ?`,
+    `SELECT od_id, mb_id, od_name, od_email, od_hp, od_status, od_receipt_price, od_cart_price, od_send_cost, od_coupon, od_time, od_invoice, od_delivery_company, od_shop_memo FROM g5_shop_order ${whereSql} ${orderSql} LIMIT ? OFFSET ?`,
     [...params, limit, offset]
   );
   const countRow = await g5one<{ c: number }>(`SELECT COUNT(*) AS c FROM g5_shop_order ${whereSql}`, params);
@@ -1328,7 +1331,7 @@ export async function getAllOrders(
       paymentId: null as number | null,
       paymentStatus: null as string | null,
       paymentMethod: null as string | null,
-      shipment: r.od_tno ? { id: 0, trackingNumber: r.od_tno, carrier: r.od_delivery_company || null, status: mapOdStatus(r.od_status) } : null,
+      shipment: r.od_invoice ? { id: 0, trackingNumber: r.od_invoice, carrier: r.od_delivery_company || null, status: mapOdStatus(r.od_status) } : null,
       adminNotes: r.od_shop_memo || "",
       items,
     };
@@ -1697,9 +1700,9 @@ export async function createNotification(userId: number, type: "order" | "commen
       title,
       content: message,
       actionUrl,
-      actionText: actionUrl ? "確認する" : undefined,
+      actionText: actionUrl ? "확인하기" : undefined,
     });
-    await sendEmail({ to: user.email, subject: `[ソウルモノ] ${title}`, html, userId: user.id }).catch((e: any) => {
+    await sendEmail({ to: user.email, subject: `[탈모학교] ${title}`, html, userId: user.id }).catch((e: any) => {
       console.warn("[createNotification] Email send failed (non-critical):", e?.message ?? e);
     });
   }
@@ -1742,16 +1745,18 @@ export async function getAllBanners() {
   return db.select().from(banners).orderBy(asc(banners.sortOrder));
 }
 
-export async function createBanner(data: { title: string; imageUrl: string; linkUrl?: string; isActive?: number; sortOrder?: number }) {
+export async function createBanner(data: { title: string; imageUrl: string; mobileImageUrl?: string; linkUrl?: string; isActive?: number; sortOrder?: number }) {
   const db = await getDb();
   if (!db) return;
-  await db.insert(banners).values({ ...data, linkUrl: data.linkUrl ?? null, isActive: data.isActive ?? 1, sortOrder: data.sortOrder ?? 0 });
+  await db.insert(banners).values({ ...data, mobileImageUrl: data.mobileImageUrl || null, linkUrl: data.linkUrl ?? null, isActive: data.isActive ?? 1, sortOrder: data.sortOrder ?? 0 });
 }
 
-export async function updateBanner(id: number, data: Partial<{ title: string; imageUrl: string; linkUrl: string; isActive: number; sortOrder: number }>) {
+export async function updateBanner(id: number, data: Partial<{ title: string; imageUrl: string; mobileImageUrl: string | null; linkUrl: string; isActive: number; sortOrder: number }>) {
   const db = await getDb();
   if (!db) return;
-  await db.update(banners).set(data).where(eq(banners.id, id));
+  const set: any = { ...data };
+  if ("mobileImageUrl" in set && !set.mobileImageUrl) set.mobileImageUrl = null; // empty field = no mobile image (PC image is used)
+  await db.update(banners).set(set).where(eq(banners.id, id));
 }
 
 export async function deleteBanner(id: number) {
@@ -1982,7 +1987,7 @@ function getPostHash(postId: number): string {
 }
 
 export function formatDisplayName(name: string | null, openId: string | null, postId?: number): string {
-  if (!name && !openId) return "匿名";
+  if (!name && !openId) return "\uc775\uba85";
   if (postId !== undefined) {
     const prefix = String.fromCharCode(97 + (postId % 26));
     return (prefix + getPostHash(postId)).slice(0, 4) + "***";
@@ -2116,7 +2121,7 @@ export async function createReviewWithPoints(data: {
   const existing = await db.select({ id: posts.id }).from(posts)
     .where(and(eq(posts.userId, data.userId), eq(posts.orderItemId, data.orderItemId)))
     .limit(1);
-  if (existing.length > 0) throw new Error("この注文商品にはすでにレビューを投稿済みです。");
+  if (existing.length > 0) throw new Error("이미 해당 주문 항목에 대한 리뷰를 작성했습니다.");
 
   // 리뷰 포인트 설정 조회
   const settingsResult = await db.select().from(reviewPointSettings).where(eq(reviewPointSettings.isActive, 1)).limit(1);
@@ -2185,7 +2190,7 @@ export async function createReviewWithPoints(data: {
       userId: data.userId,
       amount: pointsEarned,
       type: "earn",
-      description: hasPhotos ? `フォトレビュー投稿ポイント (${textPoints}P + ${photoPoints}P)` : `レビュー投稿ポイント (${textPoints}P)`,
+      description: hasPhotos ? `포토 리뷰 작성 포인트 (${textPoints}P + ${photoPoints}P)` : `리뷰 작성 포인트 (${textPoints}P)`,
       orderId: data.orderId,
     });
 
@@ -2193,8 +2198,8 @@ export async function createReviewWithPoints(data: {
     await db.insert(notifications).values({
       userId: data.userId,
       type: "point",
-      title: "レビューポイント付与",
-      message: `レビュー投稿により${pointsEarned.toLocaleString()}ポイントが付与されました。`,
+      title: "리뷰 포인트 적립",
+      message: `리뷰 작성으로 ${pointsEarned.toLocaleString()}P가 적립되었습니다.`,
       link: `/community/review`,
     });
   }
@@ -2403,14 +2408,14 @@ function cryptoRandomHex(): string {
 
 export async function issueCouponToUser(userId: number, couponId: number, isAdmin = false) {
   const member = await g5one<{ mb_id: string }>("SELECT mb_id FROM g5_member WHERE mb_no = ?", [userId]);
-  if (!member) throw new Error("会員が見つかりません。");
+  if (!member) throw new Error("회원을 찾을 수 없습니다.");
   const existing = await g5one<{ cp_no: number }>(
     "SELECT cp_no FROM g5_shop_coupon WHERE cz_id = ? AND mb_id = ?",
     [couponId, member.mb_id]
   );
-  if (existing) throw new Error("すでに発行済みのクーポンです。");
+  if (existing) throw new Error("이미 발급받은 쿠폰입니다.");
   const zone = await g5one<any>("SELECT * FROM g5_shop_coupon_zone WHERE cz_id = ?", [couponId]);
-  if (!zone) throw new Error("クーポンが見つかりません。");
+  if (!zone) throw new Error("쿠폰을 찾을 수 없습니다.");
   const cpId = cryptoRandomHex();
   const now = new Date();
   const nowStr = now.toISOString().slice(0, 19).replace("T", " ");
@@ -2608,7 +2613,7 @@ export async function getReviewReplies(postId: number) {
     id: r.wr_id,
     postId,
     content: r.wr_content,
-    userName: r.mb_id || "管理者",
+    userName: r.mb_id || "관리자",
     createdAt: r.wr_datetime,
   }));
 }
@@ -2655,7 +2660,7 @@ export async function getReviewsForAdmin(page = 1, limit = 20) {
       title: r.wr_subject || "",
       content: r.wr_content || "",
       rating: Number(r.wr_rating) || 0,
-      userName: r.mb_name || r.mb_id || "匿名",
+      userName: r.mb_name || r.mb_id || "익명",
       userEmail: r.mb_email || null,
       createdAt: r.wr_datetime,
       replyCount: Number(r.replyCount) || 0,
@@ -2805,7 +2810,7 @@ export async function createProductQnA(data: {
   const db = await getDb();
   if (!db) return;
   const qnaBoards = await db.select().from(boards).where(eq(boards.boardType, "qna")).limit(1);
-  if (qnaBoards.length === 0) throw new Error("Q&A掲示板がありません。");
+  if (qnaBoards.length === 0) throw new Error("Q&A 게시판이 없습니다.");
   const boardId = qnaBoards[0].id;
   
   const [{ id }] = await db.insert(posts).values({
@@ -2816,6 +2821,77 @@ export async function createProductQnA(data: {
     content: data.content,
   }).$returningId();
   return id;
+}
+
+// ─── Real Product Q&A (g5_write_qa, shared with the live shop) ───
+export async function getRealProductQnAForAdmin(opts: { page?: number; limit?: number; onlyUnanswered?: boolean }) {
+  const page = opts.page ?? 1;
+  const limit = opts.limit ?? 30;
+  const offset = (page - 1) * limit;
+  let where = "WHERE q.wr_is_comment = 0 AND q.wr_1 != ''";
+  if (opts.onlyUnanswered) where += " AND q.wr_comment = 0";
+
+  const rows = await g5q<any>(
+    `SELECT q.wr_id, q.wr_subject, q.wr_content, q.wr_datetime, q.wr_comment, q.wr_option, q.wr_1, q.mb_id, m.mb_name, m.mb_email, i.it_name, i.it_img1
+     FROM g5_write_qa q
+     LEFT JOIN g5_member m ON m.mb_id = q.mb_id
+     LEFT JOIN g5_shop_item i ON i.it_id = q.wr_1
+     ${where}
+     ORDER BY q.wr_id DESC
+     LIMIT ? OFFSET ?`,
+    [limit, offset]
+  );
+  const countRow = await g5one<{ c: number }>(
+    `SELECT COUNT(*) AS c FROM g5_write_qa q ${where}`,
+    []
+  );
+  return {
+    posts: rows.map((r: any) => ({
+      id: Number(r.wr_id),
+      title: r.wr_subject || "",
+      content: r.wr_content || "",
+      userName: r.mb_name || r.mb_id || null,
+      userEmail: r.mb_email || null,
+      productName: r.it_name || null,
+      productThumbnail: r.it_img1 ? (r.it_img1.startsWith("/api/product-image/") ? r.it_img1 : `/api/product-image/${r.it_img1}`) : null,
+      isSecret: (r.wr_option || "").includes("secret"),
+      createdAt: r.wr_datetime instanceof Date ? r.wr_datetime : new Date(String(r.wr_datetime || "").replace(" ", "T")),
+      isAnswered: Number(r.wr_comment) > 0 ? 1 : 0,
+      commentCount: Number(r.wr_comment) || 0,
+    })),
+    total: Number(countRow?.c) || 0,
+  };
+}
+
+export async function getRealProductQnAReplies(postId: number) {
+  const rows = await g5q<any>(
+    "SELECT wr_id, wr_content, wr_datetime FROM g5_write_qa WHERE wr_parent = ? AND wr_is_comment = 1 ORDER BY wr_id ASC",
+    [postId]
+  );
+  return rows.map((r: any) => ({
+    id: Number(r.wr_id),
+    content: r.wr_content || "",
+    createdAt: r.wr_datetime instanceof Date ? r.wr_datetime : new Date(String(r.wr_datetime || "").replace(" ", "T")),
+    isAdmin: true,
+  }));
+}
+
+export async function createRealProductQnAReply(postId: number, content: string, adminId: string, adminName: string, adminEmail: string) {
+  const now = new Date().toISOString().slice(0, 19).replace("T", " ");
+  const result: any = await g5q(
+    `INSERT INTO g5_write_qa (
+      wr_num, wr_reply, wr_parent, wr_is_comment, wr_comment, wr_comment_reply,
+      ca_name, wr_option, wr_subject, wr_content, wr_seo_title,
+      wr_link1, wr_link2, wr_link1_hit, wr_link2_hit, wr_hit, wr_good, wr_nogood,
+      mb_id, wr_password, wr_name, wr_email, wr_homepage,
+      wr_datetime, wr_file, wr_last, wr_ip,
+      wr_facebook_user, wr_twitter_user,
+      wr_1, wr_2, wr_3, wr_4, wr_5, wr_6, wr_7, wr_8, wr_9, wr_10
+    ) VALUES (0, '', ?, 1, 0, '', '', '', '', ?, '', '', '', 0, 0, 0, 0, 0, ?, '', ?, ?, '', ?, 0, ?, '', '', '', '', '', '', '', '', '', '', '', '', '')`,
+    [postId, content, adminId, adminName, adminEmail, now, now]
+  );
+  await g5q("UPDATE g5_write_qa SET wr_comment = wr_comment + 1, wr_last = ? WHERE wr_id = ?", [now, postId]);
+  return Number(result.insertId);
 }
 
 // ═══════════════════════════════════════════════════
@@ -3034,14 +3110,14 @@ export async function getActiveShipments() {
 
 function getShipmentStatusDescription(status: string): string {
   const map: Record<string, string> = {
-    ready: "配送の準備中です。",
-    picked_up: "配送業者が商品を集荷しました。",
-    in_transit: "配送中です。",
-    out_for_delivery: "配達に出発しました。",
-    delivered: "配達が完了しました。",
-    failed: "配送に失敗しました。",
+    ready: "배송 준비 중입니다.",
+    picked_up: "택배사에서 상품을 수거했습니다.",
+    in_transit: "배송 중입니다.",
+    out_for_delivery: "배달 출발했습니다.",
+    delivered: "배달이 완료되었습니다.",
+    failed: "배송에 실패했습니다.",
   };
-  return map[status] || "ステータスが変更されました。";
+  return map[status] || "상태가 변경되었습니다.";
 }
 
 export async function getShippingHistoryByShipmentId(shipmentId: number) {
@@ -3281,14 +3357,14 @@ export async function notifyPriceChanges(productId: number, productName: string,
     const lastPrice = alert.targetPrice;
     if (newPrice === lastPrice) continue;
     const direction = newPrice < lastPrice ? 'down' : 'up';
-    const dirLabel = direction === 'down' ? '値下げ' : '値上げ';
+    const dirLabel = direction === 'down' ? '인하' : '인상';
     let notified = false;
     try {
       await createNotification(
         alert.userId,
         "system",
-        `お気に入り商品の価格${dirLabel}`,
-        `「${productName}」の価格が${lastPrice.toLocaleString()}円 → ${newPrice.toLocaleString()}円に変更されました。`,
+        `관심 상품 가격 ${dirLabel}`,
+        `"${productName}" 가격이 ${lastPrice.toLocaleString()}원 → ${newPrice.toLocaleString()}원으로 변경되었습니다.`,
         `/products/${productSlug}`
       );
       notified = true;
@@ -3831,7 +3907,7 @@ export async function setPointExpirationMonths(months: number): Promise<void> {
   await db.insert(siteSettings).values({
     settingKey: "pointExpirationMonths",
     settingValue: String(months),
-    description: "ポイント有効期間（月単位）",
+    description: "포인트 만료 기간 (개월 단위)",
   }).onDuplicateKeyUpdate({ set: { settingValue: String(months) } });
 }
 
@@ -3899,7 +3975,7 @@ export async function expirePoints(): Promise<{ expiredCount: number; totalExpir
       userId,
       amount: -totalExpired,
       type: "use",
-      description: "ポイント失効",
+      description: "포인트 만료",
       expiresAt: null,
     });
   }
@@ -4029,55 +4105,94 @@ export async function resendEmail(logId: number) {
 }
 
 // ─── FAQ ───
+// 쇼핑몰 고객 화면의 「자주 묻는 질문」 페이지가 읽는 shop_faqs 테이블을 그대로 쓴다. 여기서 고친 내용이 바로 고객 화면에 보인다.
+// 고객은 일본어(question_ja / answer_ja)를 본다: 쇼핑몰 번역 스크립트가 *_ja 가 비어 있지 않으면 그 값으로 바꿔 보여준다.
+// 카테고리는 고객 화면의 탭 이름과 똑같아야 한다(탭이 category 값으로 걸러서 보여준다).
+export const FAQ_CATEGORIES = ["회원/정보", "주문/결제", "배송", "취소/교환/반품", "서비스/기타"] as const;
+const FAQ_CATEGORY_JA: Record<string, string> = {
+  "회원/정보": "会員・情報",
+  "주문/결제": "注文・お支払い",
+  "배송": "配送",
+  "취소/교환/반품": "キャンセル・交換・返品",
+  "서비스/기타": "サービス・その他",
+};
+const FAQ_SELECT = "SELECT id, category, question, answer, question_ja, answer_ja, sort_order, is_active, created_at FROM shop_faqs";
+
+function mapFaq(r: any) {
+  return {
+    id: Number(r.id),
+    category: String(r.category ?? ""),
+    question: String(r.question ?? ""),
+    answer: String(r.answer ?? ""),
+    questionJa: String(r.question_ja ?? ""),
+    answerJa: String(r.answer_ja ?? ""),
+    sortOrder: Number(r.sort_order ?? 0),
+    isActive: Number(r.is_active ?? 0),
+    viewCount: 0,
+    createdAt: r.created_at,
+  };
+}
+
+type FaqInput = {
+  category: string;
+  question?: string;
+  answer?: string;
+  questionJa?: string;
+  answerJa?: string;
+  sortOrder?: number;
+  isActive?: number;
+};
+
 export async function getFaqs(category?: string, isActive?: boolean) {
-  const db = await getDb();
-  if (!db) return [];
-  
-  const conditions = [];
-  if (category) conditions.push(eq(faqs.category, category));
-  if (isActive !== undefined) conditions.push(eq(faqs.isActive, isActive ? 1 : 0));
-  
-  return db
-    .select()
-    .from(faqs)
-    .where(conditions.length > 0 ? and(...conditions) : undefined)
-    .orderBy(asc(faqs.sortOrder), desc(faqs.createdAt));
+  const where: string[] = [];
+  const params: any[] = [];
+  if (category) { where.push("category = ?"); params.push(category); }
+  if (isActive !== undefined) { where.push("is_active = ?"); params.push(isActive ? 1 : 0); }
+  // 고객 화면과 같은 순서(카테고리 -> 정렬 순서 -> 번호)
+  const rows = await g5q(FAQ_SELECT + (where.length ? " WHERE " + where.join(" AND ") : "") + " ORDER BY category, sort_order, id", params);
+  return rows.map(mapFaq);
 }
 
 export async function getFaqById(id: number) {
-  const db = await getDb();
-  if (!db) return null;
-  
-  const [faq] = await db.select().from(faqs).where(eq(faqs.id, id)).limit(1);
-  
-  // 조회수 증가
-  if (faq) {
-    await db.update(faqs).set({ viewCount: faq.viewCount + 1 }).where(eq(faqs.id, id));
-  }
-  
-  return faq || null;
+  const row = await g5one(FAQ_SELECT + " WHERE id = ?", [id]);
+  return row ? mapFaq(row) : null;
 }
 
-export async function createFaq(data: InsertFaq) {
-  const db = await getDb();
-  if (!db) throw new Error("Database not initialized");
-  
-  const [{ id }] = await db.insert(faqs).values(data).$returningId();
-  return id;
+export async function createFaq(data: FaqInput) {
+  const qJa = (data.questionJa ?? "").trim();
+  const aJa = (data.answerJa ?? "").trim();
+  // question/answer(한국어) 칸은 NOT NULL: 한국어를 안 적으면 일본어를 대신 넣는다
+  const q = (data.question ?? "").trim() || qJa;
+  const a = (data.answer ?? "").trim() || aJa;
+  const r: any = await g5q(
+    "INSERT INTO shop_faqs (category, category_ja, question, answer, question_ja, answer_ja, sort_order, is_active) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+    [data.category, FAQ_CATEGORY_JA[data.category] ?? null, q, a, qJa || null, aJa || null, data.sortOrder ?? 0, data.isActive ?? 1]
+  );
+  return Number(r.insertId);
 }
 
-export async function updateFaq(id: number, data: Partial<InsertFaq>) {
-  const db = await getDb();
-  if (!db) throw new Error("Database not initialized");
-  
-  await db.update(faqs).set(data).where(eq(faqs.id, id));
+export async function updateFaq(id: number, data: Partial<FaqInput>) {
+  const cur = await getFaqById(id);
+  if (!cur) return;
+  const qJa = (data.questionJa ?? cur.questionJa).trim();
+  const aJa = (data.answerJa ?? cur.answerJa).trim();
+  const sets: string[] = [];
+  const params: any[] = [];
+  const put = (col: string, v: any) => { sets.push(col + " = ?"); params.push(v); };
+  if (data.category !== undefined) { put("category", data.category); put("category_ja", FAQ_CATEGORY_JA[data.category] ?? null); }
+  if (data.question !== undefined || data.questionJa !== undefined) put("question", (data.question !== undefined ? data.question : cur.question).trim() || qJa);
+  if (data.answer !== undefined || data.answerJa !== undefined) put("answer", (data.answer !== undefined ? data.answer : cur.answer).trim() || aJa);
+  if (data.questionJa !== undefined) put("question_ja", qJa || null);
+  if (data.answerJa !== undefined) put("answer_ja", aJa || null);
+  if (data.sortOrder !== undefined) put("sort_order", data.sortOrder);
+  if (data.isActive !== undefined) put("is_active", data.isActive);
+  if (!sets.length) return;
+  params.push(id);
+  await g5q("UPDATE shop_faqs SET " + sets.join(", ") + " WHERE id = ?", params);
 }
 
 export async function deleteFaq(id: number) {
-  const db = await getDb();
-  if (!db) throw new Error("Database not initialized");
-  
-  await db.delete(faqs).where(eq(faqs.id, id));
+  await g5q("DELETE FROM shop_faqs WHERE id = ?", [id]);
 }
 
 // ─── Inquiry Replies ───
@@ -4137,8 +4252,8 @@ export async function createInquiryReply(data: InsertInquiryReply) {
     await createNotification(
       post.userId,
       "inquiry",
-      isAuto ? "個別お問い合わせの自動応答が登録されました" : "個別お問い合わせの担当者回答が登録されました",
-      `お問い合わせいただいた「${post.title}」への${isAuto ? "自動応答" : "担当者の回答"}が登録されました。\n\n内容: ${contentPreview}`,
+      isAuto ? "1:1 문의 자동응답이 등록되었습니다" : "1:1 문의 상담사 답변이 등록되었습니다",
+      `문의하신 "${post.title}"에 대한 ${isAuto ? "자동응답" : "상담사 답변"}이 등록되었습니다.\n\n내용: ${contentPreview}`,
       `/inquiry/${post.id}`
     );
     
@@ -4322,7 +4437,7 @@ export async function updateShippingSyncSchedulerConfig(config: { enabled?: bool
     await db.insert(siteSettings).values({
       settingKey: SCHEDULER_SETTINGS_KEYS.enabled,
       settingValue: String(config.enabled),
-      description: "配送同期スケジューラーの有効状態",
+      description: "배송 동기화 스케줄러 활성화 여부",
     }).onDuplicateKeyUpdate({ set: { settingValue: String(config.enabled) } });
   }
 
@@ -4330,7 +4445,7 @@ export async function updateShippingSyncSchedulerConfig(config: { enabled?: bool
     await db.insert(siteSettings).values({
       settingKey: SCHEDULER_SETTINGS_KEYS.intervalHours,
       settingValue: String(config.intervalHours),
-      description: "配送同期の間隔（時間単位）",
+      description: "배송 동기화 주기 (시간 단위)",
     }).onDuplicateKeyUpdate({ set: { settingValue: String(config.intervalHours) } });
   }
 }
@@ -4343,13 +4458,13 @@ export async function updateShippingSyncLastRun(result: { syncedCount: number; f
   await db.insert(siteSettings).values({
     settingKey: SCHEDULER_SETTINGS_KEYS.lastRunAt,
     settingValue: now,
-    description: "配送同期の最終実行時間",
+    description: "배송 동기화 마지막 실행 시간",
   }).onDuplicateKeyUpdate({ set: { settingValue: now } });
 
   await db.insert(siteSettings).values({
     settingKey: SCHEDULER_SETTINGS_KEYS.lastRunResult,
     settingValue: JSON.stringify(result),
-    description: "配送同期の最終実行結果",
+    description: "배송 동기화 마지막 실행 결과",
   }).onDuplicateKeyUpdate({ set: { settingValue: JSON.stringify(result) } });
 }
 
@@ -4497,7 +4612,7 @@ export async function cancelPaymentConfirmation(paymentId: number) {
   const now = new Date();
   return db.transaction(async (tx) => {
     const [payment] = await tx.select().from(payments).where(eq(payments.id, paymentId)).limit(1);
-    if (!payment) throw new Error("お支払い情報が見つかりません。");
+    if (!payment) throw new Error("결제 정보를 찾을 수 없습니다.");
     await tx.update(payments)
       .set({ status: "pending", confirmedAt: null, confirmedBy: null, updatedAt: now })
       .where(eq(payments.id, paymentId));
@@ -5412,14 +5527,14 @@ export async function getClaims(page = 1, limit = 30, status?: string) {
             o.od_status, o.od_name, o.od_hp, o.od_receipt_price,
             m.mb_name, m.mb_hp, m.mb_email,
             (SELECT it_name FROM g5_shop_cart WHERE od_id = c.od_id LIMIT 1) as first_item
-     FROM seoulmono_claims c
+     FROM allddaom_claims c
      LEFT JOIN g5_shop_order o ON o.od_id = c.od_id
      LEFT JOIN g5_member m ON m.mb_id = c.mb_id
      ${where} ORDER BY c.created_at DESC LIMIT ? OFFSET ?`,
     [...params, limit, offset]
   );
   const countRow = await g5one<{ c: number }>(
-    `SELECT COUNT(*) AS c FROM seoulmono_claims c ${where}`,
+    `SELECT COUNT(*) AS c FROM allddaom_claims c ${where}`,
     params
   );
   return {
@@ -5474,7 +5589,7 @@ export async function updateClaimStatus(id: number, status?: string, adminMemo?:
   if (adminMemo !== undefined) { updates.push("admin_memo = ?"); params.push(adminMemo); }
   if (updates.length === 0) return;
   params.push(id);
-  await g5q(`UPDATE seoulmono_claims SET ${updates.join(", ")} WHERE id = ?`, params);
+  await g5q(`UPDATE allddaom_claims SET ${updates.join(", ")} WHERE id = ?`, params);
 }
 
 // ─── Admin Action Logs ───
@@ -5553,7 +5668,7 @@ export async function getAdminActionLogs(opts: {
 
 
 /**
- * [seoulmono-admin] 로그인 비밀번호 검증.
+ * [sorosoro-admin2] 로그인 비밀번호 검증.
  * g5 계정은 그누보드 PBKDF2/md5, 그 외(a2_users)는 bcrypt 를 쓴다.
  */
 export async function verifyUserPassword(user: any, plain: string): Promise<boolean> {
@@ -5563,4 +5678,113 @@ export async function verifyUserPassword(user: any, plain: string): Promise<bool
   }
   const bcrypt = (await import("bcryptjs")).default;
   return bcrypt.compare(plain, user.password);
+}
+
+// ─── 관련상품 (g5_shop_item_relation: it_id → it_id2, 순서 ir_no) ───
+export async function getRelatedProducts(productId: number) {
+  const rows = await g5q<any>(
+    `SELECT i.it_id, i.it_name, i.it_price, i.it_use, i.it_soldout, i.it_img1
+     FROM g5_shop_item_relation r
+     JOIN g5_shop_item i ON i.it_id = r.it_id2
+     WHERE r.it_id = ?
+     ORDER BY r.ir_no ASC, r.it_id2 ASC`,
+    [String(productId)]
+  );
+  return rows.map((r: any) => ({
+    id: Number(r.it_id),
+    name: r.it_name as string,
+    price: Number(r.it_price) || 0,
+    status: r.it_soldout === "1" ? "soldout" : (r.it_use === "1" ? "active" : "inactive"),
+    thumbnail: r.it_img1 ? (String(r.it_img1).startsWith("/api/product-image/") ? r.it_img1 : `/api/product-image/${r.it_img1}`) : null,
+  }));
+}
+
+export async function setRelatedProducts(productId: number, ids: number[]) {
+  const me = String(productId);
+  const clean = Array.from(new Set(ids.map((x) => String(x)))).filter((x) => x !== me && /^\d+$/.test(x)).slice(0, 12);
+  let valid: string[] = [];
+  if (clean.length) {
+    const ex = await g5q<any>(`SELECT it_id FROM g5_shop_item WHERE it_id IN (${clean.map(() => "?").join(",")})`, clean);
+    const have = new Set(ex.map((r: any) => String(r.it_id)));
+    valid = clean.filter((x) => have.has(x));
+  }
+  await g5q("DELETE FROM g5_shop_item_relation WHERE it_id = ?", [me]);
+  for (let i = 0; i < valid.length; i++) {
+    await g5q("INSERT INTO g5_shop_item_relation (it_id, it_id2, ir_no) VALUES (?, ?, ?)", [me, valid[i], i + 1]);
+  }
+  return valid.length;
+}
+
+// ─── 로그인 페이지 이벤트 배너 (a2_login_banners) ───
+export async function getLoginBanners() {
+  const rows = await g5q<any>("SELECT id, title, imageUrl, linkUrl, isActive, sortOrder FROM a2_login_banners ORDER BY sortOrder ASC, id ASC");
+  return rows.map((r: any) => ({ id: Number(r.id), title: String(r.title || ""), imageUrl: String(r.imageUrl || ""), linkUrl: String(r.linkUrl || ""), isActive: Number(r.isActive) ? 1 : 0, sortOrder: Number(r.sortOrder) || 0 }));
+}
+export async function createLoginBanner(d: { title: string; imageUrl: string; linkUrl?: string; isActive?: number; sortOrder?: number }) {
+  await g5q("INSERT INTO a2_login_banners (title, imageUrl, linkUrl, isActive, sortOrder) VALUES (?, ?, ?, ?, ?)", [d.title, d.imageUrl, d.linkUrl ?? "", d.isActive ?? 1, d.sortOrder ?? 0]);
+}
+export async function updateLoginBanner(id: number, d: Partial<{ title: string; imageUrl: string; linkUrl: string; isActive: number; sortOrder: number }>) {
+  const keys = (["title", "imageUrl", "linkUrl", "isActive", "sortOrder"] as const).filter((k) => d[k] !== undefined);
+  if (!keys.length) return;
+  await g5q(`UPDATE a2_login_banners SET ${keys.map((k) => `${k} = ?`).join(", ")} WHERE id = ?`, [...keys.map((k) => d[k]), id]);
+}
+export async function deleteLoginBanner(id: number) {
+  await g5q("DELETE FROM a2_login_banners WHERE id = ?", [id]);
+}
+
+// ─── 기획전 (a2_exhibitions / a2_exhibition_items) ───
+export async function getExhibitions() {
+  const rows = await g5q<any>(
+    `SELECT e.id, e.title, e.subtitle, e.isActive, e.sortOrder,
+            (SELECT COUNT(*) FROM a2_exhibition_items x WHERE x.exhibition_id = e.id) AS cnt
+     FROM a2_exhibitions e ORDER BY e.sortOrder ASC, e.id ASC`
+  );
+  return rows.map((r: any) => ({ id: Number(r.id), title: String(r.title || ""), subtitle: String(r.subtitle || ""), isActive: Number(r.isActive) ? 1 : 0, sortOrder: Number(r.sortOrder) || 0, count: Number(r.cnt) || 0 }));
+}
+export async function getExhibition(id: number) {
+  const e = await g5one<any>("SELECT id, title, subtitle, isActive, sortOrder FROM a2_exhibitions WHERE id = ?", [id]);
+  if (!e) return null;
+  const rows = await g5q<any>(
+    `SELECT i.it_id, i.it_name, i.it_price, i.it_use, i.it_soldout, i.it_img1
+     FROM a2_exhibition_items x JOIN g5_shop_item i ON i.it_id = x.it_id
+     WHERE x.exhibition_id = ? ORDER BY x.sortOrder ASC, x.id ASC`,
+    [id]
+  );
+  return {
+    id: Number(e.id), title: String(e.title || ""), subtitle: String(e.subtitle || ""), isActive: Number(e.isActive) ? 1 : 0, sortOrder: Number(e.sortOrder) || 0,
+    items: rows.map((r: any) => ({
+      id: Number(r.it_id), name: r.it_name as string, price: Number(r.it_price) || 0,
+      status: r.it_soldout === "1" ? "soldout" : (r.it_use === "1" ? "active" : "inactive"),
+      thumbnail: r.it_img1 ? (String(r.it_img1).startsWith("/api/product-image/") ? r.it_img1 : `/api/product-image/${r.it_img1}`) : null,
+    })),
+  };
+}
+export async function saveExhibition(d: { id?: number; title: string; subtitle: string; isActive: number; sortOrder: number; itemIds: number[] }) {
+  let id = d.id ?? 0;
+  if (id) {
+    await g5q("UPDATE a2_exhibitions SET title = ?, subtitle = ?, isActive = ?, sortOrder = ? WHERE id = ?", [d.title, d.subtitle, d.isActive, d.sortOrder, id]);
+  } else {
+    const ins: any = await g5q("INSERT INTO a2_exhibitions (title, subtitle, isActive, sortOrder) VALUES (?, ?, ?, ?)", [d.title, d.subtitle, d.isActive, d.sortOrder]);
+    id = Number(ins?.insertId) || 0;
+    if (!id) throw new Error("기획전 생성에 실패했습니다.");
+  }
+  const clean = Array.from(new Set(d.itemIds.map((x) => String(x)))).filter((x) => /^\d+$/.test(x)).slice(0, 24);
+  let valid: string[] = [];
+  if (clean.length) {
+    const ex = await g5q<any>(`SELECT it_id FROM g5_shop_item WHERE it_id IN (${clean.map(() => "?").join(",")})`, clean);
+    const have = new Set(ex.map((r: any) => String(r.it_id)));
+    valid = clean.filter((x) => have.has(x));
+  }
+  await g5q("DELETE FROM a2_exhibition_items WHERE exhibition_id = ?", [id]);
+  for (let i = 0; i < valid.length; i++) {
+    await g5q("INSERT INTO a2_exhibition_items (exhibition_id, it_id, sortOrder) VALUES (?, ?, ?)", [id, valid[i], i + 1]);
+  }
+  return { id, count: valid.length };
+}
+export async function setExhibitionActive(id: number, isActive: number) {
+  await g5q("UPDATE a2_exhibitions SET isActive = ? WHERE id = ?", [isActive ? 1 : 0, id]);
+}
+export async function deleteExhibition(id: number) {
+  await g5q("DELETE FROM a2_exhibition_items WHERE exhibition_id = ?", [id]);
+  await g5q("DELETE FROM a2_exhibitions WHERE id = ?", [id]);
 }

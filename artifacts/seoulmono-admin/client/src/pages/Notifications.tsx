@@ -9,10 +9,6 @@ import { toast } from "sonner";
 
 const iconMap: Record<string, any> = { order: Package, comment: MessageCircle, point: Star, system: Info, review: Star, inquiry: HelpCircle, discussion: MessageCircle };
 
-// 通関検査の通知 (旧データの韓国語タイトルも判定)
-const isCustomsNotice = (title: string) =>
-  title === "통관검사 안내" || title.includes("通関検査");
-
 export default function Notifications() {
   useAuth({ redirectOnUnauthenticated: true });
   const { data } = trpc.user.notifications.useQuery();
@@ -25,16 +21,16 @@ export default function Notifications() {
   const notifications = data?.notifications ?? [];
 
   return (
-    <MyPageLayout title={`通知 (未読${data?.unreadCount ?? 0}件)`}>
+    <MyPageLayout title={`알림 (${data?.unreadCount ?? 0}건 미읽음)`}>
         <div className="flex justify-end gap-2 mb-6">
           {(data?.unreadCount ?? 0) > 0 && (
             <Button variant="outline" size="sm" onClick={() => markAllRead.mutate()} disabled={markAllRead.isPending}>
-              <CheckCheck className="w-4 h-4 mr-1" />すべて既読
+              <CheckCheck className="w-4 h-4 mr-1" />모두 읽음
             </Button>
           )}
           {notifications.length > 0 && (
-            <Button variant="outline" size="sm" onClick={() => { if (confirm("通知をすべて削除しますか？")) deleteAll.mutate(); }} disabled={deleteAll.isPending} className="text-destructive hover:text-destructive border-destructive/30 hover:border-destructive/60">
-              <Trash2 className="w-4 h-4 mr-1" />すべて削除
+            <Button variant="outline" size="sm" onClick={() => { if (confirm("알림을 모두 삭제하시겠습니까?")) deleteAll.mutate(); }} disabled={deleteAll.isPending} className="text-destructive hover:text-destructive border-destructive/30 hover:border-destructive/60">
+              <Trash2 className="w-4 h-4 mr-1" />모두 삭제
             </Button>
           )}
         </div>
@@ -50,17 +46,17 @@ export default function Notifications() {
                   key={n.id}
                   onClick={() => { if (!n.isRead) markRead.mutate({ id: n.id }); }}
                   className={`flex gap-3 p-4 rounded-xl border transition-colors cursor-pointer ${
-                    isCustomsNotice(n.title)
+                    n.title === "통관검사 안내"
                       ? (n.isRead ? "bg-rose-50/50 border-rose-200" : "bg-rose-50 border-rose-300")
                       : (n.isRead ? "bg-card" : "bg-primary/5 border-primary/20")
                   }`}
                 >
                   <div className={`w-9 h-9 rounded-full flex items-center justify-center shrink-0 ${
-                    isCustomsNotice(n.title)
+                    n.title === "통관검사 안내"
                       ? "bg-rose-100"
                       : (n.isRead ? "bg-secondary" : "bg-primary/10")
                   }`}>
-                    {isCustomsNotice(n.title)
+                    {n.title === "통관검사 안내"
                       ? <ShieldAlert className="w-4 h-4 text-rose-600" />
                       : <Icon className={`w-4 h-4 ${n.isRead ? "text-muted-foreground" : "text-primary"}`} />
                     }

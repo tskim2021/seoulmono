@@ -19,18 +19,18 @@ export default function ReviewImageUploader({ images, onChange, maxImages = 5 }:
     if (!files || files.length === 0) return;
     const remaining = maxImages - images.length;
     if (remaining <= 0) {
-      toast.error(`画像は最大${maxImages}枚までアップロードできます`);
+      toast.error(`이미지는 최대 ${maxImages}장까지 업로드할 수 있습니다`);
       return;
     }
     const filesToUpload = Array.from(files).slice(0, remaining);
     // Validate file types and sizes
     for (const file of filesToUpload) {
       if (!file.type.startsWith("image/")) {
-        toast.error(`${file.name} は画像ファイルではありません`);
+        toast.error(`${file.name}은(는) 이미지 파일이 아닙니다`);
         return;
       }
       if (file.size > 5 * 1024 * 1024) {
-        toast.error(`${file.name} のファイルサイズが5MBを超えています`);
+        toast.error(`${file.name} 파일 크기가 5MB를 초과합니다`);
         return;
       }
     }
@@ -48,7 +48,7 @@ export default function ReviewImageUploader({ images, onChange, maxImages = 5 }:
         uploadedUrls.push(result.url);
       }
       onChange([...images, ...uploadedUrls]);
-      toast.success(`${uploadedUrls.length}枚の画像をアップロードしました`);
+      toast.success(`${uploadedUrls.length}장의 이미지가 업로드되었습니다`);
     } catch {
       toast.error("画像のアップロードに失敗しました");
     } finally {
@@ -76,7 +76,7 @@ export default function ReviewImageUploader({ images, onChange, maxImages = 5 }:
     <div className="space-y-3">
       <div className="flex items-center justify-between">
         <span className="text-sm font-medium">画像を添付</span>
-        <span className="text-xs text-muted-foreground">{images.length}/{maxImages}枚</span>
+        <span className="text-xs text-muted-foreground">{images.length}/{maxImages}장</span>
       </div>
 
       {/* Preview grid */}
@@ -84,7 +84,7 @@ export default function ReviewImageUploader({ images, onChange, maxImages = 5 }:
         <div className="grid grid-cols-3 sm:grid-cols-5 gap-2">
           {images.map((url, i) => (
             <div key={i} className="relative group aspect-square rounded-lg overflow-hidden border bg-secondary/30">
-              <img src={url} alt={`レビュー画像 ${i + 1}`} className="w-full h-full object-cover" />
+              <img src={url} alt={`리뷰 이미지 ${i + 1}`} className="w-full h-full object-cover" />
               <button
                 type="button"
                 onClick={() => removeImage(i)}
@@ -114,7 +114,7 @@ export default function ReviewImageUploader({ images, onChange, maxImages = 5 }:
             <div className="flex flex-col items-center gap-2">
               <ImagePlus className="w-6 h-6 text-muted-foreground" />
               <p className="text-sm text-muted-foreground">クリックまたはドラッグして画像を追加</p>
-              <p className="text-xs text-muted-foreground/60">JPG, PNG, GIF (最大5MB、{maxImages}枚)</p>
+              <p className="text-xs text-muted-foreground/60">JPG, PNG, GIF (최대 5MB, {maxImages}장)</p>
             </div>
           )}
           <input

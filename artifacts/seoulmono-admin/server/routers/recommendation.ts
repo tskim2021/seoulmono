@@ -128,7 +128,7 @@ export const recommendationRouter = router({
     limit: z.number().default(8),
   }).optional()).query(async ({ ctx, input }) => {
     const db = await getDb();
-    if (!db) return { products: [], reason: "サービスをご利用いただけません" };
+    if (!db) return { products: [], reason: "서비스 이용 불가" };
     const limit = input?.limit ?? 8;
 
     // 사용자의 구매 이력에서 카테고리 선호도 분석
@@ -181,7 +181,7 @@ export const recommendationRouter = router({
       .slice(0, 3)
       .map(([id]) => id);
 
-    let reason = "あなたへのおすすめ";
+    let reason = "맞춤 추천";
 
     if (topCategories.length > 0) {
       // 선호 카테고리에서 미구매 인기 상품 추천
@@ -201,7 +201,7 @@ export const recommendationRouter = router({
         .limit(limit);
 
       if (recommended.length >= 4) {
-        reason = "購入履歴に基づくおすすめ";
+        reason = "구매 이력 기반 추천";
         return { products: recommended, reason };
       }
     }
@@ -219,7 +219,7 @@ export const recommendationRouter = router({
       .orderBy(desc(products.viewCount), desc(products.avgRating))
       .limit(limit);
 
-    reason = topCategories.length > 0 ? "関心のあるカテゴリに基づくおすすめ" : "人気商品のおすすめ";
+    reason = topCategories.length > 0 ? "관심 카테고리 기반 추천" : "인기 상품 추천";
     return { products: popular, reason };
   }),
 

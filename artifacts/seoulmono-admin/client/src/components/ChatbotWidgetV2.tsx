@@ -54,7 +54,7 @@ export function ChatbotWidgetV2({ productId }: { productId?: number }) {
       setMessages(prev => [...prev, { role: "assistant" as const, content: String(data.content) }]);
     },
     onError: () => {
-      setMessages(prev => [...prev, { role: "assistant", content: settings?.responseUnavailableMessage || "申し訳ございません。一時的なエラーが発生しました。" }]);
+      setMessages(prev => [...prev, { role: "assistant", content: settings?.responseUnavailableMessage || "죄송합니다. 일시적인 오류가 발생했습니다." }]);
     },
   });
 
@@ -105,7 +105,7 @@ export function ChatbotWidgetV2({ productId }: { productId?: number }) {
 
   const handleReset = () => {
     if (messages.length === 0 && navStack.length === 1) return;
-    if (confirm("会話をリセットしますか？")) {
+    if (confirm("대화를 초기화하시겠습니까?")) {
       setMessages([]);
       setInput("");
       setNavStack([{ mode: "welcome" }]);
@@ -233,13 +233,13 @@ export function ChatbotWidgetV2({ productId }: { productId?: number }) {
               </div>
               <div>
                 <h3 className="font-semibold text-sm">
-                  {currentNav.categoryName || "AIアシスタント"}
+                  {currentNav.categoryName || "AI 상담사"}
                 </h3>
                 <p className="text-xs opacity-80">
-                  {currentNav.mode === "welcome" && "何でもご質問ください"}
-                  {currentNav.mode === "categories" && "カテゴリを選択"}
-                  {currentNav.mode === "qna" && "質問を選択"}
-                  {currentNav.mode === "chat" && "AIと会話中"}
+                  {currentNav.mode === "welcome" && "무엇이든 물어보세요"}
+                  {currentNav.mode === "categories" && "카테고리 선택"}
+                  {currentNav.mode === "qna" && "질문 선택"}
+                  {currentNav.mode === "chat" && "AI와 대화 중"}
                 </p>
               </div>
             </div>
@@ -279,7 +279,7 @@ export function ChatbotWidgetV2({ productId }: { productId?: number }) {
                   <div>
                     <h4 className="font-semibold mb-1">こんにちは！</h4>
                     <p className="text-sm text-muted-foreground">
-                      {settings?.greetingMessage || "ソウルモノ AIアシスタントです。どのようなご用件でしょうか？"}
+                      {settings?.greetingMessage || "탈모학교 AI 상담사입니다. 무엇을 도와드릴까요?"}
                     </p>
                   </div>
                   
@@ -309,7 +309,7 @@ export function ChatbotWidgetV2({ productId }: { productId?: number }) {
                       onClick={handleAIChat}
                       className="w-full text-sm px-4 py-3 rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-colors font-medium"
                     >
-                      AIと直接チャットする
+                      AI와 직접 대화하기
                     </button>
                   </div>
                 </div>
@@ -361,7 +361,7 @@ export function ChatbotWidgetV2({ productId }: { productId?: number }) {
                       onClick={handleAIChat}
                       className="w-full text-sm px-4 py-2 rounded-lg bg-muted hover:bg-accent transition-colors"
                     >
-                      AIと直接チャットする
+                      AI와 직접 대화하기
                     </button>
                   </div>
                 </div>
@@ -377,7 +377,7 @@ export function ChatbotWidgetV2({ productId }: { productId?: number }) {
                       </div>
                       <h4 className="font-semibold mb-1">AIとチャットする</h4>
                       <p className="text-sm text-muted-foreground">
-                        ご不明な点をお気軽にご質問ください
+                        궁금한 점을 자유롭게 물어보세요
                       </p>
                     </div>
                   ) : (

@@ -28,7 +28,7 @@ export const uploadRouter = router({
         if (buffer.length > 5 * 1024 * 1024) {
           throw new TRPCError({
             code: "BAD_REQUEST",
-            message: "ファイルサイズは5MBを超えられません。",
+            message: "파일 크기는 5MB를 초과할 수 없습니다.",
           });
         }
 
@@ -41,7 +41,7 @@ export const uploadRouter = router({
         console.error("Image upload error:", error);
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
-          message: "画像のアップロードに失敗しました。",
+          message: "이미지 업로드에 실패했습니다.",
         });
       }
     }),
@@ -65,7 +65,7 @@ export const uploadRouter = router({
         if (buffer.length > 10 * 1024 * 1024) {
           throw new TRPCError({
             code: "BAD_REQUEST",
-            message: "ファイルサイズは10MBを超えられません。",
+            message: "파일 크기는 10MB를 초과할 수 없습니다.",
           });
         }
 
@@ -74,7 +74,7 @@ export const uploadRouter = router({
         if (!allowedTypes.includes(input.contentType)) {
           throw new TRPCError({
             code: "BAD_REQUEST",
-            message: "画像ファイルのみアップロードできます。（JPG, PNG, GIF, WebP）",
+            message: "이미지 파일만 업로드할 수 있습니다. (JPG, PNG, GIF, WebP)",
           });
         }
 
@@ -89,7 +89,7 @@ export const uploadRouter = router({
         console.error("Inquiry image upload error:", error);
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
-          message: "画像のアップロードに失敗しました。",
+          message: "이미지 업로드에 실패했습니다.",
         });
       }
     }),

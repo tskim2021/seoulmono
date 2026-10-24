@@ -87,11 +87,11 @@ export default function ReviewWrite() {
                 <div className="flex items-center justify-center gap-2 mb-2">
                   <Gift className="w-5 h-5 text-amber-500" />
                   <span className="font-bold text-amber-700 dark:text-amber-300 text-lg">
-                    {earnedPoints.toLocaleString()}P 獲得！
+                    {earnedPoints.toLocaleString()}P 적립!
                   </span>
                 </div>
                 <p className="text-xs text-amber-600 dark:text-amber-400">
-                  レビュー投稿ポイントが自動で付与されました
+                  리뷰 작성 포인트가 자동으로 적립되었습니다
                 </p>
               </div>
             )}
@@ -126,7 +126,7 @@ export default function ReviewWrite() {
     <Layout>
       <div className="container py-8 max-w-2xl mx-auto">
         <button onClick={() => window.history.back()} className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground mb-6 transition-colors">
-          <ArrowLeft className="w-4 h-4" /> 戻る
+          <ArrowLeft className="w-4 h-4" /> 돌아가기
         </button>
 
         <h1 className="text-2xl font-bold mb-6">レビューを書く</h1>
@@ -145,7 +145,7 @@ export default function ReviewWrite() {
             </div>
             <div>
               <Badge variant="outline" className="text-xs mb-1 text-green-600 border-green-300 bg-green-50 dark:bg-green-950/30">
-                <CheckCircle className="w-3 h-3 mr-1" /> 購入確認済み
+                <CheckCircle className="w-3 h-3 mr-1" /> 구매 인증
               </Badge>
               <h3 className="font-semibold">{product.name}</h3>
               <p className="text-sm text-muted-foreground price-text">{formatPrice(product.salePrice ?? product.price)}</p>
@@ -165,7 +165,7 @@ export default function ReviewWrite() {
                 <div className="flex flex-wrap gap-x-4 gap-y-1 mt-1 text-xs text-amber-700 dark:text-amber-400">
                   <span>テキストレビュー: <strong>{textPoints}P</strong></span>
                   <span>フォト追加: <strong>+{photoPoints}P</strong></span>
-                  <span>評価{minRating}点以上</span>
+                  <span>별점 {minRating}점 이상</span>
                 </div>
               </div>
               <div className="text-right flex-shrink-0">
@@ -198,7 +198,7 @@ export default function ReviewWrite() {
                 />
               </button>
             ))}
-            <span className="ml-2 text-sm text-muted-foreground">{rating}点</span>
+            <span className="ml-2 text-sm text-muted-foreground">{rating}점</span>
           </div>
         </div>
 
@@ -220,7 +220,7 @@ export default function ReviewWrite() {
           <div className="flex items-center justify-between mb-2">
             <label className="block text-sm font-semibold">内容</label>
             <span className={`text-xs ${rating >= minRating ? "text-green-600" : "text-muted-foreground"}`}>
-              {content.length}文字
+              {content.length}자
             </span>
           </div>
           <textarea
@@ -232,7 +232,7 @@ export default function ReviewWrite() {
           />
           {isPointEnabled && rating < minRating && (
             <p className="text-xs text-amber-600 mt-1">
-              評価{minRating}点以上でポイントが付与されます
+              별점 {minRating}점 이상으로 평가하면 포인트가 적립됩니다
             </p>
           )}
         </div>
@@ -242,11 +242,11 @@ export default function ReviewWrite() {
           <div className="flex items-center justify-between mb-3">
             <label className="block text-sm font-semibold">
               <Camera className="w-4 h-4 inline mr-1" />
-              写真を添付
+              사진 첨부
             </label>
             {isPointEnabled && (
               <Badge variant="secondary" className="text-xs bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300">
-                写真添付で +{photoPoints}P
+                사진 첨부 시 +{photoPoints}P
               </Badge>
             )}
           </div>
@@ -259,7 +259,7 @@ export default function ReviewWrite() {
             {isPointEnabled && currentPoints > 0 && (
               <p className="text-sm text-amber-600 dark:text-amber-400 font-medium">
                 <Gift className="w-4 h-4 inline mr-1" />
-                レビュー登録で <strong>{currentPoints}P</strong> 獲得予定
+                리뷰 등록 시 <strong>{currentPoints}P</strong> 적립 예정
               </p>
             )}
           </div>
@@ -272,7 +272,7 @@ export default function ReviewWrite() {
             {createReview.isPending ? (
               <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> 登録中...</>
             ) : (
-              "レビューを登録"
+              "리뷰 등록"
             )}
           </Button>
         </div>

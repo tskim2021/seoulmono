@@ -69,7 +69,7 @@ export function ImageLightbox({ images, initialIndex = 0, onClose }: ImageLightb
       <div className="max-w-[90vw] max-h-[85vh] flex items-center justify-center" onClick={e => e.stopPropagation()}>
         <img
           src={images[currentIndex]}
-          alt={`画像 ${currentIndex + 1}`}
+          alt={`이미지 ${currentIndex + 1}`}
           className="max-w-full max-h-[85vh] object-contain rounded-lg shadow-2xl"
         />
       </div>
@@ -118,7 +118,7 @@ export function ReviewImageGallery({ images, maxVisible = 4 }: ReviewImageGaller
             onClick={() => { setLightboxIndex(i); setLightboxOpen(true); }}
             className="relative w-16 h-16 sm:w-20 sm:h-20 rounded-lg overflow-hidden border bg-secondary/30 hover:opacity-80 transition-opacity group"
           >
-            <img src={img} alt={`レビュー画像 ${i + 1}`} className="w-full h-full object-cover" />
+            <img src={img} alt={`리뷰 이미지 ${i + 1}`} className="w-full h-full object-cover" />
             <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors flex items-center justify-center">
               <ZoomIn className="w-4 h-4 text-white opacity-0 group-hover:opacity-80 transition-opacity drop-shadow" />
             </div>

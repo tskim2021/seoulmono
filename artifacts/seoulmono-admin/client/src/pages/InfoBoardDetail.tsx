@@ -72,7 +72,7 @@ export default function InfoBoardDetail({ postIdProp }: { postIdProp?: number } 
 
   const formatDate = (date: Date | string) => {
     const d = new Date(date);
-    return d.toLocaleDateString("ja-JP", { year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit" });
+    return d.toLocaleDateString("ko-KR", { year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit" });
   };
 
   if (isLoading) {
@@ -116,7 +116,7 @@ export default function InfoBoardDetail({ postIdProp }: { postIdProp?: number } 
       <div className="container py-8">
         {/* 상단 네비게이션 */}
         <Link href="/bbs/board.php?bo_table=info" className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground mb-6">
-          <ArrowLeft className="w-4 h-4" />一覧へ
+          <ArrowLeft className="w-4 h-4" />목록으로
         </Link>
 
         <article className="bg-card border rounded-xl p-6 md:p-8">
@@ -129,7 +129,7 @@ export default function InfoBoardDetail({ postIdProp }: { postIdProp?: number } 
             <div className="flex items-center gap-3 text-sm text-muted-foreground">
               <div className="flex items-center gap-1.5">
                 <div className="w-6 h-6 rounded-full bg-secondary flex items-center justify-center"><User className="w-3 h-3" /></div>
-                <span className="font-medium text-foreground">{post.userName || "匿名"}</span>
+                <span className="font-medium text-foreground">{post.userName || "익명"}</span>
               </div>
               <span>{formatDate(post.createdAt)}</span>
               <span className="flex items-center gap-1"><Eye className="w-3.5 h-3.5" />{post.viewCount}</span>
@@ -147,7 +147,7 @@ export default function InfoBoardDetail({ postIdProp }: { postIdProp?: number } 
             <div className="mb-8">
               <div className="mt-6 space-y-3">
                 {(post.images as string[]).map((img, i) => (
-                  <img key={i} src={img} alt={`添付画像 ${i + 1}`} className="max-w-full rounded-lg border" />
+                  <img key={i} src={img} alt={`첨부 이미지 ${i + 1}`} className="max-w-full rounded-lg border" />
                 ))}
               </div>
             </div>
@@ -174,10 +174,10 @@ export default function InfoBoardDetail({ postIdProp }: { postIdProp?: number } 
               {(user?.id === post.userId || user?.role === "admin") && (
                 <>
                   <Link href={`/info-board/edit/${postId}`}>
-                    <Button variant="outline" size="sm">編集</Button>
+                    <Button variant="outline" size="sm">更新</Button>
                   </Link>
-                  <Button variant="destructive" size="sm" onClick={() => { if (confirm("本当に削除しますか？")) deletePost.mutate({ id: postId }); }}>
-                    削除
+                  <Button variant="destructive" size="sm" onClick={() => { if (confirm("정말 삭제하시겠습니까?")) deletePost.mutate({ id: postId }); }}>
+                    삭제
                   </Button>
                 </>
               )}
@@ -190,7 +190,7 @@ export default function InfoBoardDetail({ postIdProp }: { postIdProp?: number } 
           <div className="mt-4">
           <h3 className="text-sm font-semibold text-gray-700 mb-4 flex items-center gap-1.5">
             <MessageSquare className="w-4 h-4" />
-            コメント {comments?.length ?? 0}件
+            댓글 {comments?.length ?? 0}개
           </h3>
 
           {/* 댓글 목록 */}
@@ -202,26 +202,26 @@ export default function InfoBoardDetail({ postIdProp }: { postIdProp?: number } 
                   <div className="flex items-center justify-between mb-1.5">
                     <div className="flex items-center gap-2">
                       <span className={`text-sm font-medium ${comment.isAdmin ? "text-amber-700" : "text-gray-700"}`}>
-                        {comment.userName || "匿名"}
+                        {comment.userName || "익명"}
                         {comment.isAdmin ? <span className="ml-1 text-[10px] bg-amber-100 text-amber-700 px-1.5 py-0.5 rounded">管理者</span> : null}
                       </span>
                       <span className="text-xs text-gray-400">{formatDate(comment.createdAt)}</span>
                     </div>
                     <div className="flex items-center gap-1">
                       <button
-                        onClick={() => setReplyTo(replyTo?.id === comment.id ? null : { id: comment.id, name: comment.userName || "匿名" })}
+                        onClick={() => setReplyTo(replyTo?.id === comment.id ? null : { id: comment.id, name: comment.userName || "익명" })}
                         className="text-xs text-gray-400 hover:text-amber-600"
                       >
-                        返信
+                        답글
                       </button>
                       {(user?.id === comment.userId || user?.role === "admin") && (
                         <button
                           onClick={() => {
-                            if (confirm("コメントを削除しますか？")) deleteComment.mutate({ id: comment.id });
+                            if (confirm("댓글을 삭제하시겠습니까?")) deleteComment.mutate({ id: comment.id });
                           }}
                           className="text-xs text-gray-400 hover:text-red-500 ml-2"
                         >
-                          削除
+                          삭제
                         </button>
                       )}
                     </div>
@@ -234,7 +234,7 @@ export default function InfoBoardDetail({ postIdProp }: { postIdProp?: number } 
                   <div className="py-3 px-4 pl-10 bg-gray-50 border-b border-gray-100">
                     <div className="flex gap-2">
                       <Textarea
-                        placeholder={`${replyTo?.name ?? ''}さんへの返信を入力...`}
+                        placeholder={`${replyTo?.name ?? ''}님에게 답글 작성...`}
                         value={replyText}
                         onChange={(e) => setReplyText(e.target.value)}
                         className="min-h-[60px] text-sm resize-none"
@@ -246,10 +246,10 @@ export default function InfoBoardDetail({ postIdProp }: { postIdProp?: number } 
                           onClick={() => handleSubmitComment(comment.id)}
                           disabled={!replyText.trim() || createComment.isPending}
                         >
-                          投稿
+                          등록
                         </Button>
                         <Button size="sm" variant="ghost" onClick={() => { setReplyTo(null); setReplyText(""); }}>
-                          キャンセル
+                          취소
                         </Button>
                       </div>
                     </div>
@@ -263,7 +263,7 @@ export default function InfoBoardDetail({ postIdProp }: { postIdProp?: number } 
                       <div className="flex items-center gap-2">
                         <CornerDownRight className="w-3 h-3 text-gray-400" />
                         <span className={`text-sm font-medium ${child.isAdmin ? "text-amber-700" : "text-gray-700"}`}>
-                          {child.userName || "匿名"}
+                          {child.userName || "익명"}
                           {child.isAdmin ? <span className="ml-1 text-[10px] bg-amber-100 text-amber-700 px-1.5 py-0.5 rounded">管理者</span> : null}
                         </span>
                         <span className="text-xs text-gray-400">{formatDate(child.createdAt)}</span>
@@ -271,11 +271,11 @@ export default function InfoBoardDetail({ postIdProp }: { postIdProp?: number } 
                       {(user?.id === child.userId || user?.role === "admin") && (
                         <button
                           onClick={() => {
-                            if (confirm("コメントを削除しますか？")) deleteComment.mutate({ id: child.id });
+                            if (confirm("댓글을 삭제하시겠습니까?")) deleteComment.mutate({ id: child.id });
                           }}
                           className="text-xs text-gray-400 hover:text-red-500"
                         >
-                          削除
+                          삭제
                         </button>
                       )}
                     </div>
@@ -302,7 +302,7 @@ export default function InfoBoardDetail({ postIdProp }: { postIdProp?: number } 
                   disabled={!commentText.trim() || createComment.isPending}
                   className="self-end"
                 >
-                  投稿
+                  등록
                 </Button>
               </div>
             ) : (

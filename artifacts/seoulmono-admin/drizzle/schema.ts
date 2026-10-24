@@ -342,6 +342,7 @@ export const banners = mysqlTable("a2_banners", {
   id: int("id").autoincrement().primaryKey(),
   title: varchar("title", { length: 255 }).notNull(),
   imageUrl: text("imageUrl").notNull(),
+  mobileImageUrl: text("mobileImageUrl"),
   linkUrl: text("linkUrl"),
   isActive: int("isActive").default(1).notNull(),
   sortOrder: int("sortOrder").default(0).notNull(),

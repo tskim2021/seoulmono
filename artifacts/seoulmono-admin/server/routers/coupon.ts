@@ -135,7 +135,7 @@ export const couponRouter = router({
     code: z.string().min(1),
   })).mutation(async ({ ctx, input }) => {
     const coupon = await db.getCouponByCode(input.code);
-    if (!coupon) throw new TRPCError({ code: "NOT_FOUND", message: "存在しないクーポンコードです。" });
+    if (!coupon) throw new TRPCError({ code: "NOT_FOUND", message: "존재하지 않는 쿠폰 코드입니다." });
     try {
       const userCouponId = await db.issueCouponToUser(ctx.user.id, coupon.id);
       return { success: true, couponName: coupon.name, couponId: coupon.id, userCouponId };

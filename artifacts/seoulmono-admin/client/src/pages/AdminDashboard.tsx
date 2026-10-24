@@ -35,7 +35,6 @@ import { Link, Route, Switch, useLocation } from "wouter";
 import { type ReactNode, useState, useMemo, useRef, useCallback, useEffect, Fragment } from "react";
 import { toast } from "sonner";
 import AdminProductExcelUpload from "./AdminProductExcelUpload";
-import AdminTrackingExcelUpload from "./AdminTrackingExcelUpload";
 import AdminShippingDashboard from "./AdminShippingDashboard";
 import AdminChatbotSettings from "./AdminChatbotSettings";
 import AdminChatbotCategories from "./AdminChatbotCategories";
@@ -43,24 +42,18 @@ import AdminChatbotQna from "./AdminChatbotQna";
 import AdminChatbotConversations from "./AdminChatbotConversations";
 import AdminPointHistory from "./admin/AdminPointHistory";
 import AdminPointExpiration from "./admin/AdminPointExpiration";
-import AdminEmailTemplate from "./admin/AdminEmailTemplate";
-import AdminEmailLogs from "./admin/AdminEmailLogs";
+import AdminEmailPreview from "./admin/AdminEmailPreview";
 import AdminFAQ from "./admin/AdminFAQ";
 import AdminPaymentSettings from "./AdminPaymentSettings";
 import AdminPaymentManagement from "./AdminPaymentManagement";
 import AdminPricingSettings from "./AdminPricingSettings";
-import AdminNewsManagement from "./AdminNewsManagement";
-import AdminNewsAutoSettings from "./AdminNewsAutoSettings";
 import AdminProductInfo from "./AdminProductInfo";
 import AdminUserDetail from "./admin/AdminUserDetail";
 import AdminOrdersSpreadsheet from "./AdminOrdersSpreadsheet";
-import AdminInfoBoardAuto from "./admin/AdminInfoBoardAuto";
-import AdminDiscussionAuto from "./admin/AdminDiscussionAuto";
+import AdminFulfilment from "./AdminFulfilment";
 import AdminInquiries from "./admin/AdminInquiries";
 import AdminPointSettings from "./admin/AdminPointSettings";
-import AdminSmtpSettings from "./admin/AdminSmtpSettings";
 import AdminGnuApiSync from "./admin/AdminGnuApiSync";
-import AdminApiSettings from "./admin/AdminApiSettings";
 import AdminActionLogs from "./admin/AdminActionLogs";
 import AdminVisitorStats from "./admin/AdminVisitorStats";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, BarChart, Bar, Legend } from "recharts";
@@ -154,8 +147,8 @@ function MultiImageUploader({ images, onImagesChange }: { images: string[]; onIm
 
   const handleFiles = useCallback(async (files: FileList | File[]) => {
     const validFiles = Array.from(files).filter(f => {
-      if (!f.type.startsWith("image/")) { toast.error(`${f.name}: 画像ファイルのみアップロードできます。`); return false; }
-      if (f.size > 5 * 1024 * 1024) { toast.error(`${f.name}: ファイルサイズは5MB以下にしてください。`); return false; }
+      if (!f.type.startsWith("image/")) { toast.error(`${f.name}: 이미지 파일만 업로드 가능합니다.`); return false; }
+      if (f.size > 5 * 1024 * 1024) { toast.error(`${f.name}: 파일 크기는 5MB 이하여야 합니다.`); return false; }
       return true;
     });
     if (validFiles.length === 0) return;
@@ -173,7 +166,7 @@ function MultiImageUploader({ images, onImagesChange }: { images: string[]; onIm
         newUrls.push(url);
       }
       onImagesChange([...images, ...newUrls]);
-      toast.success(`${newUrls.length}枚の画像をアップロードしました。`);
+      toast.success(`${newUrls.length}개 이미지가 업로드되었습니다.`);
     } catch {
       toast.error("画像のアップロードに失敗しました。");
     } finally {
@@ -212,7 +205,7 @@ function MultiImageUploader({ images, onImagesChange }: { images: string[]; onIm
   return (
     <div className="space-y-3">
       <div className="flex items-center justify-between">
-        <label className="text-sm font-medium">商品画像 ({images.length}枚)</label>
+        <label className="text-sm font-medium">상품 이미지 ({images.length}개)</label>
         <span className="text-xs text-muted-foreground">ドラッグして順序を変更 | 1枚目の画像がメイン画像</span>
       </div>
       {/* 기존 이미지 그리드 */}
@@ -229,7 +222,7 @@ function MultiImageUploader({ images, onImagesChange }: { images: string[]; onIm
                 idx === 0 ? "border-primary ring-2 ring-primary/20" : "border-border"
               } ${dragIdx === idx ? "opacity-50 scale-95" : ""}`}
             >
-              <img src={url} alt={`商品画像 ${idx + 1}`} className="w-full h-full object-cover" />
+              <img src={url} alt={`상품 이미지 ${idx + 1}`} className="w-full h-full object-cover" />
               {idx === 0 && (
                 <div className="absolute top-0.5 left-0.5 bg-primary text-primary-foreground text-[10px] px-1.5 py-0.5 rounded font-medium">メイン</div>
               )}
@@ -292,7 +285,7 @@ function ContentAIGenerateButton({ productId, productName, productDescription, o
         onGenerated(result.content);
         toast.success("AIが商品詳細説明を生成しました。");
       } else {
-        toast.error(result.error || "AI生成に失敗しました。");
+        toast.error(result.error || "AI 생성에 실패했습니다.");
       }
     },
     onError: (err) => toast.error(err.message),
@@ -315,9 +308,9 @@ function ContentAIGenerateButton({ productId, productName, productDescription, o
       }}
     >
       {generateMut.isPending ? (
-        <><Loader2 className="w-3 h-3 mr-1 animate-spin" /> AI生成中...</>
+        <><Loader2 className="w-3 h-3 mr-1 animate-spin" /> AI 생성 중...</>
       ) : (
-        <><Sparkles className="w-3 h-3 mr-1" /> AI詳細説明を生成</>
+        <><Sparkles className="w-3 h-3 mr-1" /> AI 상세 설명 생성</>
       )}
     </Button>
   );
@@ -362,7 +355,7 @@ export function AdminLayout({ children }: { children: ReactNode }) {
         <div className="text-center">
           <h2 className="text-xl font-bold mb-2">アクセス権限がありません</h2>
           <p className="text-muted-foreground mb-4">
-            管理者のみアクセスできます。(現在のアカウント: {user.name ?? "-"})
+            관리자만 접근할 수 있습니다. (현재 계정: {user.name ?? "-"})
           </p>
           <Button variant="outline" onClick={() => setLocation("/login")}>別のアカウントでログイン</Button>
         </div>
@@ -381,12 +374,14 @@ export function AdminLayout({ children }: { children: ReactNode }) {
       label: "ショップ管理",
       items: [
         { href: "/admin/categories", icon: FolderTree, label: "カテゴリー管理" },
-        { href: "/admin/products", icon: ShoppingBag, label: "商品管理" },
+        { href: "/admin/products", icon: ShoppingBag, label: "상품 관리" },
+        { href: "/admin/fulfilment", icon: Truck, label: "주문 처리 (출고)" },
         { href: "/admin/orders", icon: Package, label: "注文管理" },
         { href: "/admin/orders/spreadsheet", icon: Package, label: "注文管理 (スプレッドシート)" },
-        { href: "/admin/refunds", icon: RotateCcw, label: "返金管理" },
+        { href: "/admin/refunds", icon: RotateCcw, label: "환불 관리" },
         { href: "/admin/carts", icon: ShoppingCart, label: "カート状況" },
         { href: "/admin/banners", icon: Image, label: "バナー管理" },
+        { href: "/admin/exhibitions", icon: Gift, label: "기획전 관리" },
         { href: "/admin/coupons", icon: Ticket, label: "クーポン管理" },
         { href: "/admin/promo-codes", icon: Tag, label: "プロモコード管理" },
       ]
@@ -416,56 +411,38 @@ export function AdminLayout({ children }: { children: ReactNode }) {
       label: "コミュニティ管理",
       items: [
         { href: "/admin/boards", icon: FileText, label: "掲示板管理" },
-        { href: "/admin/product-qna", icon: HelpCircle, label: "商品Q&A管理" },
+        { href: "/admin/product-qna", icon: HelpCircle, label: "상품 Q&A 관리" },
         { href: "/admin/reviews", icon: MessageCircle, label: "レビュー管理" },
-        { href: "/admin/news", icon: Newspaper, label: "ニュース管理" },
-        { href: "/admin/news-settings", icon: Zap, label: "ニュース自動生成設定" },
-        { href: "/admin/info-board-auto", icon: Bot, label: "情報共有 AI自動投稿" },
-        { href: "/admin/discussion-auto", icon: Bot, label: "ディスカッション広場 AI自動投稿" },
       ]
     },
     {
       label: "AIアシスタント",
       items: [
-        { href: "/admin/chatbot/settings", icon: Settings2, label: "基本設定" },
-        { href: "/admin/chatbot/categories", icon: FolderTree, label: "カテゴリー管理" },
-        { href: "/admin/chatbot/qna", icon: MessageSquareText, label: "Q&A管理" },
-        { href: "/admin/chatbot/conversations", icon: History, label: "会話履歴" },
+
+        { href: "/admin/payment-settings", icon: CreditCard, label: "결제 수단 설정" },
+        { href: "/admin/pricing-settings", icon: DollarSign, label: "엔화 가격 변환" },
       ]
     },
     {
       label: "決済管理",
       items: [
-        { href: "/admin/payment-management", icon: DollarSign, label: "銀行振込管理" },
-        { href: "/admin/payment-settings", icon: CreditCard, label: "決済手段設定" },
-        { href: "/admin/pricing-settings", icon: DollarSign, label: "円価格変換" },
+        { href: "/admin/email-preview", icon: Mail, label: "이메일 미리보기" },
+        { href: "/admin/faq", icon: HelpCircle, label: "FAQ 관리" },
+        { href: "/admin/gnu-api-sync", icon: Globe, label: "외부 API 연동" },
       ]
     },
     {
       label: "設定",
       items: [
-        { href: "/admin/review-settings", icon: Star, label: "レビューポイント設定" },
-        { href: "/admin/email-template", icon: Mail, label: "メールテンプレート" },
-        { href: "/admin/smtp-settings", icon: Mail, label: "SMTPメール設定" },
-        { href: "/admin/email-logs", icon: History, label: "メール送信履歴" },
-        { href: "/admin/faq", icon: HelpCircle, label: "FAQ管理" },
-        { href: "/admin/gnu-api-sync", icon: Globe, label: "外部API連携" },
-        { href: "/admin/api-settings", icon: Key, label: "APIキー設定" },
+        { href: "/admin/visitor-stats", icon: Eye, label: "アクセス統計" },
+        { href: "/admin/keywords", icon: BarChart3, label: "検索キーワード統計" },
+        { href: "/admin/action-logs", icon: ClipboardList, label: "관리자 처리 이력" },
       ]
     },
     {
       label: "統計",
       items: [
-        { href: "/admin/visitor-stats", icon: Eye, label: "アクセス統計" },
-        { href: "/admin/keywords", icon: BarChart3, label: "検索キーワード統計" },
-        { href: "/admin/action-logs", icon: ClipboardList, label: "管理者操作履歴" },
-      ]
-    },
-    {
-      label: "一括アップロード",
-      items: [
-        { href: "/admin/excel-upload/products", icon: Upload, label: "商品Excelアップロード" },
-        { href: "/admin/excel-upload/tracking", icon: Truck, label: "追跡番号Excelアップロード" },
+        { href: "/admin/excel-upload/products", icon: Upload, label: "상품 엑셀 업로드" },
       ]
     },
   ];
@@ -537,7 +514,7 @@ export function AdminLayout({ children }: { children: ReactNode }) {
             <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center">
               <span className="text-primary text-[10px] font-bold">{user?.name?.[0] ?? "A"}</span>
             </div>
-            <span className="hidden sm:inline">{user?.name ?? "管理者"}</span>
+            <span className="hidden sm:inline">{user?.name ?? "관리자"}</span>
           </div>
         </header>
         <main className="flex-1 p-4 lg:p-5 w-full">{children}</main>
@@ -552,7 +529,7 @@ function DashboardHome() {
   const { data: stats } = trpc.admin.stats.useQuery();
   const { data: lowStockOptions } = trpc.admin.lowStockOptions.useQuery();
   const { data: recentOrders } = trpc.admin.orders.useQuery({ page: 1, limit: 5 });
-  const { data: recentPosts } = trpc.admin.posts.useQuery({ page: 1, limit: 5, boardId: 7 });
+  const { data: recentPosts } = trpc.admin.getInquiries.useQuery({ page: 1, limit: 5, status: "pending" });
   const [reportPeriod, setReportPeriod] = useState<"daily" | "weekly" | "monthly">("weekly");
   const [showReport, setShowReport] = useState(false);
   const generateReport = trpc.salesReport.generate.useMutation();
@@ -594,7 +571,7 @@ function DashboardHome() {
         {/* 통관검사 대기 알림 */}
         <div className="bg-card border border-rose-200 dark:border-rose-800 rounded-xl p-5 elegant-shadow">
           <h3 className="font-semibold mb-3 flex items-center gap-2 text-rose-600">
-            <AlertCircle className="w-4 h-4" /> 通関検査 ({stats?.customsHoldCount ?? 0})
+            <AlertCircle className="w-4 h-4" /> 통관검사 ({stats?.customsHoldCount ?? 0})
           </h3>
           {(stats?.customsHoldCount ?? 0) > 0 ? (
             <div>
@@ -611,14 +588,14 @@ function DashboardHome() {
         {/* 재고 부족 알림 */}
         <div className="bg-card border rounded-xl p-5 elegant-shadow">
           <h3 className="font-semibold mb-3 flex items-center gap-2 text-destructive">
-            <AlertCircle className="w-4 h-4" /> 在庫不足 ({lowStockOptions?.length ?? 0})
+            <AlertCircle className="w-4 h-4" /> 재고 부족 ({lowStockOptions?.length ?? 0})
           </h3>
           {lowStockOptions && lowStockOptions.length > 0 ? (
             <div className="space-y-2 max-h-40 overflow-y-auto">
               {lowStockOptions.slice(0, 3).map((opt, idx) => (
                 <div key={idx} className="p-2 bg-secondary/30 rounded-lg text-sm">
                   <div className="font-medium truncate">{opt.optionName}: {opt.optionValue}</div>
-                  <div className="text-xs text-muted-foreground">在庫 {opt.stock}個</div>
+                  <div className="text-xs text-muted-foreground">재고 {opt.stock}개</div>
                 </div>
               ))}
             </div>
@@ -630,7 +607,7 @@ function DashboardHome() {
         {/* 신규 주문 알림 */}
         <div className="bg-card border rounded-xl p-5 elegant-shadow">
           <h3 className="font-semibold mb-3 flex items-center gap-2 text-primary">
-            <Package className="w-4 h-4" /> 新規注文 ({recentOrders?.total ?? 0})
+            <Package className="w-4 h-4" /> 신규 주문 ({recentOrders?.total ?? 0})
           </h3>
           {recentOrders && recentOrders.orders.length > 0 ? (
             <div className="space-y-2 max-h-40 overflow-y-auto">
@@ -651,12 +628,12 @@ function DashboardHome() {
         {/* 고객 문의 알림 */}
         <div className="bg-card border rounded-xl p-5 elegant-shadow">
           <h3 className="font-semibold mb-3 flex items-center gap-2 text-amber-600">
-            <HelpCircle className="w-4 h-4" /> お問い合わせ ({recentPosts?.total ?? 0})
+            <HelpCircle className="w-4 h-4" /> 고객 문의 ({recentPosts?.total ?? 0})
           </h3>
           {recentPosts && recentPosts.posts.length > 0 ? (
             <div className="space-y-2 max-h-40 overflow-y-auto">
               {recentPosts.posts.slice(0, 3).map((post) => (
-                <Link key={post.id} href={`/community/post/${post.id}`}>
+                <Link key={post.id} href="/admin/inquiries">
                   <div className="p-2 bg-secondary/30 rounded-lg text-sm hover:bg-secondary/50 transition-colors">
                     <div className="font-medium truncate">{post.title}</div>
                     <div className="text-xs text-muted-foreground">{post.userName}</div>
@@ -673,7 +650,7 @@ function DashboardHome() {
       {/* Low Stock Alert (old) - remove */}
       {false && lowStockOptions && (lowStockOptions?.length ?? 0) > 0 && (
         <div className="bg-destructive/10 border border-destructive/30 rounded-xl p-5 mb-6">
-          <h3 className="font-semibold mb-3 flex items-center gap-2 text-destructive"><AlertCircle className="w-4 h-4" /> 在庫不足アラート ({lowStockOptions?.length ?? 0}件)</h3>
+          <h3 className="font-semibold mb-3 flex items-center gap-2 text-destructive"><AlertCircle className="w-4 h-4" /> 재고 부족 알림 ({lowStockOptions?.length ?? 0}건)</h3>
           <div className="space-y-2 max-h-40 overflow-y-auto">
               {lowStockOptions?.map((opt, idx) => (
               <div key={idx} className="flex items-center justify-between p-2 bg-background rounded-lg text-sm">
@@ -681,7 +658,7 @@ function DashboardHome() {
                   <span className="font-medium">{opt.optionName}: {opt.optionValue}</span>
                   <span className="text-xs text-muted-foreground ml-2">(Product ID: {opt.productId})</span>
                 </div>
-                <Badge variant="destructive" className="text-xs">在庫 {opt.stock}個</Badge>
+                <Badge variant="destructive" className="text-xs">재고 {opt.stock}개</Badge>
               </div>
             ))}
           </div>
@@ -693,7 +670,7 @@ function DashboardHome() {
         <div className="flex items-center justify-between mb-4">
           <h3 className="font-semibold text-lg flex items-center gap-2">
             <BarChart3 className="w-5 h-5 text-primary" />
-            AI売上レポート
+            AI 매출 리포트
           </h3>
           <div className="flex items-center gap-2">
             <Select value={reportPeriod} onValueChange={(v: any) => setReportPeriod(v)}>
@@ -708,7 +685,7 @@ function DashboardHome() {
             </Select>
             <Button onClick={handleGenerateReport} disabled={generateReport.isPending}>
               {generateReport.isPending ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Calendar className="w-4 h-4 mr-2" />}
-              レポートを生成
+              리포트 생성
             </Button>
           </div>
         </div>
@@ -721,7 +698,7 @@ function DashboardHome() {
               </div>
               <div className="bg-muted/50 rounded-lg p-4">
                 <div className="text-sm text-muted-foreground mb-1">総注文数</div>
-                <div className="text-xl font-bold">{generateReport.data.totalOrders}件</div>
+                <div className="text-xl font-bold">{generateReport.data.totalOrders}건</div>
               </div>
               <div className="bg-muted/50 rounded-lg p-4">
                 <div className="text-sm text-muted-foreground mb-1">平均注文額</div>
@@ -733,7 +710,7 @@ function DashboardHome() {
               </div>
             </div>
             <div className="bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
-              <h4 className="font-semibold mb-2 flex items-center gap-2"><TrendingUp className="w-4 h-4" /> AI分析インサイト</h4>
+              <h4 className="font-semibold mb-2 flex items-center gap-2"><TrendingUp className="w-4 h-4" /> AI 분석 인사이트</h4>
               <div className="text-sm whitespace-pre-wrap">{typeof generateReport.data.aiInsights === 'string' ? generateReport.data.aiInsights : JSON.stringify(generateReport.data.aiInsights)}</div>
             </div>
             {generateReport.data.topProducts.length > 0 && (
@@ -748,7 +725,7 @@ function DashboardHome() {
                       </div>
                       <div className="text-right">
                         <div className="font-semibold price-text">{formatPrice(p.revenue)}</div>
-                        <div className="text-xs text-muted-foreground">{p.count}個販売</div>
+                        <div className="text-xs text-muted-foreground">{p.count}개 판매</div>
                       </div>
                     </div>
                   ))}
@@ -774,10 +751,10 @@ function DashboardHome() {
                     <div>
                       <div className="flex items-center gap-1.5">
                         <p className="text-sm font-medium font-mono">{formatOrderNumber(order.orderNumber)}</p>
-                        {order.source === "seoulmono" ? (
+                        {order.source === "sorosoro" ? (
                           <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-blue-100 text-blue-700 border border-blue-200">ショップ</span>
                         ) : (
-                          <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-orange-100 text-orange-700 border border-orange-200">{order.source ?? "その他"}</span>
+                          <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-orange-100 text-orange-700 border border-orange-200">{order.source ?? "기타"}</span>
                         )}
                       </div>
                       <p className="text-xs text-muted-foreground">{formatDate(order.createdAt)}</p>
@@ -794,10 +771,10 @@ function DashboardHome() {
         </div>
 
         <div className="bg-card border rounded-xl p-6 elegant-shadow">
-          <h3 className="font-semibold mb-4 flex items-center gap-2"><TrendingUp className="w-4 h-4" /> クイックリンク</h3>
+          <h3 className="font-semibold mb-4 flex items-center gap-2"><TrendingUp className="w-4 h-4" /> 빠른 링크</h3>
           <div className="grid grid-cols-2 gap-3">
             {[
-              { label: "商品登録", href: "/admin/products?action=create", icon: Plus },
+              { label: "商品を登録", href: "/admin/products?action=create", icon: Plus },
               { label: "注文管理", href: "/admin/orders", icon: Package },
               { label: "会員管理", href: "/admin/users", icon: Users },
               { label: "掲示板管理", href: "/admin/boards", icon: FileText },
@@ -819,15 +796,15 @@ function DashboardHome() {
 // ─── Dashboard Charts ───
 const PIE_COLORS = ["#8b5e3c", "#a67c5b", "#c9a882", "#e2cdb0", "#6b4226", "#d4a574", "#b8860b"];
 const STATUS_LABELS: Record<string, string> = {
-  pending: "待機", paid: "支払い済み", preparing: "準備中", shipping: "配送中",
-  delivered: "配送完了", cancelled: "キャンセル", refunded: "返金",
+  pending: "대기", paid: "결제완료", preparing: "준비중", shipping: "배송중",
+  delivered: "배송완료", cancelled: "취소", refunded: "환불",
 };
 
 function DashboardCharts() {
   const { data: dailySales } = trpc.admin.dailySales.useQuery({ days: 30 });
   const { data: orderDist } = trpc.admin.orderStatusDistribution.useQuery();
   const { data: catSales } = trpc.admin.categorySales.useQuery();
-  
+
   // 새로운 통계 데이터
   const [period, setPeriod] = useState<"daily" | "weekly" | "monthly">("daily");
   const { data: salesTrend } = trpc.admin.salesTrend.useQuery({ period, days: 30 });
@@ -849,11 +826,11 @@ function DashboardCharts() {
       {/* Daily Sales Line Chart */}
       <div className="bg-card border rounded-xl p-6 elegant-shadow">
         <h3 className="font-semibold mb-4 flex items-center gap-2">
-          <TrendingUp className="w-4 h-4" /> 日別売上推移 (30日)
+          <TrendingUp className="w-4 h-4" /> 일별 매출 추이 (30일)
         </h3>
         {(!dailySales || dailySales.length === 0) ? (
           <div className="flex items-center justify-center h-[250px] text-sm text-muted-foreground">
-            まだ注文データがありません
+            아직 주문 데이터가 없습니다
           </div>
         ) : (
           <ResponsiveContainer width="100%" height={250}>
@@ -863,12 +840,12 @@ function DashboardCharts() {
                 const d = new Date(v);
                 return `${d.getMonth()+1}/${d.getDate()}`;
               }} />
-              <YAxis tick={{ fontSize: 11 }} tickFormatter={(v) => v >= 10000 ? `${(v/10000).toFixed(0)}万` : v.toLocaleString()} />
+              <YAxis tick={{ fontSize: 11 }} tickFormatter={(v) => v >= 10000 ? `${(v/10000).toFixed(0)}만` : v.toLocaleString()} />
               <Tooltip formatter={chartTooltipFormatter} labelFormatter={(v) => {
                 const d = new Date(v);
                 return `${d.getFullYear()}.${d.getMonth()+1}.${d.getDate()}`;
               }} />
-              <Line type="monotone" dataKey="revenue" stroke="#8b5e3c" strokeWidth={2} dot={{ r: 3 }} name="売上額" />
+              <Line type="monotone" dataKey="revenue" stroke="#8b5e3c" strokeWidth={2} dot={{ r: 3 }} name="매출액" />
             </LineChart>
           </ResponsiveContainer>
         )}
@@ -877,11 +854,11 @@ function DashboardCharts() {
       {/* Order Status Pie Chart */}
       <div className="bg-card border rounded-xl p-6 elegant-shadow">
         <h3 className="font-semibold mb-4 flex items-center gap-2">
-          <BarChart3 className="w-4 h-4" /> 注文ステータス分布
+          <BarChart3 className="w-4 h-4" /> 주문 상태 분포
         </h3>
         {pieData.length === 0 ? (
           <div className="flex items-center justify-center h-[250px] text-sm text-muted-foreground">
-            まだ注文データがありません
+            아직 주문 데이터가 없습니다
           </div>
         ) : (
           <ResponsiveContainer width="100%" height={250}>
@@ -901,15 +878,15 @@ function DashboardCharts() {
       {catSales && catSales.length > 0 && (
         <div className="bg-card border rounded-xl p-6 elegant-shadow lg:col-span-2">
           <h3 className="font-semibold mb-4 flex items-center gap-2">
-            <Tag className="w-4 h-4" /> カテゴリー別売上
+            <Tag className="w-4 h-4" /> 카테고리별 매출
           </h3>
           <ResponsiveContainer width="100%" height={280}>
             <BarChart data={catSales} layout="vertical">
               <CartesianGrid strokeDasharray="3 3" stroke="#e5e5e5" />
-              <XAxis type="number" tick={{ fontSize: 11 }} tickFormatter={(v) => v >= 10000 ? `${(v/10000).toFixed(0)}万` : v.toLocaleString()} />
+              <XAxis type="number" tick={{ fontSize: 11 }} tickFormatter={(v) => v >= 10000 ? `${(v/10000).toFixed(0)}만` : v.toLocaleString()} />
               <YAxis type="category" dataKey="categoryName" width={100} tick={{ fontSize: 12 }} />
               <Tooltip formatter={chartTooltipFormatter} />
-              <Bar dataKey="revenue" fill="#8b5e3c" radius={[0, 4, 4, 0]} name="売上額" />
+              <Bar dataKey="revenue" fill="#8b5e3c" radius={[0, 4, 4, 0]} name="매출액" />
             </BarChart>
           </ResponsiveContainer>
         </div>
@@ -919,7 +896,7 @@ function DashboardCharts() {
       <div className="bg-card border rounded-xl p-6 elegant-shadow lg:col-span-2">
         <div className="flex items-center justify-between mb-4">
           <h3 className="font-semibold flex items-center gap-2">
-            <TrendingUp className="w-4 h-4" /> 売上推移 (30日)
+            <TrendingUp className="w-4 h-4" /> 매출 추이 (30일)
           </h3>
           <div className="flex gap-2">
             <Button size="sm" variant={period === "daily" ? "default" : "outline"} onClick={() => setPeriod("daily")}>日別</Button>
@@ -929,16 +906,16 @@ function DashboardCharts() {
         </div>
         {(!salesTrend || salesTrend.length === 0) ? (
           <div className="flex items-center justify-center h-[280px] text-sm text-muted-foreground">
-            まだ売上データがありません
+            아직 매출 데이터가 없습니다
           </div>
         ) : (
           <ResponsiveContainer width="100%" height={280}>
             <LineChart data={salesTrend}>
               <CartesianGrid strokeDasharray="3 3" stroke="#e5e5e5" />
               <XAxis dataKey="date" tick={{ fontSize: 11 }} />
-              <YAxis tick={{ fontSize: 11 }} tickFormatter={(v) => v >= 10000 ? `${(v/10000).toFixed(0)}万` : v.toLocaleString()} />
+              <YAxis tick={{ fontSize: 11 }} tickFormatter={(v) => v >= 10000 ? `${(v/10000).toFixed(0)}만` : v.toLocaleString()} />
               <Tooltip formatter={chartTooltipFormatter} />
-              <Line type="monotone" dataKey="sales" stroke="#10b981" strokeWidth={2} dot={{ r: 3 }} name="売上額" />
+              <Line type="monotone" dataKey="sales" stroke="#10b981" strokeWidth={2} dot={{ r: 3 }} name="매출액" />
             </LineChart>
           </ResponsiveContainer>
         )}
@@ -947,11 +924,11 @@ function DashboardCharts() {
       {/* 인기 상품 TOP 10 */}
       <div className="bg-card border rounded-xl p-6 elegant-shadow">
         <h3 className="font-semibold mb-4 flex items-center gap-2">
-          <Star className="w-4 h-4" /> 人気商品 TOP 10
+          <Star className="w-4 h-4" /> 인기 상품 TOP 10
         </h3>
         {(!topProducts || topProducts.length === 0) ? (
           <div className="flex items-center justify-center h-[280px] text-sm text-muted-foreground">
-            まだ販売データがありません
+            아직 판매 데이터가 없습니다
           </div>
         ) : (
           <div className="space-y-2 max-h-[280px] overflow-y-auto">
@@ -961,7 +938,7 @@ function DashboardCharts() {
                   <Badge variant={idx < 3 ? "default" : "secondary"} className="text-xs">{idx + 1}</Badge>
                   <div>
                     <div className="font-medium text-sm">{p.productName}</div>
-                    <div className="text-xs text-muted-foreground">販売 {p.totalQuantity}個 · 注文 {p.orderCount}件</div>
+                    <div className="text-xs text-muted-foreground">판매 {p.totalQuantity}개 · 주문 {p.orderCount}건</div>
                   </div>
                 </div>
                 <div className="text-right">
@@ -976,11 +953,11 @@ function DashboardCharts() {
       {/* 신규 회원 추이 */}
       <div className="bg-card border rounded-xl p-6 elegant-shadow">
         <h3 className="font-semibold mb-4 flex items-center gap-2">
-          <Users className="w-4 h-4" /> 新規会員推移 (30日)
+          <Users className="w-4 h-4" /> 신규 회원 추이 (30일)
         </h3>
         {(!newUsersTrend || newUsersTrend.length === 0) ? (
           <div className="flex items-center justify-center h-[280px] text-sm text-muted-foreground">
-            まだ会員データがありません
+            아직 회원 데이터가 없습니다
           </div>
         ) : (
           <ResponsiveContainer width="100%" height={280}>
@@ -995,7 +972,7 @@ function DashboardCharts() {
                 const d = new Date(v);
                 return `${d.getFullYear()}.${d.getMonth()+1}.${d.getDate()}`;
               }} />
-              <Bar dataKey="count" fill="#3b82f6" radius={[4, 4, 0, 0]} name="新規会員" />
+              <Bar dataKey="count" fill="#3b82f6" radius={[4, 4, 0, 0]} name="신규 회원" />
             </BarChart>
           </ResponsiveContainer>
         )}
@@ -1028,12 +1005,12 @@ function AdminCategories() {
     <div>
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold">カテゴリー管理</h1>
-        <Button onClick={openCreate} size="sm"><Plus className="w-4 h-4 mr-1" /> カテゴリーを追加</Button>
+        <Button onClick={openCreate} size="sm"><Plus className="w-4 h-4 mr-1" /> カテゴリーの追加</Button>
       </div>
       <div className="bg-card border rounded-xl overflow-hidden elegant-shadow">
         <table className="w-full">
           <thead><tr className="bg-secondary/50 text-xs text-muted-foreground">
-            <th className="text-left py-3 px-4">ID</th><th className="text-left py-3 px-4">名前</th><th className="text-left py-3 px-4">スラッグ</th><th className="text-center py-3 px-4">親</th><th className="text-center py-3 px-4">順序</th><th className="text-center py-3 px-4">ステータス</th><th className="text-center py-3 px-4">操作</th>
+            <th className="text-left py-3 px-4">ID</th><th className="text-left py-3 px-4">氏名</th><th className="text-left py-3 px-4">スラッグ</th><th className="text-center py-3 px-4">親</th><th className="text-center py-3 px-4">順序</th><th className="text-center py-3 px-4">ステータス</th><th className="text-center py-3 px-4">操作</th>
           </tr></thead>
           <tbody className="divide-y">
             {(cats ?? []).map((c: any) => (
@@ -1047,7 +1024,7 @@ function AdminCategories() {
                 <td className="py-3 px-4 text-center">
                   <div className="flex items-center justify-center gap-1">
                     <Button variant="ghost" size="sm" onClick={() => openEdit(c)}><Pencil className="w-3.5 h-3.5" /></Button>
-                    <Button variant="ghost" size="sm" className="text-destructive" onClick={() => { if (confirm("削除しますか？")) deleteMut.mutate({ id: c.id }); }}><Trash2 className="w-3.5 h-3.5" /></Button>
+                    <Button variant="ghost" size="sm" className="text-destructive" onClick={() => { if (confirm("삭제하시겠습니까?")) deleteMut.mutate({ id: c.id }); }}><Trash2 className="w-3.5 h-3.5" /></Button>
                   </div>
                 </td>
               </tr>
@@ -1089,6 +1066,90 @@ function AdminCategories() {
 }
 
 // ─── Product Management ───
+function RelatedProductsEditor({ productId }: { productId: number }) {
+  const utils = trpc.useUtils();
+  const { data, isLoading } = trpc.product.getRelated.useQuery({ productId });
+  const [items, setItems] = useState<any[]>([]);
+  const [dirty, setDirty] = useState(false);
+  const [q, setQ] = useState("");
+  useEffect(() => { if (data) { setItems(data); setDirty(false); } }, [data]);
+  const term = q.trim();
+  const { data: found, isFetching } = trpc.admin.products.useQuery({ page: 1, limit: 8, search: term || undefined, sort: "newest" }, { enabled: term.length >= 1 });
+  const saveMut = trpc.product.setRelated.useMutation({
+    onSuccess: (r) => { utils.product.getRelated.invalidate({ productId }); toast.success(`관련상품 ${r.count}개가 저장되었습니다.`); },
+    onError: (e) => toast.error("저장 실패: " + e.message),
+  });
+  const MAX = 12;
+  const add = (p: any) => {
+    if (items.length >= MAX) { toast.error(`관련상품은 최대 ${MAX}개까지 지정할 수 있습니다.`); return; }
+    setItems(prev => [...prev, { id: p.id, name: p.name, price: p.price, status: p.status, thumbnail: p.thumbnail }]);
+    setDirty(true);
+  };
+  const remove = (id: number) => { setItems(prev => prev.filter(x => x.id !== id)); setDirty(true); };
+  const move = (idx: number, dir: -1 | 1) => {
+    const j = idx + dir;
+    if (j < 0 || j >= items.length) return;
+    setItems(prev => { const a = [...prev]; [a[idx], a[j]] = [a[j], a[idx]]; return a; });
+    setDirty(true);
+  };
+  const results = (found?.products ?? []).filter((p: any) => p.id !== productId);
+  return (
+    <div className="border rounded-xl p-5 bg-card space-y-4">
+      <div className="flex items-center justify-between">
+        <div>
+          <label className="text-sm font-semibold">관련상품 ({items.length}/{MAX})</label>
+          <p className="text-xs text-muted-foreground mt-1">상품 상세 페이지 하단에 이 순서대로 노출됩니다. 지정하지 않으면 관련상품 영역이 나오지 않습니다. (이 영역은 아래 "수정 저장"과 별도로 저장됩니다)</p>
+        </div>
+        <div className="flex gap-2">
+          <Button type="button" variant="outline" size="sm" disabled={items.length === 0} onClick={() => { setItems([]); setDirty(true); }}>전체 비우기</Button>
+          <Button type="button" size="sm" disabled={!dirty || saveMut.isPending} onClick={() => saveMut.mutate({ productId, relatedIds: items.map(x => x.id) })}>
+            {saveMut.isPending ? "保存中..." : "관련상품 저장"}
+          </Button>
+        </div>
+      </div>
+      {isLoading ? <p className="text-sm text-muted-foreground">読み込み中...</p> : items.length === 0 ? (
+        <p className="text-sm text-muted-foreground border border-dashed rounded-lg p-4 text-center">지정된 관련상품이 없습니다.</p>
+      ) : (
+        <ul className="space-y-2">
+          {items.map((it, idx) => (
+            <li key={it.id} className="flex items-center gap-3 border rounded-lg p-2">
+              <span className="text-xs text-muted-foreground w-5 text-center">{idx + 1}</span>
+              {it.thumbnail ? <img src={proxyImage(it.thumbnail)} alt="" className="w-10 h-10 rounded object-cover bg-muted" /> : <div className="w-10 h-10 rounded bg-muted" />}
+              <div className="flex-1 min-w-0">
+                <p className="text-sm truncate">{it.name}</p>
+                <p className="text-xs text-muted-foreground">{it.id}{it.status !== "active" ? (it.status === "soldout" ? " · 품절" : " · 판매중지") : ""}</p>
+              </div>
+              <Button type="button" variant="ghost" size="sm" disabled={idx === 0} onClick={() => move(idx, -1)}><ChevronUp className="w-4 h-4" /></Button>
+              <Button type="button" variant="ghost" size="sm" disabled={idx === items.length - 1} onClick={() => move(idx, 1)}><ChevronDown className="w-4 h-4" /></Button>
+              <Button type="button" variant="ghost" size="sm" onClick={() => remove(it.id)}><X className="w-4 h-4" /></Button>
+            </li>
+          ))}
+        </ul>
+      )}
+      <div>
+        <Input value={q} onChange={e => setQ(e.target.value)} placeholder="추가할 상품명 검색" />
+        {term && (
+          <div className="mt-2 border rounded-lg divide-y max-h-80 overflow-auto">
+            {isFetching && results.length === 0 ? <p className="text-sm text-muted-foreground p-3">検索中...</p> : results.length === 0 ? <p className="text-sm text-muted-foreground p-3">検索結果がありません。</p> : results.map((p: any) => {
+              const added = items.some(x => x.id === p.id);
+              return (
+                <div key={p.id} className="flex items-center gap-3 p-2">
+                  {p.thumbnail ? <img src={proxyImage(p.thumbnail)} alt="" className="w-10 h-10 rounded object-cover bg-muted" /> : <div className="w-10 h-10 rounded bg-muted" />}
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm truncate">{p.name}</p>
+                    <p className="text-xs text-muted-foreground">{p.id}{p.status === "soldout" ? " · 품절" : ""}</p>
+                  </div>
+                  <Button type="button" variant="outline" size="sm" disabled={added} onClick={() => add(p)}>{added ? "추가됨" : "追加"}</Button>
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 function AdminProducts() {
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
@@ -1127,9 +1188,9 @@ function AdminProducts() {
   const bulkDeleteMut = trpc.bulkActions.deleteProducts.useMutation({ onSuccess: () => { utils.admin.products.invalidate(); setSelectedIds([]); toast.success("選択した商品を削除しました。"); } });
   const bulkUpdateStatusMut = trpc.bulkActions.updateProductsStatus.useMutation({ onSuccess: () => { utils.admin.products.invalidate(); setSelectedIds([]); toast.success("ステータスを変更しました。"); } });
   const bulkUpdateCategoryMut = trpc.bulkActions.updateProductsCategory.useMutation({ onSuccess: () => { utils.admin.products.invalidate(); setSelectedIds([]); toast.success("カテゴリーを変更しました。"); } });
-  const bulkUpdatePointRateMut = trpc.bulkActions.updateProductsPointRate.useMutation({ onSuccess: (d) => { utils.admin.products.invalidate(); setSelectedIds([]); toast.success(`${d.count}件の商品のポイント付与率を変更しました。`); } });
-  const bulkUpdateFlagsMut = trpc.bulkActions.updateProductsFlags.useMutation({ onSuccess: (d) => { utils.admin.products.invalidate(); setSelectedIds([]); toast.success(`${d.count}件の商品のフラグを変更しました。`); } });
-  const bulkUpdateSalePriceMut = trpc.bulkActions.updateProductsSalePrice.useMutation({ onSuccess: (d) => { utils.admin.products.invalidate(); setSelectedIds([]); setBulkSalePrice(""); toast.success(`${d.count}件の商品の特価を設定しました。`); } });
+  const bulkUpdatePointRateMut = trpc.bulkActions.updateProductsPointRate.useMutation({ onSuccess: (d) => { utils.admin.products.invalidate(); setSelectedIds([]); toast.success(`${d.count}개 상품의 포인트 적립률이 변경되었습니다.`); } });
+  const bulkUpdateFlagsMut = trpc.bulkActions.updateProductsFlags.useMutation({ onSuccess: (d) => { utils.admin.products.invalidate(); setSelectedIds([]); toast.success(`${d.count}개 상품의 플래그가 변경되었습니다.`); } });
+  const bulkUpdateSalePriceMut = trpc.bulkActions.updateProductsSalePrice.useMutation({ onSuccess: (d) => { utils.admin.products.invalidate(); setSelectedIds([]); setBulkSalePrice(""); toast.success(`${d.count}개 상품의 특가가 설정되었습니다.`); } });
   const batchSortMut = trpc.product.adminBatchUpdateSortOrder.useMutation({ onSuccess: () => utils.admin.products.invalidate() });
 
   // 드래그 상태
@@ -1227,7 +1288,7 @@ function AdminProducts() {
     // Validate options
     for (const og of optionGroups) {
       if (!og.name.trim()) { toast.error("オプショングループ名を入力してください。"); return; }
-      if (og.values.length === 0) { toast.error(`「${og.name}」オプションに値を追加してください。`); return; }
+      if (og.values.length === 0) { toast.error(`"${og.name}" 옵션에 값을 추가해주세요.`); return; }
       for (const v of og.values) {
         if (!v.value.trim()) { toast.error("オプション値を入力してください。"); return; }
         if (v.price < 0) { toast.error("オプション販売金額は0以上にしてください。"); return; }
@@ -1257,7 +1318,7 @@ function AdminProducts() {
       <div>
         <div className="flex items-center gap-3 mb-6">
           <Button variant="ghost" size="sm" onClick={() => setPageMode("list")}><ArrowLeft className="w-4 h-4 mr-1" /> 一覧へ</Button>
-          <h1 className="text-2xl font-bold">{editItem ? "商品の編集" : "商品登録"}</h1>
+          <h1 className="text-2xl font-bold">{editItem ? "商品の編集" : "商品を登録"}</h1>
         </div>
         <div className="space-y-4 max-w-5xl">
 
@@ -1345,7 +1406,7 @@ function AdminProducts() {
                   <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={form.isBest === 1} onChange={e => setForm(f => ({ ...f, isBest: e.target.checked ? 1 : 0 }))} /> ベスト</label>
                   <label className="flex items-center gap-2 text-sm text-rose-600">
                     <input type="checkbox" className="accent-rose-600" checked={(form as any).noDiscount === 1} onChange={e => setForm(f => ({ ...f, noDiscount: e.target.checked ? 1 : 0 } as any))} />
-                    割引対象外
+                    할인 제외
                     <span className="text-xs text-muted-foreground font-normal">(クーポン・特価が適用されません)</span>
                   </label>
                 </div>
@@ -1396,7 +1457,7 @@ function AdminProducts() {
           <div className="border rounded-xl p-5 bg-card">
             <div className="flex items-center justify-between mb-3">
               <label className="text-sm font-semibold">商品オプション</label>
-              <Button type="button" variant="outline" size="sm" onClick={addOptionGroup}><Plus className="w-3.5 h-3.5 mr-1" /> オプショングループを追加</Button>
+              <Button type="button" variant="outline" size="sm" onClick={addOptionGroup}><Plus className="w-3.5 h-3.5 mr-1" /> 옵션 그룹 추가</Button>
             </div>
             {optionGroups.length === 0 && <p className="text-xs text-muted-foreground">オプションがありません。サイズ、色などのオプションを追加すると、オプションごとに販売金額を設定できます。</p>}
             <div className="space-y-4">
@@ -1419,7 +1480,7 @@ function AdminProducts() {
                         <Button type="button" variant="ghost" size="sm" className="h-8 w-8 p-0 text-muted-foreground hover:text-destructive" onClick={() => removeOptionValue(gi, vi)} disabled={group.values.length <= 1}><X className="w-3.5 h-3.5" /></Button>
                       </div>
                     ))}
-                    <Button type="button" variant="ghost" size="sm" className="text-xs h-7" onClick={() => addOptionValue(gi)}><Plus className="w-3 h-3 mr-1" /> オプション値を追加</Button>
+                    <Button type="button" variant="ghost" size="sm" className="text-xs h-7" onClick={() => addOptionValue(gi)}><Plus className="w-3 h-3 mr-1" /> 옵션값 추가</Button>
                   </div>
                 </div>
               ))}
@@ -1441,6 +1502,15 @@ function AdminProducts() {
             <RichTextEditor value={form.content} onChange={val => setForm(f => ({ ...f, content: val }))} minHeight={400} />
           </div>
 
+          {editItem ? (
+            <RelatedProductsEditor key={editItem.id} productId={editItem.id} />
+          ) : (
+            <div className="border rounded-xl p-5 bg-card">
+              <label className="text-sm font-semibold block mb-1">관련상품</label>
+              <p className="text-xs text-muted-foreground">상품 등록 후 수정 화면에서 지정할 수 있습니다.</p>
+            </div>
+          )}
+
           {editItem && (
             <>
               <Separator />
@@ -1460,7 +1530,7 @@ function AdminProducts() {
     <div>
       <div className="flex items-center justify-between mb-6 flex-wrap gap-3">
         <h1 className="text-2xl font-bold">商品管理 <span className="text-base font-normal text-muted-foreground">({data?.total ?? 0})</span></h1>
-        <Button onClick={openCreate} size="sm"><Plus className="w-4 h-4 mr-1" /> 商品登録</Button>
+        <Button onClick={openCreate} size="sm"><Plus className="w-4 h-4 mr-1" /> 商品を登録</Button>
       </div>
 
       <div className="mb-4 flex items-center gap-3 flex-wrap">
@@ -1493,14 +1563,14 @@ function AdminProducts() {
         </select>
         {selectedIds.length > 0 && (
           <div className="flex items-center gap-2">
-            <span className="text-sm text-muted-foreground">{selectedIds.length}件選択中</span>
+            <span className="text-sm text-muted-foreground">{selectedIds.length}개 선택됨</span>
             <select className="border rounded px-3 py-2 text-sm" value={bulkAction} onChange={e => setBulkAction(e.target.value)}>
               <option value="">一括操作を選択</option>
               <option value="delete">削除</option>
               <option value="status:active">販売中に変更</option>
               <option value="status:inactive">無効に変更</option>
               <option value="status:soldout">品切れに変更</option>
-              <optgroup label="ポイント付与率 (%)">
+              <optgroup label="포인트 적립률 (%)">
                 <option value="pointRate:percent:0">付与 0%</option>
                 <option value="pointRate:percent:1">付与 1%</option>
                 <option value="pointRate:percent:2">付与 2%</option>
@@ -1508,13 +1578,13 @@ function AdminProducts() {
                 <option value="pointRate:percent:5">付与 5%</option>
                 <option value="pointRate:percent:10">付与 10%</option>
               </optgroup>
-              <optgroup label="ポイント付与 (固定額)">
+              <optgroup label="포인트 적립 (고정금액)">
                 <option value="pointRate:fixed:500">付与 500円</option>
                 <option value="pointRate:fixed:1000">付与 1,000円</option>
                 <option value="pointRate:fixed:2000">付与 2,000円</option>
                 <option value="pointRate:fixed:5000">付与 5,000円</option>
               </optgroup>
-              <optgroup label="商品フラグ">
+              <optgroup label="상품 플래그">
                 <option value="flag:isFeatured:1">おすすめ商品 ON</option>
                 <option value="flag:isFeatured:0">おすすめ商品 OFF</option>
                 <option value="flag:isNew:1">新商品 ON</option>
@@ -1522,10 +1592,10 @@ function AdminProducts() {
                 <option value="flag:isBest:1">ベスト ON</option>
                 <option value="flag:isBest:0">ベスト OFF</option>
               </optgroup>
-              <optgroup label="特価(割引価格)設定">
+              <optgroup label="특가(할인가) 설정">
                 <option value="salePrice">特価を一括設定</option>
               </optgroup>
-              {cats?.map((c: any) => <option key={c.id} value={`category:${c.id}`}>{c.name}に移動</option>)}
+              {cats?.map((c: any) => <option key={c.id} value={`category:${c.id}`}>{c.name}으로 이동</option>)}
             </select>
             {bulkAction === "salePrice" && (
               <div className="flex items-center gap-1">
@@ -1557,7 +1627,7 @@ function AdminProducts() {
             <thead><tr className="bg-secondary/50 text-xs text-muted-foreground">
               {isSortOrderMode && <th className="py-3 px-2 w-8"></th>}
               <th className="text-center py-3 px-4 w-12"><input type="checkbox" checked={selectedIds.length === (data?.products ?? []).length && (data?.products ?? []).length > 0} onChange={toggleSelectAll} /></th>
-              <th className="text-left py-3 px-4">ID</th><th className="text-left py-3 px-4">商品番号</th><th className="text-center py-3 px-4 w-20">画像</th><th className="text-left py-3 px-4">商品名</th><th className="text-left py-3 px-4">第1カテゴリー</th><th className="text-left py-3 px-4">第2カテゴリー</th><th className="text-right py-3 px-4">価格</th><th className="text-right py-3 px-4">割引価格</th><th className="text-center py-3 px-4">ポイント</th><th className="text-center py-3 px-4">在庫</th><th className="text-center py-3 px-4">ステータス</th><th className="text-center py-3 px-4">表示順位</th><th className="text-center py-3 px-4">フラグ</th><th className="text-center py-3 px-4">操作</th>
+              <th className="text-left py-3 px-4">ID</th><th className="text-left py-3 px-4">商品番号</th><th className="text-center py-3 px-4 w-20">画像</th><th className="text-left py-3 px-4">商品名</th><th className="text-left py-3 px-4">第1カテゴリー</th><th className="text-left py-3 px-4">第2カテゴリー</th><th className="text-right py-3 px-4">価格</th><th className="text-right py-3 px-4">割引価格</th><th className="text-center py-3 px-4">付与</th><th className="text-center py-3 px-4">在庫</th><th className="text-center py-3 px-4">ステータス</th><th className="text-center py-3 px-4">表示順位</th><th className="text-center py-3 px-4">フラグ</th><th className="text-center py-3 px-4">操作</th>
             </tr></thead>
             <tbody className="divide-y">
               {(isSortOrderMode ? localProducts : (data?.products ?? [])).map((p: any, idx: number) => {
@@ -1607,7 +1677,7 @@ function AdminProducts() {
                           onKeyDown={e => {
                             if (e.key === 'Enter') {
                               const price = inlineSalePrice ? Number(inlineSalePrice) : null;
-                              if (price !== null && price < 0) { toast.error("\ud2b9\uac00\ub294 0\uc6d0 \uc774\uc0c1\uc774\uc5b4\uc57c \ud569\ub2c8\ub2e4."); return; }
+                              if (price !== null && price < 0) { toast.error("特価は0円以上にしてください。"); return; }
                               inlineUpdateMut.mutate({ id: p.id, salePrice: price });
                             } else if (e.key === 'Escape') {
                               setInlineEditingId(null);
@@ -1628,9 +1698,9 @@ function AdminProducts() {
                       </span>
                     )}
                   </td>
-                  <td className="py-3 px-4 text-sm text-center">{p.pointRateType === "fixed" ? `${(p.pointRate ?? 0).toLocaleString()}円` : `${p.pointRate ?? 0}%`}</td>
+                  <td className="py-3 px-4 text-sm text-center">{p.pointRateType === "fixed" ? `${(p.pointRate ?? 0).toLocaleString()}원` : `${p.pointRate ?? 0}%`}</td>
                   <td className="py-3 px-4 text-sm text-center">{p.stock}</td>
-                  <td className="py-3 px-4 text-center"><Badge variant={p.status === "active" ? "default" : "secondary"} className="text-[10px]">{p.status === "active" ? "販売中" : p.status === "soldout" ? "品切れ" : "無効"}</Badge></td>
+                  <td className="py-3 px-4 text-center"><Badge variant={p.status === "active" ? "default" : "secondary"} className="text-[10px]">{p.status === "active" ? "販売中" : p.status === "soldout" ? "품절" : "비활성"}</Badge></td>
                   <td className="py-3 px-4 text-center text-xs text-muted-foreground font-mono">{p.sortOrder ?? 0}</td>
                   <td className="py-3 px-4 text-center">
                     <div className="flex items-center justify-center gap-1">
@@ -1643,7 +1713,7 @@ function AdminProducts() {
                   <td className="py-3 px-4 text-center">
                     <div className="flex items-center justify-center gap-1">
                       <Button variant="ghost" size="sm" onClick={() => openEdit(p)}><Pencil className="w-3.5 h-3.5" /></Button>
-                      <Button variant="ghost" size="sm" className="text-destructive" onClick={() => { if (confirm("削除しますか？")) deleteMut.mutate({ id: p.id }); }}><Trash2 className="w-3.5 h-3.5" /></Button>
+                      <Button variant="ghost" size="sm" className="text-destructive" onClick={() => { if (confirm("삭제하시겠습니까?")) deleteMut.mutate({ id: p.id }); }}><Trash2 className="w-3.5 h-3.5" /></Button>
                     </div>
                   </td>
                 </tr>
@@ -1803,8 +1873,8 @@ function AdminOrders() {
 
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
   const [bulkAction, setBulkAction] = useState<string>("");
-  const bulkUpdateStatusMut = trpc.bulkActions.updateOrdersStatus.useMutation({ onSuccess: () => { utils.admin.orders.invalidate(); utils.admin.orderTabCounts.invalidate(); setSelectedIds([]); toast.success("ステータスを変更しました。"); }, onError: (err) => { toast.error("ステータス変更エラー: " + err.message); } });
-  const bulkDeleteMut = trpc.bulkActions.deleteOrders.useMutation({ onSuccess: () => { utils.admin.orders.invalidate(); utils.admin.orderTabCounts.invalidate(); setSelectedIds([]); toast.success("選択した注文を削除しました。"); }, onError: (err) => { toast.error("削除エラー: " + err.message); } });
+  const bulkUpdateStatusMut = trpc.bulkActions.updateOrdersStatus.useMutation({ onSuccess: () => { utils.admin.orders.invalidate(); utils.admin.orderTabCounts.invalidate(); setSelectedIds([]); toast.success("ステータスを変更しました。"); }, onError: (err) => { toast.error("상태 변경 오류: " + err.message); } });
+  const bulkDeleteMut = trpc.bulkActions.deleteOrders.useMutation({ onSuccess: () => { utils.admin.orders.invalidate(); utils.admin.orderTabCounts.invalidate(); setSelectedIds([]); toast.success("選択した注文を削除しました。"); }, onError: (err) => { toast.error("삭제 오류: " + err.message); } });
 
   const toggleSelectAll = () => {
     if (selectedIds.length === (data?.orders ?? []).length) setSelectedIds([]);
@@ -1818,7 +1888,7 @@ function AdminOrders() {
     if (selectedIds.length === 0) { toast.error("注文を選択してください。"); return; }
     if (!bulkAction) { toast.error("操作を選択してください。"); return; }
     if (bulkAction === "delete") {
-      if (confirm(`選択した${selectedIds.length}件の注文を削除しますか？`)) {
+      if (confirm(`선택된 ${selectedIds.length}개 주문을 삭제하시겠습니까?`)) {
         bulkDeleteMut.mutate({ ids: selectedIds });
       }
     } else {
@@ -1846,20 +1916,20 @@ function AdminOrders() {
   );
   const refreshListTracking = trpc.shipping.adminRefreshTracking.useMutation({
     onSuccess: (res: any) => {
-      if (!res.success) { toast.info(res.message || "配送情報をまだ照会できません。"); return; }
-      if (res.eventsCount > 0) toast.success(`${res.eventsCount}件のイベントを更新`);
+      if (!res.success) { toast.info(res.message || "배송 정보를 아직 조회할 수 없습니다."); return; }
+      if (res.eventsCount > 0) toast.success(`${res.eventsCount}개 이벤트 업데이트`);
       else toast.info("最新の状態です。");
       setTimeout(() => refetchListModal(), 1500);
     },
     onError: (e: any) => toast.error(e.message),
   });
   const listShipmentStatusLabels: Record<string, string> = {
-    ready: "配送準備", picked_up: "集荷", accepted: "受付",
-    export_customs: "発送国通関", in_transit: "配送中", in_transit_intl: "国際輸送",
-    in_transit_domestic: "国内配送", arrived_destination: "到着国到着",
-    import_customs: "到着国通関", customs_cleared: "通関完了",
-    out_for_delivery: "配達に出発", delivered: "配達完了",
-    failed: "配送失敗", returned: "返送",
+    ready: "배송 준비", picked_up: "상품 수거", accepted: "접수",
+    export_customs: "출발국 통관", in_transit: "배송 중", in_transit_intl: "국제운송",
+    in_transit_domestic: "국내배송", arrived_destination: "도착국 도착",
+    import_customs: "도착국 통관", customs_cleared: "통관 완료",
+    out_for_delivery: "배달 출발", delivered: "배달 완료",
+    failed: "배송 실패", returned: "반송",
   };
 
   return (
@@ -1868,13 +1938,10 @@ function AdminOrders() {
         <h1 className="text-2xl font-bold">注文管理 <span className="text-base font-normal text-muted-foreground">({data?.total ?? 0})</span></h1>
         <div className="flex items-center gap-2">
           <Button size="sm" variant="outline" className="h-8 text-xs gap-1" onClick={expandAllOrders}>
-            <ChevronDown className="w-3.5 h-3.5" />展開
+            <ChevronDown className="w-3.5 h-3.5" />펼치기
           </Button>
           <Button size="sm" variant="outline" className="h-8 text-xs gap-1" onClick={collapseAllOrders}>
-            <ChevronRight className="w-3.5 h-3.5" />閉じる
-          </Button>
-          <Button size="sm" variant="outline" className="h-8 text-xs gap-1" onClick={() => setLocation("/admin/excel-upload/tracking")}>
-            <Upload className="w-3.5 h-3.5" />Excelアップロード
+            <ChevronRight className="w-3.5 h-3.5" />접기
           </Button>
         </div>
       </div>
@@ -1894,7 +1961,7 @@ function AdminOrders() {
             />
           </div>
           <Button size="sm" className="h-8 px-4 bg-rose-600 hover:bg-rose-700 text-white gap-1.5" onClick={applyFilters}>
-            <Search className="w-3.5 h-3.5" />検索
+            <Search className="w-3.5 h-3.5" />검색
           </Button>
         </div>
 
@@ -1906,7 +1973,7 @@ function AdminOrders() {
             <span className="text-xs text-muted-foreground">~</span>
             <input type="date" className="border rounded px-2 py-1 text-xs h-7 bg-background" value={pendingDateTo} onChange={e => { setPendingDateTo(e.target.value); setActiveDatePreset(""); }} />
             {(["오늘", "7일", "14일", "1개월", "3개월", "전체"] as const).map(p => (
-              <button key={p} onClick={() => applyDatePreset(p)} className={`text-xs px-2.5 py-1 rounded border h-7 transition-colors ${activeDatePreset === p ? "bg-primary text-primary-foreground border-primary" : "bg-background border-border hover:bg-accent"}`}>{({ "오늘": "今日", "7일": "7日", "14일": "14日", "1개월": "1か月", "3개월": "3か月", "전체": "すべて" } as Record<string, string>)[p] ?? p}</button>
+              <button key={p} onClick={() => applyDatePreset(p)} className={`text-xs px-2.5 py-1 rounded border h-7 transition-colors ${activeDatePreset === p ? "bg-primary text-primary-foreground border-primary" : "bg-background border-border hover:bg-accent"}`}>{p}</button>
             ))}
           </div>
         </div>
@@ -1953,7 +2020,7 @@ function AdminOrders() {
         <div className="flex items-center gap-0 border-b">
           <div className="w-24 px-3 py-2.5 text-xs font-semibold text-muted-foreground bg-secondary/40 self-stretch flex items-center flex-shrink-0">決済方法</div>
           <div className="flex flex-wrap gap-x-4 px-3 py-2">
-            {([{ label: "すべて", value: "" }, { label: "カード決済", value: "card" }, { label: "銀行振込", value: "bank_transfer" }] as const).map(opt => (
+            {([{ label: "すべて", value: "" }, { label: "カード決済", value: "card" }] as const).map(opt => (
               <label key={opt.value} className="flex items-center gap-1.5 cursor-pointer text-xs py-0.5">
                 <input type="radio" name="paymentMethodFilter" className="accent-rose-600" checked={pendingPaymentMethod === opt.value}
                   onChange={() => setPendingPaymentMethod(opt.value)} />
@@ -1971,7 +2038,7 @@ function AdminOrders() {
               <label key={n} className="flex items-center gap-1.5 cursor-pointer text-xs py-0.5">
                 <input type="radio" name="pageSizeFilter" className="accent-rose-600" checked={pageSize === n}
                   onChange={() => { setPageSize(n); setPage(1); }} />
-                <span className={pageSize === n ? "font-semibold text-rose-600" : "text-foreground"}>{n}件</span>
+                <span className={pageSize === n ? "font-semibold text-rose-600" : "text-foreground"}>{n}개</span>
               </label>
             ))}
           </div>
@@ -1996,22 +2063,22 @@ function AdminOrders() {
             </div>
             <div className="flex items-center gap-2">
               <Button size="sm" className="h-7 text-xs px-3 bg-rose-600 hover:bg-rose-700 text-white gap-1" onClick={applyFilters}>
-                <Search className="w-3 h-3" />検索
+                <Search className="w-3 h-3" />검색
               </Button>
               <Button size="sm" variant="outline" className="h-7 text-xs px-3 gap-1" onClick={resetFilters}>
-                <X className="w-3 h-3" />リセット
+                <X className="w-3 h-3" />초기화
               </Button>
               <Button size="sm" variant="outline" className="h-7 text-xs gap-1"
                 onClick={() => { downloadOrdersExcel(data?.orders ?? []); toast.success("Excelをダウンロード中..."); }}>
-                <Upload className="w-3.5 h-3.5" />Excel
+                <Upload className="w-3.5 h-3.5" />엑셀
               </Button>
               {selectedIds.length > 0 && (
                 <div className="flex items-center gap-1.5">
-                  <span className="text-xs text-muted-foreground">{selectedIds.length}件選択</span>
+                  <span className="text-xs text-muted-foreground">{selectedIds.length}개 선택</span>
                   <select className="border rounded px-2 py-1 text-xs h-7" value={bulkAction} onChange={e => setBulkAction(e.target.value)}>
                     <option value="">一括操作</option>
                     <option value="delete">削除</option>
-                    {statuses.map(s => <option key={s} value={s}>{getOrderStatusLabel(s)}に変更</option>)}
+                    {statuses.map(s => <option key={s} value={s}>{getOrderStatusLabel(s)}로 변경</option>)}
                   </select>
                   <Button size="sm" className="h-7 text-xs" onClick={handleBulkAction} disabled={!bulkAction}>実行</Button>
                 </div>
@@ -2057,10 +2124,10 @@ function AdminOrders() {
                               {isCollapsed ? <ChevronRight className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
                               <span className="font-mono text-primary">{formatOrderNumber(o.orderNumber)}</span>
                               <span className="text-[11px] font-normal text-muted-foreground">
-                                {(() => { const d = new Date(o.createdAt); return d.toLocaleString("ja-JP", { year:"numeric", month:"2-digit", day:"2-digit", hour:"2-digit", minute:"2-digit", hour12: false }); })()}
+                                {(() => { const d = new Date(o.createdAt); return d.toLocaleString("ko-KR", { year:"numeric", month:"2-digit", day:"2-digit", hour:"2-digit", minute:"2-digit", hour12: false }); })()}
                               </span>
                             </button>
-                            <span className="text-xs text-muted-foreground">{items.length}点の商品</span>
+                            <span className="text-xs text-muted-foreground">{items.length}개 상품</span>
                             <span className="flex items-center gap-1">
                               {o.paymentMethod === "card" && (
                                 <span className="inline-flex items-center justify-center w-4 h-4 rounded text-[9px] font-bold bg-blue-100 text-blue-700 border border-blue-300 flex-shrink-0">カ</span>
@@ -2068,9 +2135,9 @@ function AdminOrders() {
                               {(o.paymentMethod === "bank_transfer" || o.paymentMethod === "virtual_account") && (
                                 <span className="inline-flex items-center justify-center w-4 h-4 rounded text-[9px] font-bold bg-emerald-100 text-emerald-700 border border-emerald-300 flex-shrink-0">振</span>
                               )}
-                              <span className="text-xs font-semibold price-text">実決済額: {formatPrice(o.totalAmount - (o.discountAmount ?? 0) - (o.pointsUsed ?? 0))}</span>
+                              <span className="text-xs font-semibold price-text">실결제: {formatPrice(o.totalAmount - (o.discountAmount ?? 0) - (o.pointsUsed ?? 0))}</span>
                               {(o.pointsUsed ?? 0) > 0 && (
-                                <span className="text-[10px] text-rose-500 font-medium">ポイント: {(o.pointsUsed ?? 0).toLocaleString()}</span>
+                                <span className="text-[10px] text-rose-500 font-medium">포인트: {(o.pointsUsed ?? 0).toLocaleString()}</span>
                               )}
                             </span>
                             {o.paymentMethod === "bank_transfer" && o.paymentStatus === "pending" && o.paymentId && (
@@ -2169,18 +2236,20 @@ function AdminOrders() {
                                   src={proxyImage(item.productThumbnail || item.product?.thumbnail)}
                                   alt={item.productName}
                                   className="w-10 h-10 rounded object-cover flex-shrink-0 cursor-pointer hover:opacity-80 transition-opacity"
-                                  onClick={() => item.product?.slug && (window.location.href = productHref(item.product.slug))}
+                                  onClick={() => item.product?.slug && window.open("https://seoulmono.com/item/" + item.product.slug, "_blank", "noopener")}
+                                  title="쇼핑몰 상품 페이지 열기"
                                 />
                               )}
                               <div className="min-w-0">
                                 <div
                                   className={`text-xs font-medium cursor-pointer hover:underline hover:text-primary ${itemCancelled ? "line-through text-muted-foreground" : ""}`}
-                                  onClick={() => item.product?.slug && (window.location.href = productHref(item.product.slug))}
+                                  onClick={() => (window.location.href = "/admin/fulfilment?od=" + encodeURIComponent(String(o.orderNumber)))}
+                                  title="주문 상세(주문 처리 화면) 열기"
                                 >{item.productName}</div>
                                 {item.options && Object.keys(item.options).length > 0 && (
                                   <div className="text-[11px] text-muted-foreground">{Object.values(item.options).join(", ")}</div>
                                 )}
-                                <div className="text-[11px] text-muted-foreground">{item.quantity}個 × {formatPrice(item.price)}</div>
+                                <div className="text-[11px] text-muted-foreground">{item.quantity}개 × {formatPrice(item.price)}</div>
                                 {item.product?.noDiscount === 1 && (
                                   <span className="inline-block mt-0.5 text-[9px] px-1.5 py-0.5 rounded bg-amber-50 text-amber-700 border border-amber-300 font-medium">割引対象外商品</span>
                                 )}
@@ -2336,7 +2405,7 @@ function AdminOrders() {
                   <Clock className="w-4 h-4 text-primary" />
                   <span className="font-bold text-base">配送タイムライン</span>
                   {listModalData?.history && (
-                    <span className="text-sm text-muted-foreground">{listModalData.history.length}件</span>
+                    <span className="text-sm text-muted-foreground">{listModalData.history.length}건</span>
                   )}
                 </div>
                 <p className="text-sm text-muted-foreground mt-0.5 line-clamp-1">{listTrackingItem.productName}</p>
@@ -2359,20 +2428,20 @@ function AdminOrders() {
                 disabled={refreshListTracking.isPending}
               >
                 <RotateCcw className={`w-3 h-3 ${refreshListTracking.isPending ? "animate-spin" : ""}`} />
-                再読み込み
+                새로고침
               </Button>
             </div>
 
             {/* 추적번호 */}
             <div className="mx-4 mt-4 border rounded-xl p-4 flex-shrink-0">
               <p className="text-[11px] text-muted-foreground mb-0.5">
-                追跡番号 · {listModalData?.carrier?.name ?? listTrackingItem.shipment?.carrier?.name ?? "配送業者"}
+                추적번호 · {listModalData?.carrier?.name ?? listTrackingItem.shipment?.carrier?.name ?? "택배사"}
               </p>
               <p className="font-bold text-base">{listTrackingItem.shipment?.trackingNumber}</p>
               <div className="flex gap-2 mt-2 flex-wrap">
                 <Button size="sm" variant="outline" className="h-7 text-xs gap-1"
                   onClick={() => { navigator.clipboard.writeText(listTrackingItem.shipment?.trackingNumber ?? ""); toast.success("コピーしました"); }}>
-                  <Copy className="w-3 h-3" />コピー
+                  <Copy className="w-3 h-3" />복사
                 </Button>
                 <Button size="sm" className="h-7 text-xs gap-1 bg-blue-600 hover:bg-blue-700 text-white" asChild>
                   <a href={`https://t.17track.net/en#nums=${listTrackingItem.shipment?.trackingNumber}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1">
@@ -2382,7 +2451,7 @@ function AdminOrders() {
                 {/^\d{10,13}$/.test(listTrackingItem.shipment?.trackingNumber ?? "") && (
                   <Button size="sm" className="h-7 text-xs gap-1 bg-orange-600 hover:bg-orange-700 text-white" asChild>
                     <a href={`https://track.shiptrack.co.kr/cjkorex/${listTrackingItem.shipment?.trackingNumber}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1">
-                      <ExternalLink className="w-3 h-3" />CJで照会
+                      <ExternalLink className="w-3 h-3" />CJ조회
                     </a>
                   </Button>
                 )}
@@ -2442,7 +2511,7 @@ function AdminOrders() {
             {/* 푸터 */}
             <div className="flex items-center justify-between px-5 py-3 border-t flex-shrink-0">
               <span className="text-xs text-muted-foreground">
-                {listModalData?.updatedAt ? `最終同期: ${formatDateTime(listModalData.updatedAt)}` : "自動更新"}
+                {listModalData?.updatedAt ? `최종동기: ${formatDateTime(listModalData.updatedAt)}` : "自動更新"}
               </span>
               <Button size="sm" variant="outline" onClick={() => setListTrackingItem(null)} className="h-7 text-xs">閉じる</Button>
             </div>
@@ -2480,7 +2549,7 @@ function AdminOrderDetail({ id }: { id: string }) {
     onError: (e) => toast.error(e.message),
   });
   const statuses = ["pending", "paid", "preparing", "shipping", "delivered", "customs_hold", "cancelled"];
-  
+
   // 운송장 등록 상태
   const [showShipmentForm, setShowShipmentForm] = useState(false);
   const [trackingNumber, setTrackingNumber] = useState("");
@@ -2551,10 +2620,10 @@ function AdminOrderDetail({ id }: { id: string }) {
       setCancelItemIds([]);
       setCancelReason("");
       if (result.allCancelled) {
-        toast.success(`全商品をキャンセルしました。返金額: ${formatPrice(result.refundAmount ?? 0)}`);
+        toast.success(`전체 상품이 취소되었습니다. 환불 금액: ${formatPrice(result.refundAmount ?? 0)}`);
       } else {
-        const parts = [`${result.cancelledCount}点の商品をキャンセルしました。`, `返金額: ${formatPrice(result.refundAmount ?? 0)}`];
-        if ((result.couponReduction ?? 0) > 0) parts.push(`(クーポン差引 -${formatPrice(result.couponReduction ?? 0)} を含む)`);
+        const parts = [`${result.cancelledCount}개 상품이 취소되었습니다.`, `환불 금액: ${formatPrice(result.refundAmount ?? 0)}`];
+        if ((result.couponReduction ?? 0) > 0) parts.push(`(쿠폰 차감 -${formatPrice(result.couponReduction ?? 0)} 포함)`);
         toast.success(parts.join(" "));
       }
     },
@@ -2616,13 +2685,13 @@ function AdminOrderDetail({ id }: { id: string }) {
   const refreshTracking = trpc.shipping.adminRefreshTracking.useMutation({
     onSuccess: (data: { success: boolean; eventsCount: number; delivered?: boolean; message?: string }) => {
       if (!data.success) {
-        toast.info(data.message || "配送情報をまだ照会できません。");
+        toast.info(data.message || "배송 정보를 아직 조회할 수 없습니다.");
         return;
       }
       if (data.delivered) {
         toast.success("配送が完了しました！");
       } else if (data.eventsCount > 0) {
-        toast.success(`配送情報を更新しました。(新規イベント ${data.eventsCount}件)`);
+        toast.success(`배송 정보가 업데이트되었습니다. (${data.eventsCount}개 새 이벤트)`);
       } else {
         toast.info("配送情報は最新の状態です。");
       }
@@ -2638,23 +2707,23 @@ function AdminOrderDetail({ id }: { id: string }) {
     : null;
 
   const shipmentStatusLabels: Record<string, string> = {
-    ready: "配送準備",
-    picked_up: "集荷",
-    accepted: "受付",
-    export_customs: "発送国通関",
-    in_transit: "配送中",
-    in_transit_intl: "国際輸送",
-    in_transit_domestic: "国内配送",
-    arrived_destination: "到着国到着",
-    import_customs: "到着国通関",
-    customs_cleared: "通関完了",
-    customs_departure: "通関出発",
-    customs_arrival: "通関到着",
-    out_for_delivery: "配達に出発",
-    delivered: "配達完了",
-    failed: "配送失敗",
-    returned: "返送",
-    alert: "注意",
+    ready: "배송 준비",
+    picked_up: "상품 수거",
+    accepted: "접수",
+    export_customs: "출발국 통관",
+    in_transit: "배송 중",
+    in_transit_intl: "국제운송",
+    in_transit_domestic: "국내배송",
+    arrived_destination: "도착국 도착",
+    import_customs: "도착국 통관",
+    customs_cleared: "통관 완료",
+    customs_departure: "통관 출발",
+    customs_arrival: "통관 도착",
+    out_for_delivery: "배달 출발",
+    delivered: "배달 완료",
+    failed: "배송 실패",
+    returned: "반송",
+    alert: "주의",
   };
 
   // 국제배송 단계 정의
@@ -2695,7 +2764,7 @@ function AdminOrderDetail({ id }: { id: string }) {
               className="h-8 text-xs border-rose-300 text-rose-600 hover:bg-rose-50 gap-1.5"
               onClick={() => { setCancelItemIds([]); setCancelReason(""); setShowPartialCancelDialog(true); }}
             >
-              <X className="w-3.5 h-3.5" />一部キャンセル
+              <X className="w-3.5 h-3.5" />부분 취소
             </Button>
           )}
         </div>
@@ -2753,19 +2822,19 @@ function AdminOrderDetail({ id }: { id: string }) {
                         <div className="flex-1 min-w-0">
                           <p className="text-sm font-medium leading-snug">{item.productName}</p>
                           <div className="flex items-center gap-2 mt-0.5 flex-wrap">
-                            <span className="text-xs text-muted-foreground">数量 {item.quantity}個 · {formatPrice(itemTotal)}</span>
+                            <span className="text-xs text-muted-foreground">수량 {item.quantity}개 · {formatPrice(itemTotal)}</span>
                             {isNoDiscount && (
                               <span className="text-[10px] px-1.5 py-0.5 rounded bg-amber-50 text-amber-700 border border-amber-300 font-medium">割引対象外商品</span>
                             )}
                             {itemCoupon > 0 && (
-                              <span className="text-xs text-rose-600 bg-rose-100 dark:bg-rose-950/30 px-1.5 py-0.5 rounded font-medium">クーポン -{formatPrice(itemCoupon)}</span>
+                              <span className="text-xs text-rose-600 bg-rose-100 dark:bg-rose-950/30 px-1.5 py-0.5 rounded font-medium">쿠폰 -{formatPrice(itemCoupon)}</span>
                             )}
                             {itemDiscount > 0 && (
-                              <span className="text-xs text-orange-600 bg-orange-50 dark:bg-orange-950/30 px-1.5 py-0.5 rounded font-medium">割引 -{formatPrice(itemDiscount)}</span>
+                              <span className="text-xs text-orange-600 bg-orange-50 dark:bg-orange-950/30 px-1.5 py-0.5 rounded font-medium">할인 -{formatPrice(itemDiscount)}</span>
                             )}
                           </div>
                           {(itemCoupon > 0 || itemDiscount > 0) && (
-                            <p className="text-xs font-semibold text-emerald-700 dark:text-emerald-400 mt-0.5">返金予定: {formatPrice(itemRefund)}</p>
+                            <p className="text-xs font-semibold text-emerald-700 dark:text-emerald-400 mt-0.5">환불 예상: {formatPrice(itemRefund)}</p>
                           )}
                         </div>
                       </label>
@@ -2777,14 +2846,14 @@ function AdminOrderDetail({ id }: { id: string }) {
                   <div className="rounded-lg bg-muted/50 border p-3 text-sm space-y-1.5">
                     <p className="font-semibold text-sm mb-1">返金予定の内訳</p>
                     <div className="flex justify-between text-muted-foreground">
-                      <span>キャンセル商品合計 ({cancelItemIds.length}点)</span>
+                      <span>취소 상품 합계 ({cancelItemIds.length}개)</span>
                       <span>{formatPrice(selectedTotal)}</span>
                     </div>
                     {couponReduction > 0 && (
                       <div className="flex justify-between text-rose-600">
                         <span className="flex items-center gap-1">
                           <span className="text-xs px-1 py-0.5 bg-rose-100 text-rose-600 rounded font-semibold">クーポン</span>
-                          差引
+                          차감
                         </span>
                         <span>-{formatPrice(couponReduction)}</span>
                       </div>
@@ -2819,7 +2888,7 @@ function AdminOrderDetail({ id }: { id: string }) {
                     disabled={cancelItemIds.length === 0 || partialCancel.isPending}
                     onClick={() => partialCancel.mutate({ orderId: order.id, itemIds: cancelItemIds, reason: cancelReason || undefined })}
                   >
-                    {partialCancel.isPending ? "処理中..." : `${cancelItemIds.length}点をキャンセル (返金 ${formatPrice(refundAmount)})`}
+                    {partialCancel.isPending ? "処理中..." : `${cancelItemIds.length}개 취소 (환불 ${formatPrice(refundAmount)})`}
                   </Button>
                 </DialogFooter>
               </>
@@ -2848,7 +2917,7 @@ function AdminOrderDetail({ id }: { id: string }) {
                 <div className="flex items-center justify-between mb-5">
                   <div className="flex items-center gap-2">
                     <Package className="w-4 h-4 text-primary" />
-                    <h3 className="font-semibold">購入商品一覧 ({allItems.length}点)</h3>
+                    <h3 className="font-semibold">구매 상품 목록 ({allItems.length}개)</h3>
                   </div>
                   <div className="flex items-center gap-3">
                     <div className="flex items-center gap-2 text-xs text-muted-foreground">
@@ -2859,7 +2928,7 @@ function AdminOrderDetail({ id }: { id: string }) {
                       <span>{filledCount}/{allItems.length}</span>
                     </div>
                     {missingCount > 0 ? (
-                      <span className="text-xs px-2.5 py-1 rounded-full bg-orange-100 text-orange-600 dark:bg-orange-950/30 dark:text-orange-400 font-semibold">{missingCount}件未入力</span>
+                      <span className="text-xs px-2.5 py-1 rounded-full bg-orange-100 text-orange-600 dark:bg-orange-950/30 dark:text-orange-400 font-semibold">{missingCount}개 미입력</span>
                     ) : (
                       <span className="text-xs px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-600 dark:bg-emerald-950/30 dark:text-emerald-400 font-semibold">すべて入力済み</span>
                     )}
@@ -2881,18 +2950,18 @@ function AdminOrderDetail({ id }: { id: string }) {
                         {/* 헤더 */}
                         <div className={`flex items-center justify-between px-4 py-2.5 border-b ${isCancelled ? "bg-rose-50/60 dark:bg-rose-950/20 border-rose-100 dark:border-rose-900/30" : hasTracking ? "bg-emerald-50 dark:bg-emerald-950/20 border-emerald-100 dark:border-emerald-800/30" : "bg-secondary/50"}`}>
                           <span className="text-xs font-mono font-semibold text-muted-foreground">
-                            注文番号 {formatOrderNumber(order.orderNumber)}
+                            주문번호 {formatOrderNumber(order.orderNumber)}
                             <span className="ml-2 opacity-50">#{String(item.id).padStart(6, '0')}</span>
                           </span>
                           {isCancelled ? (
                             <div className="flex items-center gap-1.5 flex-wrap">
                               <span className="text-xs px-2 py-0.5 rounded-full font-medium bg-gray-200 text-gray-600 dark:bg-gray-700 dark:text-gray-300 flex items-center gap-1">
-                                <X className="w-3 h-3" />キャンセル済み
+                                <X className="w-3 h-3" />취소됨
                               </span>
                               {item.refundedAt ? (
                                 <>
                                   <span className="text-xs px-2 py-0.5 rounded-full font-medium bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400 flex items-center gap-1">
-                                    <CheckCircle2 className="w-3 h-3" />返金完了 {formatDateTime(item.refundedAt)}
+                                    <CheckCircle2 className="w-3 h-3" />환불 완료 {formatDateTime(item.refundedAt)}
                                   </span>
                                   <button
                                     className="text-xs px-2 py-0.5 rounded-full font-medium bg-muted text-muted-foreground border hover:bg-accent flex items-center gap-1 disabled:opacity-50"
@@ -2905,7 +2974,7 @@ function AdminOrderDetail({ id }: { id: string }) {
                                   className="text-xs px-2 py-0.5 rounded-full font-medium bg-emerald-100 text-emerald-700 border border-emerald-300 hover:bg-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-400 flex items-center gap-1 disabled:opacity-50"
                                   disabled={markItemRefunded.isPending}
                                   onClick={() => markItemRefunded.mutate({ itemId: item.id })}
-                                ><Check className="w-3 h-3" />返金完了 ({formatPrice(item.refundAmount)})</button>
+                                ><Check className="w-3 h-3" />환불 완료 ({formatPrice(item.refundAmount)})</button>
                               ) : null}
                             </div>
                           ) : hasTracking ? (
@@ -2926,9 +2995,9 @@ function AdminOrderDetail({ id }: { id: string }) {
                             <p className="text-sm font-semibold leading-snug">{item.productName}</p>
                             {item.options && <p className="text-xs text-muted-foreground mt-0.5">{Object.entries(item.options).map(([k, v]) => `${k}: ${v}`).join(", ")}</p>}
                             <div className="flex items-center gap-3 mt-2 flex-wrap">
-                              <span className="text-xs bg-primary/10 text-primary px-2 py-0.5 rounded-full font-medium">数量 {item.quantity}個</span>
-                              <span className="text-xs text-muted-foreground">単価 {formatPrice(item.price)}</span>
-                              <span className="text-xs font-bold">小計 {formatPrice(item.price * item.quantity)}</span>
+                              <span className="text-xs bg-primary/10 text-primary px-2 py-0.5 rounded-full font-medium">수량 {item.quantity}개</span>
+                              <span className="text-xs text-muted-foreground">단가 {formatPrice(item.price)}</span>
+                              <span className="text-xs font-bold">소계 {formatPrice(item.price * item.quantity)}</span>
                               {(() => {
                                 const itemTotal = item.price * item.quantity;
                                 const isNoDiscount = item.product?.noDiscount === 1;
@@ -2945,7 +3014,7 @@ function AdminOrderDetail({ id }: { id: string }) {
                                       <span className="text-[10px] px-1.5 py-0.5 rounded bg-amber-50 text-amber-700 border border-amber-300 font-medium">割引対象外商品</span>
                                     )}
                                     {itemCoupon > 0 && (
-                                      <span className="text-xs text-rose-600 font-medium bg-rose-50 dark:bg-rose-950/30 px-2 py-0.5 rounded-full">クーポン -{formatPrice(itemCoupon)}</span>
+                                      <span className="text-xs text-rose-600 font-medium bg-rose-50 dark:bg-rose-950/30 px-2 py-0.5 rounded-full">쿠폰 -{formatPrice(itemCoupon)}</span>
                                     )}
                                   </>
                                 );
@@ -2964,13 +3033,13 @@ function AdminOrderDetail({ id }: { id: string }) {
                               className="text-xs border rounded px-2 py-1 text-muted-foreground hover:text-foreground hover:border-foreground transition-colors flex items-center gap-1"
                               onClick={() => startEditItem(item)}
                             >
-                              <Pencil className="w-3 h-3" />編集
+                              <Pencil className="w-3 h-3" />수정
                             </button>
                             <button
                               className="text-xs border rounded px-2 py-1 text-muted-foreground hover:text-primary hover:border-primary transition-colors flex items-center gap-1"
                               onClick={() => setTrackingModalItem(item)}
                             >
-                              <Search className="w-3 h-3" />追跡
+                              <Search className="w-3 h-3" />추적
                             </button>
                           </div>
                         ) : (
@@ -3003,7 +3072,7 @@ function AdminOrderDetail({ id }: { id: string }) {
                               disabled={!inputTracking.trim() || registerShipmentItem.isPending || updateShipmentInfoInline.isPending}
                               onClick={() => { saveItemTrackingDetail(item, inputTracking, inputCarrierId); cancelEditItem(item.id); }}
                             >
-                              <Save className="w-3.5 h-3.5" />保存
+                              <Save className="w-3.5 h-3.5" />저장
                             </Button>
                             {isEditing && (
                               <Button size="sm" variant="ghost" className="h-9 text-xs" onClick={() => cancelEditItem(item.id)}>閉じる</Button>
@@ -3015,7 +3084,7 @@ function AdminOrderDetail({ id }: { id: string }) {
                         <div className="flex items-center gap-2 px-4 py-3 flex-wrap">
                           {isCancelled && (
                             <span className="text-xs text-rose-400 flex items-center gap-1 mr-1">
-                              <X className="w-3 h-3" />キャンセル済み — 別のステータスに変更すると復元されます
+                              <X className="w-3 h-3" />취소됨 — 다른 상태로 변경 시 복원됩니다
                             </span>
                           )}
                           <div className="flex items-center gap-2 ml-auto">
@@ -3091,7 +3160,7 @@ function AdminOrderDetail({ id }: { id: string }) {
                   variant="outline"
                   className="gap-1 h-7 text-xs border-rose-400 text-rose-600 bg-rose-50 hover:bg-rose-100 dark:bg-rose-950/20"
                   disabled={cancelPaymentConfirmation.isPending}
-                  onClick={() => { if (window.confirm("入金確認を取り消しますか？注文ステータスが入金待ちに戻ります。")) cancelPaymentConfirmation.mutate({ paymentId: paymentData.id }); }}
+                  onClick={() => { if (window.confirm("입금확인을 취소하시겠습니까? 주문 상태가 입금 대기로 돌아갑니다.")) cancelPaymentConfirmation.mutate({ paymentId: paymentData.id }); }}
                 >
                   <XCircle className="w-3.5 h-3.5" />
                   {cancelPaymentConfirmation.isPending ? "処理中..." : "入金確認の取消"}
@@ -3099,13 +3168,13 @@ function AdminOrderDetail({ id }: { id: string }) {
               )}
             </div>
             <div className="space-y-2 text-sm">
-              <div className="flex justify-between"><span className="text-muted-foreground">商品金額</span><span className="price-text">{formatPrice(order.totalAmount)}</span></div>
-              <div className="flex justify-between"><span className="text-muted-foreground">送料 (国際配送)</span><span className="text-emerald-600 font-medium">無料</span></div>
+              <div className="flex justify-between"><span className="text-muted-foreground">상품 금액</span><span className="price-text">{formatPrice(order.totalAmount - (order.shippingFee ?? 0) + (order.discountAmount ?? 0))}</span></div>
+              <div className="flex justify-between"><span className="text-muted-foreground">送料</span><span className={order.shippingFee > 0 ? "price-text" : "text-emerald-600 font-medium"}>{order.shippingFee > 0 ? formatPrice(order.shippingFee) : "無料"}</span></div>
               {(order.couponDiscount ?? 0) > 0 && (
                 <div className="flex justify-between">
                   <span className="text-muted-foreground flex items-center gap-1 flex-wrap">
                     <span className="text-xs px-1.5 py-0.5 bg-rose-100 text-rose-600 dark:bg-rose-950/30 rounded font-semibold">クーポン</span>
-                    割引
+                    할인
                     {(order as any).couponName && (
                       <span className="text-xs px-1.5 py-0.5 bg-rose-50 text-rose-600 border border-rose-200 rounded font-medium">{(order as any).couponName}</span>
                     )}
@@ -3118,8 +3187,8 @@ function AdminOrderDetail({ id }: { id: string }) {
               )}
               {order.pointsUsed > 0 && <div className="flex justify-between"><span className="text-muted-foreground">ポイント利用</span><span className="text-rose-600">-{formatPrice(order.pointsUsed)}</span></div>}
               <div className="flex justify-between border-t pt-2 font-bold">
-                <span>お支払い合計</span>
-                <span className="price-text">{formatPrice(order.totalAmount + order.shippingFee - (order.pointsUsed ?? 0) - (order.discountAmount ?? 0))}</span>
+                <span>累計決済金額</span>
+                <span className="price-text">{formatPrice(order.totalAmount)}</span>
               </div>
             </div>
             {paymentData && paymentData.paymentMethod === "bank_transfer" && (
@@ -3196,7 +3265,7 @@ function AdminOrderDetail({ id }: { id: string }) {
                     <span className="text-rose-700 dark:text-rose-400">キャンセル / 返金情報</span>
                   </div>
                   <div className="flex justify-between text-xs">
-                    <span className="text-muted-foreground">キャンセル商品 ({cancelledItems.length}点)</span>
+                    <span className="text-muted-foreground">취소 상품 ({cancelledItems.length}개)</span>
                     <span className="font-medium">{formatPrice(cancelledTotal)}</span>
                   </div>
                   {couponReduction > 0 && (
@@ -3252,7 +3321,7 @@ function AdminOrderDetail({ id }: { id: string }) {
               <h3 className="font-semibold mb-4">注文者情報</h3>
               <div className="space-y-2 text-sm">
                 <div><span className="text-muted-foreground">氏名:</span> {order.user.name ?? "-"}</div>
-                <div><span className="text-muted-foreground">ID:</span> {order.user.email ?? "-"}</div>
+                <div><span className="text-muted-foreground">아이디:</span> {order.user.email ?? "-"}</div>
                 <div><span className="text-muted-foreground">会員ランク:</span> {getGradeLabel(order.user.grade)}</div>
               </div>
             </div>
@@ -3266,7 +3335,7 @@ function AdminOrderDetail({ id }: { id: string }) {
           <DialogHeader>
             <DialogTitle>配送情報の編集</DialogTitle>
             <DialogDescription>
-              追跡番号を編集できます。追跡番号を変更すると、17trackに自動で再登録されます。
+              운송장 번호를 수정할 수 있습니다. 운송장 번호가 변경되면 17track에 자동으로 재등록됩니다.
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
@@ -3281,7 +3350,7 @@ function AdminOrderDetail({ id }: { id: string }) {
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setShowEditShipmentDialog(false)}>
-              キャンセル
+              취소
             </Button>
             <Button
               disabled={!editTrackingNumber || updateShipmentInfo.isPending}
@@ -3315,7 +3384,7 @@ function AdminOrderDetail({ id }: { id: string }) {
                   <Clock className="w-4 h-4 text-primary" />
                   <span className="font-bold text-base">配送タイムライン</span>
                   {modalTrackingData?.history && (
-                    <span className="text-sm text-muted-foreground">{modalTrackingData.history.length}件</span>
+                    <span className="text-sm text-muted-foreground">{modalTrackingData.history.length}건</span>
                   )}
                 </div>
                 <p className="text-sm text-muted-foreground mt-0.5 line-clamp-1">{trackingModalItem.productName}</p>
@@ -3338,7 +3407,7 @@ function AdminOrderDetail({ id }: { id: string }) {
                 disabled={refreshTracking.isPending}
               >
                 <RotateCcw className={`w-3 h-3 ${refreshTracking.isPending ? "animate-spin" : ""}`} />
-                再読み込み
+                새로고침
               </Button>
             </div>
 
@@ -3346,7 +3415,7 @@ function AdminOrderDetail({ id }: { id: string }) {
             <div className="mx-4 mt-4 border rounded-xl p-4 flex-shrink-0">
               <div className="mb-3">
                 <p className="text-[11px] text-muted-foreground mb-0.5">
-                  追跡番号 · {modalTrackingData?.carrier?.name ?? trackingModalItem.shipment?.carrier?.name ?? "配送業者"}
+                  추적번호 · {modalTrackingData?.carrier?.name ?? trackingModalItem.shipment?.carrier?.name ?? "택배사"}
                 </p>
                 <p className="font-bold text-base text-foreground">
                   {trackingModalItem.shipment?.trackingNumber}
@@ -3354,7 +3423,7 @@ function AdminOrderDetail({ id }: { id: string }) {
                 {order.recipientName && (
                   <p className="text-xs text-muted-foreground flex items-center gap-1 mt-1">
                     <MapPin className="w-3 h-3 flex-shrink-0" />
-                    受取人: {order.recipientName}{(order as any).recipientNameEn ? ` ${(order as any).recipientNameEn}` : ""}
+                    수령인: {order.recipientName}{(order as any).recipientNameEn ? ` ${(order as any).recipientNameEn}` : ""}
                   </p>
                 )}
               </div>
@@ -3365,7 +3434,7 @@ function AdminOrderDetail({ id }: { id: string }) {
                   className="h-7 text-xs gap-1"
                   onClick={() => { navigator.clipboard.writeText(trackingModalItem.shipment?.trackingNumber ?? ""); toast.success("コピーしました"); }}
                 >
-                  <Copy className="w-3 h-3" />コピー
+                  <Copy className="w-3 h-3" />복사
                 </Button>
                 <Button size="sm" className="h-7 text-xs gap-1 bg-blue-600 hover:bg-blue-700 text-white" asChild>
                   <a
@@ -3387,7 +3456,7 @@ function AdminOrderDetail({ id }: { id: string }) {
                         rel="noopener noreferrer"
                         className="flex items-center gap-1"
                       >
-                        <ExternalLink className="w-3 h-3" />CJ大韓通運
+                        <ExternalLink className="w-3 h-3" />CJ대한통운
                       </a>
                     </Button>
                     <Button size="sm" variant="outline" className="h-7 text-xs gap-1" asChild>
@@ -3461,7 +3530,7 @@ function AdminOrderDetail({ id }: { id: string }) {
             <div className="flex items-center justify-between px-5 py-3 border-t flex-shrink-0">
               <span className="text-xs text-muted-foreground">
                 {modalTrackingData?.updatedAt
-                  ? `最終同期: ${formatDateTime(modalTrackingData.updatedAt)} · 毎日自動更新`
+                  ? `최종동기: ${formatDateTime(modalTrackingData.updatedAt)} · 매일 자동업데이트`
                   : "自動更新"}
               </span>
               <Button
@@ -3470,7 +3539,7 @@ function AdminOrderDetail({ id }: { id: string }) {
                 onClick={() => setTrackingModalItem(null)}
                 className="h-7 text-xs"
               >
-                閉じる
+                닫기
               </Button>
             </div>
           </div>
@@ -3561,7 +3630,7 @@ function CartConvertModal({ userId, userName, userEmail, items, onClose, onSucce
                     ? <img src={item.product.thumbnail} alt="" className="w-full h-full object-cover" />
                     : <ShoppingBag className="w-3 h-3 text-muted-foreground/40" />}
                 </div>
-                <div className="flex-1 min-w-0 text-xs truncate">{item.product?.name ?? `商品 #${item.productId}`}</div>
+                <div className="flex-1 min-w-0 text-xs truncate">{item.product?.name ?? `상품 #${item.productId}`}</div>
                 <div className="text-xs text-muted-foreground shrink-0">×{item.quantity}</div>
                 <div className="text-xs font-semibold shrink-0 text-right">{((item.product?.salePrice ?? 0) * item.quantity).toLocaleString()}円</div>
               </div>
@@ -3643,13 +3712,13 @@ function CartConvertModal({ userId, userName, userEmail, items, onClose, onSucce
           <div className="flex items-center justify-between pt-1">
             <label className="flex items-center gap-1.5 text-xs cursor-pointer">
               <input type="checkbox" checked={form.clearCart} onChange={e => setForm(f => ({ ...f, clearCart: e.target.checked }))} className="rounded" />
-              注文後にカートを空にする
+              주문 후 장바구니 비우기
             </label>
             <div className="flex gap-2">
               <Button type="button" variant="outline" size="sm" onClick={onClose}>キャンセル</Button>
               <Button type="submit" size="sm" disabled={convertMut.isPending}>
                 {convertMut.isPending && <Loader2 className="w-3 h-3 animate-spin mr-1" />}
-                注文を作成
+                주문 생성
               </Button>
             </div>
           </div>
@@ -3700,7 +3769,7 @@ function AdminCartManagement() {
 
       {error && (
         <div className="bg-destructive/10 text-destructive text-sm rounded-lg p-4">
-          エラー: {error.message}
+          오류: {error.message}
         </div>
       )}
       {isLoading ? (
@@ -3720,20 +3789,20 @@ function AdminCartManagement() {
                     {(user.name ?? user.email).charAt(0).toUpperCase()}
                   </div>
                   <div>
-                    <div className="font-semibold text-sm">{user.name ?? "(名前なし)"}</div>
+                    <div className="font-semibold text-sm">{user.name ?? "(이름 없음)"}</div>
                     <div className="text-xs text-muted-foreground">{user.email}</div>
                   </div>
                 </div>
                 <div className="flex items-center gap-3 text-sm">
-                  <span className="text-muted-foreground">{items.length}点の商品</span>
+                  <span className="text-muted-foreground">{items.length}개 상품</span>
                   <span className="font-semibold text-primary">{totalAmount.toLocaleString()}円</span>
-                  <span className="text-xs text-muted-foreground">{new Date(lastUpdated).toLocaleDateString("ja-JP")}</span>
+                  <span className="text-xs text-muted-foreground">{new Date(lastUpdated).toLocaleDateString("ko-KR")}</span>
                   <Link href={`/admin/users/${user.id}`}>
                     <Button variant="ghost" size="sm" className="h-7 text-xs">会員を見る</Button>
                   </Link>
                   <Button size="sm" className="h-7 text-xs bg-primary text-primary-foreground"
                     onClick={() => setConvertTarget({ userId: user.id, userName: user.name, userEmail: user.email, items })}>
-                    注文に変換
+                    주문으로 전환
                   </Button>
                 </div>
               </div>
@@ -3748,16 +3817,16 @@ function AdminCartManagement() {
                       )}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <div className="text-sm font-medium truncate">{item.product?.name ?? `商品 #${item.productId}`}</div>
+                      <div className="text-sm font-medium truncate">{item.product?.name ?? `상품 #${item.productId}`}</div>
                       {item.options && Object.keys(item.options).length > 0 && (
                         <div className="text-xs text-muted-foreground mt-0.5">
                           {Object.entries(item.options as Record<string, string>).map(([k, v]) => `${k}: ${v}`).join(" / ")}
                         </div>
                       )}
                     </div>
-                    <div className="text-sm text-muted-foreground shrink-0">数量 {item.quantity}</div>
+                    <div className="text-sm text-muted-foreground shrink-0">수량 {item.quantity}</div>
                     <div className="text-sm font-semibold shrink-0 w-28 text-right">
-                      {item.product ? ((item.product.salePrice ?? 0) * item.quantity).toLocaleString() + "円" : "-"}
+                      {item.product ? ((item.product.salePrice ?? 0) * item.quantity).toLocaleString() + "원" : "-"}
                     </div>
                   </div>
                 ))}
@@ -3787,7 +3856,7 @@ function AdminCartManagement() {
           items={convertTarget.items}
           onClose={() => setConvertTarget(null)}
           onSuccess={(orderNumber) => {
-            toast.success(`注文を作成しました。注文番号: ${orderNumber}`);
+            toast.success(`주문이 생성됐습니다. 주문번호: ${orderNumber}`);
             setConvertTarget(null);
             utils.cart.adminCarts.invalidate();
           }}
@@ -3892,7 +3961,7 @@ function AdminUsers() {
       {/* 검색 */}
       <div className="bg-card border rounded-xl p-5 mb-4 space-y-3">
         <div className="flex flex-wrap items-center gap-2">
-          <span className="text-xs text-muted-foreground w-16">検索語</span>
+          <span className="text-xs text-muted-foreground w-16">検索キーワード</span>
           <select className="border rounded-md px-2 py-2 text-sm bg-background" value={searchField} onChange={e => setSearchField(e.target.value)}>
             <option value="id">会員ID</option>
             <option value="name">氏名</option>
@@ -3936,7 +4005,7 @@ function AdminUsers() {
           <table className="w-full text-sm">
             <thead><tr className="bg-secondary/50 text-xs text-muted-foreground">
               <th className="text-center py-3 px-3 w-10"><input type="checkbox" checked={selectedIds.length === (data?.users ?? []).length && (data?.users ?? []).length > 0} onChange={toggleSelectAll} /></th>
-              <th className="text-left py-3 px-3">ID</th>
+              <th className="text-left py-3 px-3">아이디</th>
               <th className="text-left py-3 px-3">氏名</th>
               <th className="text-left py-3 px-3">携帯電話</th>
               <th className="text-center py-3 px-3">権限</th>
@@ -3969,7 +4038,7 @@ function AdminUsers() {
                     </select>
                   </td>
                   <td className="py-2.5 px-3 text-right price-text">{(u.points ?? 0).toLocaleString()}P</td>
-                  <td className="py-2.5 px-3 text-center">{(u.orderCount ?? 0).toLocaleString()}件</td>
+                  <td className="py-2.5 px-3 text-center">{(u.orderCount ?? 0).toLocaleString()}건</td>
                   <td className="py-2.5 px-3 text-right price-text">{formatPrice(u.totalPaid ?? 0)}</td>
                   <td className="py-2.5 px-3 text-center">{statusBadge(u.status)}</td>
                   <td className="py-2.5 px-3 text-muted-foreground text-xs">{u.lastSignedIn ? formatDate(u.lastSignedIn) : "-"}</td>
@@ -3984,7 +4053,7 @@ function AdminUsers() {
                   </td>
                   <td className="py-2.5 px-3 text-muted-foreground text-xs">{formatDate(u.createdAt)}</td>
                   <td className="py-2.5 px-3 text-center">
-                    <Link href={`/admin/users/${u.id}`}><Button variant="outline" size="sm" className="h-7 px-2 text-xs">編集</Button></Link>
+                    <Link href={`/admin/users/${u.id}`}><Button variant="outline" size="sm" className="h-7 px-2 text-xs">更新</Button></Link>
                   </td>
                 </tr>
               ))}
@@ -4019,18 +4088,18 @@ function AdminBoards() {
     else { createMut.mutate(form); }
   };
 
-  const boardTypeLabel: Record<string, string> = { free: "自由掲示板", review: "お客様レビュー", qna: "Q&A", notice: "お知らせ" };
+  const boardTypeLabel: Record<string, string> = { free: "자유게시판", review: "고객 리뷰", qna: "Q&A", notice: "공지사항" };
 
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold">掲示板管理</h1>
-        <Button onClick={openCreate} size="sm"><Plus className="w-4 h-4 mr-1" /> 掲示板を追加</Button>
+        <Button onClick={openCreate} size="sm"><Plus className="w-4 h-4 mr-1" /> 掲示板の追加</Button>
       </div>
       <div className="bg-card border rounded-xl overflow-hidden elegant-shadow">
         <table className="w-full">
           <thead><tr className="bg-secondary/50 text-xs text-muted-foreground">
-            <th className="text-left py-3 px-4">ID</th><th className="text-left py-3 px-4">名前</th><th className="text-left py-3 px-4">スラッグ</th><th className="text-center py-3 px-4">種類</th><th className="text-center py-3 px-4">順序</th><th className="text-center py-3 px-4">ステータス</th><th className="text-center py-3 px-4">操作</th>
+            <th className="text-left py-3 px-4">ID</th><th className="text-left py-3 px-4">氏名</th><th className="text-left py-3 px-4">スラッグ</th><th className="text-center py-3 px-4">種類</th><th className="text-center py-3 px-4">順序</th><th className="text-center py-3 px-4">ステータス</th><th className="text-center py-3 px-4">操作</th>
           </tr></thead>
           <tbody className="divide-y">
             {(boardsList ?? []).map((b: any) => (
@@ -4044,7 +4113,7 @@ function AdminBoards() {
                 <td className="py-3 px-4 text-center">
                   <div className="flex items-center justify-center gap-1">
                     <Button variant="ghost" size="sm" onClick={() => openEdit(b)}><Pencil className="w-3.5 h-3.5" /></Button>
-                    <Button variant="ghost" size="sm" className="text-destructive" onClick={() => { if (confirm("削除しますか？関連する投稿も一緒に削除されます。")) deleteMut.mutate({ id: b.id }); }}><Trash2 className="w-3.5 h-3.5" /></Button>
+                    <Button variant="ghost" size="sm" className="text-destructive" onClick={() => { if (confirm("삭제하시겠습니까? 관련 게시글도 함께 삭제됩니다.")) deleteMut.mutate({ id: b.id }); }}><Trash2 className="w-3.5 h-3.5" /></Button>
                   </div>
                 </td>
               </tr>
@@ -4084,6 +4153,245 @@ function AdminBoards() {
   );
 }
 
+function AdminLoginBanners() {
+  const utils = trpc.useUtils();
+  const { data: list } = trpc.admin.loginBanners.useQuery();
+  const uploadMut = trpc.admin.uploadImage.useMutation();
+  const blank = { title: "", imageUrl: "", linkUrl: "", isActive: 1, sortOrder: 0 };
+  const [editId, setEditId] = useState<number | null>(null);
+  const [form, setForm] = useState(blank);
+  const [open, setOpen] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const done = (msg: string) => { utils.admin.loginBanners.invalidate(); setOpen(false); setEditId(null); setForm(blank); toast.success(msg); };
+  const onErr = (e: any) => toast.error(e?.message ?? "저장에 실패했습니다.");
+  const createMut = trpc.admin.createLoginBanner.useMutation({ onSuccess: () => done("로그인 배너가 추가되었습니다."), onError: onErr });
+  const updateMut = trpc.admin.updateLoginBanner.useMutation({ onSuccess: () => done("로그인 배너가 수정되었습니다."), onError: onErr });
+  const toggleMut = trpc.admin.updateLoginBanner.useMutation({ onSuccess: () => utils.admin.loginBanners.invalidate(), onError: onErr });
+  const deleteMut = trpc.admin.deleteLoginBanner.useMutation({ onSuccess: () => { utils.admin.loginBanners.invalidate(); toast.success("削除しました。"); }, onError: onErr });
+
+  const upload = async (file: File) => {
+    if (!file.type.startsWith("image/")) { toast.error("이미지 파일만 업로드할 수 있습니다."); return; }
+    if (file.size > 5 * 1024 * 1024) { toast.error("ファイルサイズは5MB以下にしてください。"); return; }
+    setUploading(true);
+    try {
+      const base64 = await new Promise<string>((resolve, reject) => { const r = new FileReader(); r.onload = () => resolve(String(r.result).split(",")[1]); r.onerror = reject; r.readAsDataURL(file); });
+      const res = await uploadMut.mutateAsync({ base64, fileName: file.name, contentType: file.type });
+      setForm(f => ({ ...f, imageUrl: res.url }));
+      toast.success("이미지를 업로드했습니다. 저장을 눌러야 반영됩니다.");
+    } catch (e: any) { toast.error("업로드 실패: " + (e?.message ?? "")); }
+    finally { setUploading(false); }
+  };
+  const startCreate = () => { setEditId(null); setForm(blank); setOpen(true); };
+  const startEdit = (b: any) => { setEditId(b.id); setForm({ title: b.title, imageUrl: b.imageUrl, linkUrl: b.linkUrl ?? "", isActive: b.isActive, sortOrder: b.sortOrder }); setOpen(true); };
+  const save = () => {
+    if (!form.title.trim() || !form.imageUrl.trim()) { toast.error("제목과 이미지를 입력해주세요."); return; }
+    const data = { ...form, title: form.title.trim(), linkUrl: form.linkUrl.trim() };
+    if (editId) updateMut.mutate({ id: editId, ...data }); else createMut.mutate(data);
+  };
+  return (
+    <div className="bg-card border rounded-xl p-5 mt-8 elegant-shadow">
+      <div className="flex items-center justify-between mb-1">
+        <h2 className="text-base font-semibold">로그인 페이지 이벤트 배너</h2>
+        <Button size="sm" onClick={startCreate}><Plus className="w-4 h-4 mr-1" /> バナーの追加</Button>
+      </div>
+      <p className="text-xs text-muted-foreground mb-4">로그인 페이지 왼쪽에 표시됩니다. 활성 배너가 2개 이상이면 5초마다 자동으로 넘어갑니다. 활성 배너가 없으면 기본 문구 화면이 나옵니다. 권장 이미지: 세로로 긴 비율(예: 900×1000px). 이미지는 영역을 꽉 채우도록 잘려서 표시됩니다.</p>
+      {open && (
+        <div className="border rounded-lg p-4 mb-4 space-y-3 bg-secondary/20">
+          <div><label className="text-sm font-medium">タイトル *</label><Input value={form.title} onChange={e => setForm(f => ({ ...f, title: e.target.value }))} placeholder="배너 제목 (이미지 대체 텍스트로 사용)" /></div>
+          <div>
+            <label className="text-sm font-medium">이미지 *</label>
+            <div className="flex gap-2 items-center">
+              <Input value={form.imageUrl} onChange={e => setForm(f => ({ ...f, imageUrl: e.target.value }))} placeholder="파일 선택으로 업로드하거나 이미지 URL 입력" className="flex-1" />
+              <label className="inline-flex items-center px-3 py-2 text-sm border rounded-lg cursor-pointer hover:bg-accent whitespace-nowrap bg-background">
+                {uploading ? "アップロード中..." : "파일 선택"}
+                <input type="file" accept="image/*" className="hidden" disabled={uploading} onChange={e => { const f = e.target.files?.[0]; if (f) upload(f); e.target.value = ""; }} />
+              </label>
+            </div>
+            {form.imageUrl && <img src={form.imageUrl} alt="プレビュー" className="h-48 mt-2 rounded-lg border object-cover bg-secondary/30" onError={(e) => (e.currentTarget.style.display = "none")} />}
+          </div>
+          <div><label className="text-sm font-medium">링크 URL</label><Input value={form.linkUrl} onChange={e => setForm(f => ({ ...f, linkUrl: e.target.value }))} placeholder="클릭 시 이동할 주소 (예: /events 또는 https://...) — 비우면 클릭되지 않음" /></div>
+          <div className="grid grid-cols-2 gap-3">
+            <div><label className="text-sm font-medium">정렬 순서 (작을수록 먼저)</label><Input type="number" value={form.sortOrder} onChange={e => setForm(f => ({ ...f, sortOrder: Number(e.target.value) }))} /></div>
+            <div className="flex items-center gap-2 pt-6">
+              <input type="checkbox" checked={form.isActive === 1} onChange={e => setForm(f => ({ ...f, isActive: e.target.checked ? 1 : 0 }))} />
+              <label className="text-sm">有効化</label>
+            </div>
+          </div>
+          <div className="flex gap-2 justify-end">
+            <Button variant="outline" size="sm" onClick={() => { setOpen(false); setEditId(null); setForm(blank); }}>キャンセル</Button>
+            <Button size="sm" onClick={save} disabled={createMut.isPending || updateMut.isPending}>{editId ? "更新を保存" : "追加"}</Button>
+          </div>
+        </div>
+      )}
+      <table className="w-full">
+        <thead><tr className="bg-secondary/50 text-xs text-muted-foreground">
+          <th className="text-left py-2 px-3">タイトル</th><th className="text-left py-2 px-3">画像</th><th className="text-left py-2 px-3">リンク</th><th className="text-center py-2 px-3">順序</th><th className="text-center py-2 px-3">ステータス</th><th className="text-center py-2 px-3">操作</th>
+        </tr></thead>
+        <tbody className="divide-y">
+          {(list ?? []).map((b: any) => (
+            <tr key={b.id}>
+              <td className="py-2 px-3 text-sm font-medium">{b.title}</td>
+              <td className="py-2 px-3"><img src={b.imageUrl} alt="" className="h-12 w-10 object-cover rounded border bg-secondary/30" onError={(e) => (e.currentTarget.style.visibility = "hidden")} /></td>
+              <td className="py-2 px-3 text-xs text-muted-foreground max-w-[220px] truncate">{b.linkUrl || "-"}</td>
+              <td className="py-2 px-3 text-sm text-center">{b.sortOrder}</td>
+              <td className="py-2 px-3 text-center"><button onClick={() => toggleMut.mutate({ id: b.id, isActive: b.isActive ? 0 : 1 })}><Badge variant={b.isActive ? "default" : "secondary"} className="text-[10px] cursor-pointer">{b.isActive ? "有効" : "無効"}</Badge></button></td>
+              <td className="py-2 px-3 text-center">
+                <Button variant="ghost" size="sm" onClick={() => startEdit(b)}><Pencil className="w-3.5 h-3.5" /></Button>
+                <Button variant="ghost" size="sm" className="text-destructive" onClick={() => { if (confirm("삭제하시겠습니까?")) deleteMut.mutate({ id: b.id }); }}><Trash2 className="w-3.5 h-3.5" /></Button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      {(list ?? []).length === 0 && <p className="text-center py-6 text-sm text-muted-foreground">등록된 로그인 배너가 없습니다 (기본 문구 화면이 표시됩니다)</p>}
+    </div>
+  );
+}
+
+function AdminExhibitions() {
+  const utils = trpc.useUtils();
+  const { data: list } = trpc.admin.exhibitions.useQuery();
+  const [editing, setEditing] = useState<null | "new" | number>(null);
+  const [form, setForm] = useState({ title: "", subtitle: "", isActive: 1, sortOrder: 0 });
+  const [items, setItems] = useState<any[]>([]);
+  const [q, setQ] = useState("");
+  const [loadedId, setLoadedId] = useState<number | null>(null);
+  const term = q.trim();
+  const { data: found, isFetching } = trpc.admin.products.useQuery({ page: 1, limit: 8, search: term || undefined, sort: "newest" }, { enabled: editing !== null && term.length >= 1 });
+  const detailId = typeof editing === "number" ? editing : 0;
+  const { data: detail } = trpc.admin.exhibition.useQuery({ id: detailId }, { enabled: detailId > 0 });
+  useEffect(() => {
+    if (detail && detail.id === detailId && loadedId !== detail.id) {
+      setForm({ title: detail.title, subtitle: detail.subtitle, isActive: detail.isActive, sortOrder: detail.sortOrder });
+      setItems(detail.items);
+      setLoadedId(detail.id);
+    }
+  }, [detail, detailId, loadedId]);
+  const MAX = 24;
+  const onErr = (e: any) => toast.error(e?.message ?? "저장에 실패했습니다.");
+  const saveMut = trpc.admin.saveExhibition.useMutation({
+    onSuccess: (r) => { utils.admin.exhibitions.invalidate(); utils.admin.exhibition.invalidate(); toast.success(`기획전이 저장되었습니다. (상품 ${r.count}개) — 쇼핑몰에 바로 반영됩니다.`); setEditing(null); },
+    onError: onErr,
+  });
+  const toggleMut = trpc.admin.setExhibitionActive.useMutation({ onSuccess: () => utils.admin.exhibitions.invalidate(), onError: onErr });
+  const deleteMut = trpc.admin.deleteExhibition.useMutation({ onSuccess: () => { utils.admin.exhibitions.invalidate(); toast.success("削除しました。"); }, onError: onErr });
+
+  const startNew = () => { setForm({ title: "", subtitle: "", isActive: 1, sortOrder: ((list ?? []).reduce((m: number, x: any) => Math.max(m, x.sortOrder), 0)) + 10 }); setItems([]); setQ(""); setLoadedId(null); setEditing("new"); };
+  const startEdit = (id: number) => { setItems([]); setQ(""); setLoadedId(null); setEditing(id); };
+  const add = (p: any) => {
+    if (items.length >= MAX) { toast.error(`상품은 최대 ${MAX}개까지 넣을 수 있습니다.`); return; }
+    setItems(prev => [...prev, { id: p.id, name: p.name, price: p.price, status: p.status, thumbnail: p.thumbnail }]);
+  };
+  const move = (idx: number, dir: -1 | 1) => {
+    const j = idx + dir; if (j < 0 || j >= items.length) return;
+    setItems(prev => { const a = [...prev]; [a[idx], a[j]] = [a[j], a[idx]]; return a; });
+  };
+  const save = () => {
+    if (!form.title.trim()) { toast.error("기획전 제목을 입력해주세요."); return; }
+    saveMut.mutate({ id: typeof editing === "number" ? editing : undefined, title: form.title, subtitle: form.subtitle, isActive: form.isActive, sortOrder: form.sortOrder, itemIds: items.map(x => x.id) });
+  };
+
+  if (editing !== null) {
+    const results = (found?.products ?? []);
+    const loading = typeof editing === "number" && loadedId !== editing;
+    return (
+      <div>
+        <div className="flex items-center gap-3 mb-6">
+          <Button variant="ghost" size="sm" onClick={() => setEditing(null)}><ArrowLeft className="w-4 h-4 mr-1" /> 一覧へ</Button>
+          <h1 className="text-2xl font-bold">{editing === "new" ? "기획전 추가" : "기획전 수정"}</h1>
+        </div>
+        {loading ? <p className="text-sm text-muted-foreground">読み込み中...</p> : (
+          <div className="space-y-4 max-w-4xl">
+            <div className="border rounded-xl p-5 bg-card space-y-3">
+              <div><label className="text-sm font-medium">기획전 제목 * <span className="text-xs text-muted-foreground font-normal">(쇼핑몰에 그대로 표시됩니다 — 일본어로 입력)</span></label><Input value={form.title} onChange={e => setForm(f => ({ ...f, title: e.target.value }))} placeholder="例) 春のビタミン特集" /></div>
+              <div><label className="text-sm font-medium">부제목 <span className="text-xs text-muted-foreground font-normal">(제목 아래 작은 글씨, 비워도 됨)</span></label><Input value={form.subtitle} onChange={e => setForm(f => ({ ...f, subtitle: e.target.value }))} placeholder="例) 今おすすめの商品をピックアップしました" /></div>
+              <div className="grid grid-cols-2 gap-3">
+                <div><label className="text-sm font-medium">노출 순서 (작을수록 위)</label><Input type="number" value={form.sortOrder} onChange={e => setForm(f => ({ ...f, sortOrder: Number(e.target.value) }))} /></div>
+                <div className="flex items-center gap-2 pt-6"><input type="checkbox" checked={form.isActive === 1} onChange={e => setForm(f => ({ ...f, isActive: e.target.checked ? 1 : 0 }))} /><label className="text-sm">쇼핑몰에 노출</label></div>
+              </div>
+            </div>
+            <div className="border rounded-xl p-5 bg-card space-y-4">
+              <div className="flex items-center justify-between">
+                <label className="text-sm font-semibold">기획전 상품 ({items.length}/{MAX})</label>
+                <Button type="button" variant="outline" size="sm" disabled={items.length === 0} onClick={() => setItems([])}>전체 비우기</Button>
+              </div>
+              <p className="text-xs text-muted-foreground">쇼핑몰 메인 페이지에 이 순서대로 노출됩니다. 판매중지·이미지 없는 상품은 자동으로 제외됩니다.</p>
+              {items.length === 0 ? <p className="text-sm text-muted-foreground border border-dashed rounded-lg p-4 text-center">상품을 아래에서 검색해 추가하세요.</p> : (
+                <ul className="space-y-2">
+                  {items.map((it, idx) => (
+                    <li key={it.id} className="flex items-center gap-3 border rounded-lg p-2">
+                      <span className="text-xs text-muted-foreground w-5 text-center">{idx + 1}</span>
+                      {it.thumbnail ? <img src={proxyImage(it.thumbnail)} alt="" className="w-10 h-10 rounded object-cover bg-muted" /> : <div className="w-10 h-10 rounded bg-muted" />}
+                      <div className="flex-1 min-w-0"><p className="text-sm truncate">{it.name}</p><p className="text-xs text-muted-foreground">{it.id}{it.status !== "active" ? (it.status === "soldout" ? " · 품절" : " · 판매중지") : ""}</p></div>
+                      <Button type="button" variant="ghost" size="sm" disabled={idx === 0} onClick={() => move(idx, -1)}><ChevronUp className="w-4 h-4" /></Button>
+                      <Button type="button" variant="ghost" size="sm" disabled={idx === items.length - 1} onClick={() => move(idx, 1)}><ChevronDown className="w-4 h-4" /></Button>
+                      <Button type="button" variant="ghost" size="sm" onClick={() => setItems(prev => prev.filter(x => x.id !== it.id))}><X className="w-4 h-4" /></Button>
+                    </li>
+                  ))}
+                </ul>
+              )}
+              <div>
+                <Input value={q} onChange={e => setQ(e.target.value)} placeholder="추가할 상품명 검색" />
+                {term && (
+                  <div className="mt-2 border rounded-lg divide-y max-h-80 overflow-auto">
+                    {isFetching && results.length === 0 ? <p className="text-sm text-muted-foreground p-3">検索中...</p> : results.length === 0 ? <p className="text-sm text-muted-foreground p-3">検索結果がありません。</p> : results.map((p: any) => {
+                      const added = items.some(x => x.id === p.id);
+                      return (
+                        <div key={p.id} className="flex items-center gap-3 p-2">
+                          {p.thumbnail ? <img src={proxyImage(p.thumbnail)} alt="" className="w-10 h-10 rounded object-cover bg-muted" /> : <div className="w-10 h-10 rounded bg-muted" />}
+                          <div className="flex-1 min-w-0"><p className="text-sm truncate">{p.name}</p><p className="text-xs text-muted-foreground">{p.id}{p.status === "soldout" ? " · 품절" : ""}</p></div>
+                          <Button type="button" variant="outline" size="sm" disabled={added} onClick={() => add(p)}>{added ? "추가됨" : "追加"}</Button>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            </div>
+            <div className="flex gap-2 justify-end">
+              <Button variant="outline" onClick={() => setEditing(null)}>キャンセル</Button>
+              <Button onClick={save} disabled={saveMut.isPending}>{saveMut.isPending ? "保存中..." : "저장 (바로 반영)"}</Button>
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  return (
+    <div>
+      <div className="flex items-center justify-between mb-2">
+        <h1 className="text-2xl font-bold">기획전 관리</h1>
+        <Button size="sm" onClick={startNew}><Plus className="w-4 h-4 mr-1" /> 기획전 추가</Button>
+      </div>
+      <p className="text-sm text-muted-foreground mb-6">쇼핑몰 메인 페이지(히어로 아래)에 "新着商品" 같은 상품 섹션으로 노출됩니다. 저장하면 바로 반영됩니다.</p>
+      <div className="bg-card border rounded-xl overflow-hidden elegant-shadow">
+        <table className="w-full">
+          <thead><tr className="bg-secondary/50 text-xs text-muted-foreground">
+            <th className="text-center py-3 px-3 w-16">順序</th><th className="text-left py-3 px-4">タイトル</th><th className="text-left py-3 px-4">부제목</th><th className="text-center py-3 px-3">상품 수</th><th className="text-center py-3 px-3">ステータス</th><th className="text-center py-3 px-3">操作</th>
+          </tr></thead>
+          <tbody className="divide-y">
+            {(list ?? []).map((e: any) => (
+              <tr key={e.id} className="hover:bg-accent/20">
+                <td className="py-3 px-3 text-sm text-center">{e.sortOrder}</td>
+                <td className="py-3 px-4 text-sm font-medium">{e.title}</td>
+                <td className="py-3 px-4 text-sm text-muted-foreground">{e.subtitle || "-"}</td>
+                <td className="py-3 px-3 text-sm text-center">{e.count}</td>
+                <td className="py-3 px-3 text-center"><button onClick={() => toggleMut.mutate({ id: e.id, isActive: e.isActive ? 0 : 1 })}><Badge variant={e.isActive ? "default" : "secondary"} className="text-[10px] cursor-pointer">{e.isActive ? "노출" : "숨김"}</Badge></button></td>
+                <td className="py-3 px-3 text-center">
+                  <Button variant="ghost" size="sm" onClick={() => startEdit(e.id)}><Pencil className="w-3.5 h-3.5" /></Button>
+                  <Button variant="ghost" size="sm" className="text-destructive" onClick={() => { if (confirm(`"${e.title}" 기획전을 삭제하시겠습니까?`)) deleteMut.mutate({ id: e.id }); }}><Trash2 className="w-3.5 h-3.5" /></Button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        {(list ?? []).length === 0 && <p className="text-center py-8 text-sm text-muted-foreground">등록된 기획전이 없습니다</p>}
+      </div>
+    </div>
+  );
+}
+
 // ─── Banner Management ───
 function AdminBanners() {
   const { data: bannersList } = trpc.admin.banners.useQuery();
@@ -4098,15 +4406,30 @@ function AdminBanners() {
   const utils = trpc.useUtils();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editItem, setEditItem] = useState<any>(null);
-  const [form, setForm] = useState({ title: "", imageUrl: "", linkUrl: "", isActive: 1, sortOrder: 0 });
+  const [form, setForm] = useState({ title: "", imageUrl: "", mobileImageUrl: "", linkUrl: "", isActive: 1, sortOrder: 0 });
+  // image upload (same storage as product images: /api/product-image/<id>/<file>)
+  const uploadMut = trpc.admin.uploadImage.useMutation();
+  const [uploadingKey, setUploadingKey] = useState<"imageUrl" | "mobileImageUrl" | null>(null);
+  const uploadBannerFile = async (file: File, key: "imageUrl" | "mobileImageUrl") => {
+    if (!file.type.startsWith("image/")) { toast.error("이미지 파일만 업로드할 수 있습니다."); return; }
+    if (file.size > 5 * 1024 * 1024) { toast.error("ファイルサイズは5MB以下にしてください。"); return; }
+    setUploadingKey(key);
+    try {
+      const base64 = await new Promise<string>((resolve, reject) => { const r = new FileReader(); r.onload = () => resolve(String(r.result).split(",")[1]); r.onerror = reject; r.readAsDataURL(file); });
+      const res = await uploadMut.mutateAsync({ base64, fileName: file.name, contentType: file.type });
+      setForm(f => key === "imageUrl" ? { ...f, imageUrl: res.url } : { ...f, mobileImageUrl: res.url });
+      toast.success("이미지를 업로드했습니다. 저장을 눌러야 반영됩니다.");
+    } catch (e: any) { toast.error("업로드 실패: " + (e?.message ?? "")); }
+    finally { setUploadingKey(null); }
+  };
 
   const createMut = trpc.admin.createBanner.useMutation({ onSuccess: () => { utils.admin.banners.invalidate(); setDialogOpen(false); toast.success("バナーを作成しました。"); } });
   const updateMut = trpc.admin.updateBanner.useMutation({ onSuccess: () => { utils.admin.banners.invalidate(); setDialogOpen(false); toast.success("バナーを更新しました。"); } });
   const deleteMut = trpc.admin.deleteBanner.useMutation({ onSuccess: () => { utils.admin.banners.invalidate(); toast.success("バナーを削除しました。"); } });
   const toggleActive = trpc.admin.updateBanner.useMutation({ onSuccess: () => { utils.admin.banners.invalidate(); } });
 
-  const openCreate = () => { setEditItem(null); setForm({ title: "", imageUrl: "", linkUrl: "", isActive: 1, sortOrder: 0 }); setDialogOpen(true); };
-  const openEdit = (b: any) => { setEditItem(b); setForm({ title: b.title, imageUrl: b.imageUrl, linkUrl: b.linkUrl ?? "", isActive: b.isActive, sortOrder: b.sortOrder }); setDialogOpen(true); };
+  const openCreate = () => { setEditItem(null); setForm({ title: "", imageUrl: "", mobileImageUrl: "", linkUrl: "", isActive: 1, sortOrder: 0 }); setDialogOpen(true); };
+  const openEdit = (b: any) => { setEditItem(b); setForm({ title: b.title, imageUrl: b.imageUrl, mobileImageUrl: b.mobileImageUrl ?? "", linkUrl: b.linkUrl ?? "", isActive: b.isActive, sortOrder: b.sortOrder }); setDialogOpen(true); };
   const handleSave = () => {
     if (!form.title || !form.imageUrl) { toast.error("タイトルと画像URLを入力してください。"); return; }
     if (editItem) { updateMut.mutate({ id: editItem.id, ...form }); }
@@ -4117,7 +4440,7 @@ function AdminBanners() {
     <div>
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold">バナー管理</h1>
-        <Button onClick={openCreate} size="sm"><Plus className="w-4 h-4 mr-1" /> バナーを追加</Button>
+        <Button onClick={openCreate} size="sm"><Plus className="w-4 h-4 mr-1" /> バナーの追加</Button>
       </div>
 
       {/* 상단 공지 배너 텍스트 */}
@@ -4133,7 +4456,7 @@ function AdminBanners() {
           />
           <Button onClick={() => setTopBannerMut.mutate({ text: topBannerText })} disabled={setTopBannerMut.isPending}>保存</Button>
         </div>
-        <div className="mt-2 text-xs text-muted-foreground">プレビュー: <span className="bg-[#3b2a1a] text-[#e8d5b0] px-3 py-1 rounded text-xs">{topBannerText || "🌿 インド直送 海外直送専門ショップ · ソウルモノ"}</span></div>
+        <div className="mt-2 text-xs text-muted-foreground">プレビュー: <span className="bg-[#3b2a1a] text-[#e8d5b0] px-3 py-1 rounded text-xs">{topBannerText || "🌿 인도 직배송 해외직구 전문 쇼핑몰 · 탈모학교"}</span></div>
       </div>
       <div className="bg-card border rounded-xl overflow-hidden elegant-shadow">
         <table className="w-full">
@@ -4145,7 +4468,7 @@ function AdminBanners() {
               <tr key={b.id} className="hover:bg-accent/20">
                 <td className="py-3 px-4 text-sm">{b.id}</td>
                 <td className="py-3 px-4 text-sm font-medium">{b.title}</td>
-                <td className="py-3 px-4 text-sm text-muted-foreground max-w-[200px] truncate">{b.imageUrl}</td>
+                <td className="py-3 px-4 text-sm text-muted-foreground"><img src={b.imageUrl} alt="" className="h-10 w-28 object-cover rounded border inline-block mr-2 align-middle bg-secondary/30" onError={(e) => (e.currentTarget.style.display = "none")} />{b.mobileImageUrl ? <span className="text-[10px] border rounded px-1 align-middle">모바일 별도</span> : <span className="text-[10px] align-middle">모바일: PC 이미지 사용</span>}</td>
                 <td className="py-3 px-4 text-sm text-center">{b.sortOrder}</td>
                 <td className="py-3 px-4 text-center">
                   <button onClick={() => toggleActive.mutate({ id: b.id, isActive: b.isActive ? 0 : 1 })}>
@@ -4155,7 +4478,7 @@ function AdminBanners() {
                 <td className="py-3 px-4 text-center">
                   <div className="flex items-center justify-center gap-1">
                     <Button variant="ghost" size="sm" onClick={() => openEdit(b)}><Pencil className="w-3.5 h-3.5" /></Button>
-                    <Button variant="ghost" size="sm" className="text-destructive" onClick={() => { if (confirm("削除しますか？")) deleteMut.mutate({ id: b.id }); }}><Trash2 className="w-3.5 h-3.5" /></Button>
+                    <Button variant="ghost" size="sm" className="text-destructive" onClick={() => { if (confirm("삭제하시겠습니까?")) deleteMut.mutate({ id: b.id }); }}><Trash2 className="w-3.5 h-3.5" /></Button>
                   </div>
                 </td>
               </tr>
@@ -4166,13 +4489,33 @@ function AdminBanners() {
       </div>
 
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent className="sm:max-w-md">
+        <DialogContent className="sm:max-w-lg max-h-[90vh] overflow-y-auto">
           <DialogHeader><DialogTitle>{editItem ? "バナーの編集" : "バナーの追加"}</DialogTitle><DialogDescription>バナーの情報を入力してください。</DialogDescription></DialogHeader>
           <div className="space-y-3">
-            <div><label className="text-sm font-medium">タイトル *</label><Input value={form.title} onChange={e => setForm(f => ({ ...f, title: e.target.value }))} placeholder="バナーのタイトル" /></div>
-            <div><label className="text-sm font-medium">画像URL *</label><Input value={form.imageUrl} onChange={e => setForm(f => ({ ...f, imageUrl: e.target.value }))} placeholder="https://..." /></div>
-            {form.imageUrl && <img src={form.imageUrl} alt="プレビュー" className="w-full h-32 object-cover rounded-lg border" onError={(e) => (e.currentTarget.style.display = "none")} />}
-            <div><label className="text-sm font-medium">リンクURL</label><Input value={form.linkUrl} onChange={e => setForm(f => ({ ...f, linkUrl: e.target.value }))} placeholder="クリック時の遷移先URL" /></div>
+            <div><label className="text-sm font-medium">タイトル *</label><Input value={form.title} onChange={e => setForm(f => ({ ...f, title: e.target.value }))} placeholder="배너 제목" /></div>
+            <div>
+              <label className="text-sm font-medium">PC 이미지 * <span className="text-xs text-muted-foreground font-normal">(권장 1800×600px, 가로 3:1 — 화면이 작아져도 이 비율 그대로 축소됩니다)</span></label>
+              <div className="flex gap-2 items-center">
+                <Input value={form.imageUrl} onChange={e => setForm(f => ({ ...f, imageUrl: e.target.value }))} placeholder="파일 선택으로 업로드하거나 이미지 URL 입력" className="flex-1" />
+                <label className="inline-flex items-center px-3 py-2 text-sm border rounded-lg cursor-pointer hover:bg-accent whitespace-nowrap">
+                  {uploadingKey === "imageUrl" ? "アップロード中..." : "파일 선택"}
+                  <input type="file" accept="image/*" className="hidden" disabled={uploadingKey !== null} onChange={e => { const f = e.target.files?.[0]; if (f) uploadBannerFile(f, "imageUrl"); e.target.value = ""; }} />
+                </label>
+              </div>
+              {form.imageUrl && <img src={form.imageUrl} alt="PC 미리보기" className="w-full mt-2 rounded-lg border object-contain bg-secondary/30" onError={(e) => (e.currentTarget.style.display = "none")} />}
+            </div>
+            <div>
+              <label className="text-sm font-medium">모바일 이미지 <span className="text-xs text-muted-foreground font-normal">(선택, 권장 1050×600px — 비우면 PC 이미지를 사용)</span></label>
+              <div className="flex gap-2 items-center">
+                <Input value={form.mobileImageUrl} onChange={e => setForm(f => ({ ...f, mobileImageUrl: e.target.value }))} placeholder="파일 선택으로 업로드하거나 이미지 URL 입력" className="flex-1" />
+                <label className="inline-flex items-center px-3 py-2 text-sm border rounded-lg cursor-pointer hover:bg-accent whitespace-nowrap">
+                  {uploadingKey === "mobileImageUrl" ? "アップロード中..." : "파일 선택"}
+                  <input type="file" accept="image/*" className="hidden" disabled={uploadingKey !== null} onChange={e => { const f = e.target.files?.[0]; if (f) uploadBannerFile(f, "mobileImageUrl"); e.target.value = ""; }} />
+                </label>
+              </div>
+              {form.mobileImageUrl && <img src={form.mobileImageUrl} alt="모바일 미리보기" className="w-48 mt-2 rounded-lg border object-contain bg-secondary/30" onError={(e) => (e.currentTarget.style.display = "none")} />}
+            </div>
+            <div><label className="text-sm font-medium">링크 URL</label><Input value={form.linkUrl} onChange={e => setForm(f => ({ ...f, linkUrl: e.target.value }))} placeholder="클릭 시 이동할 URL" /></div>
             <div className="grid grid-cols-2 gap-3">
               <div><label className="text-sm font-medium">表示順</label><Input type="number" value={form.sortOrder} onChange={e => setForm(f => ({ ...f, sortOrder: Number(e.target.value) }))} /></div>
               <div className="flex items-center gap-2 pt-6">
@@ -4187,6 +4530,8 @@ function AdminBanners() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      <AdminLoginBanners />
     </div>
   );
 }
@@ -4297,12 +4642,12 @@ function AdminKeywords() {
                   </>
                 ) : (
                   <>
-                    <td className="py-3 px-4 text-sm text-right">{k.searchCount.toLocaleString()}回</td>
+                    <td className="py-3 px-4 text-sm text-right">{k.searchCount.toLocaleString()}회</td>
                     <td className="py-3 px-4 text-sm text-right font-mono">{k.sortOrder ?? 0}</td>
                     <td className="py-3 px-4 text-center">
                       <div className="flex items-center justify-center gap-1">
                         <Button variant="ghost" size="sm" onClick={() => startEdit(k)}><Pencil className="w-3.5 h-3.5" /></Button>
-                        <Button variant="ghost" size="sm" className="text-destructive" onClick={() => { if (confirm("削除しますか？")) deleteMut.mutate({ id: k.id }); }}><Trash2 className="w-3.5 h-3.5" /></Button>
+                        <Button variant="ghost" size="sm" className="text-destructive" onClick={() => { if (confirm("삭제하시겠습니까?")) deleteMut.mutate({ id: k.id }); }}><Trash2 className="w-3.5 h-3.5" /></Button>
                       </div>
                     </td>
                   </>
@@ -4311,142 +4656,7 @@ function AdminKeywords() {
             ))}
           </tbody>
         </table>
-        {displayList.length === 0 && <p className="text-center py-8 text-sm text-muted-foreground">検索キーワードのデータがありません</p>}
-      </div>
-    </div>
-  );
-}
-
-// ─── Review Point Settings ───
-function AdminReviewSettings() {
-  const utils = trpc.useUtils();
-  const { data: settings, isLoading } = trpc.admin.getReviewPointSettings.useQuery();
-  const updateMut = trpc.admin.updateReviewPointSettings.useMutation({
-    onSuccess: () => {
-      utils.admin.getReviewPointSettings.invalidate();
-      toast.success("レビューポイント設定を保存しました。");
-    },
-    onError: (err) => toast.error(err.message),
-  });
-
-
-  const [pointsPerReview, setPointsPerReview] = useState(100);
-  const [pointsPerPhotoReview, setPointsPerPhotoReview] = useState(200);
-  const [minRatingForPoints, setMinRatingForPoints] = useState(1);
-
-  // Load settings when data arrives
-  useMemo(() => {
-    if (settings) {
-      setPointsPerReview(settings.pointsPerReview);
-      setPointsPerPhotoReview(settings.pointsPerPhotoReview);
-      setMinRatingForPoints(settings.minRatingForPoints);
-    }
-  }, [settings]);
-
-  const handleSave = () => {
-    updateMut.mutate({
-      pointsPerReview,
-      pointsPerPhotoReview,
-      minRatingForPoints,
-      likePointsThreshold: 10,
-      pointsPerLikeThreshold: 50,
-    });
-  };
-
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center py-20">
-        <Loader2 className="w-8 h-8 animate-spin text-muted-foreground" />
-      </div>
-    );
-  }
-
-  return (
-    <div>
-      <h1 className="text-2xl font-bold mb-6">レビューポイント設定</h1>
-
-      <div className="bg-card border rounded-xl p-6 elegant-shadow max-w-xl">
-        <div className="flex items-center gap-3 mb-6 pb-4 border-b">
-          <div className="w-10 h-10 rounded-full bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center">
-            <Gift className="w-5 h-5 text-amber-600 dark:text-amber-400" />
-          </div>
-          <div>
-            <h2 className="font-semibold">レビュー投稿ポイント</h2>
-            <p className="text-sm text-muted-foreground">お客様がレビューを投稿した際に自動で付与されるポイントを設定します</p>
-          </div>
-        </div>
-
-        <div className="space-y-5">
-
-              {/* Text review points */}
-              <div>
-                <label className="block text-sm font-medium mb-1.5">テキストレビューポイント</label>
-                <div className="flex items-center gap-2">
-                  <Input
-                    type="number"
-                    value={pointsPerReview}
-                    onChange={(e) => setPointsPerReview(Math.max(0, Number(e.target.value)))}
-                    className="w-32"
-                    min={0}
-                  />
-                  <span className="text-sm text-muted-foreground">P</span>
-                </div>
-                <p className="text-xs text-muted-foreground mt-1">文章のみのレビューに付与される基本ポイント</p>
-              </div>
-
-              {/* Photo review points */}
-              <div>
-                <label className="block text-sm font-medium mb-1.5">フォトレビュー追加ポイント</label>
-                <div className="flex items-center gap-2">
-                  <Input
-                    type="number"
-                    value={pointsPerPhotoReview}
-                    onChange={(e) => setPointsPerPhotoReview(Math.max(0, Number(e.target.value)))}
-                    className="w-32"
-                    min={0}
-                  />
-                  <span className="text-sm text-muted-foreground">P</span>
-                </div>
-                <p className="text-xs text-muted-foreground mt-1">写真付きレビューに追加で付与されるポイント</p>
-              </div>
-
-              {/* Minimum rating */}
-              <div>
-                <label className="block text-sm font-medium mb-1.5">最低評価</label>
-                <div className="flex items-center gap-2">
-                  <Input
-                    type="number"
-                    value={minRatingForPoints}
-                    onChange={(e) => setMinRatingForPoints(Math.max(1, Math.min(5, Number(e.target.value))))}
-                    className="w-32"
-                    min={1}
-                    max={5}
-                  />
-                  <span className="text-sm text-muted-foreground">点</span>
-                </div>
-                <p className="text-xs text-muted-foreground mt-1">ポイント付与のための最低評価 (1〜5点)</p>
-              </div>
-
-              {/* Preview */}
-              <div className="bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded-lg p-4 mt-4">
-                <p className="text-sm font-medium text-amber-900 dark:text-amber-200 mb-2">付与例</p>
-                <div className="text-sm text-amber-700 dark:text-amber-400 space-y-1">
-                  <p>• テキストレビュー (評価{minRatingForPoints}点以上): <strong>{pointsPerReview}P</strong></p>
-                  <p>• フォトレビュー (評価{minRatingForPoints}点以上 + 写真): <strong>{pointsPerReview + pointsPerPhotoReview}P</strong></p>
-                </div>
-              </div>
-
-        </div>
-
-        <div className="mt-6 pt-4 border-t flex justify-end">
-          <Button onClick={handleSave} disabled={updateMut.isPending}>
-            {updateMut.isPending ? (
-              <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> 保存中...</>
-            ) : (
-              "設定を保存"
-            )}
-          </Button>
-        </div>
+        {displayList.length === 0 && <p className="text-center py-8 text-sm text-muted-foreground">검색어 데이터가 없습니다</p>}
       </div>
     </div>
   );
@@ -4482,8 +4692,8 @@ function AdminCoupons() {
   const createMut = trpc.coupon.adminCreate.useMutation({ onSuccess: () => { utils.coupon.adminList.invalidate(); setShowDialog(false); toast.success("クーポンを作成しました"); } });
   const updateMut = trpc.coupon.adminUpdate.useMutation({ onSuccess: () => { utils.coupon.adminList.invalidate(); setShowDialog(false); toast.success("クーポンを更新しました"); } });
   const deleteMut = trpc.coupon.adminDelete.useMutation({ onSuccess: () => { utils.coupon.adminList.invalidate(); toast.success("クーポンを削除しました"); } });
-  const issueMut = trpc.coupon.adminIssueCoupon.useMutation({ onSuccess: (d) => { toast.success(`${d.issued}名にクーポンを発行しました`); } });
-  const issueToAllMut = trpc.coupon.adminIssueToAll.useMutation({ onSuccess: (d) => { toast.success(`全会員${d.total}名のうち${d.issued}名に発行完了 (発行済みは除く)`); } });
+  const issueMut = trpc.coupon.adminIssueCoupon.useMutation({ onSuccess: (d) => { toast.success(`${d.issued}명에게 쿠폰이 발급되었습니다`); } });
+  const issueToAllMut = trpc.coupon.adminIssueToAll.useMutation({ onSuccess: (d) => { toast.success(`전체 회원 ${d.total}명 중 ${d.issued}명에게 발급 완료 (기발급 제외)`); } });
 
   const parseIds = (s: string | null | undefined): number[] => s ? s.split(",").map(Number).filter(Boolean) : [];
 
@@ -4536,25 +4746,25 @@ function AdminCoupons() {
   };
 
   const targetLabel = (c: any) => {
-    if (c.targetType === "product") return `商品 ${parseIds(c.targetProductIds).length}点`;
-    if (c.targetType === "category") return `カテゴリー ${parseIds(c.targetCategoryIds).length}件`;
-    return "全商品";
+    if (c.targetType === "product") return `상품 ${parseIds(c.targetProductIds).length}개`;
+    if (c.targetType === "category") return `카테고리 ${parseIds(c.targetCategoryIds).length}개`;
+    return "전체 상품";
   };
   const assignLabel = (c: any) => {
-    if (c.assignType === "specific") return `会員 ${parseIds(c.assignUserIds).length}名`;
-    return "全会員";
+    if (c.assignType === "specific") return `회원 ${parseIds(c.assignUserIds).length}명`;
+    return "전체 회원";
   };
 
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-2xl font-bold">クーポン管理</h2>
-        <Button onClick={openCreate} size="sm"><Plus className="w-4 h-4 mr-1" /> クーポン作成</Button>
+        <Button onClick={openCreate} size="sm"><Plus className="w-4 h-4 mr-1" /> クーポンの作成</Button>
       </div>
       <div className="bg-card border rounded-xl overflow-hidden overflow-x-auto">
         <table className="w-full text-sm">
           <thead className="bg-secondary/30"><tr>
-            <th className="p-3 text-left">コード</th><th className="p-3 text-left">名前</th>
+            <th className="p-3 text-left">コード</th><th className="p-3 text-left">氏名</th>
             <th className="p-3 text-left">割引</th><th className="p-3 text-left">適用対象</th>
             <th className="p-3 text-left">発行対象</th><th className="p-3 text-left">期間</th>
             <th className="p-3 text-center">使用/全体</th>
@@ -4570,19 +4780,19 @@ function AdminCoupons() {
                 <td className="p-3">{c.discountType === "percent" ? `${c.discountValue}%` : formatPrice(c.discountValue)}</td>
                 <td className="p-3 text-xs"><Badge variant="outline">{targetLabel(c)}</Badge></td>
                 <td className="p-3 text-xs"><Badge variant="outline">{assignLabel(c)}</Badge></td>
-                <td className="p-3 text-xs">{new Date(c.startDate).toLocaleString("ja-JP", { year:"numeric", month:"2-digit", day:"2-digit", hour:"2-digit", minute:"2-digit", hour12:false })} ~ {new Date(c.endDate).toLocaleString("ja-JP", { year:"numeric", month:"2-digit", day:"2-digit", hour:"2-digit", minute:"2-digit", hour12:false })}</td>
+                <td className="p-3 text-xs">{new Date(c.startDate).toLocaleString("ko-KR", { year:"numeric", month:"2-digit", day:"2-digit", hour:"2-digit", minute:"2-digit", hour12:false })} ~ {new Date(c.endDate).toLocaleString("ko-KR", { year:"numeric", month:"2-digit", day:"2-digit", hour:"2-digit", minute:"2-digit", hour12:false })}</td>
                 <td className="p-3 text-center">{c.usedCount}/{c.totalQuantity === -1 ? "∞" : c.totalQuantity}</td>
-                <td className="p-3 text-center text-sm">{c.perUserLimit != null ? `${c.perUserLimit}回` : "∞"}</td>
+                <td className="p-3 text-center text-sm">{c.perUserLimit != null ? `${c.perUserLimit}회` : "∞"}</td>
                 <td className="p-3 text-center"><Badge variant={c.isActive ? "default" : "secondary"}>{c.isActive ? "有効" : "無効"}</Badge></td>
                 <td className="p-3 text-center">
                   <div className="flex gap-1 justify-center">
                     <Button variant="outline" size="sm" className="h-7 text-xs px-2 text-primary border-primary/40 hover:bg-primary/10"
                       disabled={issueToAllMut.isPending}
-                      onClick={() => { if (confirm(`「${c.name}」クーポンを全会員に発行しますか？\n発行済みの会員は除外されます。`)) issueToAllMut.mutate({ couponId: c.id }); }}>
-                      <Users className="w-3 h-3 mr-1" />全員に発行
+                      onClick={() => { if (confirm(`"${c.name}" 쿠폰을 전체 회원에게 발급하시겠습니까?\n이미 발급받은 회원은 제외됩니다.`)) issueToAllMut.mutate({ couponId: c.id }); }}>
+                      <Users className="w-3 h-3 mr-1" />전체 발급
                     </Button>
                     <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => openEdit(c)}><Pencil className="w-3.5 h-3.5" /></Button>
-                    <Button variant="ghost" size="icon" className="h-7 w-7 text-destructive" onClick={() => { if (confirm("削除しますか？")) deleteMut.mutate({ id: c.id }); }}><Trash2 className="w-3.5 h-3.5" /></Button>
+                    <Button variant="ghost" size="icon" className="h-7 w-7 text-destructive" onClick={() => { if (confirm("삭제하시겠습니까?")) deleteMut.mutate({ id: c.id }); }}><Trash2 className="w-3.5 h-3.5" /></Button>
                   </div>
                 </td>
               </tr>
@@ -4659,7 +4869,7 @@ function AdminCoupons() {
                 {(["all", "category", "product"] as const).map(t => (
                   <button key={t} type="button" className={`px-3 py-1.5 text-xs rounded-full border transition-colors ${form.targetType === t ? "bg-primary text-primary-foreground border-primary" : "bg-secondary/50 border-border hover:bg-secondary"}`}
                     onClick={() => setForm(f => ({ ...f, targetType: t }))}>
-                    {t === "all" ? "全商品" : t === "category" ? "特定のカテゴリー" : "特定の商品"}
+                    {t === "all" ? "すべての商品" : t === "category" ? "특정 카테고리" : "특정 상품"}
                   </button>
                 ))}
               </div>
@@ -4674,7 +4884,7 @@ function AdminCoupons() {
                       </label>
                     ))}
                   </div>
-                  {form.targetCategoryIds.length > 0 && <p className="text-xs text-muted-foreground">{form.targetCategoryIds.length}件のカテゴリーを選択中</p>}
+                  {form.targetCategoryIds.length > 0 && <p className="text-xs text-muted-foreground">{form.targetCategoryIds.length}개 카테고리 선택됨</p>}
                 </div>
               )}
               {form.targetType === "product" && (
@@ -4690,7 +4900,7 @@ function AdminCoupons() {
                       </label>
                     ))}
                   </div>
-                  {form.targetProductIds.length > 0 && <p className="text-xs text-muted-foreground">{form.targetProductIds.length}件の商品を選択中</p>}
+                  {form.targetProductIds.length > 0 && <p className="text-xs text-muted-foreground">{form.targetProductIds.length}개 상품 선택됨</p>}
                 </div>
               )}
             </div>
@@ -4718,7 +4928,7 @@ function AdminCoupons() {
                       </label>
                     ))}
                   </div>
-                  {form.assignUserIds.length > 0 && <p className="text-xs text-muted-foreground">{form.assignUserIds.length}名を選択中</p>}
+                  {form.assignUserIds.length > 0 && <p className="text-xs text-muted-foreground">{form.assignUserIds.length}명 선택됨</p>}
                 </div>
               )}
             </div>
@@ -4812,12 +5022,12 @@ function AdminPromoCodes() {
     <div>
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-2xl font-bold">プロモコード管理</h2>
-        <Button onClick={openCreate} size="sm"><Plus className="w-4 h-4 mr-1" /> プロモコード作成</Button>
+        <Button onClick={openCreate} size="sm"><Plus className="w-4 h-4 mr-1" /> プロモコードの作成</Button>
       </div>
       <div className="bg-card border rounded-xl overflow-hidden overflow-x-auto">
         <table className="w-full text-sm">
           <thead className="bg-secondary/30"><tr>
-            <th className="p-3 text-left">コード</th><th className="p-3 text-left">名前</th>
+            <th className="p-3 text-left">コード</th><th className="p-3 text-left">氏名</th>
             <th className="p-3 text-left">割引</th><th className="p-3 text-left">適用対象</th>
             <th className="p-3 text-left">期間</th>
             <th className="p-3 text-center">使用/全体</th>
@@ -4831,15 +5041,15 @@ function AdminPromoCodes() {
                 <td className="p-3 font-mono text-xs">{c.code}</td>
                 <td className="p-3">{c.name}</td>
                 <td className="p-3">{c.discountType === "percent" ? `${c.discountValue}%` : formatPrice(c.discountValue)}</td>
-                <td className="p-3 text-xs"><Badge variant="outline">{c.targetProductIds ? `商品 ${parseIds(c.targetProductIds).length}点` : c.targetCategoryIds ? `カテゴリー ${parseIds(c.targetCategoryIds).length}件` : "全商品"}</Badge></td>
-                <td className="p-3 text-xs">{new Date(c.startDate).toLocaleString("ja-JP", { year:"numeric", month:"2-digit", day:"2-digit", hour:"2-digit", minute:"2-digit", hour12:false })} ~ {new Date(c.endDate).toLocaleString("ja-JP", { year:"numeric", month:"2-digit", day:"2-digit", hour:"2-digit", minute:"2-digit", hour12:false })}</td>
+                <td className="p-3 text-xs"><Badge variant="outline">{c.targetProductIds ? `상품 ${parseIds(c.targetProductIds).length}개` : c.targetCategoryIds ? `카테고리 ${parseIds(c.targetCategoryIds).length}개` : "전체 상품"}</Badge></td>
+                <td className="p-3 text-xs">{new Date(c.startDate).toLocaleString("ko-KR", { year:"numeric", month:"2-digit", day:"2-digit", hour:"2-digit", minute:"2-digit", hour12:false })} ~ {new Date(c.endDate).toLocaleString("ko-KR", { year:"numeric", month:"2-digit", day:"2-digit", hour:"2-digit", minute:"2-digit", hour12:false })}</td>
                 <td className="p-3 text-center">{c.usedCount}/{c.totalUsageLimit === -1 ? "∞" : c.totalUsageLimit}</td>
-                <td className="p-3 text-center text-sm">{c.perUserLimit}回</td>
+                <td className="p-3 text-center text-sm">{c.perUserLimit}회</td>
                 <td className="p-3 text-center"><Badge variant={c.isActive ? "default" : "secondary"}>{c.isActive ? "有効" : "無効"}</Badge></td>
                 <td className="p-3 text-center">
                   <div className="flex gap-1 justify-center">
                     <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => openEdit(c)}><Pencil className="w-3.5 h-3.5" /></Button>
-                    <Button variant="ghost" size="icon" className="h-7 w-7 text-destructive" onClick={() => { if (confirm("削除しますか？")) deleteMut.mutate({ id: c.id }); }}><Trash2 className="w-3.5 h-3.5" /></Button>
+                    <Button variant="ghost" size="icon" className="h-7 w-7 text-destructive" onClick={() => { if (confirm("삭제하시겠습니까?")) deleteMut.mutate({ id: c.id }); }}><Trash2 className="w-3.5 h-3.5" /></Button>
                   </div>
                 </td>
               </tr>
@@ -4896,7 +5106,7 @@ function AdminPromoCodes() {
                   <button key={t} type="button"
                     className={`px-3 py-1.5 text-xs rounded-full border transition-colors ${form.targetMode === t ? "bg-primary text-primary-foreground border-primary" : "bg-secondary/50 border-border hover:bg-secondary"}`}
                     onClick={() => setForm(f => ({ ...f, targetMode: t, targetCategoryIds: t === "category" ? f.targetCategoryIds : [], targetProductIds: t === "product" ? f.targetProductIds : [] }))}>
-                    {t === "all" ? "全商品" : t === "category" ? "特定のカテゴリー" : "特定の商品"}
+                    {t === "all" ? "すべての商品" : t === "category" ? "특정 카테고리" : "특정 상품"}
                   </button>
                 ))}
               </div>
@@ -4911,7 +5121,7 @@ function AdminPromoCodes() {
                       </label>
                     ))}
                   </div>
-                  {form.targetCategoryIds.length > 0 && <p className="text-xs text-muted-foreground">{form.targetCategoryIds.length}件のカテゴリーを選択中</p>}
+                  {form.targetCategoryIds.length > 0 && <p className="text-xs text-muted-foreground">{form.targetCategoryIds.length}개 카테고리 선택됨</p>}
                 </div>
               )}
               {form.targetMode === "product" && (
@@ -4927,7 +5137,7 @@ function AdminPromoCodes() {
                       </label>
                     ))}
                   </div>
-                  {form.targetProductIds.length > 0 && <p className="text-xs text-muted-foreground">{form.targetProductIds.length}件の商品を選択中</p>}
+                  {form.targetProductIds.length > 0 && <p className="text-xs text-muted-foreground">{form.targetProductIds.length}개 상품 선택됨</p>}
                 </div>
               )}
             </div>
@@ -4960,17 +5170,17 @@ function AdminQnAItem({ post, onInvalidate }: { post: QnAPost; onInvalidate: () 
   const [isExpanded, setIsExpanded] = useState(false);
   const [answerContent, setAnswerContent] = useState("");
 
-  const { data: comments } = trpc.community.comments.useQuery(
+  const { data: comments } = trpc.community.productQnAReplies.useQuery(
     { postId: post.id },
     { enabled: isExpanded }
   );
 
-  const answerQnA = trpc.community.answerQnA.useMutation({
+  const answerQnA = trpc.community.answerProductQnA.useMutation({
     onSuccess: () => {
       toast.success("回答を登録しました");
       setAnswerContent("");
       onInvalidate();
-      utils.community.comments.invalidate({ postId: post.id });
+      utils.community.productQnAReplies.invalidate({ postId: post.id });
     },
     onError: (e) => toast.error(e.message),
   });
@@ -4985,7 +5195,7 @@ function AdminQnAItem({ post, onInvalidate }: { post: QnAPost; onInvalidate: () 
       >
         <div className="shrink-0">
           {post.productThumbnail ? (
-            <img src={proxyImage(post.productThumbnail)} alt={post.productName ?? "商品"} className="w-12 h-12 object-cover rounded-lg border" />
+            <img src={proxyImage(post.productThumbnail)} alt={post.productName ?? "상품"} className="w-12 h-12 object-cover rounded-lg border" />
           ) : (
             <div className="w-12 h-12 bg-muted rounded-lg border flex items-center justify-center">
               <ShoppingBag className="w-5 h-5 text-muted-foreground/40" />
@@ -5005,7 +5215,7 @@ function AdminQnAItem({ post, onInvalidate }: { post: QnAPost; onInvalidate: () 
           </div>
           <p className="text-xs text-muted-foreground mt-1 line-clamp-1">{post.content}</p>
           <p className="text-xs text-muted-foreground mt-0.5">
-            {post.userName ?? "匿名"} · {formatDate(post.createdAt)}
+            {post.userName ?? "익명"} · {formatDate(post.createdAt)}
           </p>
         </div>
         <div className="shrink-0 text-muted-foreground">
@@ -5053,7 +5263,7 @@ function AdminQnAItem({ post, onInvalidate }: { post: QnAPost; onInvalidate: () 
                 onClick={() => answerQnA.mutate({ postId: post.id, content: answerContent.trim() })}
               >
                 <Check className="w-3.5 h-3.5 mr-1" />
-                回答を登録
+                답변 등록
               </Button>
             </div>
           </div>
@@ -5093,15 +5303,15 @@ function AdminProductQnA() {
     <div>
       <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
         <HelpCircle className="w-6 h-6 text-primary" />
-        商品Q&A管理
+        상품 Q&A 관리
       </h2>
       <div className="flex items-center justify-between mb-6 gap-4">
         <div className="flex gap-2">
           <Button size="sm" variant={!onlyUnanswered ? "default" : "outline"} onClick={() => { setOnlyUnanswered(false); setPage(1); }}>
-            すべて {!onlyUnanswered && data && <span className="ml-1 bg-white/20 text-white px-1.5 py-0.5 rounded text-xs">{data.total}</span>}
+            전체 {!onlyUnanswered && data && <span className="ml-1 bg-white/20 text-white px-1.5 py-0.5 rounded text-xs">{data.total}</span>}
           </Button>
           <Button size="sm" variant={onlyUnanswered ? "default" : "outline"} onClick={() => { setOnlyUnanswered(true); setPage(1); }}>
-            未回答
+            미답변
             {onlyUnanswered && data && <span className="ml-1 bg-white/20 text-white px-1.5 py-0.5 rounded text-xs">{data.total}</span>}
           </Button>
         </div>
@@ -5121,7 +5331,7 @@ function AdminProductQnA() {
       ) : filteredPosts.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-20 gap-3 text-muted-foreground">
           <HelpCircle className="w-12 h-12 opacity-20" />
-          <p className="text-lg font-medium">{search.trim() ? "検索結果がありません" : onlyUnanswered ? "未回答のQ&Aはありません" : "Q&Aがありません"}</p>
+          <p className="text-lg font-medium">{search.trim() ? "検索結果がありません" : onlyUnanswered ? "미답변 Q&A가 없습니다" : "Q&A가 없습니다"}</p>
         </div>
       ) : (
         <div className="space-y-3">
@@ -5215,18 +5425,18 @@ function AdminReviews() {
                 <td className="p-3">{r.id}</td>
                 <td className="p-3">
                   {r.productThumbnail ? (
-                    <img src={proxyImage(r.productThumbnail)} alt={r.productName ?? "商品"} className="w-12 h-12 object-cover rounded border" />
+                    <img src={proxyImage(r.productThumbnail)} alt={r.productName ?? "상품"} className="w-12 h-12 object-cover rounded border" />
                   ) : (
                     <div className="w-12 h-12 bg-muted rounded border flex items-center justify-center"><ShoppingBag className="w-5 h-5 text-muted-foreground/40" /></div>
                   )}
                 </td>
                 <td className="p-3 font-medium">{r.title}</td>
                 <td className="p-3">
-                  <div className="font-medium">{r.userName ?? "匿名"}</div>
+                  <div className="font-medium">{r.userName ?? "익명"}</div>
                   {r.userEmail && <div className="text-xs text-muted-foreground">{r.userEmail}</div>}
                 </td>
                 <td className="p-3 text-center">{r.rating ? `${"★".repeat(r.rating)}` : "-"}</td>
-                <td className="p-3 text-center"><Badge variant={r.replyCount > 0 ? "default" : "outline"}>{r.replyCount > 0 ? `${r.replyCount}件` : "未回答"}</Badge></td>
+                <td className="p-3 text-center"><Badge variant={r.replyCount > 0 ? "default" : "outline"}>{r.replyCount > 0 ? `${r.replyCount}건` : "未回答"}</Badge></td>
                 <td className="p-3 text-xs">{formatDate(r.createdAt)}</td>
                 <td className="p-3 text-center"><Button variant="ghost" size="sm" onClick={(e) => { e.stopPropagation(); setSelectedReview(r); }}><Eye className="w-4 h-4" /></Button></td>
               </tr>
@@ -5246,21 +5456,21 @@ function AdminReviews() {
               {/* 상품 정보 */}
               <div className="flex items-center gap-3 p-3 bg-secondary/20 rounded-lg">
                 {selectedReview.productThumbnail ? (
-                  <img src={proxyImage(selectedReview.productThumbnail)} alt={selectedReview.productName ?? "商品"} className="w-14 h-14 object-cover rounded-lg border shrink-0" />
+                  <img src={proxyImage(selectedReview.productThumbnail)} alt={selectedReview.productName ?? "상품"} className="w-14 h-14 object-cover rounded-lg border shrink-0" />
                 ) : (
                   <div className="w-14 h-14 bg-muted rounded-lg border flex items-center justify-center shrink-0">
                     <ShoppingBag className="w-6 h-6 text-muted-foreground/40" />
                   </div>
                 )}
                 <div className="min-w-0">
-                  <p className="text-sm font-semibold truncate">{selectedReview.productName ?? "商品名なし"}</p>
+                  <p className="text-sm font-semibold truncate">{selectedReview.productName ?? "상품명 없음"}</p>
                   <p className="text-xs text-muted-foreground">商品レビュー</p>
                 </div>
               </div>
 
               <div className="bg-secondary/20 rounded-lg p-4">
                 <div className="flex items-center justify-between mb-2">
-                  <span className="font-medium">{selectedReview.userName ?? "匿名"}</span>
+                  <span className="font-medium">{selectedReview.userName ?? "익명"}</span>
                   <span className="text-xs text-muted-foreground">{formatDate(selectedReview.createdAt)}</span>
                 </div>
                 <h3 className="font-semibold mb-1">{selectedReview.title}</h3>
@@ -5271,7 +5481,7 @@ function AdminReviews() {
               {/* Existing replies */}
               {replies && replies.length > 0 && (
                 <div className="space-y-2">
-                  <p className="text-sm font-medium">回答 ({replies.length})</p>
+                  <p className="text-sm font-medium">답변 ({replies.length})</p>
                   {replies.map(reply => (
                     <div key={reply.id} className="bg-primary/5 border border-primary/10 rounded-lg p-3">
                       <div className="flex items-center justify-between mb-1">
@@ -5344,7 +5554,7 @@ function AdminShipping() {
 
   const bulkRegister = trpc.shipping.adminBulkCreateShipment.useMutation({
     onSuccess: (data: any) => {
-      toast.success(`${data.successCount}件の追跡番号を登録しました。`);
+      toast.success(`${data.successCount}건의 운송장이 등록되었습니다.`);
       setBulkDialogOpen(false);
       setBulkEntries([]);
       utils.shipping.adminShipments.invalidate();
@@ -5370,9 +5580,9 @@ function AdminShipping() {
     onSuccess: (data: any) => {
       setBulkRefreshProgress({ total: data.total, done: data.total, running: false });
       if (data.failCount > 0) {
-        toast.warning(`${data.successCount}件成功、${data.failCount}件失敗`);
+        toast.warning(`${data.successCount}건 성공, ${data.failCount}건 실패`);
       } else {
-        toast.success(`${data.successCount}件の配送情報を更新しました。`);
+        toast.success(`${data.successCount}건의 배송 정보가 업데이트되었습니다.`);
       }
       setSelectedShipmentIds([]);
       utils.shipping.adminShipments.invalidate();
@@ -5407,9 +5617,9 @@ function AdminShipping() {
   };
 
   const shipmentStatusLabels: Record<string, string> = {
-    ready: "配送準備", picked_up: "集荷", in_transit: "配送中",
-    out_for_delivery: "配達に出発", delivered: "配達完了", failed: "配送失敗",
-    import_customs: "通関検査", customs_departure: "通関出発", customs_arrival: "通関到着",
+    ready: "배송 준비", picked_up: "상품 수거", in_transit: "배송 중",
+    out_for_delivery: "배달 출발", delivered: "배달 완료", failed: "배송 실패",
+    import_customs: "통관검사", customs_departure: "통관 출발", customs_arrival: "통관 도착",
   };
 
   return (
@@ -5448,7 +5658,7 @@ function AdminShipping() {
       {/* Pending Orders */}
       {(pendingData?.orders ?? []).length > 0 && (
         <div className="bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800 rounded-xl p-4">
-          <h3 className="font-semibold text-amber-800 dark:text-amber-200 mb-3 flex items-center gap-2"><Clock className="w-4 h-4" />発送待ちの注文 ({pendingData?.orders.length}件)</h3>
+          <h3 className="font-semibold text-amber-800 dark:text-amber-200 mb-3 flex items-center gap-2"><Clock className="w-4 h-4" />발송 대기 주문 ({pendingData?.orders.length}건)</h3>
           <div className="space-y-2">
             {pendingData!.orders.slice(0, 5).map(order => (
               <div key={order.id} className="flex items-center justify-between bg-background rounded-lg p-3">
@@ -5457,11 +5667,11 @@ function AdminShipping() {
                   <span className="text-xs text-muted-foreground ml-2">{formatDate(order.createdAt)}</span>
                 </div>
                 <Button size="sm" onClick={() => { setSelectedOrderId(order.id); setSingleDialogOpen(true); }} className="gap-1">
-                  <Truck className="w-3 h-3" />追跡番号を登録
+                  <Truck className="w-3 h-3" />운송장 등록
                 </Button>
               </div>
             ))}
-            {(pendingData?.orders.length ?? 0) > 5 && <p className="text-xs text-muted-foreground text-center">ほか{(pendingData?.orders.length ?? 0) - 5}件</p>}
+            {(pendingData?.orders.length ?? 0) > 5 && <p className="text-xs text-muted-foreground text-center">외 {(pendingData?.orders.length ?? 0) - 5}건</p>}
           </div>
         </div>
       )}
@@ -5480,8 +5690,8 @@ function AdminShipping() {
             >
               <RotateCcw className={`w-3.5 h-3.5 ${bulkRefreshProgress.running ? 'animate-spin' : ''}`} />
               {bulkRefreshProgress.running
-                ? `再読み込み中... (${selectedShipmentIds.length}件)`
-                : `選択した${selectedShipmentIds.length}件を再読み込み`}
+                ? `새로고침 중... (${selectedShipmentIds.length}건)`
+                : `선택한 ${selectedShipmentIds.length}건 새로고침`}
             </Button>
           )}
           <div className="flex gap-1 ml-auto">
@@ -5499,7 +5709,7 @@ function AdminShipping() {
             <div className="flex items-center gap-2 mb-2">
               <RotateCcw className="w-4 h-4 text-blue-600 animate-spin" />
               <span className="text-sm font-medium text-blue-700 dark:text-blue-300">配送情報を一括再読み込み中...</span>
-              <span className="text-xs text-blue-500 ml-auto">{bulkRefreshProgress.total}件処理中</span>
+              <span className="text-xs text-blue-500 ml-auto">{bulkRefreshProgress.total}건 처리 중</span>
             </div>
             <div className="w-full bg-blue-200 dark:bg-blue-800 rounded-full h-1.5">
               <div className="bg-blue-600 h-1.5 rounded-full animate-pulse" style={{ width: '100%' }} />
@@ -5563,11 +5773,11 @@ function AdminShipping() {
       {/* Single Register Dialog */}
       <Dialog open={singleDialogOpen} onOpenChange={setSingleDialogOpen}>
         <DialogContent>
-          <DialogHeader><DialogTitle>追跡番号の登録</DialogTitle></DialogHeader>
+          <DialogHeader><DialogTitle>追跡番号を登録</DialogTitle></DialogHeader>
           <div className="space-y-4">
             <div className="bg-blue-50 dark:bg-blue-950/20 rounded-lg p-3 text-sm text-blue-700 dark:text-blue-300 flex items-center gap-2">
               <Truck className="w-4 h-4" />
-              国際配送として自動登録されます。
+              국제배송으로 자동 등록됩니다.
             </div>
             <div>
               <label className="text-sm font-medium mb-1.5 block">追跡番号</label>
@@ -5588,7 +5798,7 @@ function AdminShipping() {
           <div className="space-y-4">
             <div className="bg-blue-50 dark:bg-blue-950/20 rounded-lg p-3 text-sm text-blue-700 dark:text-blue-300 flex items-center gap-2">
               <Truck className="w-4 h-4" />
-              すべての注文が国際配送として自動登録されます。
+              모든 주문이 국제배송으로 자동 등록됩니다.
             </div>
             <div className="max-h-60 overflow-y-auto space-y-2">
               {(pendingData?.orders ?? []).map(order => {
@@ -5615,7 +5825,7 @@ function AdminShipping() {
                 const entries = bulkEntries.filter(e => e.trackingNumber);
                 bulkRegister.mutate({ shipments: entries });
               }}>
-              {bulkRegister.isPending ? "登録中..." : `${bulkEntries.filter(e => e.trackingNumber).length}件を一括登録`}
+              {bulkRegister.isPending ? "登録中..." : `${bulkEntries.filter(e => e.trackingNumber).length}건 일괄 등록`}
             </Button>
           </div>
         </DialogContent>
@@ -5643,10 +5853,10 @@ function AdminReturns() {
   });
 
   const returnStatusLabels: Record<string, string> = {
-    requested: "受付済み", approved: "承認", collecting: "回収中",
-    collected: "回収完了", completed: "処理完了", rejected: "拒否",
+    requested: "접수됨", approved: "승인", collecting: "수거 중",
+    collected: "수거 완료", completed: "처리 완료", rejected: "거부",
   };
-  const returnTypeLabels: Record<string, string> = { return: "返品", exchange: "交換" };
+  const returnTypeLabels: Record<string, string> = { return: "반품", exchange: "교환" };
 
   return (
     <div className="space-y-6">
@@ -5736,21 +5946,21 @@ function AdminShippingPolicy() {
 
   useEffect(() => {
     if (settingsData && !loaded) {
-      setMethod(getVal("shippingMethod", "国際配送"));
-      setFee(getVal("shippingFee", "0"));
-      setAdditionalFee(getVal("shippingAdditionalFee", "590"));
-      setDays(getVal("shippingDays", "10〜14日 (営業日基準)"));
-      setNote(getVal("shippingNote", "すべての注文は国際配送で発送され、送料は全額無料です。配送追跡は17trackを通じて提供されます。"));
+      setMethod(getVal("shippingMethod", "국제배송"));
+      setFee(getVal("shippingFee", "890"));
+      setAdditionalFee(getVal("shippingAdditionalFee", "490"));
+      setDays(getVal("shippingDays", "10~14일 (영업일기준)"));
+      setNote(getVal("shippingNote", "배송비는 서로 다른 상품(품목) 수 기준으로 청구되며, 같은 상품은 수량과 관계없이 1번만 청구됩니다. 배송 추적은 17track을 통해 제공됩니다."));
       setLoaded(true);
     }
   }, [settingsData, loaded]);
 
   const handleSave = async () => {
     await Promise.all([
-      updateSetting.mutateAsync({ key: "shippingMethod", value: method, label: "배송 방법" }),
-      updateSetting.mutateAsync({ key: "shippingFee", value: fee, label: "배송비" }),
-      updateSetting.mutateAsync({ key: "shippingAdditionalFee", value: additionalFee, label: "추가 수량당 배송비" }),
-      updateSetting.mutateAsync({ key: "shippingDays", value: days, label: "예상 배송일" }),
+      updateSetting.mutateAsync({ key: "shippingMethod", value: method, label: "配送方法" }),
+      updateSetting.mutateAsync({ key: "shippingFee", value: fee, label: "送料" }),
+      updateSetting.mutateAsync({ key: "shippingAdditionalFee", value: additionalFee, label: "추가 품목당 배송비" }),
+      updateSetting.mutateAsync({ key: "shippingDays", value: days, label: "配送予定日" }),
       updateSetting.mutateAsync({ key: "shippingNote", value: note, label: "배송 안내" }),
     ]);
   };
@@ -5764,7 +5974,7 @@ function AdminShippingPolicy() {
       <div className="bg-card border rounded-xl p-5 space-y-4">
         <h2 className="text-base font-semibold flex items-center gap-2">
           <Truck className="w-4 h-4 text-emerald-600" />
-          配送ポリシー設定
+          배송 정책 설정
         </h2>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -5823,7 +6033,7 @@ function AdminShippingPolicy() {
 
         <Button size="sm" onClick={handleSave} disabled={updateSetting.isPending}>
           {updateSetting.isPending ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Save className="w-4 h-4 mr-2" />}
-          設定を保存
+          설정 저장
         </Button>
       </div>
 
@@ -5836,7 +6046,7 @@ function AdminShippingPolicy() {
               <Truck className="w-5 h-5 text-emerald-600" />
             </div>
             <div>
-              <h3 className="text-base font-bold">{fee === "0" || ["무료", "無料"].includes(fee.trim()) ? "全商品送料無料" : `送料 ${fee}円`}</h3>
+              <h3 className="text-base font-bold">{fee === "0" || fee.toLowerCase() === "무료" ? "전 상품 무료배송" : `배송비 ${fee}엔`}</h3>
               <p className="text-xs text-muted-foreground">{method}</p>
             </div>
           </div>
@@ -5847,8 +6057,8 @@ function AdminShippingPolicy() {
             </div>
             <div className="bg-muted/50 rounded-lg p-2.5">
               <span className="text-xs text-muted-foreground">送料 (1点 / 追加1点ごと)</span>
-              <p className={`font-semibold mt-0.5 text-sm ${fee === "0" || ["무료", "無料"].includes(fee.trim()) ? "text-emerald-600" : ""}`}>
-                {fee === "0" || ["무료", "無料"].includes(fee.trim()) ? "無料" : `${Number(fee).toLocaleString()}円 / +${Number(additionalFee || 0).toLocaleString()}円`}
+              <p className={`font-semibold mt-0.5 text-sm ${fee === "0" || fee.toLowerCase() === "무료" ? "text-emerald-600" : ""}`}>
+                {fee === "0" || fee.toLowerCase() === "무료" ? "無料" : `${Number(fee).toLocaleString()}엔 / +${Number(additionalFee || 0).toLocaleString()}엔`}
               </p>
             </div>
             <div className="bg-muted/50 rounded-lg p-2.5">
@@ -5874,7 +6084,6 @@ function OrderDetailWrapper() {
 
 function AdminRefundManagement() {
   const CLAIM_STATUSES = ["접수", "처리중", "승인", "반려", "완료"];
-  const CLAIM_STATUS_LABELS: Record<string, string> = { "접수": "受付", "처리중": "処理中", "승인": "承認", "반려": "却下", "완료": "完了" };
   const CLAIM_STATUS_COLORS: Record<string, { color: string; bg: string }> = {
     접수: { color: "#f59e0b", bg: "#fffbeb" },
     처리중: { color: "#3b82f6", bg: "#eff6ff" },
@@ -5900,7 +6109,7 @@ function AdminRefundManagement() {
       <div className="flex items-center justify-between mb-6 flex-wrap gap-3">
         <h1 className="text-2xl font-bold flex items-center gap-2">
           <RotateCcw className="w-6 h-6 text-rose-500" />
-          返金管理
+          환불 관리
         </h1>
         <div className="flex gap-2 flex-wrap">
           {["전체", ...CLAIM_STATUSES].map((s) => (
@@ -5910,7 +6119,7 @@ function AdminRefundManagement() {
               variant={statusFilter === s ? "default" : "outline"}
               onClick={() => { setStatusFilter(s); setPage(1); }}
             >
-              {s === "전체" ? "すべて" : (CLAIM_STATUS_LABELS[s] ?? s)}
+              {s}
             </Button>
           ))}
         </div>
@@ -5921,7 +6130,7 @@ function AdminRefundManagement() {
       ) : !data || data.items.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-20 gap-3 text-muted-foreground">
           <CheckCircle2 className="w-12 h-12 text-emerald-400" />
-          <p className="text-lg font-medium">{statusFilter === "전체" ? "申請履歴はありません" : `「${CLAIM_STATUS_LABELS[statusFilter] ?? statusFilter}」状態の申請はありません`}</p>
+          <p className="text-lg font-medium">{statusFilter === "전체" ? "申請履歴はありません" : `'${statusFilter}' 상태인 요청이 없습니다`}</p>
         </div>
       ) : (
         <div className="space-y-3">
@@ -5933,7 +6142,7 @@ function AdminRefundManagement() {
               <div key={c.id} className={`bg-card border rounded-xl p-4 flex flex-col sm:flex-row gap-4 ${c.status === "완료" || c.status === "반려" ? "opacity-70" : ""}`}>
                 <div className="flex-1 space-y-1.5 min-w-0">
                   <div className="flex flex-wrap items-center gap-2">
-                    <Link href={`/admin/orders/${c.odId}`} className="font-mono font-semibold text-sm text-primary hover:underline">
+                    <Link href={`/admin/fulfilment?od=${c.odId}`} className="font-mono font-semibold text-sm text-primary hover:underline">
                       {formatOrderNumber(c.odId)}
                     </Link>
                     <Badge variant="outline" className="text-xs">{c.claimType}</Badge>
@@ -5941,7 +6150,7 @@ function AdminRefundManagement() {
                       className="text-xs font-bold px-2.5 py-0.5 rounded-full"
                       style={{ color: sc.color, background: sc.bg, border: `1px solid ${sc.color}30` }}
                     >
-                      {CLAIM_STATUS_LABELS[c.status] ?? c.status}
+                      {c.status}
                     </span>
                   </div>
                   <p className="text-sm font-medium truncate">{c.itemName}</p>
@@ -5952,8 +6161,8 @@ function AdminRefundManagement() {
                     <span className="font-medium">申請理由: </span>{c.reason}
                   </div>
                   <p className="text-xs text-muted-foreground">
-                    受付日: {formatDateTime(c.createdAt)}
-                    {c.updatedAt && new Date(c.updatedAt).getTime() !== new Date(c.createdAt).getTime() ? ` · 更新日: ${formatDateTime(c.updatedAt)}` : ""}
+                    접수일: {formatDateTime(c.createdAt)}
+                    {c.updatedAt && new Date(c.updatedAt).getTime() !== new Date(c.createdAt).getTime() ? ` · 수정일: ${formatDateTime(c.updatedAt)}` : ""}
                   </p>
                   <div className="mt-2">
                     <textarea
@@ -5969,7 +6178,7 @@ function AdminRefundManagement() {
                           disabled={updateClaim.isPending}
                           onClick={() => updateClaim.mutate({ id: c.id, adminMemo: memoDraft })}
                         >
-                          メモを保存
+                          메모 저장
                         </Button>
                       </div>
                     )}
@@ -6010,6 +6219,7 @@ export default function AdminDashboard() {
         <Route path="/admin" component={DashboardHome} />
         <Route path="/admin/categories" component={AdminCategories} />
         <Route path="/admin/products" component={AdminProducts} />
+        <Route path="/admin/fulfilment" component={AdminFulfilment} />
         <Route path="/admin/orders/spreadsheet" component={AdminOrdersSpreadsheet} />
         <Route path="/admin/orders/:id">{(params) => <AdminOrderDetail id={params.id} />}</Route>
         <Route path="/admin/orders" component={AdminOrders} />
@@ -6019,21 +6229,18 @@ export default function AdminDashboard() {
         <Route path="/admin/point-history" component={AdminPointHistory} />
         <Route path="/admin/point-settings" component={AdminPointSettings} />
         <Route path="/admin/point-expiration" component={AdminPointExpiration} />
-        <Route path="/admin/email-template" component={AdminEmailTemplate} />
-        <Route path="/admin/smtp-settings" component={AdminSmtpSettings} />
-        <Route path="/admin/email-logs" component={AdminEmailLogs} />
+        <Route path="/admin/email-preview" component={AdminEmailPreview} />
         <Route path="/admin/faq" component={AdminFAQ} />
         <Route path="/admin/boards" component={AdminBoards} />
         <Route path="/admin/banners" component={AdminBanners} />
+        <Route path="/admin/exhibitions" component={AdminExhibitions} />
         <Route path="/admin/keywords" component={AdminKeywords} />
-        <Route path="/admin/review-settings" component={AdminReviewSettings} />
         <Route path="/admin/coupons" component={AdminCoupons} />
         <Route path="/admin/promo-codes" component={AdminPromoCodes} />
         <Route path="/admin/product-qna" component={AdminProductQnA} />
         <Route path="/admin/reviews" component={AdminReviews} />
         <Route path="/admin/shipping-policy" component={AdminShippingPolicy} />
         <Route path="/admin/excel-upload/products">{() => <AdminProductExcelUpload />}</Route>
-        <Route path="/admin/excel-upload/tracking">{() => <AdminTrackingExcelUpload />}</Route>
         <Route path="/admin/shipping-dashboard" component={AdminShippingDashboard} />
         <Route path="/admin/point-expiration" component={AdminPointSettings} />
         <Route path="/admin/chatbot/settings" component={AdminChatbotSettings} />
@@ -6041,16 +6248,11 @@ export default function AdminDashboard() {
         <Route path="/admin/chatbot/qna" component={AdminChatbotQna} />
         <Route path="/admin/chatbot/conversations" component={AdminChatbotConversations} />
         <Route path="/admin/payment-settings" component={AdminPaymentSettings} />
-        <Route path="/admin/payment-management" component={AdminPaymentManagement} />
+
         <Route path="/admin/pricing-settings" component={AdminPricingSettings} />
         <Route path="/admin/refunds" component={AdminRefundManagement} />
-        <Route path="/admin/news" component={AdminNewsManagement} />
-        <Route path="/admin/news-settings" component={AdminNewsAutoSettings} />
         <Route path="/admin/inquiries" component={AdminInquiries} />
-        <Route path="/admin/info-board-auto" component={AdminInfoBoardAuto} />
-        <Route path="/admin/discussion-auto" component={AdminDiscussionAuto} />
         <Route path="/admin/gnu-api-sync" component={AdminGnuApiSync} />
-        <Route path="/admin/api-settings" component={AdminApiSettings} />
         <Route path="/admin/action-logs" component={AdminActionLogs} />
         <Route path="/admin/visitor-stats" component={AdminVisitorStats} />
         <Route>{() => <div className="flex flex-col items-center justify-center py-20 gap-4"><AlertCircle className="w-12 h-12 text-muted-foreground" /><h2 className="text-xl font-bold">ページが見つかりません</h2><p className="text-muted-foreground">お探しの管理ページは存在しません。</p><Link href="/admin"><Button variant="outline"><ArrowLeft className="w-4 h-4 mr-2" />ダッシュボードへ</Button></Link></div>}</Route>

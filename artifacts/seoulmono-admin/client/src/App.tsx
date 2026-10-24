@@ -60,7 +60,7 @@ import ShippingGuide from "./pages/ShippingGuide";
 function Router() {
   return (
     <Switch>
-      {/* seoulmono-admin: 관리자 전용 배포이므로 루트는 대시보드로 보낸다.
+      {/* sorosoro-admin2: 관리자 전용 배포이므로 루트는 대시보드로 보낸다.
           AdminDashboard 는 내부에서 /admin/* 로 다시 라우팅하므로
           "/" 에 직접 걸면 그 내부 라우터가 404 를 낸다. */}
       <Route path="/"><Redirect to="/admin" /></Route>

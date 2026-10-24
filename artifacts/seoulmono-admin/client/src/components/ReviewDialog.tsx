@@ -47,13 +47,13 @@ export function ReviewDialog({ open, onOpenChange, orderItemId, productName, pro
       for (const file of Array.from(files)) {
         // 파일 크기 체크 (5MB 제한)
         if (file.size > 5 * 1024 * 1024) {
-          toast.error(`${file.name} は5MBを超えています。`);
+          toast.error(`${file.name}은(는) 5MB를 초과합니다.`);
           continue;
         }
 
         // 이미지 파일 여부 확인
         if (!file.type.startsWith("image/")) {
-          toast.error(`${file.name} は画像ファイルではありません。`);
+          toast.error(`${file.name}은(는) 이미지 파일이 아닙니다.`);
           continue;
         }
 
@@ -81,7 +81,7 @@ export function ReviewDialog({ open, onOpenChange, orderItemId, productName, pro
       }
 
       setImages([...images, ...uploadedUrls]);
-      toast.success(`${uploadedUrls.length}枚の写真をアップロードしました。`);
+      toast.success(`${uploadedUrls.length}개의 사진이 업로드되었습니다.`);
     } catch (error) {
       console.error("Image upload error:", error);
       toast.error("写真のアップロードに失敗しました。");
@@ -110,7 +110,7 @@ export function ReviewDialog({ open, onOpenChange, orderItemId, productName, pro
       onSuccess?.();
     },
     onError: (error) => {
-      toast.error(error.message || "レビューの投稿に失敗しました。");
+      toast.error(error.message || "리뷰 작성에 실패했습니다.");
     },
   });
 
@@ -137,7 +137,7 @@ export function ReviewDialog({ open, onOpenChange, orderItemId, productName, pro
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[600px]">
         <DialogHeader>
-          <DialogTitle>レビュー投稿</DialogTitle>
+          <DialogTitle>レビューを書く</DialogTitle>
           <DialogDescription asChild>
             <div className="flex items-center gap-2 mt-1">
               {productThumbnail && (
@@ -176,7 +176,7 @@ export function ReviewDialog({ open, onOpenChange, orderItemId, productName, pro
                 </button>
               ))}
               <span className="ml-2 text-sm text-muted-foreground self-center">
-                {rating}点
+                {rating}점
               </span>
             </div>
           </div>
@@ -205,16 +205,16 @@ export function ReviewDialog({ open, onOpenChange, orderItemId, productName, pro
               className="resize-none"
             />
             <p className="text-xs text-muted-foreground">
-              {content.length} / 最低10文字
+              {content.length} / 최소 10자
             </p>
           </div>
 
           {/* 사진 업로드 */}
           <div className="space-y-2">
             <Label>
-              写真アップロード（任意、最大5枚）
+              사진 업로드 (선택사항, 최대 5장)
               <span className="text-xs text-primary ml-2">
-                +200ポイント
+                +200 포인트
               </span>
             </Label>
             <input
@@ -240,7 +240,7 @@ export function ReviewDialog({ open, onOpenChange, orderItemId, productName, pro
                   <div key={idx} className="relative">
                     <img
                       src={img}
-                      alt={`レビュー写真 ${idx + 1}`}
+                      alt={`리뷰 사진 ${idx + 1}`}
                       className="w-20 h-20 rounded-lg object-cover"
                     />
                     <button
@@ -263,10 +263,10 @@ export function ReviewDialog({ open, onOpenChange, orderItemId, productName, pro
             onClick={() => onOpenChange(false)}
             disabled={createReview.isPending}
           >
-            キャンセル
+            취소
           </Button>
           <Button onClick={handleSubmit} disabled={createReview.isPending}>
-            {createReview.isPending ? "投稿中..." : "レビュー投稿"}
+            {createReview.isPending ? "投稿中..." : "レビューを書く"}
           </Button>
         </DialogFooter>
       </DialogContent>

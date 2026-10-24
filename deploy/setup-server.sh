@@ -30,14 +30,17 @@ if [ ! -f .env ]; then
 fi
 chmod 600 .env
 # Only missing tables are created; existing records are preserved.
-mysql seoulmono < deploy/schema.sql
-pnpm install --frozen-lockfile
-pnpm --filter @workspace/shop run build
-pnpm --filter @workspace/order-system run build
-pnpm --filter @workspace/api-server run build
+DB_NAME="$(node --env-file=.env -p 'process.env.MYSQL_DB')"
+mysql "$DB_NAME" < deploy/schema.sql
+# Original catalog, site settings and existing admin are restored separately from a private dump.
+# No admin account or password is generated.
+node --env-file=.env deploy/prepare-admin-env.cjs
+bash deploy/install-live.sh
 pm2 startOrReload deploy/ecosystem.config.cjs --update-env
 pm2 save
 pm2 startup systemd -u root --hp /root
+cp deploy/seoulmono-sec-headers.conf /etc/nginx/snippets/
+cp deploy/seoulmono-ratelimit.conf /etc/nginx/conf.d/
 # Keep existing HTTPS configuration on subsequent deployments.
 if [ ! -f /etc/nginx/sites-available/seoulmono ]; then
   cp deploy/nginx.conf /etc/nginx/sites-available/seoulmono

@@ -7,7 +7,7 @@ import { RefreshCcw, JapaneseYen } from "lucide-react";
 import { toast } from "sonner";
 
 function getShopToken(): string | null {
-  return localStorage.getItem("seoulmono_token");
+  return localStorage.getItem("allddaom_token");
 }
 
 async function callShopApi(path: string, init?: RequestInit) {
@@ -20,7 +20,7 @@ async function callShopApi(path: string, init?: RequestInit) {
     },
   });
   const data = await res.json().catch(() => ({}));
-  if (!res.ok) throw new Error(data?.error || "リクエストに失敗しました。");
+  if (!res.ok) throw new Error(data?.error || "요청에 실패했습니다.");
   return data;
 }
 
@@ -43,7 +43,7 @@ export default function AdminPricingSettings() {
       setStatus({ total: data.total, converted: data.converted, pending: data.pending });
       if (data.rate) setRate(String(data.rate));
     } catch (err: any) {
-      toast.error(err.message || "ステータスを取得できませんでした。");
+      toast.error(err.message || "상태를 불러오지 못했습니다.");
     } finally {
       setLoading(false);
     }
@@ -68,24 +68,24 @@ export default function AdminPricingSettings() {
       toast.success("為替レートを保存しました。");
       refresh();
     } catch (err: any) {
-      toast.error(err.message || "保存に失敗しました。");
+      toast.error(err.message || "저장에 실패했습니다.");
     }
   };
 
   const convertNow = async () => {
     if (
       !confirm(
-        "現在設定されている為替レートで、まだ変換されていないすべての商品価格を円に変換します。元の価格（ウォン）は別カラムに自動でバックアップされます。続行しますか？"
+        "현재 설정된 환율로 아직 변환되지 않은 모든 상품 가격을 엔화로 변환합니다. 원래 가격(원화)은 별도 컬럼에 자동 백업됩니다. 계속할까요?"
       )
     )
       return;
     setConverting(true);
     try {
       const data = await callShopApi("/api/admin/pricing/convert-to-jpy", { method: "POST" });
-      toast.success(`${data.converted}件の商品価格を円に変換しました。`);
+      toast.success(`${data.converted}개 상품 가격이 엔화로 변환되었습니다.`);
       refresh();
     } catch (err: any) {
-      toast.error(err.message || "変換に失敗しました。");
+      toast.error(err.message || "변환에 실패했습니다.");
     } finally {
       setConverting(false);
     }
@@ -95,25 +95,25 @@ export default function AdminPricingSettings() {
     <div className="p-6 max-w-xl">
       <h1 className="text-2xl font-bold mb-1 flex items-center gap-2">
         <JapaneseYen className="w-6 h-6" />
-        円価格への変換
+        엔화 가격 변환
       </h1>
       <p className="text-sm text-muted-foreground mb-6">
-        ウォン建てで登録されている商品価格を、設定した為替レートで一括変換します。元の価格は自動でバックアップされ、いつでも復元できます。
+        원화 기준으로 등록된 상품 가격을 설정한 환율로 일괄 변환합니다. 원래 가격은 자동 백업되어 언제든 복원할 수 있습니다.
       </p>
 
       {!hasToken ? (
         <div className="border rounded-lg p-5 bg-muted/40 text-sm">
           <p className="mb-3">
-            この機能にはショップのログインセッションが必要です。下のリンクを新しいタブで開き、管理者アカウントで一度ログインしてから、
-            このページを再読み込みしてください。
+            이 기능은 쇼핑몰 로그인 세션이 필요합니다. 아래 링크를 새 탭으로 열어 관리자 계정으로 한 번 로그인한 뒤,
+            이 페이지를 새로고침 해주세요.
           </p>
           <a href="/login" target="_blank" rel="noreferrer" className="text-primary underline">
-            seoulmono.com ログインページを開く →
+            seoulmono.com 로그인 페이지 열기 →
           </a>
           <div className="mt-4">
             <Button variant="outline" size="sm" onClick={refresh}>
               <RefreshCcw className="w-4 h-4 mr-1.5" />
-              再読み込み
+              새로고침
             </Button>
           </div>
         </div>
@@ -122,7 +122,7 @@ export default function AdminPricingSettings() {
           <div className="grid grid-cols-3 gap-4 text-center">
             <div>
               <p className="text-2xl font-bold">{status ? status.total : "-"}</p>
-              <p className="text-xs text-muted-foreground mt-1">全商品</p>
+              <p className="text-xs text-muted-foreground mt-1">すべての商品</p>
             </div>
             <div>
               <p className="text-2xl font-bold text-emerald-600">{status ? status.converted : "-"}</p>
@@ -138,7 +138,7 @@ export default function AdminPricingSettings() {
 
           <div>
             <Label htmlFor="jpy-rate" className="mb-1.5 block">
-              為替レート (1ウォン = ? 円)
+              환율 (1원 = ? 엔)
             </Label>
             <div className="flex gap-2">
               <Input
@@ -150,7 +150,7 @@ export default function AdminPricingSettings() {
                 onChange={(e) => setRate(e.target.value)}
               />
               <Button onClick={saveRate} disabled={loading}>
-                保存
+                저장
               </Button>
             </div>
           </div>
@@ -161,7 +161,7 @@ export default function AdminPricingSettings() {
 
           <Button variant="ghost" size="sm" onClick={refresh} disabled={loading} className="w-full">
             <RefreshCcw className="w-4 h-4 mr-1.5" />
-            ステータスを再読み込み
+            상태 새로고침
           </Button>
         </div>
       )}

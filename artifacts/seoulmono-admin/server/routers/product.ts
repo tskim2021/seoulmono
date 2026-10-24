@@ -40,6 +40,13 @@ export const productRouter = router({
     }
     return combined.slice(0, 8);
   }),
+  getRelated: adminProcedure.input(z.object({ productId: z.number() })).query(async ({ input }) => {
+    return db.getRelatedProducts(input.productId);
+  }),
+  setRelated: adminProcedure.input(z.object({ productId: z.number(), relatedIds: z.array(z.number()).max(12) })).mutation(async ({ input }) => {
+    const count = await db.setRelatedProducts(input.productId, input.relatedIds);
+    return { success: true, count };
+  }),
   getByIds: publicProcedure.input(z.object({ ids: z.array(z.number()) })).query(async ({ input }) => {
     return db.getProductsByIds(input.ids);
   }),
@@ -155,8 +162,8 @@ export const productRouter = router({
             await db.createNotification(
               alert.userId,
               "system",
-              "再入荷のお知らせ",
-              `お申し込みの商品「${prevProduct.name}」が再入荷しました。今すぐご購入いただけます！`,
+              "재입고 알림",
+              `신청하신 상품 "${prevProduct.name}"이 재입고되었습니다. 지금 바로 구매하세요!`,
               `/products/${prevProduct.slug}`
             );
           } catch (e) {
@@ -255,6 +262,6 @@ export const productRouter = router({
   }),
   topBannerText: publicProcedure.query(async () => {
     const val = await db.getSetting("topBannerText");
-    return { text: val ?? "🌿 インド直送・海外個人輸入専門ショップ · ソウルモノ" };
+    return { text: val ?? "🌿 인도 직배송 해외직구 전문 쇼핑몰 · 탈모학교" };
   }),
 });

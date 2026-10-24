@@ -52,7 +52,7 @@ export default function MyInquiries() {
       <div className="flex justify-end mb-6">
         <Button onClick={() => navigate("/customer-service/inquiry")}>
           <Plus className="w-4 h-4 mr-2" />
-          新規お問い合わせ
+          새 문의 작성
         </Button>
       </div>
 
@@ -81,7 +81,7 @@ export default function MyInquiries() {
               onClick={() => navigate("/customer-service/inquiry")}
               className="mt-4"
             >
-              最初のお問い合わせを作成
+              첫 문의 작성하기
             </Button>
           </CardContent>
         </Card>
@@ -110,13 +110,13 @@ export default function MyInquiries() {
           {data.total > 10 && (
             <div className="flex justify-center gap-2 mt-6">
               <Button variant="outline" disabled={page === 1} onClick={() => setPage(p => p - 1)}>
-                前へ
+                이전
               </Button>
               <span className="flex items-center px-4">
                 {page} / {Math.ceil(data.total / 10)}
               </span>
               <Button variant="outline" disabled={page >= Math.ceil(data.total / 10)} onClick={() => setPage(p => p + 1)}>
-                次へ
+                다음
               </Button>
             </div>
           )}

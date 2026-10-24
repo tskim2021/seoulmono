@@ -55,12 +55,12 @@ export default function CheckoutScreen() {
       const script = `
         (function () {
           try {
-            sessionStorage.setItem("seoulmono_checkout", ${JSON.stringify(
+            sessionStorage.setItem("allddaom_checkout", ${JSON.stringify(
               JSON.stringify(checkoutItems)
             )});
             ${
               token
-                ? `localStorage.setItem("seoulmono_token", ${JSON.stringify(
+                ? `localStorage.setItem("allddaom_token", ${JSON.stringify(
                     token
                   )});`
                 : ""

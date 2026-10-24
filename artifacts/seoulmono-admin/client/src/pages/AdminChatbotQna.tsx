@@ -111,7 +111,7 @@ export default function AdminChatbotQna() {
   };
 
   const handleDelete = async (id: number) => {
-    if (!confirm("このQ&Aを削除しますか？")) return;
+    if (!confirm("이 문답을 삭제하시겠습니까?")) return;
     try {
       await deleteMutation.mutateAsync({ id });
       toast.success("Q&Aを削除しました。");
@@ -128,7 +128,7 @@ export default function AdminChatbotQna() {
   }, [qnaList, selectedCategory]);
 
   const getCategoryName = (categoryId: number) => {
-    return categories?.find((c) => c.id === categoryId)?.name || "不明";
+    return categories?.find((c) => c.id === categoryId)?.name || "알 수 없음";
   };
 
   if (qnaLoading || catLoading) {
@@ -145,15 +145,15 @@ export default function AdminChatbotQna() {
         <div>
           <h1 className="text-2xl font-bold flex items-center gap-2">
             <MessageSquareText className="w-6 h-6" />
-            Q&A管理
+            문답 관리
           </h1>
           <p className="text-sm text-muted-foreground mt-1">
-            カテゴリー別の質問と回答を管理します。Markdown形式に対応しています。
+            카테고리별 질문과 답변을 관리합니다. 마크다운 형식을 지원합니다.
           </p>
         </div>
         <Button onClick={() => handleOpenDialog()}>
           <Plus className="w-4 h-4 mr-2" />
-          Q&Aを追加
+          문답 추가
         </Button>
       </div>
 
@@ -163,7 +163,7 @@ export default function AdminChatbotQna() {
             <div>
               <CardTitle>Q&A一覧</CardTitle>
               <CardDescription>
-                カテゴリーで絞り込んでQ&Aを管理できます。
+                카테고리별로 필터링하여 문답을 관리할 수 있습니다.
               </CardDescription>
             </div>
             <div className="flex items-center gap-2">
@@ -260,7 +260,7 @@ export default function AdminChatbotQna() {
           <DialogHeader>
             <DialogTitle>{editingQna ? "Q&Aの編集" : "Q&Aの追加"}</DialogTitle>
             <DialogDescription>
-              チャットボットが応答する質問と回答を{editingQna ? "編集" : "追加"}します。回答はMarkdown形式に対応しています。
+              챗봇이 응답할 질문과 답변을 {editingQna ? "更新" : "追加"}합니다. 답변은 마크다운 형식을 지원합니다.
             </DialogDescription>
           </DialogHeader>
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -364,16 +364,16 @@ export default function AdminChatbotQna() {
 
             <DialogFooter>
               <Button type="button" variant="outline" onClick={() => setDialogOpen(false)}>
-                キャンセル
+                취소
               </Button>
               <Button type="submit" disabled={createMutation.isPending || updateMutation.isPending}>
                 {createMutation.isPending || updateMutation.isPending ? (
                   <>
                     <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                    保存中...
+                    저장 중...
                   </>
                 ) : (
-                  editingQna ? "更新" : "追加"
+                  editingQna ? "수정" : "추가"
                 )}
               </Button>
             </DialogFooter>

@@ -26,7 +26,7 @@ export default function AdminPaymentManagement() {
             }`}
           >
             <Clock className="w-4 h-4 inline mr-2" />
-            入金待ち一覧
+            입금 대기 목록
           </button>
           <button
             onClick={() => setSelectedTab("accounts")}
@@ -37,7 +37,7 @@ export default function AdminPaymentManagement() {
             }`}
           >
             <Banknote className="w-4 h-4 inline mr-2" />
-            振込先口座管理
+            입금 계좌 관리
           </button>
           <button
             onClick={() => setSelectedTab("settings")}
@@ -48,7 +48,7 @@ export default function AdminPaymentManagement() {
             }`}
           >
             <Settings className="w-4 h-4 inline mr-2" />
-            自動キャンセル設定
+            자동취소 설정
           </button>
         </div>
 
@@ -103,7 +103,7 @@ function PendingPaymentsList() {
                 <p className="font-bold text-lg price-text">{formatPrice(payment.depositAmount ?? 0)}</p>
                 {remainingHours !== null && (
                   <p className={`text-xs ${isUrgent ? "text-rose-600 font-medium" : "text-muted-foreground"}`}>
-                    {remainingHours > 0 ? `残り${remainingHours}時間` : "期限切れ"}
+                    {remainingHours > 0 ? `${remainingHours}시간 남음` : "期限切れ"}
                   </p>
                 )}
               </div>
@@ -173,7 +173,7 @@ function BankAccountsManagement() {
           <DialogTrigger asChild>
             <Button onClick={() => setEditingAccount(null)}>
               <Plus className="w-4 h-4 mr-2" />
-              口座を追加
+              계좌 추가
             </Button>
           </DialogTrigger>
           <DialogContent>
@@ -207,7 +207,7 @@ function BankAccountsManagement() {
               <div>
                 <p className="font-medium">{account.bankName}</p>
                 <p className="text-sm text-muted-foreground font-mono">{account.accountNumber}</p>
-                <p className="text-sm text-muted-foreground">口座名義: {account.accountHolder}</p>
+                <p className="text-sm text-muted-foreground">예금주: {account.accountHolder}</p>
               </div>
               <div className="flex gap-2">
                 <Button
@@ -224,7 +224,7 @@ function BankAccountsManagement() {
                   size="sm"
                   variant="destructive"
                   onClick={() => {
-                    if (confirm("本当に削除しますか？")) {
+                    if (confirm("정말 삭제하시겠습니까?")) {
                       deleteAccount.mutate({ id: account.id });
                     }
                   }}
@@ -284,7 +284,7 @@ function BankAccountForm({ account, onSubmit, isPending }: { account: any; onSub
         />
       </div>
       <Button type="submit" disabled={isPending} className="w-full">
-        {isPending ? "処理中..." : account ? "更新" : "追加"}
+        {isPending ? "処理中..." : account ? "수정" : "추가"}
       </Button>
     </form>
   );
@@ -307,7 +307,7 @@ function AutoCancelSettings() {
       <div className="bg-card border rounded-lg p-6">
         <h3 className="font-semibold mb-4">自動キャンセル時間の設定</h3>
         <p className="text-sm text-muted-foreground mb-6">
-          注文後、設定された時間内に入金がない場合、注文は自動的にキャンセルされます。
+          주문 후 설정된 시간 내에 입금하지 않으면 주문이 자동으로 취소됩니다.
         </p>
 
         <div className="grid grid-cols-4 gap-3 mb-6">
@@ -330,7 +330,7 @@ function AutoCancelSettings() {
 
         <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-6">
           <p className="text-sm text-amber-900">
-            現在の設定: 注文後 <strong>{selectedHours}時間</strong> 以内に未入金の場合、自動キャンセル
+            현재 설정: 주문 후 <strong>{selectedHours}時間</strong> 이내 미입금 시 자동 취소
           </p>
         </div>
 

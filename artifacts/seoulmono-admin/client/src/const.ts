@@ -5,7 +5,7 @@ export const getLoginUrl = () => {
   const appId = import.meta.env.VITE_APP_ID;
 
   if (!oauthPortalUrl || !appId) {
-    // seoulmono-admin 는 /admin/ 아래에서 서비스된다.
+    // sorosoro-admin2 는 /admin/ 아래에서 서비스된다.
     // 이 값은 window.location.href 에 그대로 쓰이는 브라우저 절대경로라
     // 접두사를 빼면 /admin 밖의 쇼핑몰로 튕긴다.
     return "/admin/login";

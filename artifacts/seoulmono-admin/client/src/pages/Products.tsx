@@ -53,13 +53,13 @@ export default function Products() {
     { label: "その他",     slug: "etc",            href: "/products?category=etc" },
   ];
 
-  const titleMap: Record<string, string> = { featured: "おすすめ商品", new: "新商品", best: "ベストセラー", sale: "特価商品" };
-  const pageTitle = filter ? titleMap[filter] ?? "すべての商品" : selectedCat ? selectedCat.name : "すべての商品";
+  const titleMap: Record<string, string> = { featured: "추천 상품", new: "신상품", best: "베스트셀러", sale: "특가 상품" };
+  const pageTitle = filter ? titleMap[filter] ?? "전체상품" : selectedCat ? selectedCat.name : "전체상품";
 
   useSEO({
     title: pageTitle,
-    description: `${pageTitle} - ソウルモノの豊富な商品ラインナップをご覧ください。`,
-    keywords: `${pageTitle}, 商品, ショッピング, オンラインショップ`,
+    description: `${pageTitle} - 탈모학교의 다양한 상품을 둘러보세요.`,
+    keywords: `${pageTitle}, 상품, 쇼핑, 온라인쇼핑`,
   });
 
   return (
@@ -102,7 +102,7 @@ export default function Products() {
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
               <div>
                 <h1 className="text-xl font-bold">{pageTitle}</h1>
-                <p className="text-sm text-muted-foreground mt-0.5">全{data?.total ?? 0}件の商品</p>
+                <p className="text-sm text-muted-foreground mt-0.5">총 {data?.total ?? 0}개의 상품</p>
               </div>
               <div className="flex items-center gap-3">
                 <div className="relative">

@@ -69,7 +69,7 @@ export default function Compare() {
         <div className="flex items-center gap-3 mb-6">
           <GitCompare className="w-8 h-8 text-primary" />
           <h1 className="text-2xl font-bold">商品比較</h1>
-          <Badge variant="secondary">{products.length}点</Badge>
+          <Badge variant="secondary">{products.length}개 상품</Badge>
         </div>
 
         <div className="overflow-x-auto">
@@ -121,7 +121,7 @@ export default function Compare() {
                           <div>
                             <span className="text-lg font-bold text-destructive">{formatPrice(product.salePrice)}</span>
                             <div className="text-xs text-muted-foreground mt-1">
-                              {Math.round(((product.price - product.salePrice) / product.price) * 100)}% OFF
+                              {Math.round(((product.price - product.salePrice) / product.price) * 100)}% 할인
                             </div>
                           </div>
                         ) : (
@@ -133,7 +133,7 @@ export default function Compare() {
                       )}
                       {field.key === "stock" && (
                         <span className={product.stock > 0 ? "text-green-600 dark:text-green-400" : "text-destructive"}>
-                          {product.stock > 0 ? `${product.stock}個` : "在庫切れ"}
+                          {product.stock > 0 ? `${product.stock}개` : "品切れ"}
                         </span>
                       )}
                       {field.key === "rating" && (
@@ -143,7 +143,7 @@ export default function Compare() {
                         </div>
                       )}
                       {field.key === "reviewCount" && (
-                        <span className="text-sm">{product.reviewCount || 0}件</span>
+                        <span className="text-sm">{product.reviewCount || 0}개</span>
                       )}
                       {field.key === "description" && (
                         <p className="text-sm text-muted-foreground line-clamp-3 text-left px-2">
@@ -162,12 +162,12 @@ export default function Compare() {
                       <Link href={productHref(product.slug)}>
                         <Button className="w-full">
                           <ShoppingCart className="w-4 h-4 mr-2" />
-                          詳細を見る
+                          상세보기
                         </Button>
                       </Link>
                       <Button variant="outline" className="w-full">
                         <Heart className="w-4 h-4 mr-2" />
-                        お気に入り
+                        위시리스트
                       </Button>
                     </div>
                   </td>

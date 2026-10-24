@@ -171,7 +171,7 @@ export default function KoreanAddressSearch({
             className="flex items-center gap-1.5 text-xs text-blue-600 dark:text-blue-400 hover:underline mb-2"
           >
             <Globe className="w-3.5 h-3.5" />
-            英語住所 {showEnglish ? "閉じる" : "確認/修正"}
+            영문 주소 {showEnglish ? "접기" : "확인/수정"}
             {showEnglish ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
           </button>
 
@@ -179,7 +179,7 @@ export default function KoreanAddressSearch({
             <div className="space-y-2 p-3 bg-blue-50 dark:bg-blue-950/20 rounded-lg border border-blue-200 dark:border-blue-800">
               <p className="text-xs text-blue-600 dark:text-blue-400 font-medium flex items-center gap-1">
                 <Globe className="w-3 h-3" />
-                English Address （国際配送用）
+                English Address (국제배송용)
               </p>
               <Input
                 readOnly
@@ -201,7 +201,7 @@ export default function KoreanAddressSearch({
                 )}
               </div>
               <p className="text-[11px] text-muted-foreground">
-                国際配送のため英語住所が必要です。詳細住所を入力すると自動的に英語に翻訳されます。
+                국제배송을 위해 영문 주소가 필요합니다. 상세주소를 입력하면 자동으로 영문으로 번역됩니다.
               </p>
             </div>
           )}
@@ -214,7 +214,7 @@ export default function KoreanAddressSearch({
           <DialogHeader className="p-4 pb-0">
             <DialogTitle className="flex items-center gap-2">
               <MapPin className="w-5 h-5" />
-              住所検索
+              주소 검색
             </DialogTitle>
           </DialogHeader>
           <div className="h-[450px]">

@@ -68,11 +68,11 @@ export default function DiscussionList() {
     const minutes = Math.floor(diff / 60000);
     const hours = Math.floor(diff / 3600000);
     const days = Math.floor(diff / 86400000);
-    if (minutes < 1) return "たった今";
-    if (minutes < 60) return `${minutes}分前`;
-    if (hours < 24) return `${hours}時間前`;
-    if (days < 7) return `${days}日前`;
-    return d.toLocaleDateString("ja-JP");
+    if (minutes < 1) return "방금 전";
+    if (minutes < 60) return `${minutes}분 전`;
+    if (hours < 24) return `${hours}시간 전`;
+    if (days < 7) return `${days}일 전`;
+    return d.toLocaleDateString("ko-KR");
   };
 
   return (
@@ -93,7 +93,7 @@ export default function DiscussionList() {
               </div>
               {user ? (
                 <Button onClick={() => navigate("/discussions/write")} className="gap-2">
-                  <Plus className="h-4 w-4" /> 新しいディスカッションを始める
+                  <Plus className="h-4 w-4" /> 새 토론 시작
                 </Button>
               ) : (
                 <Button asChild>
@@ -113,7 +113,7 @@ export default function DiscussionList() {
               className="rounded-full"
               onClick={() => handleCategoryChange(undefined)}
             >
-              すべてのカテゴリー
+              전체 카테고리
             </Button>
             {categories.map((cat: any) => (
               <Button
@@ -183,7 +183,7 @@ export default function DiscussionList() {
                   <p className="text-muted-foreground mb-4">最初のディスカッションを始めてみましょう！</p>
                   {user && (
                     <Button onClick={() => navigate("/discussions/write")} className="gap-2">
-                      <Plus className="h-4 w-4" /> 新しいディスカッションを始める
+                      <Plus className="h-4 w-4" /> 새 토론 시작
                     </Button>
                   )}
                 </CardContent>
@@ -206,12 +206,12 @@ export default function DiscussionList() {
                             <div className="flex items-center gap-2 mb-1 flex-wrap">
                               {discussion.isPinned === 1 && (
                                 <Badge variant="secondary" className="gap-1 text-xs">
-                                  <Pin className="h-3 w-3" /> 固定
+                                  <Pin className="h-3 w-3" /> 고정
                                 </Badge>
                               )}
                               {discussion.isClosed === 1 && (
                                 <Badge variant="outline" className="gap-1 text-xs">
-                                  <Lock className="h-3 w-3" /> 終了
+                                  <Lock className="h-3 w-3" /> 마감
                                 </Badge>
                               )}
                               {discussion.categoryId && (
@@ -229,7 +229,7 @@ export default function DiscussionList() {
                             <div className="flex items-center gap-3 text-xs text-muted-foreground flex-wrap">
                               <span className="flex items-center gap-1">
                                 <User className="h-3 w-3" />
-                                {discussion.userName ?? "匿名"}
+                                {discussion.userName ?? "익명"}
                               </span>
                               <span>{formatDate(discussion.createdAt)}</span>
                               {(discussion.tags as string[] | null)?.slice(0, 3).map((tag) => (
@@ -269,7 +269,7 @@ export default function DiscussionList() {
             {/* 총 게시글 수 */}
             {data && (
               <p className="text-center text-sm text-muted-foreground mt-4">
-                全 {data.total}件のディスカッション
+                총 {data.total}개의 토론
               </p>
             )}
           </div>

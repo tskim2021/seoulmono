@@ -39,6 +39,8 @@ import { stripeRouter } from "./routers/stripe";
 import { faqRouter } from "./routers/faq";
 import { promoCodeRouter } from "./routers/promoCode";
 import { adminLogsRouter } from "./routers/adminLogs";
+import { fulfilmentRouter } from "./routers/fulfilment";
+import { emailPreviewRouter } from "./routers/emailPreview";
 
 export const appRouter = router({
   system: systemRouter,
@@ -87,6 +89,8 @@ export const appRouter = router({
   faq: faqRouter,
   promoCode: promoCodeRouter,
   adminLogs: adminLogsRouter,
+  fulfilment: fulfilmentRouter,
+  emailPreview: emailPreviewRouter,
 });
 
 export type AppRouter = typeof appRouter;

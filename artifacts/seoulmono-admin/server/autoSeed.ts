@@ -65,7 +65,7 @@ import { drizzle } from "drizzle-orm/mysql2";
       const hash = await bcrypt.hash("admin1234", 10);
       await db.insert(users).values({
         openId: "system-admin",
-        name: "ソウルモノ",
+        name: "탈모학교",
         email: "admin@talmoschool.com",
         loginMethod: "email",
         role: "admin",
@@ -81,11 +81,11 @@ import { drizzle } from "drizzle-orm/mysql2";
   async function ensureTestUsers(db: any) {
     try {
       const testAccounts = [
-        { email: "test1@talmoschool.com", name: "テストユーザー1", phone: "010-1111-1111", openId: "local_test1@talmoschool.com" },
-        { email: "test2@talmoschool.com", name: "テストユーザー2", phone: "010-2222-2222", openId: "local_test2@talmoschool.com" },
-        { email: "test3@talmoschool.com", name: "テストユーザー3", phone: "010-3333-3333", openId: "local_test3@talmoschool.com" },
-        { email: "test4@talmoschool.com", name: "テストユーザー4", phone: "010-4444-4444", openId: "local_test4@talmoschool.com" },
-        { email: "test5@talmoschool.com", name: "テストユーザー5", phone: "010-5555-5555", openId: "local_test5@talmoschool.com" },
+        { email: "test1@talmoschool.com", name: "테스트유저1", phone: "010-1111-1111", openId: "local_test1@talmoschool.com" },
+        { email: "test2@talmoschool.com", name: "테스트유저2", phone: "010-2222-2222", openId: "local_test2@talmoschool.com" },
+        { email: "test3@talmoschool.com", name: "테스트유저3", phone: "010-3333-3333", openId: "local_test3@talmoschool.com" },
+        { email: "test4@talmoschool.com", name: "테스트유저4", phone: "010-4444-4444", openId: "local_test4@talmoschool.com" },
+        { email: "test5@talmoschool.com", name: "테스트유저5", phone: "010-5555-5555", openId: "local_test5@talmoschool.com" },
       ];
       const hash = await bcrypt.hash("1234gg!", 10);
       let created = 0;
@@ -371,7 +371,7 @@ import { drizzle } from "drizzle-orm/mysql2";
           boardId: boardMap["review"],
           userId: adminId,
           title: review.title,
-          content: `[お客様レビュー] ${review.product}\n\n${review.title}`,
+          content: `[고객 리뷰] ${review.product}\n\n${review.title}`,
           authorName: review.author,
           viewCount: 50 + Math.floor(Math.random() * 200),
           isNotice: 0,
@@ -384,7 +384,7 @@ import { drizzle } from "drizzle-orm/mysql2";
       }
 
       for (const title of realInfoTitles) {
-        const content = `${title}\n\nこの記事では「${title.replace("?", "")}」について詳しく解説します。\n\nこの医薬品の成分、効能、服用方法、副作用などの情報を提供します。\n\n詳しくは医療の専門家にご相談ください。\n\n※ 本情報は参考用です。医師の処方に従ってご使用ください。`;
+        const content = `${title}\n\n이 글에서는 ${title.replace("?", "")}에 대해 자세히 알아보겠습니다.\n\n해당 의약품의 성분, 효능, 복용법, 부작용 등에 대한 정보를 제공합니다.\n\n자세한 사항은 전문 의료인과 상담하시기 바랍니다.\n\n※ 본 정보는 참고용이며, 의사의 처방에 따라 복용하시기 바랍니다.`;
         await db.insert(posts).values({
           boardId: boardMap["info"],
           userId: adminId,
@@ -474,10 +474,10 @@ import { drizzle } from "drizzle-orm/mysql2";
 
       const categoryMap: Record<string, number> = {};
       const categoryData = [
-        { key: "탈모헤어", name: "薄毛・ヘアケア", slug: "hair-loss", description: "薄毛治療およびヘアケア製品", sortOrder: 1 },
-        { key: "성기능", name: "男性機能", slug: "sexual-health", description: "男性機能改善製品", sortOrder: 2 },
-        { key: "피부미용", name: "スキンケア・美容", slug: "skin-beauty", description: "スキンケア・美容製品", sortOrder: 3 },
-        { key: "다이어트", name: "ダイエット", slug: "diet", description: "ダイエット・体重管理製品", sortOrder: 4 },
+        { name: "탈모헤어", slug: "hair-loss", description: "탈모 치료 및 헤어케어 제품", sortOrder: 1 },
+        { name: "성기능", slug: "sexual-health", description: "성기능 개선 제품", sortOrder: 2 },
+        { name: "피부미용", slug: "skin-beauty", description: "피부미용 및 스킨케어 제품", sortOrder: 3 },
+        { name: "다이어트", slug: "diet", description: "다이어트 및 체중관리 제품", sortOrder: 4 },
       ];
 
       for (const cat of categoryData) {
@@ -488,7 +488,7 @@ import { drizzle } from "drizzle-orm/mysql2";
           sortOrder: cat.sortOrder,
           isActive: 1,
         }).$returningId();
-        categoryMap[cat.key] = catId; // key = Korean source category label used in seed data
+        categoryMap[cat.name] = catId;
       }
 
       const usedSlugs = new Set<string>();
@@ -560,7 +560,7 @@ import { drizzle } from "drizzle-orm/mysql2";
       let adminId: number;
       if (adminUser.length === 0) {
         const [{ id: newAdminId }] = await db.insert(users).values({
-          name: "ソウルモノ",
+          name: "탈모학교",
           email: "admin@talmoschool.com",
           role: "admin",
           grade: "vvip",
@@ -575,12 +575,12 @@ import { drizzle } from "drizzle-orm/mysql2";
       }
 
       const boardData = [
-        { slug: "notice", name: "お知らせ", description: "ソウルモノからのお知らせ", boardType: "notice" as const, sortOrder: 1 },
-        { slug: "event", name: "イベント", description: "ソウルモノのイベント", boardType: "notice" as const, sortOrder: 2 },
-        { slug: "info", name: "情報シェア", description: "健康情報・医薬品情報の共有", boardType: "info" as const, sortOrder: 3 },
-        { slug: "qna", name: "Q&A", description: "商品に関するご質問と回答", boardType: "qna" as const, sortOrder: 4 },
-        { slug: "free", name: "自由掲示板", description: "自由に交流できるスペース", boardType: "free" as const, sortOrder: 5 },
-        { slug: "review", name: "お客様レビュー", description: "ソウルモノ商品のレビュー", boardType: "review" as const, sortOrder: 6 },
+        { slug: "notice", name: "공지사항", description: "탈모학교 공지사항", boardType: "notice" as const, sortOrder: 1 },
+        { slug: "event", name: "이벤트", description: "탈모학교 이벤트", boardType: "notice" as const, sortOrder: 2 },
+        { slug: "info", name: "정보나눔", description: "건강 정보 및 의약품 정보 공유", boardType: "info" as const, sortOrder: 3 },
+        { slug: "qna", name: "질문과답변", description: "상품 문의 및 질문답변", boardType: "qna" as const, sortOrder: 4 },
+        { slug: "free", name: "자유게시판", description: "자유로운 소통 공간", boardType: "free" as const, sortOrder: 5 },
+        { slug: "review", name: "고객 리뷰", description: "탈모학교 쇼핑 상품 리뷰", boardType: "review" as const, sortOrder: 6 },
       ];
 
       const boardMap: Record<string, number> = {};
@@ -716,7 +716,7 @@ import { drizzle } from "drizzle-orm/mysql2";
 
       for (let i = 0; i < infoTitles.length; i++) {
         const title = infoTitles[i];
-        const content = `${title}\n\nこの記事では「${title.replace("?", "")}」について詳しく解説します。\n\nこの医薬品の成分、効能、服用方法、副作用などの情報を提供します。\n\n詳しくは医療の専門家にご相談ください。\n\n※ 本情報は参考用です。医師の処方に従ってご使用ください。`;
+        const content = `${title}\n\n이 글에서는 ${title.replace("?", "")}에 대해 자세히 알아보겠습니다.\n\n해당 의약품의 성분, 효능, 복용법, 부작용 등에 대한 정보를 제공합니다.\n\n자세한 사항은 전문 의료인과 상담하시기 바랍니다.\n\n※ 본 정보는 참고용이며, 의사의 처방에 따라 복용하시기 바랍니다.`;
         await db.insert(posts).values({
           boardId: boardMap["info"],
           userId: adminId,
@@ -739,8 +739,8 @@ import { drizzle } from "drizzle-orm/mysql2";
   async function seedDefaultSettings(db: any) {
     try {
       const defaults = [
-        { settingKey: "registrationPoints", settingValue: "2000", description: "会員登録ポイント" },
-        { settingKey: "defaultProductPointRate", settingValue: "0", description: "基本商品ポイント還元率 (%)" },
+        { settingKey: "registrationPoints", settingValue: "2000", description: "회원가입 적립 포인트" },
+        { settingKey: "defaultProductPointRate", settingValue: "0", description: "기본 상품 포인트 적립률 (%)" },
       ];
       for (const s of defaults) {
         const existing = await db.select().from(siteSettings).where(eq(siteSettings.settingKey, s.settingKey)).limit(1);
@@ -760,28 +760,28 @@ import { drizzle } from "drizzle-orm/mysql2";
       if (Number(existing[0]?.count ?? 0) > 0) return;
 
       const stripeApiConfig = JSON.stringify({
-        publishableKey: process.env.STRIPE_PUBLISHABLE_KEY ?? "",
-        secretKey: process.env.STRIPE_SECRET_KEY ?? "",
-        currency: "jpy",
+        publishableKey: "",
+        secretKey: "",
+        currency: "krw",
         webhookSecret: "",
       });
 
       await db.insert(paymentMethods).values([
         {
           methodCode: "bank_transfer",
-          methodName: "銀行振込",
+          methodName: "무통장 입금",
           isEnabled: 1,
           sortOrder: 1,
           apiConfig: null,
-          description: "銀行口座への振込",
+          description: "국내 은행 계좌 이체",
         },
         {
           methodCode: "stripe",
-          methodName: "クレジットカード (Stripe)",
+          methodName: "신용카드 (Stripe)",
           isEnabled: 1,
           sortOrder: 2,
           apiConfig: stripeApiConfig,
-          description: "Stripeによるクレジットカード決済",
+          description: "Stripe 글로벌 카드 결제",
         },
       ]).onDuplicateKeyUpdate({ set: { id: sql`id` } });
 
@@ -831,10 +831,10 @@ import { drizzle } from "drizzle-orm/mysql2";
     try {
 
       const defaultCarriers = [
-        { name: "CJ大韓通運", code: "cj", trackingUrlTemplate: "https://www.cjlogistics.com/ko/tool/parcel/tracking?gnbInvcNo={tracking}", isActive: 1, sortOrder: 1 },
-        { name: "韓国郵便 EMS", code: "ems", trackingUrlTemplate: "https://service.epost.go.kr/trace.RetrieveEmsRigiTraceList.comm?POST_CODE={tracking}", isActive: 1, sortOrder: 2 },
-        { name: "ハンジン宅配", code: "hanjin", trackingUrlTemplate: "https://www.hanjin.com/kor/CMS/DeliveryMgr/WaybillResult.do?mCode=MN038&schLang=KR&wblnumList={tracking}", isActive: 1, sortOrder: 3 },
-        { name: "ロジェン宅配", code: "lotte", trackingUrlTemplate: "https://www.lotteglogis.com/home/reservation/tracking/index?InvNo={tracking}", isActive: 1, sortOrder: 4 },
+        { name: "CJ대한통운", code: "cj", trackingUrlTemplate: "https://www.cjlogistics.com/ko/tool/parcel/tracking?gnbInvcNo={tracking}", isActive: 1, sortOrder: 1 },
+        { name: "우체국 EMS", code: "ems", trackingUrlTemplate: "https://service.epost.go.kr/trace.RetrieveEmsRigiTraceList.comm?POST_CODE={tracking}", isActive: 1, sortOrder: 2 },
+        { name: "한진택배", code: "hanjin", trackingUrlTemplate: "https://www.hanjin.com/kor/CMS/DeliveryMgr/WaybillResult.do?mCode=MN038&schLang=KR&wblnumList={tracking}", isActive: 1, sortOrder: 3 },
+        { name: "로젠택배", code: "lotte", trackingUrlTemplate: "https://www.lotteglogis.com/home/reservation/tracking/index?InvNo={tracking}", isActive: 1, sortOrder: 4 },
         { name: "DHL", code: "dhl", trackingUrlTemplate: "https://www.dhl.com/kr-ko/home/tracking.html?tracking-id={tracking}", isActive: 1, sortOrder: 5 },
         { name: "FedEx", code: "fedex", trackingUrlTemplate: "https://www.fedex.com/fedextrack/?trknbr={tracking}", isActive: 1, sortOrder: 6 },
       ];

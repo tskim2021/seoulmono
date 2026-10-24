@@ -6,59 +6,59 @@ import { invokeLLM } from "../_core/llm";
 const sectionTypeEnum = z.enum(["faq", "usage", "dosage", "sideEffects", "precautions"]);
 
 // ─── 시스템 프롬프트 ───
-const EXPERT_SYSTEM_PROMPT = `あなたは健康食品・医薬部外品に詳しい薬剤師であり、コンテンツエディターです。
+const EXPERT_SYSTEM_PROMPT = `당신은 건강기능식품·의약외품 전문 약사이자 콘텐츠 에디터입니다.
 
-基本原則:
-1. **正確性**: 科学的根拠のある情報のみ記載します。誇張・虚偽の表現は決して使いません。
-2. **簡潔性**: 本当に必要な要点だけを記載します。無理に内容を水増ししません。
-3. **自然さ**: 番号の羅列や箇条書きではなく、自然に読める文章で書きます。
+핵심 원칙:
+1. **정확성**: 과학적 근거가 있는 정보만 작성합니다. 과장·허위 표현을 절대 사용하지 않습니다.
+2. **간결성**: 꼭 필요한 핵심 정보만 담습니다. 억지로 내용을 늘리지 않습니다.
+3. **자연스러움**: 번호 나열이나 목록 형식이 아닌, 자연스럽게 읽히는 문장으로 작성합니다.
 
-出力形式:
-- 必ず有効なJSON配列のみを返してください。
-- Markdownのコードブロックや説明文は付けず、純粋なJSONのみを返してください。
-- 各項目のcontentは、自然につながる2〜4文の文章で書いてください。番号(1,2,3)や箇条書き記号(•,-)による羅列は絶対に使わないでください。
-- 改行が必要な場合は \\n を使用してください。
-- 必ず3件の項目のみを返してください。`;
+출력 형식:
+- 반드시 유효한 JSON 배열만 반환하세요.
+- 마크다운 코드블록, 설명 텍스트 없이 순수 JSON만 반환하세요.
+- 각 항목의 content는 자연스럽게 이어지는 2~4문장의 글로 작성하세요. 번호(1,2,3)나 불릿(•,-) 나열 형식은 절대 사용하지 마세요.
+- 줄바꿈이 필요한 경우 \\n을 사용하세요.
+- 정확히 3개의 항목만 반환하세요.`;
 
 // ─── 섹션별 프롬프트 (간결 버전) ───
 const SECTION_PROMPTS: Record<string, string> = {
-  faq: `次の商品に関する**よくある質問(FAQ)**を、必ず3件だけ作成してください。
+  faq: `다음 상품에 대한 **자주 묻는 질문(FAQ)**을 정확히 3개만 작성해주세요.
 
-返却形式: [{"title": "質問", "content": "回答"}, ...]
+반환 형식: [{"title": "질문", "content": "답변"}, ...]
 
-最もよくある重要な質問を3つだけ選んでください。質問はお客様が実際に尋ねる話し言葉で、回答は番号の羅列なしで自然につながる文章で書いてください。`,
+가장 많이 물어볼 만한 핵심 질문 3가지만 선별하세요. 질문은 고객이 실제로 물어보는 구어체로, 답변은 번호 나열 없이 자연스럽게 이어지는 문장으로 작성하세요.`,
 
-  usage: `次の商品の**使用方法**を、必ず3項目で作成してください。
+  usage: `다음 상품의 **사용방법**을 정확히 3개 항목으로 작성해주세요.
 
-返却形式: [{"title": "項目タイトル", "content": "詳細説明"}, ...]
+반환 형식: [{"title": "항목 제목", "content": "상세 설명"}, ...]
 
-ユーザーが必ず知っておくべき主要な使い方を3つだけ含めてください。contentは番号や箇条書きなしで、自然につながる文章で書いてください。`,
+사용자가 반드시 알아야 할 핵심 사용법 3가지만 담으세요. content는 번호나 목록 없이 자연스럽게 이어지는 문장으로 작성하세요.`,
 
-  dosage: `次の商品の**用量・用法**を、必ず3項目で作成してください。
+  dosage: `다음 상품의 **용량과 용법**을 정확히 3개 항목으로 작성해주세요.
 
-返却形式: [{"title": "項目タイトル", "content": "詳細説明"}, ...]
+반환 형식: [{"title": "항목 제목", "content": "상세 설명"}, ...]
 
-服用量、服用時間、注意点など、最も重要な3つだけを含めてください。contentは番号や箇条書きなしで、自然につながる文章で書いてください。`,
+복용량, 복용 시간, 주의할 점 등 가장 중요한 3가지만 담으세요. content는 번호나 목록 없이 자연스럽게 이어지는 문장으로 작성하세요.`,
 
-  sideEffects: `次の商品の**副作用情報**を、必ず3項目で作成してください。
+  sideEffects: `다음 상품의 **부작용 정보**를 정확히 3개 항목으로 작성해주세요.
 
-返却形式: [{"title": "副作用の項目", "content": "詳細説明"}, ...]
+반환 형식: [{"title": "부작용 항목", "content": "상세 설명"}, ...]
 
-最も伝えるべき主要な副作用情報を3つだけ含めてください。contentは番号や箇条書きなしで、自然につながる文章で書いてください。不必要に不安を煽らず、重要な情報は漏らさないでください。`,
+가장 알려야 할 핵심 부작용 정보 3가지만 담으세요. content는 번호나 목록 없이 자연스럽게 이어지는 문장으로 작성하세요. 불필요한 공포감을 주지 않되, 중요한 정보는 빠뜨리지 마세요.`,
 
-  precautions: `次の商品の**注意事項**を、必ず3項目で作成してください。
+  precautions: `다음 상품의 **주의사항**을 정확히 3개 항목으로 작성해주세요.
 
-返却形式: [{"title": "注意事項の項目", "content": "詳細説明"}, ...]
+반환 형식: [{"title": "주의사항 항목", "content": "상세 설명"}, ...]
 
-ユーザーが必ず知っておくべき最も重要な注意事項を3つだけ含めてください。contentは番号や箇条書きなしで、自然につながる文章で書いてください。`,
+사용자가 반드시 알아야 할 가장 중요한 주의사항 3가지만 담으세요. content는 번호나 목록 없이 자연스럽게 이어지는 문장으로 작성하세요.`,
 };
 
 const SECTION_LABELS: Record<string, string> = {
-  faq: "よくある質問 (FAQ)",
-  usage: "使用方法",
-  dosage: "用量・用法",
-  sideEffects: "副作用",
-  precautions: "注意事項",
+  faq: "자주 묻는 질문 (FAQ)",
+  usage: "사용방법",
+  dosage: "용량/용법",
+  sideEffects: "부작용",
+  precautions: "주의사항",
 };
 
 export const productInfoRouter = router({
@@ -128,9 +128,9 @@ export const productInfoRouter = router({
 
     try {
       const productContext = [
-        `商品名: ${input.productName}`,
-        input.productDescription ? `商品説明: ${input.productDescription}` : "",
-        `\nこの商品の特性（内服薬、外用薬、健康食品、化粧品など）に合わせて内容を調整してください。`,
+        `상품명: ${input.productName}`,
+        input.productDescription ? `상품 설명: ${input.productDescription}` : "",
+        `\n이 상품의 특성(경구 복용제, 외용제, 건강기능식품, 화장품 등)에 맞게 내용을 조정하세요.`,
       ].filter(Boolean).join("\n");
 
       const response = await invokeLLM({
@@ -158,7 +158,7 @@ export const productInfoRouter = router({
       ).slice(0, 3); // 최대 3개만 저장
 
       if (validItems.length === 0) {
-        return { success: false, count: 0, label, error: "AIが有効なコンテンツを生成できませんでした。もう一度お試しください。" };
+        return { success: false, count: 0, label, error: "AI가 유효한 콘텐츠를 생성하지 못했습니다. 다시 시도해주세요." };
       }
 
       // 생성된 항목을 DB에 저장
@@ -176,7 +176,7 @@ export const productInfoRouter = router({
       return { success: true, count: sections.length, label };
     } catch (error) {
       console.error("[ProductInfo] LLM generation failed:", error);
-      return { success: false, count: 0, label, error: "AI生成に失敗しました。しばらくしてからもう一度お試しください。" };
+      return { success: false, count: 0, label, error: "AI 생성에 실패했습니다. 잠시 후 다시 시도해주세요." };
     }
   }),
 
@@ -191,31 +191,31 @@ export const productInfoRouter = router({
         messages: [
           {
             role: "system",
-            content: `あなたは健康食品・医薬部外品に詳しい薬剤師であり、商品説明の作成の専門家です。
+            content: `당신은 건강기능식품·의약외품 전문 약사이자 상품 설명 작성 전문가입니다.
 
-基本原則:
-1. **事実に基づく**: 科学的根拠のある情報のみ記載します。創作や誇張はしません。
-2. **情報なしの明記**: 確認できない情報は「該当する情報を確認できません」と正直に記載します。
-3. **簡潔さ**: 要点だけを記載します。無理に内容を水増ししません。
-4. **自然さ**: 番号の羅列や箇条書きではなく、自然に読める文章で書きます。
+핵심 원칙:
+1. **사실 기반**: 과학적 근거가 있는 정보만 작성합니다. 창작하거나 과장하지 않습니다.
+2. **정보 없음 표기**: 확인할 수 없는 정보는 "해당 정보를 확인할 수 없습니다"라고 정직하게 표기합니다.
+3. **간결함**: 핵심 정보만 담습니다. 억지로 내용을 늘리지 않습니다.
+4. **자연스러움**: 번호 나열이나 목록 형식이 아닌, 자연스럽게 읽히는 문장으로 작성합니다.
 
-出力形式:
-- HTML形式で書いてください。（<h3>、<p>、<strong>などを使用）
-- Markdownのコードブロックや説明文は付けず、純粋なHTMLのみを返してください。
-- 次の3つのセクションで構成してください:
-  1. 商品概要（2〜3文）
-  2. 主な成分と特徴（2〜3文）
-  3. 服用・使用の簡単な案内（1〜2文）
-- 各セクションは<h3>タグで見出しを付け、<p>タグで内容を書いてください。
-- 全体の分量は200文字以内で簡潔に書いてください。`,
+출력 형식:
+- HTML 형식으로 작성하세요. (<h3>, <p>, <strong> 등 사용)
+- 마크다운 코드블록이나 설명 텍스트 없이 순수 HTML만 반환하세요.
+- 다음 3가지 섹션으로 구성하세요:
+  1. 상품 개요 (2~3문장)
+  2. 주요 성분 및 특징 (2~3문장)
+  3. 복용/사용 간단 안내 (1~2문장)
+- 각 섹션은 <h3> 태그로 제목을 달고, <p> 태그로 내용을 작성하세요.
+- 전체 분량은 200자 이내로 간결하게 작성하세요.`,
           },
           {
             role: "user",
             content: [
-              `商品名: ${input.productName}`,
-              input.productDescription ? `商品説明: ${input.productDescription}` : "",
-              `\nこの商品の特性（内服薬、外用薬、健康食品、化粧品など）に合わせて内容を調整してください。`,
-              `\n事実でない内容は絶対に含めないでください。確認できない情報は「該当する情報を確認できません」と記載してください。`,
+              `상품명: ${input.productName}`,
+              input.productDescription ? `상품 설명: ${input.productDescription}` : "",
+              `\n이 상품의 특성(경구 복용제, 외용제, 건강기능식품, 화장품 등)에 맞게 내용을 조정하세요.`,
+              `\n사실이 아닌 내용은 절대 포함하지 마세요. 확인할 수 없는 정보는 "해당 정보를 확인할 수 없습니다"라고 표기하세요.`,
             ].filter(Boolean).join("\n"),
           },
         ],
@@ -223,7 +223,7 @@ export const productInfoRouter = router({
 
       const rawContent = response.choices?.[0]?.message?.content;
       if (!rawContent || typeof rawContent !== "string" || rawContent.trim().length === 0) {
-        return { success: false, content: "", error: "AIが有効なコンテンツを生成できませんでした。" };
+        return { success: false, content: "", error: "AI가 유효한 콘텐츠를 생성하지 못했습니다." };
       }
 
       // 마크다운 코드블록 제거
@@ -233,7 +233,7 @@ export const productInfoRouter = router({
       return { success: true, content };
     } catch (error) {
       console.error("[ProductInfo] Description generation failed:", error);
-      return { success: false, content: "", error: "AI生成に失敗しました。しばらくしてからもう一度お試しください。" };
+      return { success: false, content: "", error: "AI 생성에 실패했습니다. 잠시 후 다시 시도해주세요." };
     }
   }),
 

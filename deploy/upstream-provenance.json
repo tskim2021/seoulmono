@@ -1,0 +1,18 @@
+{
+  "source_repository": "https://github.com/tskim2021/sorosoroseoul",
+  "source_commit": "e3a08208720a831c5d8d398ce605c9e790cf3a1c",
+  "web_source": "artifacts/shop-dist-snapshot",
+  "api_source": "artifacts/api-server-compiled-snapshot/index.mjs",
+  "admin_source": "artifacts/sorosoro-admin2-live-snapshot",
+  "app_source": "artifacts/allddaom-app",
+  "source_api_sha256": "84da0e47df2a3f386de57081f6a3c1f1a9c1dbb85641ebd72837d8c55370cba2",
+  "source_api_matches_live_server": true,
+  "changes": [
+    "brand and domain substitution",
+    "original logo wordmark name substitution; original mascot and layout retained",
+    "admin display-only Japanese text; original status values and DB adapter retained",
+    "loopback server binding and environment secrets",
+    "independent database and original admin credential preservation",
+    "app domain, display name and com.seoulmono.app identity; original Git screens retained"
+  ]
+}

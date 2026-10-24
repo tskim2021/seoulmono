@@ -6,7 +6,7 @@
  * 한 화면씩 갈아끼우는 방식으로 연결한다.
  *
  * 규칙:
- *  - 기존 g5_* / seoulmono_* / va_* 테이블은 스키마를 변경하지 않는다.
+ *  - 기존 g5_* / allddaom_* / va_* 테이블은 스키마를 변경하지 않는다.
  *  - 탈모2 고유 기능용 신규 테이블은 drizzle 쪽 a2_* 접두사로만 만든다.
  */
 import crypto from "crypto";
@@ -17,7 +17,7 @@ let _pool: mysql.Pool | null = null;
 export function getG5Pool(): mysql.Pool {
   if (!_pool) {
     const url = process.env.SHOP_DATABASE_URL || process.env.DATABASE_URL;
-    if (!url) throw new Error("SHOP_DATABASE_URL（またはDATABASE_URL）が設定されていません。");
+    if (!url) throw new Error("SHOP_DATABASE_URL(또는 DATABASE_URL)이 설정되지 않았습니다.");
     _pool = mysql.createPool({
       uri: url,
       connectionLimit: 5,
@@ -131,7 +131,16 @@ export async function g5GetMemberByEmailOrId(idOrEmail: string) {
 export const G5_ORDER_STATUS_MAP: Record<string, string> = {
   "주문": "pending",
   "입금": "paid",
-  "주문접수": "paid",
+  "주문접수": "pending",
+  "결제완료": "paid",
+  "입금확인": "paid",
+  "상품준비중": "preparing",
+  "배송준비중": "preparing",
+  "배송준비": "preparing",
+  "배송중": "shipping",
+  "배송완료": "delivered",
+  "구매확정": "delivered",
+  "주문취소": "cancelled",
   "준비": "preparing",
   "배송": "shipping",
   "완료": "delivered",
@@ -158,7 +167,7 @@ export function mapOrderToTalmo(o: any): any {
     orderNumber: odId,
     userId: null,
     mbId: o.mb_id || null,
-    source: "seoulmono",
+    source: "sorosoro",
     status: g5MapOrderStatus(o.od_status),
     rawStatus: o.od_status,
     totalAmount: receipt > 0 ? receipt : cart + send,

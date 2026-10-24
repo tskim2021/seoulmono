@@ -32,7 +32,7 @@ export function ChatbotWidget({ productId }: { productId?: number }) {
       setMessages(prev => [...prev, { role: "assistant" as const, content: String(data.content) }]);
     },
     onError: () => {
-      setMessages(prev => [...prev, { role: "assistant", content: "申し訳ございません。一時的なエラーが発生しました。しばらくしてからもう一度お試しください。" }]);
+      setMessages(prev => [...prev, { role: "assistant", content: "죄송합니다. 일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요." }]);
     },
   });
 
@@ -72,7 +72,7 @@ export function ChatbotWidget({ productId }: { productId?: number }) {
 
   const handleReset = () => {
     if (messages.length === 0) return;
-    if (confirm("会話内容をすべて削除しますか？")) {
+    if (confirm("대화 내용을 모두 삭제하시겠습니까?")) {
       setMessages([]);
       setInput("");
     }
@@ -176,7 +176,7 @@ export function ChatbotWidget({ productId }: { productId?: number }) {
                   </div>
                   <h4 className="font-semibold mb-1">こんにちは！</h4>
                   <p className="text-sm text-muted-foreground mb-4">
-                    ソウルモノ AIアシスタントです。<br />どのようなご用件でしょうか？
+                    탈모학교 AI 상담사입니다.<br />무엇을 도와드릴까요?
                   </p>
                   {suggestedQuestions && suggestedQuestions.length > 0 && (
                     <div className="space-y-2 w-full">

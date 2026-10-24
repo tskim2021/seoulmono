@@ -55,17 +55,17 @@ export default function PostWrite() {
     });
   };
 
-  const boardTypeLabel: Record<string, string> = { free: "自由掲示板", review: "お客様レビュー", qna: "Q&A", notice: "お知らせ" };
+  const boardTypeLabel: Record<string, string> = { free: "자유게시판", review: "고객 리뷰", qna: "Q&A", notice: "공지사항" };
 
   return (
     <Layout>
       <div className="container py-8 max-w-3xl mx-auto">
         <button onClick={() => window.history.back()} className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground mb-6">
-          <ArrowLeft className="w-4 h-4" />戻る
+          <ArrowLeft className="w-4 h-4" />돌아가기
         </button>
 
         <div className="bg-card border rounded-xl p-6 md:p-8">
-          <h1 className="text-xl font-bold mb-6">{boardTypeLabel[slug!] ?? "掲示板"} 投稿作成</h1>
+          <h1 className="text-xl font-bold mb-6">{boardTypeLabel[slug!] ?? "게시판"} 글쓰기</h1>
 
           <form onSubmit={handleSubmit} className="space-y-5">
             <div>

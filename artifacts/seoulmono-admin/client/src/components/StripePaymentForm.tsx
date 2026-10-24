@@ -34,17 +34,17 @@ const StripeCardInner = forwardRef<StripeCardHandle>((_, ref) => {
 
   useImperativeHandle(ref, () => ({
     async createPaymentMethod() {
-      if (!stripe || !elements) throw new Error("Stripeが読み込まれていません。");
+      if (!stripe || !elements) throw new Error("Stripe가 로드되지 않았습니다.");
 
       const cardNumberElement = elements.getElement(CardNumberElement);
-      if (!cardNumberElement) throw new Error("カード情報を入力してください。");
+      if (!cardNumberElement) throw new Error("카드 정보를 입력해주세요.");
 
       const { paymentMethod, error } = await stripe.createPaymentMethod({
         type: "card",
         card: cardNumberElement,
       });
 
-      if (error) throw new Error(error.message ?? "カード情報をご確認ください。");
+      if (error) throw new Error(error.message ?? "카드 정보를 확인해주세요.");
       return paymentMethod!.id;
     },
   }));
@@ -86,7 +86,7 @@ const StripeCardInner = forwardRef<StripeCardHandle>((_, ref) => {
 
       <p className="text-xs text-muted-foreground flex items-center gap-1 pt-1">
         <Lock className="w-3 h-3" />
-        カード情報は暗号化されてStripeに送信されます
+        카드 정보는 Stripe에 암호화되어 전송됩니다
       </p>
     </div>
   );

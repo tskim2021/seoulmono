@@ -47,7 +47,7 @@ export default function DiscussionWrite() {
       navigate(`/discussions/${data.id}`);
     },
     onError: (err) => {
-      toast.error(err.message || "登録に失敗しました");
+      toast.error(err.message || "등록에 실패했습니다");
     },
   });
 
@@ -57,7 +57,7 @@ export default function DiscussionWrite() {
       navigate(`/discussions/${id}`);
     },
     onError: (err) => {
-      toast.error(err.message || "更新に失敗しました");
+      toast.error(err.message || "수정에 실패했습니다");
     },
   });
 
@@ -213,11 +213,11 @@ export default function DiscussionWrite() {
             {/* 제출 */}
             <div className="flex justify-end gap-3 pt-4 border-t">
               <Button type="button" variant="outline" onClick={() => navigate(isEdit ? `/discussions/${id}` : "/discussions")}>
-                キャンセル
+                취소
               </Button>
               <Button type="submit" disabled={isPending || !title.trim() || !content.trim()} className="gap-2">
                 <Send className="h-4 w-4" />
-                {isPending ? "処理中..." : isEdit ? "更新完了" : "ディスカッションを登録"}
+                {isPending ? "処理中..." : isEdit ? "수정 완료" : "토론 등록"}
               </Button>
             </div>
           </form>

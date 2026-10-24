@@ -9,22 +9,22 @@ import { ClipboardList, Search, RefreshCw, ChevronDown, ChevronUp } from "lucide
 import Paginator from "@/components/Paginator";
 
 const ACTION_LABELS: Record<string, string> = {
-  "order.updateStatus": "注文ステータス変更",
-  "order.bulkUpdateStatus": "注文ステータス一括変更",
-  "order.partialCancel": "一部キャンセル",
-  "order.markRefunded": "返金完了",
-  "order.markItemRefunded": "商品返金完了",
-  "order.markItemRefundPending": "返金待ち",
-  "order.updateAdminNotes": "注文メモ編集",
-  "payment.confirm": "入金確認",
-  "user.update": "会員情報編集",
-  "user.addPoints": "ポイント付与/減算",
+  "order.updateStatus": "주문상태 변경",
+  "order.bulkUpdateStatus": "주문상태 일괄변경",
+  "order.partialCancel": "부분취소",
+  "order.markRefunded": "환불완료",
+  "order.markItemRefunded": "상품환불완료",
+  "order.markItemRefundPending": "환불대기",
+  "order.updateAdminNotes": "주문메모 수정",
+  "payment.confirm": "입금확인",
+  "user.update": "회원정보 수정",
+  "user.addPoints": "포인트 지급/차감",
 };
 
 const ENTITY_LABELS: Record<string, string> = {
-  order: "注文",
-  orderItem: "注文商品",
-  user: "会員",
+  order: "주문",
+  orderItem: "주문상품",
+  user: "회원",
 };
 
 const ACTION_COLORS: Record<string, string> = {
@@ -63,7 +63,7 @@ export default function AdminActionLogs() {
 
   const formatDate = (d: string | Date) => {
     const dt = new Date(d);
-    return dt.toLocaleString("ja-JP", {
+    return dt.toLocaleString("ko-KR", {
       year: "numeric", month: "2-digit", day: "2-digit",
       hour: "2-digit", minute: "2-digit", second: "2-digit",
       hour12: false,
@@ -76,14 +76,14 @@ export default function AdminActionLogs() {
         <div>
           <h2 className="text-2xl font-bold flex items-center gap-2">
             <ClipboardList className="w-6 h-6" />
-            管理者操作履歴
+            관리자 처리 이력
           </h2>
           <p className="text-sm text-muted-foreground mt-1">
-            管理者ごとの操作履歴 — 誰が、いつ、何を行ったかを確認します
+            관리자별 처리 이력 — 누가, 언제, 무엇을 처리했는지 확인합니다
           </p>
         </div>
         <Button variant="outline" size="sm" onClick={() => refetch()}>
-          <RefreshCw className="w-4 h-4 mr-1" /> 再読み込み
+          <RefreshCw className="w-4 h-4 mr-1" /> 새로고침
         </Button>
       </div>
 
@@ -138,7 +138,7 @@ export default function AdminActionLogs() {
               className="h-8 text-xs"
               onClick={() => { setActionFilter("all"); setAdminIdFilter("all"); setDateFrom(""); setDateTo(""); setPage(1); }}
             >
-              フィルターをリセット
+              필터 초기화
             </Button>
           )}
         </div>

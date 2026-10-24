@@ -71,7 +71,7 @@ export default function MyQnA() {
               onClick={() => navigate("/community/qna")}
               className="mt-4"
             >
-              Q&A掲示板へ
+              Q&A 게시판 가기
             </Button>
           </CardContent>
         </Card>
@@ -109,13 +109,13 @@ export default function MyQnA() {
           {data.total > 10 && (
             <div className="flex justify-center gap-2 mt-6">
               <Button variant="outline" disabled={page === 1} onClick={() => setPage(p => p - 1)}>
-                前へ
+                이전
               </Button>
               <span className="flex items-center px-4">
                 {page} / {Math.ceil(data.total / 10)}
               </span>
               <Button variant="outline" disabled={page >= Math.ceil(data.total / 10)} onClick={() => setPage(p => p + 1)}>
-                次へ
+                다음
               </Button>
             </div>
           )}

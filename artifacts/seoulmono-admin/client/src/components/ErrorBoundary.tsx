@@ -55,11 +55,11 @@ class ErrorBoundary extends Component<Props, State> {
 
             {/* Title & Description */}
             <h2 className="text-2xl font-bold text-foreground mb-2">
-              問題が発生しました
+              문제가 발생했습니다
             </h2>
             <p className="text-muted-foreground mb-8 leading-relaxed">
-              予期しないエラーが発生しました。<br />
-              ページを再読み込みするか、しばらくしてからもう一度お試しください。
+              예기치 않은 오류가 발생했습니다.<br />
+              페이지를 새로고침하거나 잠시 후 다시 시도해주세요.
             </p>
 
             {/* Action Buttons */}
@@ -73,7 +73,7 @@ class ErrorBoundary extends Component<Props, State> {
                 )}
               >
                 <RotateCcw className="w-4 h-4" />
-                再試行
+                다시 시도
               </button>
               <button
                 onClick={this.handleGoHome}
@@ -84,7 +84,7 @@ class ErrorBoundary extends Component<Props, State> {
                 )}
               >
                 <Home className="w-4 h-4" />
-                ホームへ
+                홈으로
               </button>
             </div>
 
@@ -96,7 +96,7 @@ class ErrorBoundary extends Component<Props, State> {
                   className="flex items-center gap-1.5 mx-auto text-xs text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
                 >
                   {this.state.showDetails ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
-                  エラー詳細
+                  오류 상세 정보
                 </button>
                 {this.state.showDetails && (
                   <div className="mt-3 p-4 rounded-lg bg-muted overflow-auto max-h-48 text-left">

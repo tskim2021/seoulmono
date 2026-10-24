@@ -53,13 +53,13 @@ export default function ForgotAccount() {
                 className={`flex-1 flex items-center justify-center gap-2 py-2.5 text-sm font-medium transition-colors ${tab === "id" ? "bg-primary text-primary-foreground" : "bg-muted/50 text-muted-foreground hover:text-foreground"}`}
                 onClick={() => { setTab("id"); setFoundEmail(null); }}
               >
-                <User className="w-4 h-4" />IDを確認
+                <User className="w-4 h-4" />아이디 찾기
               </button>
               <button
                 className={`flex-1 flex items-center justify-center gap-2 py-2.5 text-sm font-medium transition-colors ${tab === "pw" ? "bg-primary text-primary-foreground" : "bg-muted/50 text-muted-foreground hover:text-foreground"}`}
                 onClick={() => { setTab("pw"); setResetSent(false); }}
               >
-                <Lock className="w-4 h-4" />パスワードを再設定
+                <Lock className="w-4 h-4" />비밀번호 찾기
               </button>
             </div>
 
@@ -72,7 +72,7 @@ export default function ForgotAccount() {
                   <p className="text-lg font-bold text-primary mb-6">{foundEmail}</p>
                   <div className="flex gap-2">
                     <Button variant="outline" className="flex-1" onClick={() => { setFoundEmail(null); setFindName(""); setFindPhone(""); }}>
-                      もう一度検索
+                      다시 찾기
                     </Button>
                     <Button asChild className="flex-1"><Link href="/login">ログイン</Link></Button>
                   </div>
@@ -81,7 +81,7 @@ export default function ForgotAccount() {
                 <form onSubmit={e => { e.preventDefault(); findAccountMut.mutate({ name: findName, phone: findPhone }); }} className="space-y-4">
                   <p className="text-sm text-muted-foreground">登録時のお名前と連絡先を入力してください。</p>
                   <div>
-                    <label className="block text-sm font-medium mb-1.5">お名前</label>
+                    <label className="block text-sm font-medium mb-1.5">氏名</label>
                     <Input
                       placeholder="お名前を入力してください"
                       value={findName}
@@ -113,7 +113,7 @@ export default function ForgotAccount() {
                   <p className="font-semibold mb-1">仮パスワードを送信しました</p>
                   <p className="text-sm text-muted-foreground mb-6">
                     <strong>{resetEmail}</strong> 宛に仮パスワードをお送りしました。<br />
-                    ログイン後にパスワードを変更してください。
+                    로그인 후 비밀번호를 변경해주세요.
                   </p>
                   <Button asChild className="w-full"><Link href="/login">ログインへ</Link></Button>
                 </div>
@@ -139,7 +139,7 @@ export default function ForgotAccount() {
 
             <div className="mt-6 text-center">
               <Link href="/login" className="text-sm text-primary hover:underline">
-                ログインに戻る
+                로그인으로 돌아가기
               </Link>
             </div>
           </CardContent>

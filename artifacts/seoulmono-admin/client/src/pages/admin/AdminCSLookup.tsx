@@ -74,7 +74,7 @@ export default function AdminCSLookup() {
       {/* ═══ 검색창 ═══ */}
       <div className="bg-card border rounded-xl p-5 elegant-shadow">
         <p className="text-sm text-muted-foreground mb-3">
-          氏名、メールアドレス、電話番号、または注文番号で検索してください。
+          이름, 이메일, 전화번호, 또는 주문번호로 검색하세요.
         </p>
         <div className="flex gap-2">
           <div className="relative flex-1 max-w-xl">
@@ -89,7 +89,7 @@ export default function AdminCSLookup() {
             />
           </div>
           <Button onClick={handleSearch} disabled={!query.trim()}>
-            <Search className="w-4 h-4 mr-1" /> 検索
+            <Search className="w-4 h-4 mr-1" /> 조회
           </Button>
         </div>
       </div>
@@ -102,11 +102,11 @@ export default function AdminCSLookup() {
       {data && data.type === "user" && !selectedUserId && (
         <div className="bg-card border rounded-xl overflow-hidden elegant-shadow">
           <div className="px-5 py-3 border-b bg-secondary/30 flex items-center justify-between">
-            <span className="font-medium text-sm">検索結果 <span className="text-muted-foreground">({data.total}名)</span></span>
+            <span className="font-medium text-sm">검색 결과 <span className="text-muted-foreground">({data.total}명)</span></span>
           </div>
           {data.users.length === 0 ? (
             <div className="py-12 text-center text-sm text-muted-foreground">
-              該当する結果がありません。
+              검색 결과가 없습니다.
             </div>
           ) : (
             <div className="divide-y">
@@ -135,7 +135,7 @@ export default function AdminCSLookup() {
                   <div className="flex items-center gap-6 text-sm">
                     <div className="text-right">
                       <div className="text-muted-foreground text-xs">注文</div>
-                      <div className="font-medium">{(u.orderCount ?? 0)}件</div>
+                      <div className="font-medium">{(u.orderCount ?? 0)}건</div>
                     </div>
                     <div className="text-right">
                       <div className="text-muted-foreground text-xs">決済額</div>
@@ -179,11 +179,11 @@ export default function AdminCSLookup() {
         <div className="space-y-4">
           <div className="flex items-center gap-3">
             <Button variant="ghost" size="sm" onClick={() => setSelectedUserId(null)}>
-              ← 一覧へ
+              ← 목록으로
             </Button>
             <Link href={`/admin/users/${selectedUserId}`}>
               <Button variant="outline" size="sm">
-                <ExternalLink className="w-3.5 h-3.5 mr-1" /> 詳細ページ全体
+                <ExternalLink className="w-3.5 h-3.5 mr-1" /> 전체 상세 페이지
               </Button>
             </Link>
           </div>
@@ -199,27 +199,27 @@ export default function AdminCSLookup() {
               <div className="bg-card border rounded-xl p-5 elegant-shadow">
                 <div className="flex items-start justify-between mb-4">
                   <h2 className="text-base font-semibold flex items-center gap-2">
-                    <User className="w-4 h-4" /> 会員情報
+                    <User className="w-4 h-4" /> 회원 정보
                   </h2>
                   <Badge variant={displayUser.role === "admin" ? "default" : "secondary"}>
                     {displayUser.role === "admin" ? "管理者" : "一般会員"}
                   </Badge>
                 </div>
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                  <InfoCell label="氏名" value={displayUser.name ?? "-"} />
-                  <InfoCell label="ID(メールアドレス)" value={displayUser.email ?? "-"} />
-                  <InfoCell label="電話番号" value={displayUser.phone ?? "-"} />
-                  <InfoCell label="会員ランク" value={getGradeLabel(displayUser.grade)} />
-                  <InfoCell label="ポイント" value={`${(displayUser.points ?? 0).toLocaleString()}P`} />
-                  <InfoCell label="累計購入額" value={formatPrice(displayUser.totalSpent ?? 0)} />
-                  <InfoCell label="登録日" value={formatDate(displayUser.createdAt)} />
-                  <InfoCell label="最終ログイン" value={displayUser.lastSignedIn ? formatDateTime(displayUser.lastSignedIn) : "-"} />
+                  <InfoCell label="이름" value={displayUser.name ?? "-"} />
+                  <InfoCell label="아이디(이메일)" value={displayUser.email ?? "-"} />
+                  <InfoCell label="전화번호" value={displayUser.phone ?? "-"} />
+                  <InfoCell label="등급" value={getGradeLabel(displayUser.grade)} />
+                  <InfoCell label="포인트" value={`${(displayUser.points ?? 0).toLocaleString()}P`} />
+                  <InfoCell label="총 구매액" value={formatPrice(displayUser.totalSpent ?? 0)} />
+                  <InfoCell label="가입일" value={formatDate(displayUser.createdAt)} />
+                  <InfoCell label="최근 로그인" value={displayUser.lastSignedIn ? formatDateTime(displayUser.lastSignedIn) : "-"} />
                 </div>
 
                 {/* 포인트 지급 */}
                 <div className="mt-4 pt-4 border-t">
                   <p className="text-xs font-medium text-muted-foreground mb-2 flex items-center gap-1">
-                    <Coins className="w-3.5 h-3.5" /> ポイント付与/減算
+                    <Coins className="w-3.5 h-3.5" /> 포인트 지급/차감
                   </p>
                   <div className="flex items-center gap-2 flex-wrap">
                     <Input
@@ -244,7 +244,7 @@ export default function AdminCSLookup() {
                       }}
                       disabled={addPoints.isPending}
                     >
-                      付与
+                      지급
                     </Button>
                   </div>
                 </div>
@@ -253,8 +253,8 @@ export default function AdminCSLookup() {
               {/* 주문 이력 */}
               <div className="bg-card border rounded-xl p-5 elegant-shadow">
                 <h2 className="text-base font-semibold flex items-center gap-2 mb-4">
-                  <ShoppingBag className="w-4 h-4" /> 注文履歴
-                  <span className="text-sm font-normal text-muted-foreground">({ordersTotal}件)</span>
+                  <ShoppingBag className="w-4 h-4" /> 주문 이력
+                  <span className="text-sm font-normal text-muted-foreground">({ordersTotal}건)</span>
                 </h2>
                 {orders.length === 0 ? (
                   <p className="text-sm text-muted-foreground text-center py-6">注文履歴がありません。</p>
@@ -266,10 +266,10 @@ export default function AdminCSLookup() {
                           <th className="text-left py-2 px-3">注文番号</th>
                           <th className="text-center py-2 px-3">ステータス</th>
                           <th className="text-left py-2 px-3">商品</th>
-                          <th className="text-right py-2 px-3">支払金額</th>
+                          <th className="text-right py-2 px-3">決済金額</th>
                           <th className="text-left py-2 px-3">受取人</th>
                           <th className="text-left py-2 px-3">注文日</th>
-                          <th className="text-center py-2 px-3">管理</th>
+                          <th className="text-center py-2 px-3">操作</th>
                         </tr>
                       </thead>
                       <tbody className="divide-y">
@@ -283,7 +283,7 @@ export default function AdminCSLookup() {
                             </td>
                             <td className="py-2 px-3 text-xs text-muted-foreground max-w-[180px] truncate">
                               {o.firstProductName ?? "-"}
-                              {(o.itemCount ?? 0) > 1 && <span className="ml-1 text-muted-foreground"> ほか{o.itemCount - 1}点</span>}
+                              {(o.itemCount ?? 0) > 1 && <span className="ml-1 text-muted-foreground"> 외 {o.itemCount - 1}종</span>}
                             </td>
                             <td className="py-2 px-3 text-right font-medium price-text">
                               {formatPrice(o.totalAmount - (o.discountAmount ?? 0) - (o.pointsUsed ?? 0))}
@@ -293,7 +293,7 @@ export default function AdminCSLookup() {
                             <td className="py-2 px-3 text-center">
                               <Link href={`/admin/orders/${o.id}`}>
                                 <Button variant="ghost" size="sm" className="text-xs h-7 px-2">
-                                  詳細
+                                  상세
                                 </Button>
                               </Link>
                             </td>

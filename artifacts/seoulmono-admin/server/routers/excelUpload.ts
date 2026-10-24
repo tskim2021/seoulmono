@@ -10,21 +10,21 @@ export const excelUploadRouter = router({
   getProductTemplate: adminProcedure.query(() => {
     const template = [
       {
-        '商品名': 'サンプル商品',
-        '商品コード': 'example-product',
-        'カテゴリ': '衣類',
-        '価格': 10000,
-        '割引価格': 9000,
-        '在庫': 100,
-        '簡易説明': 'サンプル商品の説明',
-        '詳細説明': '詳細説明の内容',
-        'サムネイルURL': 'https://example.com/image.jpg',
-        '追加画像URL': 'https://example.com/img1.jpg,https://example.com/img2.jpg',
-        'ステータス': '販売中',
-        'おすすめ商品': 'N',
-        '新商品': 'Y',
-        'ベスト': 'N',
-        '最低購入ランク': 'bronze',
+        '상품명': '예시 상품',
+        '상품코드': 'example-product',
+        '카테고리': '의류',
+        '가격': 10000,
+        '할인가': 9000,
+        '재고': 100,
+        '간단설명': '예시 상품 설명',
+        '상세설명': '상세 설명 내용',
+        '썸네일URL': 'https://example.com/image.jpg',
+        '추가이미지URL': 'https://example.com/img1.jpg,https://example.com/img2.jpg',
+        '상태': '판매중',
+        '추천상품': 'N',
+        '신상품': 'Y',
+        '베스트': 'N',
+        '최소구매등급': 'bronze',
       },
     ];
     return { template };
@@ -34,11 +34,11 @@ export const excelUploadRouter = router({
   getTrackingTemplate: adminProcedure.query(() => {
     const template = [
       {
-        '注文番号': 'ORD-20260101-000001',
-        'アイテムID': 1,
-        '配送業者': 'CJ大韓通運',
-        '追跡番号': '1234567890',
-        '配送予定日': '2026-01-15',
+        '주문번호': 'ORD-20260101-000001',
+        '아이템ID': 1,
+        '택배사': 'CJ대한통운',
+        '운송장번호': '1234567890',
+        '예상배송일': '2026-01-15',
       },
     ];
     return { template };
@@ -59,11 +59,11 @@ export const excelUploadRouter = router({
       const rows = XLSX.utils.sheet_to_json(sheet) as any[];
       
       if (rows.length === 0) {
-        throw new TRPCError({ code: "BAD_REQUEST", message: "Excelファイルが空です。" });
+        throw new TRPCError({ code: "BAD_REQUEST", message: "엑셀 파일이 비어있습니다." });
       }
       
       if (rows.length > 1000) {
-        throw new TRPCError({ code: "BAD_REQUEST", message: "一度にアップロードできるのは最大1000件までです。" });
+        throw new TRPCError({ code: "BAD_REQUEST", message: "한 번에 최대 1000개까지만 업로드할 수 있습니다." });
       }
       
       // 카테고리 목록 조회 (검증용)
@@ -80,46 +80,46 @@ export const excelUploadRouter = router({
         const rowErrors: string[] = [];
         
         // 필수 필드 검증
-        if (!row['商品名']) rowErrors.push('商品名は必須です');
-        if (!row['カテゴリ']) rowErrors.push('カテゴリは必須です');
-        if (row['価格'] === undefined || row['価格'] === '') rowErrors.push('価格は必須です');
-        if (row['在庫'] === undefined || row['在庫'] === '') rowErrors.push('在庫は必須です');
+        if (!row['상품명']) rowErrors.push('상품명은 필수입니다');
+        if (!row['카테고리']) rowErrors.push('카테고리는 필수입니다');
+        if (row['가격'] === undefined || row['가격'] === '') rowErrors.push('가격은 필수입니다');
+        if (row['재고'] === undefined || row['재고'] === '') rowErrors.push('재고는 필수입니다');
         
         // 카테고리 존재 여부 확인
-        if (row['カテゴリ'] && !categoryMap.has(row['カテゴリ'])) {
-          rowErrors.push(`カテゴリ「${row['カテゴリ']}」は存在しません`);
+        if (row['카테고리'] && !categoryMap.has(row['카테고리'])) {
+          rowErrors.push(`카테고리 '${row['카테고리']}'가 존재하지 않습니다`);
         }
         
         // 가격/재고 숫자 형식 확인
-        if (row['価格'] !== undefined && isNaN(Number(row['価格']))) {
-          rowErrors.push('価格は数値で入力してください');
+        if (row['가격'] !== undefined && isNaN(Number(row['가격']))) {
+          rowErrors.push('가격은 숫자여야 합니다');
         }
-        if (row['在庫'] !== undefined && isNaN(Number(row['在庫']))) {
-          rowErrors.push('在庫は数値で入力してください');
+        if (row['재고'] !== undefined && isNaN(Number(row['재고']))) {
+          rowErrors.push('재고는 숫자여야 합니다');
         }
         
         // slug 생성 (상품명 기반, 한글 → 영문 변환 없이 그대로 사용)
-        const slug = row['商品コード'] || `product-${Date.now()}-${i}`;
+        const slug = row['상품코드'] || `product-${Date.now()}-${i}`;
         
         if (rowErrors.length > 0) {
           errors.push({ row: rowNum, errors: rowErrors });
         } else {
           validatedRows.push({
-            name: row['商品名'],
+            name: row['상품명'],
             slug,
-            categoryId: categoryMap.get(row['カテゴリ'])!,
-            price: Number(row['価格']),
-            salePrice: row['割引価格'] ? Number(row['割引価格']) : null,
-            stock: Number(row['在庫']),
-            description: row['簡易説明'] || '',
-            content: row['詳細説明'] || '',
-            thumbnail: row['サムネイルURL'] || '',
-            images: row['追加画像URL'] ? row['追加画像URL'].split(',').map((s: string) => s.trim()) : [],
-            status: row['ステータス'] === '売り切れ' ? 'soldout' : row['ステータス'] === '非公開' ? 'inactive' : 'active',
-            isFeatured: row['おすすめ商品'] === 'Y' || row['おすすめ商品'] === '1' ? 1 : 0,
-            isNew: row['新商品'] === 'Y' || row['新商品'] === '1' ? 1 : 0,
-            isBest: row['ベスト'] === 'Y' || row['ベスト'] === '1' ? 1 : 0,
-            minGrade: row['最低購入ランク'] || 'bronze',
+            categoryId: categoryMap.get(row['카테고리'])!,
+            price: Number(row['가격']),
+            salePrice: row['할인가'] ? Number(row['할인가']) : null,
+            stock: Number(row['재고']),
+            description: row['간단설명'] || '',
+            content: row['상세설명'] || '',
+            thumbnail: row['썸네일URL'] || '',
+            images: row['추가이미지URL'] ? row['추가이미지URL'].split(',').map((s: string) => s.trim()) : [],
+            status: row['상태'] === '품절' ? 'soldout' : row['상태'] === '비활성' ? 'inactive' : 'active',
+            isFeatured: row['추천상품'] === 'Y' || row['추천상품'] === '1' ? 1 : 0,
+            isNew: row['신상품'] === 'Y' || row['신상품'] === '1' ? 1 : 0,
+            isBest: row['베스트'] === 'Y' || row['베스트'] === '1' ? 1 : 0,
+            minGrade: row['최소구매등급'] || 'bronze',
           });
         }
       }
@@ -133,7 +133,7 @@ export const excelUploadRouter = router({
         errors,
       };
     } catch (error: any) {
-      throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: error.message || "Excelの解析中にエラーが発生しました。" });
+      throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: error.message || "엑셀 파싱 중 오류가 발생했습니다." });
     }
   }),
   
@@ -190,11 +190,11 @@ export const excelUploadRouter = router({
       const rows = XLSX.utils.sheet_to_json(sheet) as any[];
       
       if (rows.length === 0) {
-        throw new TRPCError({ code: "BAD_REQUEST", message: "Excelファイルが空です。" });
+        throw new TRPCError({ code: "BAD_REQUEST", message: "엑셀 파일이 비어있습니다." });
       }
       
       if (rows.length > 1000) {
-        throw new TRPCError({ code: "BAD_REQUEST", message: "一度にアップロードできるのは最大1000件までです。" });
+        throw new TRPCError({ code: "BAD_REQUEST", message: "한 번에 최대 1000개까지만 업로드할 수 있습니다." });
       }
       
       // 택배사 목록 조회
@@ -210,55 +210,55 @@ export const excelUploadRouter = router({
         const rowErrors: string[] = [];
         
         // 필수 필드 검증
-        if (!row['注文番号']) rowErrors.push('注文番号は必須です');
-        if (row['アイテムID'] === undefined || row['アイテムID'] === '') rowErrors.push('アイテムIDは必須です');
-        if (!row['配送業者']) rowErrors.push('配送業者は必須です');
-        if (!row['追跡番号']) rowErrors.push('追跡番号は必須です');
+        if (!row['주문번호']) rowErrors.push('주문번호는 필수입니다');
+        if (row['아이템ID'] === undefined || row['아이템ID'] === '') rowErrors.push('아이템ID는 필수입니다');
+        if (!row['택배사']) rowErrors.push('택배사는 필수입니다');
+        if (!row['운송장번호']) rowErrors.push('운송장번호는 필수입니다');
         
         // 택배사 존재 여부 확인
-        if (row['配送業者'] && !carrierMap.has(row['配送業者'])) {
-          rowErrors.push(`配送業者「${row['配送業者']}」は存在しません`);
+        if (row['택배사'] && !carrierMap.has(row['택배사'])) {
+          rowErrors.push(`택배사 '${row['택배사']}'가 존재하지 않습니다`);
         }
         
         // 아이템ID 숫자 형식 확인
-        const itemId = Number(row['アイテムID']);
-        if (row['アイテムID'] !== undefined && isNaN(itemId)) {
-          rowErrors.push('アイテムIDは数値で入力してください');
+        const itemId = Number(row['아이템ID']);
+        if (row['아이템ID'] !== undefined && isNaN(itemId)) {
+          rowErrors.push('아이템ID는 숫자여야 합니다');
         }
         
         // 주문 존재 여부 확인 + 아이템 속하 여부 확인
-        if (row['注文番号'] && !isNaN(itemId)) {
-          const order = await db.getOrderByNumber(row['注文番号']);
+        if (row['주문번호'] && !isNaN(itemId)) {
+          const order = await db.getOrderByNumber(row['주문번호']);
           if (!order) {
-            rowErrors.push(`注文番号「${row['注文番号']}」は存在しません`);
+            rowErrors.push(`주문번호 '${row['주문번호']}'가 존재하지 않습니다`);
           } else {
             const orderItems = await db.getOrderItems(order.id);
             const item = orderItems.find(it => it.id === itemId);
             if (!item) {
-              rowErrors.push(`注文「${row['注文番号']}」にアイテムID ${itemId}は存在しません`);
+              rowErrors.push(`주문 '${row['주문번호']}'에 아이템ID ${itemId}이 존재하지 않습니다`);
             } else {
               // 기존 운송장 등록 여부 검사
               const existing = await db.getShipmentByOrderItemId(itemId);
               if (existing) {
-                rowErrors.push(`アイテムID ${itemId}にはすでに追跡番号が登録されています`);
+                rowErrors.push(`아이템ID ${itemId}에 이미 운송장이 등록되어 있습니다`);
               }
             }
             
             if (rowErrors.length === 0) {
               validatedRows.push({
                 orderId: order.id,
-                orderNumber: row['注文番号'],
+                orderNumber: row['주문번호'],
                 orderItemId: itemId,
-                carrierId: carrierMap.get(row['配送業者'])!,
-                trackingNumber: String(row['追跡番号']),
-                estimatedDeliveryDate: row['配送予定日'] || null,
+                carrierId: carrierMap.get(row['택배사'])!,
+                trackingNumber: String(row['운송장번호']),
+                estimatedDeliveryDate: row['예상배송일'] || null,
               });
             }
           }
         }
         
         if (rowErrors.length > 0) {
-          errors.push({ row: rowNum, orderNumber: row['注文番号'], itemId: row['アイテムID'], errors: rowErrors });
+          errors.push({ row: rowNum, orderNumber: row['주문번호'], itemId: row['아이템ID'], errors: rowErrors });
         }
       }
       
@@ -271,7 +271,7 @@ export const excelUploadRouter = router({
         errors,
       };
     } catch (error: any) {
-      throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: error.message || "Excelの解析中にエラーが発生しました。" });
+      throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: error.message || "엑셀 파싱 중 오류가 발생했습니다." });
     }
   }),
   

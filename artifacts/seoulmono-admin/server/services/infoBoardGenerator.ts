@@ -4,43 +4,43 @@ import * as db from "../db";
 import type { InfoBoardAutoSetting } from "../../drizzle/schema";
 
 const STYLE_LABELS: Record<string, string> = {
-  informative: "情報提供型",
-  guide: "ガイド・案内型",
-  tips: "ヒント・ノウハウ型",
-  comparison: "比較・分析型",
-  news: "ニュース・トレンド型",
+  informative: "정보 전달형",
+  guide: "가이드/안내형",
+  tips: "팁/노하우형",
+  comparison: "비교/분석형",
+  news: "뉴스/트렌드형",
 };
 
 const STYLE_PROMPTS: Record<string, string> = {
-  informative: `[情報提供型 作成ガイド]
-- テーマに関する要点を体系的に整理します。
-- 信頼できるデータと事実に基づいて書きます。
-- 読者が日常生活で活用できる実用的な情報を含めます。
-- 専門用語は分かりやすく説明します。`,
+  informative: `[정보 전달형 작성 가이드]
+- 주제에 대한 핵심 정보를 체계적으로 정리합니다.
+- 신뢰할 수 있는 데이터와 사실에 기반하여 작성합니다.
+- 독자가 실생활에서 활용할 수 있는 실용적인 정보를 포함합니다.
+- 전문 용어는 쉽게 풀어서 설명합니다.`,
 
-  guide: `[ガイド・案内型 作成ガイド]
-- ステップごとに明確に案内します。
-- 初心者でも実践できるよう、やさしく説明します。
-- 注意事項とヒントをあわせて提供します。
-- 実際の事例や例を含めて理解を助けます。`,
+  guide: `[가이드/안내형 작성 가이드]
+- 단계별로 명확하게 안내합니다.
+- 초보자도 따라할 수 있도록 쉽게 설명합니다.
+- 주의사항과 팁을 함께 제공합니다.
+- 실제 사례나 예시를 포함하여 이해를 돕습니다.`,
 
-  tips: `[ヒント・ノウハウ型 作成ガイド]
-- 実用的ですぐに活用できるヒントを提供します。
-- 番号を付けて要点となるヒントを整理します。
-- 各ヒントに簡潔な説明を添えます。
-- 専門家のアドバイスや経験に基づく内容を含めます。`,
+  tips: `[팁/노하우형 작성 가이드]
+- 실용적이고 즉시 활용 가능한 팁을 제공합니다.
+- 번호를 매겨 핵심 팁을 정리합니다.
+- 각 팁에 대한 간결한 설명을 추가합니다.
+- 전문가의 조언이나 경험에 기반한 내용을 포함합니다.`,
 
-  comparison: `[比較・分析型 作成ガイド]
-- 関連する製品、方法、オプションを客観的に比較します。
-- メリットとデメリットを明確に整理します。
-- 表やリストを使って比較内容を視覚的に整理します。
-- 読者の選択に役立つ結論を示します。`,
+  comparison: `[비교/분석형 작성 가이드]
+- 관련 제품, 방법, 또는 옵션을 객관적으로 비교합니다.
+- 장단점을 명확하게 정리합니다.
+- 표나 목록을 활용하여 비교 내용을 시각적으로 정리합니다.
+- 독자가 선택에 도움이 되는 결론을 제시합니다.`,
 
-  news: `[ニュース・トレンド型 作成ガイド]
-- 最新のトレンドと動向を分析します。
-- 業界の変化とその影響を説明します。
-- 今後の展望と予測を含めます。
-- 読者に示唆を提供します。`,
+  news: `[뉴스/트렌드형 작성 가이드]
+- 최신 트렌드와 동향을 분석합니다.
+- 업계 변화와 그 영향을 설명합니다.
+- 향후 전망과 예측을 포함합니다.
+- 독자에게 시사점을 제공합니다.`,
 };
 
 interface GeneratedPost {
@@ -92,13 +92,13 @@ export async function generateInfoBoardPost(
       await db.createInfoBoardAutoLog({
         settingId: setting.id,
         status: "failed",
-        errorMessage: "AI記事の生成に失敗しました: LLMの応答がありません",
+        errorMessage: "AI 글 생성 실패: LLM 응답 없음",
         executionTimeMs: elapsed,
         triggeredBy,
         postId: null,
         generatedTitle: null,
       });
-      return { success: false, error: "AI記事の生成に失敗しました" };
+      return { success: false, error: "AI 글 생성 실패" };
     }
 
     // 2) 이미지 자동 생성 (설정이 활성화된 경우)
@@ -117,13 +117,13 @@ export async function generateInfoBoardPost(
       await db.createInfoBoardAutoLog({
         settingId: setting.id,
         status: "failed",
-        errorMessage: "情報シェア掲示板が見つかりません",
+        errorMessage: "정보나눔 게시판을 찾을 수 없습니다",
         executionTimeMs: elapsed,
         triggeredBy,
         postId: null,
         generatedTitle: generated.title,
       });
-      return { success: false, error: "情報シェア掲示板が見つかりません" };
+      return { success: false, error: "정보나눔 게시판을 찾을 수 없습니다" };
     }
 
     // 이미지가 있으면 본문 상단에 이미지 마크다운 추가
@@ -161,7 +161,7 @@ export async function generateInfoBoardPost(
     return { success: true, postId, title: generated.title };
   } catch (err: any) {
     const elapsed = Date.now() - startTime;
-    const errorMsg = err.message || "不明なエラー";
+    const errorMsg = err.message || "알 수 없는 오류";
     await db.createInfoBoardAutoLog({
       settingId: setting.id,
       status: "failed",
@@ -180,43 +180,43 @@ export async function generateInfoBoardPost(
  * LLM을 사용하여 정보나눔 게시글 내용을 생성합니다.
  */
 async function generatePostContent(setting: InfoBoardAutoSetting): Promise<GeneratedPost | null> {
-  const styleLabel = STYLE_LABELS[setting.postStyle] || "情報提供型";
+  const styleLabel = STYLE_LABELS[setting.postStyle] || "정보 전달형";
   const styleGuide = STYLE_PROMPTS[setting.postStyle] || STYLE_PROMPTS.informative;
-  const today = new Date().toLocaleDateString("ja-JP", { year: "numeric", month: "long", day: "numeric" });
+  const today = new Date().toLocaleDateString("ko-KR", { year: "numeric", month: "long", day: "numeric" });
 
   const systemPrompt =
     setting.promptTemplate ||
-    `あなたは健康・医薬品・栄養分野の専門コンテンツライターです。
-情報シェア掲示板に投稿する、有益で信頼できる記事を作成します。
-文章は日本語で、専門的でありながら一般の読者にも分かりやすく書きます。
-誇張した表現や医学的アドバイスは避け、客観的な情報提供に集中します。
-Markdown形式で書き、小見出し(##)、リスト、強調(**)などを適切に活用します。`;
+    `당신은 건강/의약품/영양 분야의 전문 콘텐츠 작성자입니다.
+정보나눔 게시판에 올릴 유익하고 신뢰할 수 있는 글을 작성합니다.
+글은 한국어로 작성하며, 전문적이면서도 일반 독자가 이해하기 쉽게 작성합니다.
+과장된 표현이나 의학적 조언은 피하고, 객관적인 정보 전달에 집중합니다.
+마크다운 형식으로 작성하되, 소제목(##), 목록, 강조(**) 등을 적절히 활용합니다.`;
 
-  const keywordsInfo = setting.keywords ? `\n関連キーワード: ${setting.keywords}` : "";
-  const keywordsEnInfo = setting.keywordsEn ? `\n英語キーワード: ${setting.keywordsEn}` : "";
+  const keywordsInfo = setting.keywords ? `\n관련 키워드: ${setting.keywords}` : "";
+  const keywordsEnInfo = setting.keywordsEn ? `\n영어 키워드: ${setting.keywordsEn}` : "";
 
-  const userPrompt = `今日の日付: ${today}
+  const userPrompt = `오늘 날짜: ${today}
 
-テーマ: ${setting.topic}${keywordsInfo}${keywordsEnInfo}
+주제: ${setting.topic}${keywordsInfo}${keywordsEnInfo}
 
-執筆スタイル: ${styleLabel}
+작성 스타일: ${styleLabel}
 
 ${styleGuide}
 
-上記のテーマとスタイルに合った情報シェア記事を1件作成してください。
+위 주제와 스타일에 맞는 정보나눔 게시글을 1개 작성해주세요.
 
-作成ルール:
-1. タイトルは興味を引きつつ、内容を正確に表してください（50文字以内）。
-2. 本文はMarkdown形式で最低800文字以上書いてください。
-3. 小見出し(##)を活用して内容を体系的に構成してください。
-4. 実用的で読者の役に立つ情報を含めてください。
-5. 以前の記事と重複しないよう、新しい観点やテーマを扱ってください。
-6. 記事の最後に「※ この記事は情報提供を目的として作成されており、専門的な医療アドバイスに代わるものではありません。」の一文を含めてください。
+작성 규칙:
+1. 제목은 흥미를 끌면서도 정확한 내용을 담아야 합니다 (50자 이내).
+2. 본문은 마크다운 형식으로 최소 800자 이상 작성합니다.
+3. 소제목(##)을 활용하여 내용을 체계적으로 구성합니다.
+4. 실용적이고 독자에게 도움이 되는 정보를 포함합니다.
+5. 이전에 작성한 글과 중복되지 않도록 새로운 관점이나 주제를 다룹니다.
+6. 글 마지막에 "※ 이 글은 정보 제공 목적으로 작성되었으며, 전문적인 의료 조언을 대체하지 않습니다." 문구를 포함합니다.
 
-次のJSON形式で回答してください:
+다음 JSON 형식으로 응답해주세요:
 {
-  "title": "記事のタイトル",
-  "content": "記事本文（Markdown形式）"
+  "title": "게시글 제목",
+  "content": "게시글 본문 (마크다운 형식)"
 }`;
 
   const response = await invokeLLM({
@@ -232,8 +232,8 @@ ${styleGuide}
         schema: {
           type: "object",
           properties: {
-            title: { type: "string", description: "記事のタイトル" },
-            content: { type: "string", description: "記事本文（Markdown）" },
+            title: { type: "string", description: "게시글 제목" },
+            content: { type: "string", description: "게시글 본문 (마크다운)" },
           },
           required: ["title", "content"],
           additionalProperties: false,

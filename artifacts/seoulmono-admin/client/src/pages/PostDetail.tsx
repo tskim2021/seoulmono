@@ -38,7 +38,7 @@ function CommentSection({ postId }: { postId: number }) {
           <div className="w-7 h-7 rounded-full bg-secondary flex items-center justify-center">
             <User className="w-3.5 h-3.5 text-muted-foreground" />
           </div>
-          <span className="text-sm font-medium">{comment.userName ?? "匿名"}</span>
+          <span className="text-sm font-medium">{comment.userName ?? "익명"}</span>
           {comment.isAdmin === 1 && <Badge variant="secondary" className="text-[10px] px-1.5">管理者</Badge>}
           <span className="text-xs text-muted-foreground">{formatDateTime(comment.createdAt)}</span>
         </div>
@@ -46,12 +46,12 @@ function CommentSection({ postId }: { postId: number }) {
         <div className="flex items-center gap-3 mt-2">
           {isAuthenticated && !isReply && (
             <button onClick={() => setReplyTo(replyTo === comment.id ? null : comment.id)} className="text-xs text-muted-foreground hover:text-primary flex items-center gap-1">
-              <Reply className="w-3 h-3" />返信
+              <Reply className="w-3 h-3" />답글
             </button>
           )}
           {(user?.id === comment.userId || user?.role === "admin") && (
             <button onClick={() => deleteComment.mutate({ id: comment.id })} className="text-xs text-muted-foreground hover:text-destructive flex items-center gap-1">
-              <Trash2 className="w-3 h-3" />削除
+              <Trash2 className="w-3 h-3" />삭제
             </button>
           )}
         </div>
@@ -74,7 +74,7 @@ function CommentSection({ postId }: { postId: number }) {
   return (
     <div>
       <h3 className="font-semibold text-sm mb-4 flex items-center gap-2">
-        <MessageCircle className="w-4 h-4" />コメント {comments?.length ?? 0}
+        <MessageCircle className="w-4 h-4" />댓글 {comments?.length ?? 0}
       </h3>
       {/* Comment form */}
       {isAuthenticated ? (
@@ -161,7 +161,7 @@ export default function PostDetail({ postIdProp }: { postIdProp?: number } = {})
     <Layout>
       <div className="container py-8">
         <button onClick={() => window.history.back()} className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground mb-6">
-          <ArrowLeft className="w-4 h-4" />一覧へ
+          <ArrowLeft className="w-4 h-4" />목록으로
         </button>
 
         <article className="bg-card border rounded-xl p-6 md:p-8">
@@ -182,7 +182,7 @@ export default function PostDetail({ postIdProp }: { postIdProp?: number } = {})
                 <div className="flex">{Array.from({ length: 5 }).map((_, i) => <Star key={`post-rating-${i}`} className={`w-4 h-4 ${i < post.rating! ? "fill-amber-400 text-amber-400" : "text-gray-200"}`} />)}</div>
                 {post.orderId && (
                   <Badge variant="outline" className="text-xs text-green-600 border-green-300 bg-green-50 dark:bg-green-950/30">
-                    <CheckCircle className="w-3 h-3 mr-1" /> 購入確認済み
+                    <CheckCircle className="w-3 h-3 mr-1" /> 구매 인증
                   </Badge>
                 )}
               </div>
@@ -191,7 +191,7 @@ export default function PostDetail({ postIdProp }: { postIdProp?: number } = {})
             <div className="flex items-center gap-3 text-sm text-muted-foreground">
               <div className="flex items-center gap-1.5">
                 <div className="w-6 h-6 rounded-full bg-secondary flex items-center justify-center"><User className="w-3 h-3" /></div>
-                <span className="font-medium text-foreground">{post.displayName ?? post.userName ?? "匿名"}</span>
+                <span className="font-medium text-foreground">{post.displayName ?? post.userName ?? "익명"}</span>
               </div>
               <span>{formatDateTime(post.createdAt)}</span>
               <span className="flex items-center gap-1"><Eye className="w-3.5 h-3.5" />{post.viewCount}</span>
@@ -213,8 +213,8 @@ export default function PostDetail({ postIdProp }: { postIdProp?: number } = {})
           {/* Actions */}
           {(user?.id === post.userId || user?.role === "admin") && (
             <div className="flex gap-2 justify-end mb-6">
-              <Button variant="outline" size="sm" asChild><Link href={`/community/post/${post.id}/edit`}>編集</Link></Button>
-              <Button variant="destructive" size="sm" onClick={() => { if (confirm("本当に削除しますか？")) deletePost.mutate({ id: post.id }); }}>削除</Button>
+              <Button variant="outline" size="sm" asChild><Link href={`/community/post/${post.id}/edit`}>更新</Link></Button>
+              <Button variant="destructive" size="sm" onClick={() => { if (confirm("정말 삭제하시겠습니까?")) deletePost.mutate({ id: post.id }); }}>削除</Button>
             </div>
           )}
 

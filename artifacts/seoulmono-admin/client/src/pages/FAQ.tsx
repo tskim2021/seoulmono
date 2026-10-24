@@ -51,11 +51,11 @@ export default function FAQ() {
             className="mb-4"
           >
             <ChevronLeft className="w-4 h-4 mr-1" />
-            カスタマーセンターへ戻る
+            고객센터로 돌아가기
           </Button>
           <h1 className="text-3xl font-bold mb-2">よくあるご質問 (FAQ)</h1>
           <p className="text-muted-foreground">
-            お客様からよくいただくご質問をまとめました。解決しない場合はお問い合わせをご利用ください。
+            고객님께서 자주 문의하시는 질문을 모아두었습니다. 해결되지 않으신 경우 1:1 문의를 이용해 주세요.
           </p>
         </div>
 
@@ -80,7 +80,7 @@ export default function FAQ() {
               size="sm"
               onClick={() => setSelectedCategory(null)}
             >
-              すべて ({allFaqs.length})
+              전체 ({allFaqs.length})
             </Button>
             {categories.map(cat => (
               <Button
@@ -146,7 +146,7 @@ export default function FAQ() {
           <CardContent className="py-8 text-center">
             <h3 className="text-xl font-bold mb-2">お探しの回答が見つかりませんでしたか？</h3>
             <p className="text-muted-foreground mb-4">
-              お問い合わせフォームよりご質問をお寄せください。迅速にご回答いたします。
+              1:1 문의를 통해 궁금하신 사항을 문의해 주시면 신속하게 답변드리겠습니다.
             </p>
             <Link href="/customer-service/inquiry">
               <Button>お問い合わせ</Button>

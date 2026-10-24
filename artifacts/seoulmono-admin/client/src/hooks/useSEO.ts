@@ -12,8 +12,8 @@ interface SEOOptions {
   noindex?: boolean;
 }
 
-const SITE_NAME = "ソウルモノ 管理画面";
-const DEFAULT_DESCRIPTION = "ソウルモノ 管理画面 - 注文・会員・商品・配送を一元管理します。";
+const SITE_NAME = "ソウルモノ 管理者";
+const DEFAULT_DESCRIPTION = "커뮤니티와 쇼핑이 하나로 연결된 새로운 쇼핑 경험을 만나보세요. 상품 리뷰부터 자유로운 소통까지, 탈모학교에서 시작하세요.";
 const DEFAULT_OG_IMAGE = "/og-default.png";
 
 function setMetaTag(name: string, content: string, isProperty = false) {

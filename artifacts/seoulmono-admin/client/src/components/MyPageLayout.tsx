@@ -33,9 +33,9 @@ const menuSections = [
     title: "サポート",
     items: [
       { href: "/mypage/qna", icon: MessageSquare, label: "商品Q&A" },
-      { href: "/mypage/inquiries", icon: MessageSquare, label: "個別お問い合わせ" },
+      { href: "/mypage/inquiries", icon: MessageSquare, label: "お問い合わせ" },
       { href: "/mypage/addresses", icon: MapPin, label: "配送先管理" },
-      { href: "/mypage/profile", icon: User, label: "会員情報の変更" },
+      { href: "/mypage/profile", icon: User, label: "会員情報編集" },
     ],
   },
 ];
@@ -79,7 +79,7 @@ export default function MyPageLayout({ children, title }: MyPageLayoutProps) {
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-1.5">
-                        <p className="font-bold text-sm truncate">{profile?.name ?? user?.name ?? "会員"}</p>
+                        <p className="font-bold text-sm truncate">{profile?.name ?? user?.name ?? "회원"}</p>
                       </div>
                       <p className="text-xs text-muted-foreground truncate mt-0.5">{profile?.email ?? user?.email}</p>
                       <div className="flex items-center gap-3 mt-1.5 text-xs">

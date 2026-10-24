@@ -49,9 +49,9 @@ export default function AdminProductInfo({ productId, productName, productDescri
       if (result.success) {
         utils.productInfo.adminGetByProduct.invalidate({ productId });
         utils.productInfo.getByProduct.invalidate({ productId });
-        toast.success(`${result.label} ${result.count}件をAIで生成しました。`);
+        toast.success(`${result.label} ${result.count}건이 AI로 생성되었습니다.`);
       } else {
-        toast.error(result.error || "AI生成に失敗しました。");
+        toast.error(result.error || "AI 생성에 실패했습니다.");
       }
     },
     onError: (err) => { setGeneratingType(null); toast.error(err.message); },
@@ -76,7 +76,7 @@ export default function AdminProductInfo({ productId, productName, productDescri
     }
   };
   const handleDelete = (id: number) => {
-    if (confirm("本当に削除しますか？")) deleteMut.mutate({ id });
+    if (confirm("정말 삭제하시겠습니까?")) deleteMut.mutate({ id });
   };
   const handleToggleActive = (item: any) => {
     toggleActiveMut.mutate({ id: item.id, isActive: item.isActive === 1 ? 0 : 1 });
@@ -119,7 +119,7 @@ export default function AdminProductInfo({ productId, productName, productDescri
               <div className="flex items-center gap-2">
                 <Icon className={`w-4 h-4 ${group.color}`} />
                 <span className={`font-medium text-sm ${group.color}`}>{group.label}</span>
-                <Badge variant="secondary" className="text-[10px] px-1.5 py-0">{group.items.length}件</Badge>
+                <Badge variant="secondary" className="text-[10px] px-1.5 py-0">{group.items.length}건</Badge>
               </div>
               <div className="flex items-center gap-2">
                 <Button
@@ -130,13 +130,13 @@ export default function AdminProductInfo({ productId, productName, productDescri
                   disabled={!!generatingType}
                 >
                   {generatingType === group.value ? (
-                    <><Loader2 className="w-3 h-3 mr-1 animate-spin" /> AI生成中...</>
+                    <><Loader2 className="w-3 h-3 mr-1 animate-spin" /> AI 생성 중...</>
                   ) : (
-                    <><Sparkles className="w-3 h-3 mr-1" /> AI自動生成</>
+                    <><Sparkles className="w-3 h-3 mr-1" /> AI 자동 생성</>
                   )}
                 </Button>
                 <Button variant="outline" size="sm" className="h-7 text-xs" onClick={() => openCreate(group.value)}>
-                  <Plus className="w-3 h-3 mr-1" /> 追加
+                  <Plus className="w-3 h-3 mr-1" /> 추가
                 </Button>
               </div>
             </div>
@@ -144,7 +144,7 @@ export default function AdminProductInfo({ productId, productName, productDescri
             {/* 항목 리스트 */}
             {group.items.length === 0 ? (
               <div className="p-6 text-center text-muted-foreground text-sm">
-                登録された項目がありません。直接追加するか、AI自動生成をご利用ください。
+                등록된 항목이 없습니다. 직접 추가하거나 AI 자동 생성을 이용하세요.
               </div>
             ) : (
               <div className="divide-y">
@@ -184,7 +184,7 @@ export default function AdminProductInfo({ productId, productName, productDescri
           <DialogHeader>
             <DialogTitle>{editItem ? "情報の編集" : "情報の追加"}</DialogTitle>
             <DialogDescription>
-              {SECTION_TYPES.find(s => s.value === form.sectionType)?.label} の項目を{editItem ? "編集" : "追加"}します。
+              {SECTION_TYPES.find(s => s.value === form.sectionType)?.label} 항목을 {editItem ? "更新" : "追加"}합니다.
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4">

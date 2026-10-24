@@ -140,7 +140,7 @@ async function startServer() {
   });
 
   // tRPC API
-  // seoulmono-admin: 접두사 유무 양쪽 모두 받는다.
+  // sorosoro-admin2: 접두사 유무 양쪽 모두 받는다.
   app.use(
     ["/trpc", "/admin/trpc"],
     createExpressMiddleware({
@@ -157,10 +157,10 @@ async function startServer() {
 
   const port = parseInt(process.env.PORT || "3000");
 
-  server.listen(port, () => {
+  server.listen(port, "127.0.0.1", () => {
     console.log(`Server running on http://localhost:${port}/`);
 
-    // === seoulmono-admin ===
+    // === sorosoro-admin2 ===
     // 탈모2의 자동 시드/동기화/AI자동글/스케줄러는 seoulmono 운영 DB에
     // 쓰기를 하므로 기본 차단한다. ADMIN2_ENABLE_JOBS=1 일 때만 동작.
     if (process.env.ADMIN2_ENABLE_JOBS === "1") {
@@ -198,7 +198,7 @@ async function startServer() {
         console.error('[Scheduler] Point expiration notification job failed:', error);
       }
     }, {
-      timezone: 'Asia/Tokyo'
+      timezone: 'Asia/Seoul'
     });
     
     console.log('[Scheduler] Point expiration notification job scheduled (daily at 9:00 AM KST)');

@@ -16,20 +16,20 @@ export default function MyPoints() {
   return (
     <MyPageLayout title="ポイント">
 
-        {/* 失効予定ポイント通知 */}
+        {/* 만료 예정 포인트 알림 */}
         {expiringData && expiringData.totalExpiring > 0 && (
           <div className="bg-orange-50 dark:bg-orange-950/30 border border-orange-200 dark:border-orange-800 rounded-xl p-4 mb-6">
             <div className="flex items-start gap-3">
               <AlertCircle className="w-5 h-5 text-orange-600 mt-0.5 shrink-0" />
               <div className="flex-1">
                 <p className="text-sm font-semibold text-orange-900 dark:text-orange-200 mb-1">
-                  30日以内に失効予定のポイント
+                  30일 이내 만료 예정 포인트
                 </p>
                 <p className="text-sm text-orange-700 dark:text-orange-400">
-                  <strong className="font-bold">{expiringData.totalExpiring.toLocaleString()}P</strong>がまもなく失効します。
+                  <strong className="font-bold">{expiringData.totalExpiring.toLocaleString()}P</strong>가 곧 만료됩니다.
                   {expiringData.items.length > 0 && expiringData.items[0].expiresAt && (
                     <span className="ml-1">
-                      (最短 {new Date(expiringData.items[0].expiresAt).toLocaleDateString('ja-JP')} 失効)
+                      (최소 {new Date(expiringData.items[0].expiresAt).toLocaleDateString('ko-KR')} 만료)
                     </span>
                   )}
                 </p>

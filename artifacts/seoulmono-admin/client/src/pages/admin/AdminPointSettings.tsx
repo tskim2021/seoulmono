@@ -15,7 +15,7 @@ export default function AdminPointSettings() {
     onError: (e) => toast.error(e.message),
   });
   const bulkUpdate = trpc.admin.bulkUpdateProductPointRate.useMutation({
-    onSuccess: (d) => toast.success(`${d.updatedCount}件の商品のポイント付与率を変更しました。`),
+    onSuccess: (d) => toast.success(`${d.updatedCount}개 상품의 포인트 적립률이 변경되었습니다.`),
     onError: (e) => toast.error(e.message),
   });
 
@@ -26,11 +26,11 @@ export default function AdminPointSettings() {
     onError: (err) => toast.error(err.message),
   });
   const expirePointsMut = trpc.user.adminExpirePoints.useMutation({
-    onSuccess: (result) => toast.success(`${result.expiredCount}件のポイントが失効しました。(合計 ${result.totalExpiredPoints.toLocaleString()}P)`),
+    onSuccess: (result) => toast.success(`${result.expiredCount}건의 포인트가 만료되었습니다. (총 ${result.totalExpiredPoints.toLocaleString()}P)`),
     onError: (err) => toast.error(err.message),
   });
   const testNotificationMut = trpc.user.adminTestExpirationNotification.useMutation({
-    onSuccess: (result) => toast.success(`通知送信完了: ${result.totalUsers}名 (メール: ${result.emailSent}、プッシュ: ${result.pushSent}、失敗: ${result.failed})`),
+    onSuccess: (result) => toast.success(`알림 발송 완료: ${result.totalUsers}명 (이메일: ${result.emailSent}, 푸시: ${result.pushSent}, 실패: ${result.failed})`),
     onError: (err) => toast.error(err.message),
   });
 
@@ -66,7 +66,7 @@ export default function AdminPointSettings() {
         <div className="bg-card border rounded-xl p-5">
           <h2 className="text-base font-semibold mb-4 flex items-center gap-2">
             <Gift className="w-4 h-4 text-primary" />
-            ポイント付与設定
+            포인트 적립 설정
           </h2>
           <div className="space-y-5">
             <div>
@@ -100,7 +100,7 @@ export default function AdminPointSettings() {
 
             <Button onClick={() => updateSettings.mutate({ registrationPoints: Number(regPoints) || 0, defaultProductPointRate: Number(defaultRate) || 0 })} disabled={updateSettings.isPending} size="sm">
               {updateSettings.isPending ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Save className="w-4 h-4 mr-2" />}
-              付与設定を保存
+              적립 설정 저장
             </Button>
           </div>
         </div>
@@ -109,7 +109,7 @@ export default function AdminPointSettings() {
         <div className="bg-card border rounded-xl p-5">
           <h2 className="text-base font-semibold mb-3 flex items-center gap-2">
             <Package className="w-4 h-4 text-amber-600" />
-            商品ポイント付与率の一括変更
+            상품 포인트 적립률 일괄 변경
           </h2>
           <p className="text-xs text-muted-foreground mb-3">カテゴリー別または全商品のポイント付与率を一括で変更します。</p>
           <div className="flex flex-col sm:flex-row gap-2">
@@ -125,11 +125,11 @@ export default function AdminPointSettings() {
               <span className="text-sm text-muted-foreground">%</span>
             </div>
             <Button variant="outline" size="sm"
-              onClick={() => { if (!confirm(`${bulkCategoryId ? "選択したカテゴリーの" : "すべての"}商品のポイント付与率を${bulkRate}%に変更しますか？`)) return; bulkUpdate.mutate({ pointRate: Number(bulkRate) || 0, categoryId: bulkCategoryId }); }}
+              onClick={() => { if (!confirm(`${bulkCategoryId ? "선택한 카테고리의" : "전체"} 상품 포인트 적립률을 ${bulkRate}%로 변경하시겠습니까?`)) return; bulkUpdate.mutate({ pointRate: Number(bulkRate) || 0, categoryId: bulkCategoryId }); }}
               disabled={bulkUpdate.isPending}
             >
               {bulkUpdate.isPending ? <Loader2 className="w-4 h-4 mr-1 animate-spin" /> : null}
-              一括変更
+              일괄 변경
             </Button>
           </div>
         </div>
@@ -138,7 +138,7 @@ export default function AdminPointSettings() {
         <div className="bg-card border rounded-xl p-5">
           <h2 className="text-base font-semibold mb-4 flex items-center gap-2">
             <Calendar className="w-4 h-4 text-primary" />
-            ポイント有効期限設定
+            포인트 만료 설정
           </h2>
           <p className="text-xs text-muted-foreground mb-4">ポイント付与後、自動的に失効するまでの期間を設定します。</p>
           <div className="space-y-4">
@@ -152,15 +152,15 @@ export default function AdminPointSettings() {
                 <span className="text-sm text-muted-foreground">か月</span>
               </div>
               <p className="text-xs text-muted-foreground mt-1">
-                ポイント付与日から{expirationMonths}か月後に自動的に失効します。
+                포인트 적립일로부터 {expirationMonths}개월 후 자동 소멸됩니다.
               </p>
             </div>
 
             <div className="bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-lg p-3">
               <p className="text-xs font-medium text-blue-900 dark:text-blue-200 mb-1.5">適用例</p>
               <div className="text-xs text-blue-700 dark:text-blue-400 space-y-0.5">
-                <p>• 2026年1月1日付与 → {new Date(new Date(2026, 0, 1).setMonth(expirationMonths)).toLocaleDateString('ja-JP', { year: 'numeric', month: 'long', day: 'numeric' })} 失効</p>
-                <p>• 2026年6月15日付与 → {new Date(new Date(2026, 5, 15).setMonth(5 + expirationMonths)).toLocaleDateString('ja-JP', { year: 'numeric', month: 'long', day: 'numeric' })} 失効</p>
+                <p>• 2026년 1월 1일 적립 → {new Date(new Date(2026, 0, 1).setMonth(expirationMonths)).toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' })} 期限切れ</p>
+                <p>• 2026년 6월 15일 적립 → {new Date(new Date(2026, 5, 15).setMonth(5 + expirationMonths)).toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' })} 期限切れ</p>
               </div>
             </div>
 
@@ -169,7 +169,7 @@ export default function AdminPointSettings() {
               disabled={setMonthsMut.isPending}
             >
               {setMonthsMut.isPending ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Save className="w-4 h-4 mr-2" />}
-              有効期限設定を保存
+              만료 설정 저장
             </Button>
           </div>
         </div>
@@ -179,7 +179,7 @@ export default function AdminPointSettings() {
           <div className="bg-card border rounded-xl p-5">
             <h2 className="text-base font-semibold mb-3 flex items-center gap-2">
               <Clock className="w-4 h-4 text-orange-600" />
-              手動失効処理
+              수동 만료 처리
             </h2>
             <div className="bg-orange-50 dark:bg-orange-950/30 border border-orange-200 dark:border-orange-800 rounded-lg p-3 mb-3">
               <div className="flex items-start gap-1.5">
@@ -191,18 +191,18 @@ export default function AdminPointSettings() {
               </div>
             </div>
             <Button variant="outline" size="sm" className="w-full"
-              onClick={() => { if (confirm("失効したポイントを今すぐ処理しますか？")) expirePointsMut.mutate(); }}
+              onClick={() => { if (confirm("만료된 포인트를 즉시 처리하시겠습니까?")) expirePointsMut.mutate(); }}
               disabled={expirePointsMut.isPending}
             >
               {expirePointsMut.isPending ? <Loader2 className="w-4 h-4 mr-1 animate-spin" /> : <Play className="w-4 h-4 mr-1" />}
-              失効ポイントを今すぐ処理
+              만료 포인트 즉시 처리
             </Button>
           </div>
 
           <div className="bg-card border rounded-xl p-5">
             <h2 className="text-base font-semibold mb-3 flex items-center gap-2">
               <Bell className="w-4 h-4 text-blue-600" />
-              失効予定通知テスト
+              만료 예정 알림 테스트
             </h2>
             <div className="bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-lg p-3 mb-3">
               <ul className="text-xs text-blue-700 dark:text-blue-400 space-y-0.5 list-disc list-inside">
@@ -215,7 +215,7 @@ export default function AdminPointSettings() {
               disabled={testNotificationMut.isPending}
             >
               {testNotificationMut.isPending ? <Loader2 className="w-4 h-4 mr-1 animate-spin" /> : <Bell className="w-4 h-4 mr-1" />}
-              通知テストを実行
+              알림 테스트 실행
             </Button>
           </div>
         </div>

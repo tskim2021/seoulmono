@@ -22,12 +22,12 @@ export default function MyOrders() {
   const totalPages = Math.ceil((data?.total ?? 0) / 10);
   const cancelOrder = trpc.order.cancel.useMutation({
     onSuccess: () => { toast.success("注文をキャンセルしました。"); refetch(); },
-    onError: (err) => toast.error(err.message || "キャンセルに失敗しました。"),
+    onError: (err) => toast.error(err.message || "취소에 실패했습니다."),
   });
 
   const statusFilters = [
     { value: "all", label: "すべて" },
-    { value: "pending", label: "支払い待ち" },
+    { value: "pending", label: "入金前" },
     { value: "paid", label: "支払い済み" },
     { value: "shipping", label: "配送中" },
     { value: "delivered", label: "配送完了" },
@@ -147,7 +147,7 @@ export default function MyOrders() {
                         <p className="text-sm font-medium truncate">{order.firstProductName as string}</p>
                       )}
                       {'itemCount' in order && Number(order.itemCount) > 1 && (
-                        <p className="text-xs text-muted-foreground">ほか{Number(order.itemCount) - 1}点</p>
+                        <p className="text-xs text-muted-foreground">외 {Number(order.itemCount) - 1}건</p>
                       )}
                     </div>
                   </div>
@@ -176,7 +176,7 @@ export default function MyOrders() {
                   <Link href={`/mypage/orders/${order.id}`}>
                     <Button size="sm" variant="outline" className="text-xs h-7">
                       <FileText className="w-3 h-3 mr-1" />
-                      注文詳細を見る
+                      주문상세보기
                     </Button>
                   </Link>
                   {["pending", "paid", "preparing"].includes(order.status) && (
@@ -186,20 +186,20 @@ export default function MyOrders() {
                       className="text-xs h-7 text-rose-600 border-rose-200 hover:bg-rose-50 dark:text-rose-400 dark:border-rose-800 dark:hover:bg-rose-950/30 disabled:opacity-40 disabled:cursor-not-allowed"
                       disabled={order.status === "preparing" || cancelOrder.isPending}
                       onClick={() => {
-                        if (!confirm("注文をキャンセルしますか？")) return;
+                        if (!confirm("주문을 취소하시겠습니까?")) return;
                         cancelOrder.mutate({ orderId: order.id });
                       }}
                       title={order.status === "preparing" ? "商品準備中はキャンセルできません" : "注文キャンセル"}
                     >
                       <XCircle className="w-3 h-3 mr-1" />
-                      注文をキャンセル
+                      주문취소
                     </Button>
                   )}
                   {["shipping", "delivered", "customs_hold"].includes(order.status) && (
                     <Link href={`/mypage/orders/${order.id}`}>
                       <Button size="sm" variant="outline" className="text-xs h-7 text-blue-600 border-blue-200 hover:bg-blue-50 dark:text-blue-400 dark:border-blue-800 dark:hover:bg-blue-950/30">
                         <Truck className="w-3 h-3 mr-1" />
-                        配送状況を追跡
+                        배송추적
                       </Button>
                     </Link>
                   )}
@@ -207,14 +207,14 @@ export default function MyOrders() {
                     <Link href={`/mypage/orders/${order.id}`}>
                       <Button size="sm" className="text-xs h-7 gap-1 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white border-0">
                         <Star className="w-3 h-3" />
-                        レビューを書く
+                        리뷰작성
                       </Button>
                     </Link>
                   )}
                   {order.status === "delivered" && 'hasReview' in order && order.hasReview && (
                     <span className="text-xs text-muted-foreground flex items-center gap-1">
                       <CheckCircle2 className="w-3 h-3" />
-                      レビュー投稿済み
+                      리뷰 작성완료
                     </span>
                   )}
                 </div>

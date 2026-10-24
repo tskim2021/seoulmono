@@ -9,5 +9,13 @@ module.exports = {
       autorestart: true,
       max_memory_restart: "512M",
     },
+    {
+      name: "seoulmono-admin",
+      cwd: "/var/www/seoulmono/artifacts/seoulmono-admin",
+      script: "dist/index.js",
+      env: { NODE_ENV: "production", PORT: "8090" },
+      autorestart: true,
+      max_memory_restart: "512M",
+    },
   ],
 };

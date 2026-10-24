@@ -11,7 +11,7 @@ import { buildKoreaPostDescription, mapStatusDisplay } from "../lib/shippingDesc
  */
 function mapToIntlStatus(trackingStatus: number, events: { description: string; location?: string }[]): string {
   const allDescs = events.map(e => (e.description || "").toLowerCase()).join(" ");
-  
+
   if (allDescs.includes("배달완료") || allDescs.includes("delivered") || trackingStatus === 6) return "delivered";
   if (allDescs.includes("배달출발") || allDescs.includes("out for delivery") || trackingStatus === 4) return "out_for_delivery";
   if ((allDescs.includes("교환국 도착") || allDescs.includes("국제우편물류센터")) && (allDescs.includes("통관") || allDescs.includes("customs"))) return "import_customs";
@@ -23,7 +23,7 @@ function mapToIntlStatus(trackingStatus: number, events: { description: string; 
   if (allDescs.includes("발송되었습니다") || allDescs.includes("in transit") || trackingStatus === 2) return "in_transit_intl";
   if (trackingStatus === 3) return "export_customs";
   if (trackingStatus === 1) return "accepted";
-  
+
   return mapStatusToSystem(trackingStatus);
 }
 
@@ -63,10 +63,10 @@ function convertKoreaPostEvents(koreaPostResult: KoreaPostTrackingResult): { des
     const [year, month, day] = datePart.split('.').map(Number);
     const [hour, minute] = (timePart || '00:00').split(':').map(Number);
     const date = new Date(year, month - 1, day, hour, minute);
-    
+
     const description = mapStatusDisplay(event.processStatus);
     const details = buildKoreaPostDescription(event.processStatus, event.postOffice, event.details);
-    
+
     return {
       description,
       location: event.postOffice,
@@ -95,7 +95,7 @@ async function handleCustomsHold(
     const [datePart, timePart] = ci.detectedAt.split(' ');
     const [year, month, day] = datePart.split('.').map(Number);
     const [hour, minute] = (timePart || '00:00').split(':').map(Number);
-    
+
     await db.updateShipmentCustomsInfo(shipment.id, {
       customsNumber: ci.customsNumber || undefined,
       customsOffice: ci.customsOffice || undefined,
@@ -111,12 +111,12 @@ async function handleCustomsHold(
   await db.createNotification(
     order.userId,
     "order",
-    "通関検査のお知らせ",
-    `注文番号 ${order.orderNumber}: お客様のご注文商品が通関検査の対象となりました。${
-      koreaPostResult?.customsInfo?.customsOffice 
-        ? ` (${koreaPostResult.customsInfo.customsOffice} 通関番号: ${koreaPostResult.customsInfo.customsNumber})` 
+    "통관검사 안내",
+    `주문번호 ${order.orderNumber}: 고객님의 주문 상품이 통관검사 대상으로 선정되었습니다.${
+      koreaPostResult?.customsInfo?.customsOffice
+        ? ` (${koreaPostResult.customsInfo.customsOffice} 통관번호: ${koreaPostResult.customsInfo.customsNumber})`
         : ''
-    } 通関手続きが完了次第、配送を再開いたします。`,
+    } 통관 절차가 완료되면 배송이 재개됩니다.`,
     `/mypage/orders/${order.id}`
   );
 
@@ -124,12 +124,12 @@ async function handleCustomsHold(
   try {
     const { notifyOwner } = await import("../_core/notification");
     await notifyOwner({
-      title: "⚠️ 通関検査を検知",
-      content: `注文番号: ${order.orderNumber}\n追跡番号: ${shipment.trackingNumber}${
-        koreaPostResult?.customsInfo 
-          ? `\n税関: ${koreaPostResult.customsInfo.customsOffice}\n通関番号: ${koreaPostResult.customsInfo.customsNumber}` 
+      title: "⚠️ 통관검사 감지",
+      content: `주문번호: ${order.orderNumber}\n운송장: ${shipment.trackingNumber}${
+        koreaPostResult?.customsInfo
+          ? `\n세관: ${koreaPostResult.customsInfo.customsOffice}\n통관번호: ${koreaPostResult.customsInfo.customsNumber}`
           : ''
-      }\n\n通関検査の対象であることが確認されました。管理者ダッシュボードでご確認ください。`,
+      }\n\n통관검사 대상으로 확인되었습니다. 관리자 대시보드에서 확인해주세요.`,
     });
   } catch (e) {
     console.error("[ShippingSync] Failed to notify owner about customs hold:", e);
@@ -142,13 +142,13 @@ async function handleCustomsHold(
       const { sendEmail } = await import("../_core/email");
       const { generateCustomsHoldEmail } = await import("../_core/customsHoldEmail");
       const emailHtml = generateCustomsHoldEmail({
-        customerName: user.name || "お客様",
+        customerName: user.name || "고객",
         orderNumber: order.orderNumber,
         orderId: order.id,
       });
       await sendEmail({
         to: user.email,
-        subject: `[ソウルモノ] 通関検査のお知らせ - ご注文番号 ${order.orderNumber}`,
+        subject: `[탈모학교] 통관검사 안내 - 주문번호 ${order.orderNumber}`,
         html: emailHtml,
         userId: user.id,
       });
@@ -173,8 +173,8 @@ async function handleCustomsCleared(shipment: { id: number; orderId: number; tra
   await db.createNotification(
     order.userId,
     "order",
-    "通関検査完了 - 配送再開",
-    `注文番号 ${order.orderNumber}: 通関検査が完了し、配送が再開されました。`,
+    "통관검사 완료 - 배송 재개",
+    `주문번호 ${order.orderNumber}: 통관검사가 완료되어 배송이 재개되었습니다.`,
     `/mypage/orders/${order.id}`
   );
   console.log(`[ShippingSync] Order ${order.orderNumber} customs cleared, resumed shipping`);
@@ -193,12 +193,12 @@ async function handleDelivered(shipment: { id: number; orderId: number; tracking
   if (order.pointsEarned > 0) {
     const alreadyAwarded = await db.hasOrderEarnPoints(order.id);
     if (!alreadyAwarded) {
-      await db.addPoints(order.userId, order.pointsEarned, "earn", `注文 ${order.orderNumber} 配送完了ポイント付与`, order.id);
+      await db.addPoints(order.userId, order.pointsEarned, "earn", `주문 ${order.orderNumber} 배송완료 포인트 적립`, order.id);
       await db.createNotification(
         order.userId,
         "point",
-        "ポイントが付与されました",
-        `${order.pointsEarned.toLocaleString()}ポイント付与 (注文番号: ${order.orderNumber})`,
+        "포인트가 적립되었습니다",
+        `${order.pointsEarned.toLocaleString()}P 적립 (주문번호: ${order.orderNumber})`,
         `/mypage/points`
       );
     }
@@ -207,8 +207,8 @@ async function handleDelivered(shipment: { id: number; orderId: number; tracking
   await db.createNotification(
     order.userId,
     "order",
-    "配送が完了しました",
-    `注文番号: ${order.orderNumber}。商品はいかがでしたか？レビューをお寄せください！`,
+    "배송이 완료되었습니다",
+    `주문번호: ${order.orderNumber}. 상품은 어떠셨나요? 리뷰를 작성해주세요!`,
     `/mypage/orders/${order.id}`
   );
 
@@ -216,20 +216,20 @@ async function handleDelivered(shipment: { id: number; orderId: number; tracking
     const user = await db.getUserById(order.userId);
     const items = await db.getOrderItems(order.id);
     const firstProduct = items[0];
-    
+
     if (user && user.email && firstProduct) {
       const { sendEmail, generateReviewRequestEmail } = await import("../_core/email");
       const reviewUrl = `${process.env.VITE_OAUTH_PORTAL_URL || 'https://app.manus.im'}/mypage/orders/${order.id}`;
       const emailHtml = generateReviewRequestEmail({
-        customerName: user.name || "お客様",
+        customerName: user.name || "고객",
         orderNumber: order.orderNumber,
-        productName: firstProduct.productName + (items.length > 1 ? ` 他${items.length - 1}点` : ""),
+        productName: firstProduct.productName + (items.length > 1 ? ` 외 ${items.length - 1}건` : ""),
         reviewUrl,
       });
-      
+
       await sendEmail({
         to: user.email,
-        subject: "配送が完了しました！レビューをお寄せください 💜",
+        subject: "배송이 완료되었습니다! 리뷰를 작성해주세요 💜",
         html: emailHtml,
       });
     }
@@ -248,22 +248,22 @@ function isInternationalPostal(trackingNumber: string): boolean {
 
 /**
  * 배송 동기화 Job - 배송 중인 모든 주문의 추적 정보를 갱신
- * 
+ *
  * 국제우편(L로 시작): 우체국 사이트 크롤링 우선 → 17track 보조
  * 기타 국제택배: 17track API 사용
  */
 export async function runShippingSyncJob() {
   console.log("[ShippingSync] Starting shipping sync job...");
-  
+
   const activeShipments = await db.getActiveShipments();
-  
+
   if (activeShipments.length === 0) {
     console.log("[ShippingSync] No active shipments to sync.");
     return { syncedCount: 0, failedCount: 0, total: 0, customsHoldCount: 0 };
   }
-  
+
   console.log(`[ShippingSync] Found ${activeShipments.length} active shipments to sync.`);
-  
+
   let syncedCount = 0;
   let failedCount = 0;
   let deliveredCount = 0;
@@ -289,17 +289,17 @@ export async function runShippingSyncJob() {
       // ─── 국제우편 (등기 패턴): 우체국 크롤링 우선 ───
       if (needsKoreaPostCrawling(shipment.trackingNumber)) {
         console.log(`[ShippingSync] Using Korea Post crawling for ${shipment.trackingNumber}`);
-        
+
         koreaPostResult = await getKoreaPostTracking(shipment.trackingNumber);
-        
+
         if (koreaPostResult) {
           newStatus = koreaPostResult.mappedStatus;
-          
+
           // 우체국 크롤링 이벤트를 DB에 저장
           const koreaPostEvents = convertKoreaPostEvents(koreaPostResult);
           const existingHistory = await db.getShippingHistoryByShipmentId(shipment.id);
           const newEvents = filterNewEvents(existingHistory, koreaPostEvents);
-          
+
           for (const event of newEvents) {
             await db.createShippingHistory({
               shipmentId: shipment.id,
@@ -309,7 +309,7 @@ export async function runShippingSyncJob() {
               timestamp: new Date(event.time),
             });
           }
-          
+
           console.log(`[ShippingSync] Korea Post: ${shipment.trackingNumber} → ${newStatus} (+${newEvents.length} events)`);
         } else {
           // 우체국 크롤링 실패 시 17track 폴백
@@ -320,7 +320,7 @@ export async function runShippingSyncJob() {
             continue;
           }
           newStatus = mapToIntlStatus(trackingInfo.status, trackingInfo.events);
-          
+
           const existingHistory = await db.getShippingHistoryByShipmentId(shipment.id);
           const newEvents = filterNewEvents(existingHistory, trackingInfo.events);
           for (const event of newEvents) {

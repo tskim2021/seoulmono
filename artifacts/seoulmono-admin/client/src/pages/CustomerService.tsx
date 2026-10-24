@@ -18,7 +18,7 @@ export default function CustomerService() {
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold mb-4">カスタマーセンター</h1>
           <p className="text-muted-foreground text-lg">
-            どのようなご用件でしょうか？ お困りのことをすばやく解決いたします。
+            무엇을 도와드릴까요? 궁금하신 사항을 빠르게 해결해드립니다.
           </p>
         </div>
 
@@ -39,10 +39,10 @@ export default function CustomerService() {
               </CardHeader>
               <CardContent>
                 <p className="text-sm text-muted-foreground">
-                  ソウルモノの最新情報、イベント、ポリシー変更をご確認ください。
+                  탈모학교의 최신 소식, 이벤트, 정책 변경 사항을 확인하세요.
                 </p>
                 <Button variant="link" className="mt-4 p-0">
-                  お知らせを見る →
+                  공지사항 보기 →
                 </Button>
               </CardContent>
             </Card>
@@ -63,10 +63,10 @@ export default function CustomerService() {
               </CardHeader>
               <CardContent>
                 <p className="text-sm text-muted-foreground">
-                  よくあるご質問と回答を確認して、すばやく問題を解決しましょう。
+                  자주 묻는 질문과 답변을 확인하고 빠르게 문제를 해결하세요.
                 </p>
                 <Button variant="link" className="mt-4 p-0">
-                  FAQを見る →
+                  FAQ 보기 →
                 </Button>
               </CardContent>
             </Card>
@@ -87,10 +87,10 @@ export default function CustomerService() {
               </CardHeader>
               <CardContent>
                 <p className="text-sm text-muted-foreground">
-                  ご不明な点をお問い合わせいただければ、すばやくご回答いたします。
+                  궁금하신 사항을 문의하시면 빠르게 답변해드립니다.
                 </p>
                 <Button variant="link" className="mt-4 p-0">
-                  お問い合わせ →
+                  문의하기 →
                 </Button>
               </CardContent>
             </Card>
@@ -140,7 +140,7 @@ export default function CustomerService() {
                 <CardContent className="pt-6">
                   <h3 className="font-semibold mb-2">注文・お支払い</h3>
                   <p className="text-sm text-muted-foreground">
-                    注文方法、お支払い方法、注文のキャンセル・変更のご案内
+                    주문 방법, 결제 수단, 주문 취소 및 변경에 대한 안내
                   </p>
                 </CardContent>
               </Card>
@@ -151,7 +151,7 @@ export default function CustomerService() {
                 <CardContent className="pt-6">
                   <h3 className="font-semibold mb-2">配送</h3>
                   <p className="text-sm text-muted-foreground">
-                    配送状況の確認、送料、配送期間のご案内
+                    배송 조회, 배송비, 배송 기간에 대한 안내
                   </p>
                 </CardContent>
               </Card>
@@ -162,7 +162,7 @@ export default function CustomerService() {
                 <CardContent className="pt-6">
                   <h3 className="font-semibold mb-2">返品・交換</h3>
                   <p className="text-sm text-muted-foreground">
-                    返品・交換の申請方法、返金手続きのご案内
+                    반품/교환 신청 방법, 환불 절차에 대한 안내
                   </p>
                 </CardContent>
               </Card>
@@ -173,7 +173,7 @@ export default function CustomerService() {
                 <CardContent className="pt-6">
                   <h3 className="font-semibold mb-2">会員情報</h3>
                   <p className="text-sm text-muted-foreground">
-                    会員登録、情報変更、会員ランク・ポイントのご案内
+                    회원 가입, 정보 수정, 등급 및 포인트에 대한 안내
                   </p>
                 </CardContent>
               </Card>

@@ -58,9 +58,9 @@ function WaitingScreen({ postId, onNavigate }: { postId: number; onNavigate: (id
               </div>
             </div>
 
-            <h2 className="text-xl font-bold mb-2">AIアシスタントが回答を作成中{dots}</h2>
+            <h2 className="text-xl font-bold mb-2">AI 상담사 답변 생성 중{dots}</h2>
             <p className="text-muted-foreground text-sm mb-6">
-              お問い合わせ内容を分析して回答を準備しています。<br />しばらくお待ちください。
+              문의 내용을 분석하여 답변을 준비하고 있습니다.<br />잠시만 기다려 주세요.
             </p>
 
             <div className="flex justify-center gap-1.5 mb-8">
@@ -74,13 +74,13 @@ function WaitingScreen({ postId, onNavigate }: { postId: number; onNavigate: (id
             </div>
 
             <p className="text-xs text-muted-foreground">
-              回答が完了すると、自動的に画面が切り替わります。
+              답변이 완료되면 자동으로 화면이 전환됩니다.
               {elapsed >= 10 && (
                 <button
                   className="block mx-auto mt-3 text-primary underline underline-offset-2"
                   onClick={() => onNavigate(postId)}
                 >
-                  待たずにすぐ移動する
+                  기다리지 않고 바로 이동하기
                 </button>
               )}
             </p>
@@ -120,7 +120,7 @@ export default function Inquiry() {
       setWaitingPostId(data.postId);
     },
     onError: (error) => {
-      toast.error(error.message || "お問い合わせの登録に失敗しました。");
+      toast.error(error.message || "문의 등록에 실패했습니다.");
     }
   });
 
@@ -132,11 +132,11 @@ export default function Inquiry() {
     const files = e.target.files;
     if (!files || files.length === 0) return;
     const remainingSlots = MAX_IMAGES - images.length;
-    if (remainingSlots <= 0) { toast.error(`画像は最大${MAX_IMAGES}枚まで添付できます。`); return; }
+    if (remainingSlots <= 0) { toast.error(`이미지는 최대 ${MAX_IMAGES}장까지 첨부할 수 있습니다.`); return; }
     const filesToUpload = Array.from(files).slice(0, remainingSlots);
     for (const file of filesToUpload) {
-      if (!ALLOWED_TYPES.includes(file.type)) { toast.error(`${file.name}: 画像ファイルのみアップロードできます。`); return; }
-      if (file.size > MAX_FILE_SIZE) { toast.error(`${file.name}: ファイルサイズは10MBを超えることはできません。`); return; }
+      if (!ALLOWED_TYPES.includes(file.type)) { toast.error(`${file.name}: 이미지 파일만 업로드할 수 있습니다.`); return; }
+      if (file.size > MAX_FILE_SIZE) { toast.error(`${file.name}: 파일 크기는 10MB를 초과할 수 없습니다.`); return; }
     }
     setUploading(true);
     try {
@@ -147,7 +147,7 @@ export default function Inquiry() {
         uploadedUrls.push(result.url);
       }
       setImages(prev => [...prev, ...uploadedUrls]);
-      toast.success(`${uploadedUrls.length}枚の画像を添付しました。`);
+      toast.success(`${uploadedUrls.length}개의 이미지가 첨부되었습니다.`);
     } catch { toast.error("画像のアップロードに失敗しました。"); }
     finally { setUploading(false); if (fileInputRef.current) fileInputRef.current.value = ""; }
   };
@@ -175,8 +175,8 @@ export default function Inquiry() {
 
   const getCategoryLabel = (value: string) => {
     const labels: Record<string, string> = {
-      order: "注文・お支払い", shipping: "配送", return: "返品・交換",
-      product: "商品", member: "会員", etc: "その他"
+      order: "주문/결제", shipping: "배송", return: "반품/교환",
+      product: "상품", member: "회원", etc: "기타"
     };
     return labels[value] || value;
   };
@@ -207,7 +207,7 @@ export default function Inquiry() {
         <div className="mb-8">
           <Button variant="ghost" size="sm" onClick={() => navigate("/customer-service")} className="mb-4">
             <ChevronLeft className="w-4 h-4 mr-1" />
-            カスタマーセンターへ戻る
+            고객센터로 돌아가기
           </Button>
           <h1 className="text-3xl font-bold mb-2">お問い合わせ</h1>
           <p className="text-muted-foreground">お問い合わせを登録すると自動応答がすぐに届き、解決しない場合は担当者におつなぎできます。</p>
@@ -249,12 +249,12 @@ export default function Inquiry() {
                   </div>
                   <div>
                     <Label style={{ paddingBottom: "10px" }}>添付ファイル</Label>
-                    <p className="text-sm text-muted-foreground mb-3">商品の不良、配送時の破損などの場合は、写真を添付していただくと迅速に対応できます。(最大{MAX_IMAGES}枚、各10MB以下)</p>
+                    <p className="text-sm text-muted-foreground mb-3">상품 불량, 배송 파손 등의 경우 사진을 첨부해주시면 빠른 처리가 가능합니다. (최대 {MAX_IMAGES}장, 각 10MB 이하)</p>
                     {images.length > 0 && (
                       <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-3">
                         {images.map((url, index) => (
                           <div key={index} className="relative group rounded-lg overflow-hidden border bg-muted aspect-square">
-                            <img src={url} alt={`添付画像 ${index + 1}`} className="w-full h-full object-cover" />
+                            <img src={url} alt={`첨부 이미지 ${index + 1}`} className="w-full h-full object-cover" />
                             <button type="button" onClick={() => removeImage(index)} className="absolute top-1 right-1 bg-black/60 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity">
                               <X className="w-4 h-4" />
                             </button>
@@ -266,7 +266,7 @@ export default function Inquiry() {
                       <div>
                         <input ref={fileInputRef} type="file" accept="image/jpeg,image/png,image/gif,image/webp" multiple onChange={handleFileSelect} className="hidden" id="inquiry-images" />
                         <Button type="button" variant="outline" size="sm" onClick={() => fileInputRef.current?.click()} disabled={uploading}>
-                          {uploading ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" />アップロード中...</> : <><ImagePlus className="w-4 h-4 mr-2" />画像を添付 ({images.length}/{MAX_IMAGES})</>}
+                          {uploading ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" />アップロード中...</> : <><ImagePlus className="w-4 h-4 mr-2" />이미지 첨부 ({images.length}/{MAX_IMAGES})</>}
                         </Button>
                       </div>
                     )}
@@ -305,7 +305,7 @@ export default function Inquiry() {
             <Card>
               <CardHeader><CardTitle className="text-lg">マイお問い合わせ履歴</CardTitle></CardHeader>
               <CardContent>
-                <p className="text-sm text-muted-foreground">ご投稿のお問い合わせ履歴はマイページでご確認いただけます。</p>
+                <p className="text-sm text-muted-foreground mb-3">ご投稿のお問い合わせ履歴はマイページでご確認いただけます。</p>
                 <Button variant="outline" size="sm" onClick={() => navigate("/mypage/inquiries")} className="w-full">お問い合わせ履歴を見る</Button>
               </CardContent>
             </Card>

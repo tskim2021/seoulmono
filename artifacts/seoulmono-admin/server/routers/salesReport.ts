@@ -8,7 +8,7 @@ import { invokeLLM } from "../_core/llm";
 
 const adminProcedure = protectedProcedure.use(({ ctx, next }) => {
   if (ctx.user.role !== "admin") {
-    throw new TRPCError({ code: "FORBIDDEN", message: "管理者のみアクセスできます" });
+    throw new TRPCError({ code: "FORBIDDEN", message: "관리자만 접근 가능합니다" });
   }
   return next({ ctx });
 });
@@ -23,7 +23,7 @@ export const salesReportRouter = router({
     }))
     .mutation(async ({ input }) => {
       const dbConn = await db.getDb();
-      if (!dbConn) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "DB接続に失敗しました" });
+      if (!dbConn) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "DB 연결 실패" });
 
       // 기간 내 주문 데이터 조회
       const ordersData = await dbConn
@@ -64,7 +64,7 @@ export const salesReportRouter = router({
       const topProductsWithInfo = await Promise.all(
         topProducts.map(async (p) => {
           const product = await db.getProductById(p.productId);
-          return { ...p, productName: product?.name || "不明" };
+          return { ...p, productName: product?.name || "알 수 없음" };
         })
       );
 
@@ -84,16 +84,16 @@ export const salesReportRouter = router({
         messages: [
           {
             role: "system",
-            content: "あなたはEC専門のデータアナリストです。与えられた売上データを分析し、主要なインサイトと改善提案を日本語で作成してください。",
+            content: "당신은 전문 이커머스 데이터 분석가입니다. 주어진 매출 데이터를 분석하여 핵심 인사이트와 개선 제안을 한국어로 작성해주세요.",
           },
           {
             role: "user",
-            content: `次の売上データを分析してレポートを作成してください:\n\n${JSON.stringify(reportData, null, 2)}\n\n次の項目を含めてください:\n1. 全体の要約（2〜3文）\n2. 主要指標の分析\n3. 売上上位商品の分析\n4. 改善提案（3点）\n5. 次期の予測`,
+            content: `다음 매출 데이터를 분석하여 리포트를 작성해주세요:\n\n${JSON.stringify(reportData, null, 2)}\n\n다음 항목을 포함해주세요:\n1. 전체 요약 (2-3문장)\n2. 주요 지표 분석\n3. 상위 판매 상품 분석\n4. 개선 제안 (3가지)\n5. 다음 기간 예측`,
           },
         ],
       });
 
-      const aiInsights = llmResponse.choices[0]?.message?.content || "分析に失敗しました";
+      const aiInsights = llmResponse.choices[0]?.message?.content || "분석 실패";
 
       return {
         ...reportData,

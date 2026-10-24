@@ -45,7 +45,7 @@ export default function Login() {
       if (!val || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val)) return;
       try {
         const res = await utils.localAuth.checkAvailability.fetch({ email: val });
-        if (res.emailTaken) setEmailError("すでに登録されているメールアドレスです。");
+        if (res.emailTaken) setEmailError("이미 가입된 이메일입니다.");
       } catch {}
     }, 500);
   };
@@ -59,7 +59,7 @@ export default function Login() {
       if (!val || val.length < 9) return;
       try {
         const res = await utils.localAuth.checkAvailability.fetch({ phone: val });
-        if (res.phoneTaken) setPhoneError("すでに登録されている連絡先です。");
+        if (res.phoneTaken) setPhoneError("이미 가입된 연락처입니다.");
       } catch {}
     }, 500);
   };
@@ -84,8 +84,8 @@ export default function Login() {
       setLocation("/");
     },
     onError: (err) => {
-      if (err.message.includes("이메일") || err.message.includes("メール")) setEmailError(err.message);
-      else if (err.message.includes("연락처") || err.message.includes("連絡先")) setPhoneError(err.message);
+      if (err.message.includes("이메일")) setEmailError(err.message);
+      else if (err.message.includes("연락처")) setPhoneError(err.message);
       else toast.error(err.message);
     },
   });
@@ -106,7 +106,7 @@ export default function Login() {
   const isLoading = loginMutation.isPending || registerMutation.isPending;
 
   return (
-    // seoulmono-admin: 관리자 전용 배포라 쇼핑몰 Layout(헤더/카테고리바)을 쓰지 않는다.
+    // sorosoro-admin2: 관리자 전용 배포라 쇼핑몰 Layout(헤더/카테고리바)을 쓰지 않는다.
     <div className="min-h-screen flex items-center justify-center bg-background px-4">
       <div className="w-full max-w-md">
         <Card>
@@ -128,7 +128,7 @@ export default function Login() {
               {isRegister && (
                 <>
                   <div>
-                    <label className="block text-sm font-medium mb-1.5">お名前</label>
+                    <label className="block text-sm font-medium mb-1.5">氏名</label>
                     <Input
                       type="text"
                       placeholder="お名前を入力してください"
@@ -139,7 +139,7 @@ export default function Login() {
                   </div>
                   <div>
                     <label className="block text-sm font-medium mb-1.5">
-                      連絡先 <span className="text-destructive">*</span>
+                      연락처 <span className="text-destructive">*</span>
                     </label>
                     <Input
                       type="tel"
@@ -156,13 +156,13 @@ export default function Login() {
                 </>
               )}
               <div>
-                <label className="block text-sm font-medium mb-1.5">ID (またはメールアドレス)</label>
-                {/* seoulmono-admin: 그누보드 아이디(admin)로도 로그인하므로
+                <label className="block text-sm font-medium mb-1.5">ID（またはメールアドレス）</label>
+                {/* sorosoro-admin2: 그누보드 아이디(admin)로도 로그인하므로
                     로그인 시에는 type="email" 을 쓰면 브라우저 검증에 막힌다. */}
                 <Input
                   type={isRegister ? "email" : "text"}
                   autoComplete="username"
-                  placeholder={isRegister ? "IDとして使用するメールアドレスを入力してください" : "IDまたはメールアドレスを入力してください"}
+                  placeholder={isRegister ? "IDとして使用するメールアドレスを入力してください" : "IDまたはメールアドレスを入力"}
                   value={email}
                   onChange={(e) => handleEmailChange(e.target.value)}
                   className={emailError ? "border-destructive focus-visible:ring-destructive" : ""}
@@ -205,11 +205,11 @@ export default function Login() {
               </Button>
             </form>
 
-            {/* seoulmono-admin: 관리자 전용 배포라 회원가입/계정찾기 진입은 두지 않는다.
+            {/* sorosoro-admin2: 관리자 전용 배포라 회원가입/계정찾기 진입은 두지 않는다.
                 계정은 쇼핑몰의 g5_member 를 그대로 쓴다. */}
             <div className="mt-6 text-center">
               <p className="text-xs text-muted-foreground">
-                ショップの管理者アカウントでログインします。
+                既存のショップ管理者アカウントでログインします。
               </p>
             </div>
           </CardContent>

@@ -57,7 +57,7 @@ function InternationalProgressBar({ status }: { status: string }) {
     return (
       <div className="flex items-center gap-2 p-2 bg-destructive/10 rounded-lg text-destructive text-xs">
         <AlertCircle className="w-3.5 h-3.5 shrink-0" />
-        <span>{status === "returned" ? "返送処理されました。" : status === "alert" ? "配送に注意が必要です — カスタマーセンターへお問い合わせください" : "配送エラー — カスタマーセンターへお問い合わせください"}</span>
+        <span>{status === "returned" ? "返送処理されました。" : status === "alert" ? "배송 주의 — 고객센터 문의 필요" : "배송 오류 — 고객센터 문의 필요"}</span>
       </div>
     );
   }
@@ -144,7 +144,7 @@ function OrderItemRow({ item, orderStatus, onReviewSuccess, pointSettings, itemD
             )}
             {isCancelled && item.refundedAt && (
               <span className="text-[10px] px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400 font-medium shrink-0">
-                返金完了 {new Date(item.refundedAt).toLocaleString("ja-JP", { year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit", hour12: false })}
+                환불 완료 {new Date(item.refundedAt).toLocaleString("ko-KR", { year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit", hour12: false })}
               </span>
             )}
           </div>
@@ -155,9 +155,9 @@ function OrderItemRow({ item, orderStatus, onReviewSuccess, pointSettings, itemD
                 .join(", ")}
             </p>
           )}
-          <p className="text-xs text-muted-foreground">数量: {item.quantity}</p>
+          <p className="text-xs text-muted-foreground">수량: {item.quantity}</p>
           {isCancelled && item.cancelReason && (
-            <p className="text-xs text-red-500 dark:text-red-400 mt-0.5">キャンセル理由: {item.cancelReason}</p>
+            <p className="text-xs text-red-500 dark:text-red-400 mt-0.5">취소 사유: {item.cancelReason}</p>
           )}
           
           {!isCancelled && orderStatus === "delivered" && (
@@ -174,7 +174,7 @@ function OrderItemRow({ item, orderStatus, onReviewSuccess, pointSettings, itemD
                   className="h-7 text-xs gap-1 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white"
                 >
                   <Star className="w-3 h-3" />
-                  レビューを書いて{reviewPoints}Pゲット
+                  리뷰 작성하고 {reviewPoints}P 받기
                 </Button>
               )}
             </div>
@@ -227,7 +227,7 @@ function ItemTrackingSection({
   }
 
   const estimatedDate = shipment.estimatedDeliveryDate
-    ? new Date(shipment.estimatedDeliveryDate).toLocaleDateString("ja-JP", { month: "long", day: "numeric", weekday: "short" })
+    ? new Date(shipment.estimatedDeliveryDate).toLocaleDateString("ko-KR", { month: "long", day: "numeric", weekday: "short" })
     : null;
 
   return (
@@ -238,7 +238,7 @@ function ItemTrackingSection({
           <Truck className="w-3.5 h-3.5 text-primary shrink-0" />
           <span className="text-xs font-mono text-muted-foreground truncate">{shipment.trackingNumber}</span>
           {estimatedDate && shipment.status !== "delivered" && (
-            <span className="text-[10px] text-primary shrink-0">· {estimatedDate} 予定</span>
+            <span className="text-[10px] text-primary shrink-0">· {estimatedDate} 예상</span>
           )}
           {shipment.status === "delivered" && shipment.actualDeliveryDate && (
             <span className="text-[10px] text-emerald-600 shrink-0">· {formatDateTime(shipment.actualDeliveryDate)} 配達完了</span>
@@ -253,7 +253,7 @@ function ItemTrackingSection({
           {shipment.history && shipment.history.length > 0 && (
             <Button size="sm" variant="outline" className="text-xs h-7 gap-1" onClick={() => onShowTimeline(shipment)}>
               <Clock className="w-3 h-3" />
-              配送追跡履歴 ({shipment.history.length}件)
+              배송추적이력 ({shipment.history.length}건)
             </Button>
           )}
         </div>
@@ -286,13 +286,13 @@ export default function OrderDetail() {
     onSuccess: (data) => {
       setRefreshingShipmentId(null);
       if (!data.success) {
-        toast.info(data.message || "配送情報をまだ照会できません。");
+        toast.info(data.message || "배송 정보를 아직 조회할 수 없습니다.");
         return;
       }
       if (data.delivered) {
         toast.success("配送が完了しました！レビューを投稿してください。");
       } else if (data.eventsCount > 0) {
-        toast.success(`配送情報を更新しました。(新規イベント ${data.eventsCount}件)`);
+        toast.success(`배송 정보가 업데이트되었습니다. (${data.eventsCount}개 새 이벤트)`);
       } else {
         toast.info("配送情報は最新の状態です。");
       }
@@ -314,8 +314,8 @@ export default function OrderDetail() {
   const cancelItems = trpc.order.cancelItems.useMutation({
     onSuccess: (result) => {
       const msg = result.allCancelled
-        ? `注文全体をキャンセルしました。返金額: ${formatPrice(result.refundAmount)}`
-        : `${result.cancelledCount}点の商品をキャンセルしました。返金額: ${formatPrice(result.refundAmount)}`;
+        ? `주문이 전체 취소되었습니다. 환불 금액: ${formatPrice(result.refundAmount)}`
+        : `${result.cancelledCount}개 상품이 취소되었습니다. 환불 금액: ${formatPrice(result.refundAmount)}`;
       toast.success(msg);
       setShowCancelDialog(false);
       setCancelItemIds([]);
@@ -338,13 +338,13 @@ export default function OrderDetail() {
     if (order.shippingFee === 0) {
       if (shippingPolicy) {
         if (shippingPolicy.freeShipping) {
-          return "無料 (国際配送)";
+          return "무료 (국제배송)";
         }
         if (shippingPolicy.freeShippingThreshold > 0 && order.totalAmount >= shippingPolicy.freeShippingThreshold) {
-          return `無料 (${formatPrice(shippingPolicy.freeShippingThreshold)} 以上のご購入)`;
+          return `무료 (${formatPrice(shippingPolicy.freeShippingThreshold)} 이상 구매)`;
         }
       }
-      return "無料 (国際配送)";
+      return "무료 (국제배송)";
     }
     return formatPrice(order.shippingFee);
   })();
@@ -371,8 +371,8 @@ export default function OrderDetail() {
               <div className="flex-1">
                 <h4 className="text-sm font-semibold text-rose-800 dark:text-rose-200">通関検査待ち</h4>
                 <p className="text-xs text-rose-600 dark:text-rose-400 mt-1 leading-relaxed">
-                  お客様のご注文商品が、税関の通関検査の対象となりました。<br />
-                  詳細は、お知らせの[通関検査待ちのご案内]をご確認ください。
+                  고객님의 주문상품이 세관의 통관검사 대상으로 선정되었습니다.<br />
+                  자세한 내용은 공지사항의 [통관검사대기 안내] 글을 참고 부탁드립니다.
                 </p>
                 <Link href="/bbs/board.php?bo_table=notice">
                   <Button
@@ -380,7 +380,7 @@ export default function OrderDetail() {
                     variant="outline"
                     className="mt-3 text-xs h-7 border-rose-300 text-rose-700 hover:bg-rose-100 dark:border-rose-700 dark:text-rose-300 dark:hover:bg-rose-900/30"
                   >
-                    お知らせへ
+                    공지사항 바로가기
                   </Button>
                 </Link>
               </div>
@@ -400,7 +400,7 @@ export default function OrderDetail() {
                 onClick={() => { setCancelItemIds([]); setCancelReason(""); setShowCancelDialog(true); }}
               >
                 <XCircle className="w-3.5 h-3.5" />
-                商品キャンセルの申請
+                상품 취소 신청
               </Button>
             )}
           </div>
@@ -453,7 +453,7 @@ export default function OrderDetail() {
                 <Link key={item.id} href={productHref(item.product?.slug)}>
                   <Button size="sm" variant="outline" className="text-xs h-8 gap-1.5 hover:bg-primary/5 hover:border-primary/30">
                     <ShoppingBag className="w-3.5 h-3.5" />
-                    {order.items.length > 1 ? `${(item.productName as string).slice(0, 12)}${(item.productName as string).length > 12 ? '...' : ''} をもう一度購入` : '同じ商品をもう一度購入'}
+                    {order.items.length > 1 ? `${(item.productName as string).slice(0, 12)}${(item.productName as string).length > 12 ? '...' : ''} 다시 구매` : "同じ商品をもう一度購入"}
                   </Button>
                 </Link>
               ))}
@@ -487,7 +487,7 @@ export default function OrderDetail() {
             <div className="space-y-2 text-sm">
               {hasCancelledItems && (
                 <p className="text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded px-2 py-1">
-                  一部キャンセル後の残額基準です
+                  일부 취소 후 잔여 금액 기준입니다
                 </p>
               )}
               {/* 상품금액 (active items only after cancellation) */}
@@ -500,7 +500,7 @@ export default function OrderDetail() {
                 <div className="flex justify-between">
                   <span className="text-muted-foreground flex items-center gap-1">
                     <Gift className="w-3 h-3" />
-                    会員ランク割引
+                    등급 할인
                   </span>
                   <span className="text-emerald-600 price-text">-{formatPrice(gradeDiscount)}</span>
                 </div>
@@ -510,7 +510,7 @@ export default function OrderDetail() {
                 <div className="flex justify-between">
                   <span className="text-muted-foreground flex items-center gap-1 flex-wrap">
                     <Gift className="w-3 h-3" />
-                    クーポン割引
+                    쿠폰 할인
                     {(order as any).couponName && (
                       <span className="text-xs px-1.5 py-0.5 bg-rose-50 text-rose-600 border border-rose-200 rounded font-medium">{(order as any).couponName}</span>
                     )}
@@ -532,7 +532,7 @@ export default function OrderDetail() {
               )}
               <Separator />
               <div className="flex justify-between font-bold text-base">
-                <span>お支払い合計</span>
+                <span>累計決済金額</span>
                 <span className="text-primary price-text">
                   {formatPrice(order.totalAmount - discountAmount + order.shippingFee - order.pointsUsed)}
                 </span>
@@ -540,7 +540,7 @@ export default function OrderDetail() {
             </div>
             );
           })()}
-            {order.pointsEarned > 0 && <p className="text-xs text-muted-foreground">付与予定ポイント: {order.pointsEarned.toLocaleString()}P</p>}
+            {order.pointsEarned > 0 && <p className="text-xs text-muted-foreground">적립 예정 포인트: {order.pointsEarned.toLocaleString()}P</p>}
         </div>
 
         {/* 취소/환불 정보 - 결제 완료 후 취소된 경우 (미입금 상태 제외) */}
@@ -567,7 +567,7 @@ export default function OrderDetail() {
               </div>
               <div className="space-y-1.5 text-sm">
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">キャンセル商品 ({cancelledItems.length}点)</span>
+                  <span className="text-muted-foreground">취소 상품 ({cancelledItems.length}개)</span>
                   <span className="font-medium">{formatPrice(cancelledTotal)}</span>
                 </div>
                 {couponReduction > 0 && (
@@ -590,7 +590,7 @@ export default function OrderDetail() {
                   <div className="mt-2 flex items-center gap-1.5 text-sm text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/20 border border-emerald-200 dark:border-emerald-800/40 rounded-lg px-3 py-2">
                     <CheckCircle2 className="w-4 h-4 flex-shrink-0" />
                     <span className="font-semibold">返金完了</span>
-                    <span className="text-xs text-muted-foreground ml-1">{new Date(cancelledItems.find((i: any) => i.refundedAt)?.refundedAt).toLocaleString("ja-JP", { year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit", hour12: false })}</span>
+                    <span className="text-xs text-muted-foreground ml-1">{new Date(cancelledItems.find((i: any) => i.refundedAt)?.refundedAt).toLocaleString("ko-KR", { year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit", hour12: false })}</span>
                   </div>
                 )}
               </div>
@@ -626,7 +626,7 @@ export default function OrderDetail() {
                 {payment.expiresAt && (
                   <div className="bg-amber-100 border border-amber-300 rounded-lg p-3">
                     <p className="text-xs text-amber-900 leading-relaxed">
-                      ⚠️ <strong>{new Date(payment.expiresAt).toLocaleString("ja-JP")}</strong>までにご入金がない場合、ご注文は自動キャンセルされます。
+                      ⚠️ <strong>{new Date(payment.expiresAt).toLocaleString("ko-KR")}</strong>까지 입금하지 않으시면 주문이 자동 취소됩니다.
                     </p>
                   </div>
                 )}
@@ -646,7 +646,7 @@ export default function OrderDetail() {
               <div className="bg-white border border-emerald-300 rounded-lg p-4">
                 <p className="text-sm text-emerald-900 mb-2">ご入金を確認しました。配送準備中です。</p>
                 {payment.confirmedAt && (
-                  <p className="text-xs text-muted-foreground">確認日時: {formatDateTime(payment.confirmedAt)}</p>
+                  <p className="text-xs text-muted-foreground">확인 시간: {formatDateTime(payment.confirmedAt)}</p>
                 )}
               </div>
             )}
@@ -659,7 +659,7 @@ export default function OrderDetail() {
           <DialogHeader className="flex-shrink-0">
             <DialogTitle className="flex items-center gap-2 text-rose-600">
               <XCircle className="w-5 h-5" />
-              商品キャンセルの申請
+              상품 취소 신청
             </DialogTitle>
           </DialogHeader>
           {(() => {
@@ -714,16 +714,16 @@ export default function OrderDetail() {
                         <div className="flex-1 min-w-0">
                           <p className="text-sm font-medium leading-snug truncate">{item.productName}</p>
                           <div className="flex items-center gap-2 mt-0.5 flex-wrap">
-                            <span className="text-xs text-muted-foreground">数量 {item.quantity}個 · {formatPrice(itemTotal)}</span>
+                            <span className="text-xs text-muted-foreground">수량 {item.quantity}개 · {formatPrice(itemTotal)}</span>
                             {itemCoupon > 0 && (
-                              <span className="text-xs text-rose-600 bg-rose-100 dark:bg-rose-950/30 px-1.5 py-0.5 rounded font-medium">クーポン -{formatPrice(itemCoupon)}</span>
+                              <span className="text-xs text-rose-600 bg-rose-100 dark:bg-rose-950/30 px-1.5 py-0.5 rounded font-medium">쿠폰 -{formatPrice(itemCoupon)}</span>
                             )}
                             {itemGrade > 0 && (
-                              <span className="text-xs text-orange-600 bg-orange-50 dark:bg-orange-950/30 px-1.5 py-0.5 rounded font-medium">割引 -{formatPrice(itemGrade)}</span>
+                              <span className="text-xs text-orange-600 bg-orange-50 dark:bg-orange-950/30 px-1.5 py-0.5 rounded font-medium">할인 -{formatPrice(itemGrade)}</span>
                             )}
                           </div>
                           {!isPendingPayment && (itemCoupon > 0 || itemGrade > 0) && (
-                            <p className="text-xs font-semibold text-emerald-700 dark:text-emerald-400 mt-0.5">返金予定: {formatPrice(itemRefund)}</p>
+                            <p className="text-xs font-semibold text-emerald-700 dark:text-emerald-400 mt-0.5">환불 예상: {formatPrice(itemRefund)}</p>
                           )}
                         </div>
                       </label>
@@ -735,14 +735,14 @@ export default function OrderDetail() {
                   <div className="rounded-lg bg-muted/50 border p-3 text-sm space-y-1.5">
                     <p className="font-semibold text-sm mb-1">返金予定の内訳</p>
                     <div className="flex justify-between text-muted-foreground">
-                      <span>キャンセル商品合計 ({cancelItemIds.length}点)</span>
+                      <span>취소 상품 합계 ({cancelItemIds.length}개)</span>
                       <span>{formatPrice(selectedTotal)}</span>
                     </div>
                     {couponReduction > 0 && (
                       <div className="flex justify-between text-rose-600">
                         <span className="flex items-center gap-1">
                           <span className="text-xs px-1 py-0.5 bg-rose-100 dark:bg-rose-950/30 text-rose-600 rounded font-semibold">クーポン</span>
-                          差引
+                          차감
                         </span>
                         <span>-{formatPrice(couponReduction)}</span>
                       </div>
@@ -818,7 +818,7 @@ export default function OrderDetail() {
                       refundBankInfo: isBankTransfer ? { bankName: refundBankName.trim(), accountNumber: refundAccountNumber.trim(), accountHolder: user?.name ?? "" } : undefined,
                     })}
                   >
-                    {cancelItems.isPending ? "処理中..." : isPendingPayment ? `${cancelItemIds.length}点のキャンセルを申請` : `${cancelItemIds.length}点をキャンセル (返金 ${formatPrice(refundAmount)})`}
+                    {cancelItems.isPending ? "処理中..." : isPendingPayment ? `${cancelItemIds.length}개 취소 신청` : `${cancelItemIds.length}개 취소 (환불 ${formatPrice(refundAmount)})`}
                   </Button>
                 </DialogFooter>
               </>
@@ -844,7 +844,7 @@ export default function OrderDetail() {
                   <Truck className="w-4 h-4 text-primary" />
                   <span className="font-bold text-base">配送タイムライン</span>
                   {trackingModalShipment.history && (
-                    <span className="text-sm text-muted-foreground">{trackingModalShipment.history.length}件</span>
+                    <span className="text-sm text-muted-foreground">{trackingModalShipment.history.length}건</span>
                   )}
                 </div>
                 <p className="text-sm text-muted-foreground mt-0.5">{trackingModalShipment.trackingNumber}</p>
@@ -869,7 +869,7 @@ export default function OrderDetail() {
                     className="h-7 text-xs gap-1"
                     onClick={() => { navigator.clipboard.writeText(trackingModalShipment.trackingNumber ?? ""); toast.success("コピーしました"); }}
                   >
-                    <Copy className="w-3 h-3" />コピー
+                    <Copy className="w-3 h-3" />복사
                   </Button>
                   <Button size="sm" className="h-7 text-xs gap-1 bg-blue-600 hover:bg-blue-700 text-white" asChild>
                     <a href={`https://t.17track.net/en#nums=${trackingModalShipment.trackingNumber}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1">

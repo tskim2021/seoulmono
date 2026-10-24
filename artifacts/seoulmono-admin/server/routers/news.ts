@@ -24,7 +24,7 @@ export const newsRouter = router({
   // 뉴스 상세 조회 (공개)
   byId: publicProcedure.input(z.object({ id: z.number() })).query(async ({ input }) => {
     const post = await db.getNewsPostById(input.id);
-    if (!post) throw new TRPCError({ code: "NOT_FOUND", message: "ニュースが見つかりません。" });
+    if (!post) throw new TRPCError({ code: "NOT_FOUND", message: "뉴스를 찾을 수 없습니다." });
     return post;
   }),
 

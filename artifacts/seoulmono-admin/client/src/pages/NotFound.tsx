@@ -25,7 +25,7 @@ export default function NotFound() {
         {/* Description */}
         <p className="text-muted-foreground mb-8 leading-relaxed">
           お探しのページは存在しないか、移動されました。<br />
-          URLをご確認いただくか、下のボタンをご利用ください。
+          주소를 다시 확인하시거나 아래 버튼을 이용해주세요.
         </p>
 
         {/* Action Buttons */}
@@ -36,14 +36,14 @@ export default function NotFound() {
             className="gap-2"
           >
             <ArrowLeft className="w-4 h-4" />
-            前のページ
+            이전 페이지
           </Button>
           <Button
             onClick={() => setLocation("/")}
             className="gap-2"
           >
             <Home className="w-4 h-4" />
-            ホームへ
+            홈으로 가기
           </Button>
           <Button
             variant="outline"
@@ -51,7 +51,7 @@ export default function NotFound() {
             className="gap-2"
           >
             <Search className="w-4 h-4" />
-            商品を見る
+            상품 둘러보기
           </Button>
         </div>
       </div>

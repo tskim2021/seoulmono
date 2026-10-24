@@ -124,14 +124,14 @@ export default function ReviewList() {
               type="submit"
               className="flex items-center gap-2 px-5 py-2 rounded text-sm font-semibold bg-stone-700 text-white hover:bg-stone-800 transition-colors"
             >
-              <Search className="w-3.5 h-3.5" />検索
+              <Search className="w-3.5 h-3.5" />검색하기
             </button>
           </form>
         </div>
 
         {/* 총 개수 */}
         <div className="border-l-4 border-stone-600 bg-stone-50 dark:bg-stone-900/30 px-4 py-2.5 mb-4 text-sm text-stone-700 dark:text-stone-300">
-          全 <strong>{(data?.total ?? 0).toLocaleString()}</strong>件のレビューが登録されています。
+          총 <strong>{(data?.total ?? 0).toLocaleString()}</strong>개의 후기가 등록되어 있습니다.
         </div>
 
         {/* 테이블 */}
@@ -142,7 +142,7 @@ export default function ReviewList() {
                 <th className="py-3 px-3 text-center font-semibold w-14 hidden sm:table-cell">番号</th>
                 <th className="py-3 px-3 text-center font-semibold w-20 hidden md:table-cell">写真</th>
                 <th className="py-3 px-4 text-left font-semibold">投稿者</th>
-                <th className="py-3 px-3 text-center font-semibold w-24 hidden md:table-cell">名前</th>
+                <th className="py-3 px-3 text-center font-semibold w-24 hidden md:table-cell">氏名</th>
                 <th className="py-3 px-3 text-center font-semibold w-24 hidden sm:table-cell">日付</th>
                 <th className="py-3 px-3 text-center font-semibold w-28 hidden sm:table-cell">評価</th>
               </tr>
@@ -167,7 +167,7 @@ export default function ReviewList() {
                 posts.map((post: any, idx: number) => {
                   const rowNum = (data?.total ?? 0) - ((page - 1) * LIMIT) - idx;
                   const dateStr = post.createdAt
-                    ? new Date(post.createdAt).toLocaleDateString("ja-JP", { year: "numeric", month: "2-digit", day: "2-digit" }).replace(/\. /g, ".").replace(/\.$/, "")
+                    ? new Date(post.createdAt).toLocaleDateString("ko-KR", { year: "numeric", month: "2-digit", day: "2-digit" }).replace(/\. /g, ".").replace(/\.$/, "")
                     : "";
                   let postImages: string[] = [];
                   if (Array.isArray(post.images)) postImages = post.images;
@@ -201,7 +201,7 @@ export default function ReviewList() {
                         </Link>
                       </td>
                       <td className="py-3 px-3 text-center text-sm text-muted-foreground hidden md:table-cell truncate max-w-[90px]">
-                        {post.displayName || (post.userName ?? "匿名")}
+                        {post.displayName || (post.userName ?? "익명")}
                       </td>
                       <td className="py-3 px-3 text-center text-xs text-muted-foreground hidden sm:table-cell whitespace-nowrap">
                         {dateStr}

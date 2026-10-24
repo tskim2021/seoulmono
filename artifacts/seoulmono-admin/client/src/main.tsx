@@ -3,6 +3,7 @@ import { UNAUTHED_ERR_MSG } from '@shared/const';
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { httpBatchLink, TRPCClientError } from "@trpc/client";
 import { createRoot } from "react-dom/client";
+import { toast } from "sonner";
 import superjson from "superjson";
 import App from "./App";
 import { getLoginUrl } from "./const";
@@ -34,13 +35,14 @@ queryClient.getMutationCache().subscribe(event => {
     const error = event.mutation.state.error;
     redirectToLoginIfUnauthorized(error);
     console.error("[API Mutation Error]", error);
+    if (error instanceof Error && error.message.startsWith("이 기능은 실제 주문에 반영되지 않아")) toast.error(error.message);
   }
 });
 
 const trpcClient = trpc.createClient({
   links: [
     httpBatchLink({
-      url: "/admin/trpc",  // seoulmono-admin: /admin/ 아래에 마운트됨
+      url: "/admin/trpc",  // sorosoro-admin2: /admin/ 아래에 마운트됨
       transformer: superjson,
       fetch(input, init) {
         return globalThis.fetch(input, {

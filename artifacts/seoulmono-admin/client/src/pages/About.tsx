@@ -21,9 +21,9 @@ export default function About() {
             <h2 className="text-xl font-bold">ソウルモノのご紹介</h2>
           </div>
           <p className="text-muted-foreground leading-relaxed">
-            ソウルモノは2025年より、薄毛にお悩みの方に正規品の育毛・ヘアケア製品をお手頃な価格でお届けする海外直送サービスです。
-            インド、シンガポールなど海外の正規品を直接輸入し、最安値で提供しています。
-            購入金額の3%をポイント還元し、レビュー投稿で最大1,500ポイントを進呈しています。
+            탈모학교는 2025년부터 탈모 고민을 가진 분들을 위해 정품 탈모 제품을 합리적인 가격에 제공하는 국내외 해외직구 기반 서비스입니다.
+            인도, 싱가포르 등 해외 정품을 직접 수입해 최저가로 제공하며,
+            구매금액 3% 포인트 적립, 리뷰 작성 시 최대 1,500포인트 적립을 운영하고 있습니다.
           </p>
         </section>
 
@@ -51,7 +51,7 @@ export default function About() {
         </section>
 
         <p className="text-sm text-muted-foreground mt-8">
-          ソウルモノで健やかな頭皮ケアを始めましょう。
+          탈모학교와 함께 건강한 두피 관리를 시작해 보세요.
         </p>
       </div>
     </Layout>

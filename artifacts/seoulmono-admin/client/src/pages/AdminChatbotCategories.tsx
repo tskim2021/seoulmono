@@ -106,7 +106,7 @@ export default function AdminChatbotCategories() {
   };
 
   const handleDelete = async (id: number) => {
-    if (!confirm("このカテゴリーを削除しますか？")) return;
+    if (!confirm("이 카테고리를 삭제하시겠습니까?")) return;
     try {
       await deleteMutation.mutateAsync({ id });
       toast.success("カテゴリーを削除しました。");
@@ -143,15 +143,15 @@ export default function AdminChatbotCategories() {
         <div>
           <h1 className="text-2xl font-bold flex items-center gap-2">
             <FolderTree className="w-6 h-6" />
-            カテゴリー管理
+            카테고리 관리
           </h1>
           <p className="text-sm text-muted-foreground mt-1">
-            チャットボットの会話フローのカテゴリーを管理します。最大2階層まで対応しています。
+            챗봇 대화 흐름의 카테고리를 관리합니다. 최대 2단계 구조를 지원합니다.
           </p>
         </div>
         <Button onClick={() => handleOpenDialog()}>
           <Plus className="w-4 h-4 mr-2" />
-          カテゴリーを追加
+          카테고리 추가
         </Button>
       </div>
 
@@ -159,7 +159,7 @@ export default function AdminChatbotCategories() {
         <CardHeader>
           <CardTitle>カテゴリー一覧</CardTitle>
           <CardDescription>
-            親カテゴリーと子カテゴリーを管理できます。
+            상위 카테고리와 하위 카테고리를 관리할 수 있습니다.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -262,7 +262,7 @@ export default function AdminChatbotCategories() {
           <DialogHeader>
             <DialogTitle>{editingCategory ? "カテゴリーの編集" : "カテゴリーの追加"}</DialogTitle>
             <DialogDescription>
-              チャットボットの会話フローで使用するカテゴリーを{editingCategory ? "編集" : "追加"}します。
+              챗봇 대화 흐름에 사용될 카테고리를 {editingCategory ? "更新" : "追加"}합니다.
             </DialogDescription>
           </DialogHeader>
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -286,7 +286,7 @@ export default function AdminChatbotCategories() {
                 placeholder="例: 📦, 🚚, 💰"
               />
               <p className="text-xs text-muted-foreground">
-                絵文字またはアイコン名を入力してください。
+                이모지 또는 아이콘 이름을 입력하세요.
               </p>
             </div>
 
@@ -319,7 +319,7 @@ export default function AdminChatbotCategories() {
                   ))}
               </select>
               <p className="text-xs text-muted-foreground">
-                子カテゴリーにする場合は、親カテゴリーを選択してください。
+                하위 카테고리로 만들려면 상위 카테고리를 선택하세요.
               </p>
             </div>
 
@@ -351,16 +351,16 @@ export default function AdminChatbotCategories() {
 
             <DialogFooter>
               <Button type="button" variant="outline" onClick={() => setDialogOpen(false)}>
-                キャンセル
+                취소
               </Button>
               <Button type="submit" disabled={createMutation.isPending || updateMutation.isPending}>
                 {createMutation.isPending || updateMutation.isPending ? (
                   <>
                     <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                    保存中...
+                    저장 중...
                   </>
                 ) : (
-                  editingCategory ? "更新" : "追加"
+                  editingCategory ? "수정" : "추가"
                 )}
               </Button>
             </DialogFooter>

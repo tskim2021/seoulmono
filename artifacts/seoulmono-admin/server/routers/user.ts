@@ -23,20 +23,20 @@ export const userRouter = router({
     return { success: true };
   }),
   changePassword: protectedProcedure.input(z.object({
-    currentPassword: z.string().min(1, "現在のパスワードを入力してください"),
-    newPassword: z.string().min(8, "新しいパスワードは8文字以上で入力してください"),
-    confirmPassword: z.string().min(1, "パスワード確認を入力してください"),
+    currentPassword: z.string().min(1, "현재 비밀번호를 입력해주세요"),
+    newPassword: z.string().min(8, "새 비밀번호는 8자 이상이어야 합니다"),
+    confirmPassword: z.string().min(1, "비밀번호 확인을 입력해주세요"),
   })).mutation(async ({ ctx, input }) => {
     if (input.newPassword !== input.confirmPassword) {
-      throw new TRPCError({ code: "BAD_REQUEST", message: "新しいパスワードが一致しません" });
+      throw new TRPCError({ code: "BAD_REQUEST", message: "새 비밀번호가 일치하지 않습니다" });
     }
     const user = await db.getUserWithPasswordById(ctx.user.id);
     if (!user || !user.password) {
-      throw new TRPCError({ code: "BAD_REQUEST", message: "ソーシャルログインのアカウントはパスワードを変更できません" });
+      throw new TRPCError({ code: "BAD_REQUEST", message: "소셜 로그인 계정은 비밀번호 변경이 불가합니다" });
     }
     const isValid = await bcrypt.compare(input.currentPassword, user.password);
     if (!isValid) {
-      throw new TRPCError({ code: "UNAUTHORIZED", message: "現在のパスワードが正しくありません" });
+      throw new TRPCError({ code: "UNAUTHORIZED", message: "현재 비밀번호가 올바르지 않습니다" });
     }
     const hashed = await bcrypt.hash(input.newPassword, 10);
     await db.updateUserPassword(ctx.user.id, hashed);
@@ -128,13 +128,13 @@ export const userRouter = router({
     const { id, ...data } = input;
     await db.updateUserGradeAndPoints(id, data);
     const parts: string[] = [];
-    if (data.grade) parts.push(`ランク: ${data.grade}`);
-    if (data.points !== undefined) parts.push(`ポイント: ${data.points}`);
-    if (data.role) parts.push(`権限: ${data.role}`);
+    if (data.grade) parts.push(`등급: ${data.grade}`);
+    if (data.points !== undefined) parts.push(`포인트: ${data.points}`);
+    if (data.role) parts.push(`권한: ${data.role}`);
     await db.logAdminAction({
       adminId: ctx.user.id, adminName: ctx.user.name || ctx.user.email || `admin#${ctx.user.id}`,
       action: "user.update", entityType: "user", entityId: id,
-      description: `会員 #${id} 情報編集 (${parts.join(", ")})`,
+      description: `회원 #${id} 정보 수정 (${parts.join(", ")})`,
       detail: { userId: id, changes: data },
     });
     return { success: true };
@@ -145,11 +145,11 @@ export const userRouter = router({
     description: z.string(),
   })).mutation(async ({ input, ctx }) => {
     await db.addPoints(input.userId, input.amount, "admin", input.description);
-    await db.createNotification(input.userId, "point", "ポイントが付与されました", `${input.amount.toLocaleString()}ポイント - ${input.description}`, `/mypage/points`);
+    await db.createNotification(input.userId, "point", "포인트가 지급되었습니다", `${input.amount.toLocaleString()}P - ${input.description}`, `/mypage/points`);
     await db.logAdminAction({
       adminId: ctx.user.id, adminName: ctx.user.name || ctx.user.email || `admin#${ctx.user.id}`,
       action: "user.addPoints", entityType: "user", entityId: input.userId,
-      description: `会員 #${input.userId} ポイント${input.amount > 0 ? "付与" : "減算"} ${Math.abs(input.amount).toLocaleString()}ポイント - ${input.description}`,
+      description: `회원 #${input.userId} 포인트 ${input.amount > 0 ? "지급" : "차감"} ${Math.abs(input.amount).toLocaleString()}P - ${input.description}`,
       detail: { userId: input.userId, amount: input.amount, description: input.description },
     });
     return { success: true };

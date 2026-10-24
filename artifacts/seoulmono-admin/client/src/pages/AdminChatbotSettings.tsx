@@ -64,19 +64,19 @@ export default function AdminChatbotSettings() {
       <div>
         <h1 className="text-2xl font-bold flex items-center gap-2">
           <Bot className="w-6 h-6" />
-          AIチャットボット基本設定
+          AI 챗봇 기본 설정
         </h1>
         <p className="text-sm text-muted-foreground mt-1">
-          AIアシスタントの全体的な動作を設定します。
+          AI 상담사의 전반적인 동작을 설정합니다.
         </p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">
         <Card>
           <CardHeader>
-            <CardTitle>チャットボットの有効化</CardTitle>
+            <CardTitle>チャットボットを有効化</CardTitle>
             <CardDescription>
-              チャットボットウィジェットの表示有無を設定します。
+              챗봇 위젯의 표시 여부를 설정합니다.
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -84,7 +84,7 @@ export default function AdminChatbotSettings() {
               <div>
                 <Label htmlFor="isEnabled" className="font-medium">チャットボットを有効化</Label>
                 <p className="text-sm text-muted-foreground">
-                  有効にすると、ショップにチャットボットウィジェットが表示されます。
+                  활성화 시 쇼핑몰에 챗봇 위젯이 표시됩니다.
                 </p>
               </div>
               <Switch
@@ -100,7 +100,7 @@ export default function AdminChatbotSettings() {
           <CardHeader>
             <CardTitle>あいさつ文設定</CardTitle>
             <CardDescription>
-              チャットボットを開いたときに表示されるウェルカムメッセージです。
+              챗봇을 열었을 때 표시되는 환영 메시지입니다.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -121,7 +121,7 @@ export default function AdminChatbotSettings() {
           <CardHeader>
             <CardTitle>システムプロンプト</CardTitle>
             <CardDescription>
-              AIに渡される役割・ポリシーの指示文です。空欄の場合はデフォルトのプロンプトが使用されます。
+              AI에게 전달되는 역할 및 정책 지시문입니다. 비워두면 기본 프롬프트가 사용됩니다.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -136,7 +136,7 @@ export default function AdminChatbotSettings() {
                 className="font-mono text-xs"
               />
               <p className="text-xs text-muted-foreground">
-                上級者向け: AIの役割、回答スタイル、ポリシーなどをカスタマイズできます。
+                고급 사용자 전용: AI의 역할, 답변 스타일, 정책 등을 커스터마이징할 수 있습니다.
               </p>
             </div>
           </CardContent>
@@ -146,7 +146,7 @@ export default function AdminChatbotSettings() {
           <CardHeader>
             <CardTitle>会話設定</CardTitle>
             <CardDescription>
-              会話のターン数と、回答不可時の案内メッセージを設定します。
+              대화 턴수 및 응답 불가 시 안내 메시지를 설정합니다.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -161,7 +161,7 @@ export default function AdminChatbotSettings() {
                 onChange={(e) => setFormData({ ...formData, maxTurns: parseInt(e.target.value) || 20 })}
               />
               <p className="text-xs text-muted-foreground">
-                1セッションあたりの最大やり取り回数 (デフォルト20回)
+                한 세션당 최대 문답 횟수 (기본 20회)
               </p>
             </div>
 
@@ -177,7 +177,7 @@ export default function AdminChatbotSettings() {
                 rows={3}
               />
               <p className="text-xs text-muted-foreground">
-                AIが回答できない場合に表示する案内メッセージ
+                AI가 답변할 수 없을 때 표시할 안내 메시지
               </p>
             </div>
           </CardContent>
@@ -187,7 +187,7 @@ export default function AdminChatbotSettings() {
           <CardHeader>
             <CardTitle>運営時間</CardTitle>
             <CardDescription>
-              チャットボットの運営時間を設定します。運営時間外は案内メッセージが表示されます。
+              챗봇의 운영 시간을 설정합니다. 운영 시간 외에는 안내 메시지가 표시됩니다.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -212,7 +212,7 @@ export default function AdminChatbotSettings() {
               </div>
             </div>
             <p className="text-xs text-muted-foreground">
-              24時間運営: 00:00 ~ 23:59
+              24시간 운영: 00:00 ~ 23:59
             </p>
           </CardContent>
         </Card>
@@ -222,12 +222,12 @@ export default function AdminChatbotSettings() {
             {updateMutation.isPending ? (
               <>
                 <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                保存中...
+                저장 중...
               </>
             ) : (
               <>
                 <Save className="w-4 h-4 mr-2" />
-                設定を保存
+                설정 저장
               </>
             )}
           </Button>

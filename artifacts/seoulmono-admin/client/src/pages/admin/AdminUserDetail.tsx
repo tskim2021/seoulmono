@@ -110,7 +110,7 @@ export default function AdminUserDetail() {
         <div className="text-center py-16">
           <p className="text-muted-foreground mb-4">会員が見つかりません。</p>
           <Link href="/admin/users">
-            <Button variant="outline"><ArrowLeft className="w-4 h-4 mr-2" /> 会員一覧へ</Button>
+            <Button variant="outline"><ArrowLeft className="w-4 h-4 mr-2" /> 회원 목록으로</Button>
           </Link>
         </div>
       </div>
@@ -144,19 +144,19 @@ export default function AdminUserDetail() {
       <div className="bg-card border rounded-xl p-6">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-semibold flex items-center gap-2">
-            <User className="w-5 h-5" /> 基本情報
+            <User className="w-5 h-5" /> 기본 정보
           </h2>
           {!editingInfo ? (
             <Button variant="outline" size="sm" onClick={startEditInfo}>
-              <Pencil className="w-3.5 h-3.5 mr-1" /> 編集
+              <Pencil className="w-3.5 h-3.5 mr-1" /> 수정
             </Button>
           ) : (
             <div className="flex gap-2">
               <Button size="sm" onClick={() => updateInfo.mutate({ id: userId, ...infoForm })} disabled={updateInfo.isPending}>
-                <Save className="w-3.5 h-3.5 mr-1" /> 保存
+                <Save className="w-3.5 h-3.5 mr-1" /> 저장
               </Button>
               <Button variant="ghost" size="sm" onClick={() => setEditingInfo(false)}>
-                <X className="w-3.5 h-3.5 mr-1" /> キャンセル
+                <X className="w-3.5 h-3.5 mr-1" /> 취소
               </Button>
             </div>
           )}
@@ -165,17 +165,17 @@ export default function AdminUserDetail() {
         {!editingInfo ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             <InfoItem label="ID" value={String(user.id)} />
-            <InfoItem label="氏名" value={user.name ?? "-"} />
-            <InfoItem label="ID" value={user.email ?? "-"} />
-            <InfoItem label="電話番号" value={user.phone ?? "-"} />
-            <InfoItem label="会員ランク" value={getGradeLabel(user.grade)} />
-            <InfoItem label="役割" value={user.role === "admin" ? "管理者" : "会員"} />
-            <InfoItem label="ポイント" value={`${user.points.toLocaleString()}P`} />
-            <InfoItem label="注文件数" value={`${liveOrderCount.toLocaleString()}件`} />
-            <InfoItem label="累計決済金額" value={formatPrice(liveTotalPaid)} />
-            <InfoItem label="登録日" value={formatDateTime(user.createdAt)} />
-            <InfoItem label="最終ログイン" value={formatDateTime(user.lastSignedIn)} />
-            <InfoItem label="ログイン方法" value={user.loginMethod ?? "-"} />
+            <InfoItem label="이름" value={user.name ?? "-"} />
+            <InfoItem label="아이디" value={user.email ?? "-"} />
+            <InfoItem label="전화번호" value={user.phone ?? "-"} />
+            <InfoItem label="등급" value={getGradeLabel(user.grade)} />
+            <InfoItem label="역할" value={user.role === "admin" ? "管理者" : "会員"} />
+            <InfoItem label="포인트" value={`${user.points.toLocaleString()}P`} />
+            <InfoItem label="주문 건수" value={`${liveOrderCount.toLocaleString()}건`} />
+            <InfoItem label="총 결제금액" value={formatPrice(liveTotalPaid)} />
+            <InfoItem label="가입일" value={formatDateTime(user.createdAt)} />
+            <InfoItem label="최근 로그인" value={formatDateTime(user.lastSignedIn)} />
+            <InfoItem label="로그인 방법" value={user.loginMethod ?? "-"} />
             <InfoItem label="Open ID" value={user.openId} />
           </div>
         ) : (
@@ -213,7 +213,7 @@ export default function AdminUserDetail() {
       <div className="bg-card border rounded-xl p-6">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-semibold flex items-center gap-2">
-            <User className="w-5 h-5" /> パスワード管理
+            <User className="w-5 h-5" /> 비밀번호 관리
           </h2>
         </div>
         <AdminPasswordReset userId={userId} />
@@ -222,7 +222,7 @@ export default function AdminUserDetail() {
       {/* ═══ 포인트 관리 섹션 ═══ */}
       <div className="bg-card border rounded-xl p-6">
         <h2 className="text-lg font-semibold flex items-center gap-2 mb-4">
-          <Coins className="w-5 h-5" /> ポイント管理
+          <Coins className="w-5 h-5" /> 포인트 관리
         </h2>
         <div className="flex items-center gap-3 mb-4 p-3 bg-secondary/30 rounded-lg">
           <span className="text-sm text-muted-foreground">現在のポイント:</span>
@@ -250,7 +250,7 @@ export default function AdminUserDetail() {
             }}
             disabled={addPoints.isPending}
           >
-            ポイント付与
+            포인트 지급
           </Button>
         </div>
 
@@ -302,7 +302,7 @@ export default function AdminUserDetail() {
       {/* ═══ 주소 목록 섹션 ═══ */}
       <div className="bg-card border rounded-xl p-6">
         <h2 className="text-lg font-semibold flex items-center gap-2 mb-4">
-          <MapPin className="w-5 h-5" /> 配送先一覧
+          <MapPin className="w-5 h-5" /> 배송지 목록
         </h2>
         {addresses.length === 0 ? (
           <p className="text-sm text-muted-foreground py-4 text-center">登録された配送先はありません。</p>
@@ -348,10 +348,10 @@ export default function AdminUserDetail() {
                     </div>
                     <div className="flex gap-2">
                       <Button size="sm" onClick={() => updateAddr.mutate({ id: addr.id, ...addrForm })} disabled={updateAddr.isPending}>
-                        <Save className="w-3.5 h-3.5 mr-1" /> 保存
+                        <Save className="w-3.5 h-3.5 mr-1" /> 저장
                       </Button>
                       <Button variant="ghost" size="sm" onClick={() => setEditingAddrId(null)}>
-                        <X className="w-3.5 h-3.5 mr-1" /> キャンセル
+                        <X className="w-3.5 h-3.5 mr-1" /> 취소
                       </Button>
                     </div>
                   </div>
@@ -373,7 +373,7 @@ export default function AdminUserDetail() {
                         <Pencil className="w-3.5 h-3.5" />
                       </Button>
                       <Button variant="ghost" size="sm" className="text-red-500 hover:text-red-700" onClick={() => {
-                        if (confirm("この住所を削除しますか？")) deleteAddr.mutate({ id: addr.id });
+                        if (confirm("이 주소를 삭제하시겠습니까?")) deleteAddr.mutate({ id: addr.id });
                       }}>
                         <Trash2 className="w-3.5 h-3.5" />
                       </Button>
@@ -389,7 +389,7 @@ export default function AdminUserDetail() {
       {/* ═══ 구매 내역 섹션 ═══ */}
       <div className="bg-card border rounded-xl p-6">
         <h2 className="text-lg font-semibold flex items-center gap-2 mb-4">
-          <ShoppingBag className="w-5 h-5" /> 購入履歴 <span className="text-sm font-normal text-muted-foreground">({ordersTotal}件)</span>
+          <ShoppingBag className="w-5 h-5" /> 구매 내역 <span className="text-sm font-normal text-muted-foreground">({ordersTotal}건)</span>
         </h2>
         {orders.length === 0 ? (
           <p className="text-sm text-muted-foreground py-4 text-center">購入履歴がありません。</p>

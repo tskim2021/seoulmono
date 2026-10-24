@@ -36,7 +36,7 @@ export default function ProductCard({ product }: ProductCardProps) {
   const { data: wishlistItems } = trpc.wishlist.list.useQuery(undefined, { enabled: isAuthenticated });
   const isWishlisted = wishlistItems?.some(item => item.productId === product.id) ?? false;
   const toggleWishlist = trpc.wishlist.toggle.useMutation({
-    onSuccess: (data) => { toast.success(data.isAdded ? "お気に入りに追加しました" : "お気に入りから削除しました"); utils.wishlist.list.invalidate(); },
+    onSuccess: (data) => { toast.success(data.isAdded ? "위시리스트에 추가" : "위시리스트에서 제거"); utils.wishlist.list.invalidate(); },
   });
 
   const discount = getDiscountPercent(product.price, product.salePrice);
@@ -64,7 +64,7 @@ export default function ProductCard({ product }: ProductCardProps) {
           <div className="absolute top-2.5 left-2.5 flex flex-col gap-1">
             {product.isNew === 1 && <Badge className="bg-emerald-500 text-white text-[10px] px-1.5 py-0.5">NEW</Badge>}
             {product.isBest === 1 && <Badge className="bg-amber-500 text-white text-[10px] px-1.5 py-0.5">BEST</Badge>}
-            {product.status === "soldout" && <Badge variant="secondary" className="text-[10px] px-1.5 py-0.5">売り切れ</Badge>}
+            {product.status === "soldout" && <Badge variant="secondary" className="text-[10px] px-1.5 py-0.5">品切れ</Badge>}
           </div>
           {/* Quick actions */}
           <div className="absolute bottom-2 right-2 flex gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
@@ -92,11 +92,11 @@ export default function ProductCard({ product }: ProductCardProps) {
         </div>
       </Link>
 
-      {/* Info — ramumall order: review → name → sale price → discount%+price */}
+      {/* Info — ramumall order: 리뷰(N) → 이름 → 할인가(취소선) → 할인율+가격 */}
       <div className="mt-2.5">
         <div className="flex items-center gap-1 text-xs text-muted-foreground">
           {rating > 0 && <Star className="w-3 h-3 fill-amber-400 text-amber-400" />}
-          <span>レビュー({product.reviewCount})</span>
+          <span>리뷰({product.reviewCount})</span>
         </div>
 
         <Link href={productHref(product.slug, product.itId)}>

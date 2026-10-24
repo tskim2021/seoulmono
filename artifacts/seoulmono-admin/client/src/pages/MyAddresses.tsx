@@ -153,7 +153,7 @@ export default function MyAddresses() {
                   <label htmlFor="default" className="text-sm">既定の配送先に設定</label>
                 </div>
                 <Button className="w-full" onClick={handleSubmit} disabled={!form.name || !form.recipient || !form.phone || !form.zipCode || !form.address1 || createAddr.isPending || updateAddr.isPending}>
-                  {(createAddr.isPending || updateAddr.isPending) ? "処理中..." : editId ? "更新する" : "追加する"}
+                  {(createAddr.isPending || updateAddr.isPending) ? "処理中..." : editId ? "수정하기" : "추가하기"}
                 </Button>
               </div>
             </DialogContent>
@@ -178,8 +178,8 @@ export default function MyAddresses() {
                     {addr.isDefault !== 1 && (
                       <Button variant="ghost" size="sm" className="text-xs" onClick={() => updateAddr.mutate({ id: addr.id, isDefault: 1 })}>既定に設定</Button>
                     )}
-                    <Button variant="ghost" size="sm" className="text-xs" onClick={() => openEdit(addr)}>編集</Button>
-                    <button onClick={() => { if (confirm("削除しますか？")) deleteAddr.mutate({ id: addr.id }); }} className="text-muted-foreground hover:text-destructive"><Trash2 className="w-4 h-4" /></button>
+                    <Button variant="ghost" size="sm" className="text-xs" onClick={() => openEdit(addr)}>更新</Button>
+                    <button onClick={() => { if (confirm("삭제하시겠습니까?")) deleteAddr.mutate({ id: addr.id }); }} className="text-muted-foreground hover:text-destructive"><Trash2 className="w-4 h-4" /></button>
                   </div>
                 </div>
                 <p className="text-sm">{addr.recipient} / {addr.phone}</p>

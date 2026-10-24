@@ -20,7 +20,7 @@ async function getStripeClient(): Promise<{ client: Stripe; currency: string } |
   if (!config.secretKey) return null;
 
   const client = new Stripe(config.secretKey, { apiVersion: "2025-03-31.basil" });
-  return { client, currency: config.currency || "jpy" };
+  return { client, currency: config.currency || "krw" };
 }
 
 export const stripeRouter = router({
@@ -48,7 +48,7 @@ export const stripeRouter = router({
     .mutation(async ({ input }) => {
       const stripe = await getStripeClient();
       if (!stripe) {
-        throw new TRPCError({ code: "PRECONDITION_FAILED", message: "Stripe決済が設定されていません。管理者にお問い合わせください。" });
+        throw new TRPCError({ code: "PRECONDITION_FAILED", message: "Stripe 결제 설정이 되어 있지 않습니다. 관리자에게 문의하세요." });
       }
 
       // 주문번호 사전 생성 (Stripe metadata에 주문번호만 기록)
@@ -81,19 +81,19 @@ export const stripeRouter = router({
 
       throw new TRPCError({
         code: "INTERNAL_SERVER_ERROR",
-        message: `決済に失敗しました: ${intent.status}`,
+        message: `결제 실패: ${intent.status}`,
       });
     }),
 
   // 관리자: 탈모1 Gnuboard에서 Stripe 키 가져오기
   adminImportFromGnuboard: protectedProcedure.mutation(async ({ ctx }) => {
     if (ctx.user.role !== "admin") {
-      throw new TRPCError({ code: "FORBIDDEN", message: "管理者権限が必要です。" });
+      throw new TRPCError({ code: "FORBIDDEN", message: "관리자 권한이 필요합니다." });
     }
 
     const { TALMO_MYSQL_HOST, TALMO_MYSQL_USER, TALMO_MYSQL_PASSWORD, TALMO_MYSQL_DATABASE } = process.env;
     if (!TALMO_MYSQL_HOST) {
-      throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "旧システムDBの接続情報がありません。" });
+      throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "탈모1 DB 연결 정보가 없습니다." });
     }
 
     let conn: mysql.Connection | null = null;
@@ -110,17 +110,17 @@ export const stripeRouter = router({
       ) as [any[], any];
 
       if (!rows.length) {
-        throw new TRPCError({ code: "NOT_FOUND", message: "旧システムDBでStripe設定が見つかりません。" });
+        throw new TRPCError({ code: "NOT_FOUND", message: "탈모1 DB에서 Stripe 설정을 찾을 수 없습니다." });
       }
 
       const row = rows[0];
       if (!row.de_stripe_pkey || !row.de_stripe_skey) {
-        throw new TRPCError({ code: "NOT_FOUND", message: "旧システムDBにStripeキーがありません。" });
+        throw new TRPCError({ code: "NOT_FOUND", message: "탈모1 DB에 Stripe 키가 없습니다." });
       }
 
       const method = await db.getPaymentMethodByCode("stripe");
       if (!method) {
-        throw new TRPCError({ code: "NOT_FOUND", message: "Stripe決済方法がありません。" });
+        throw new TRPCError({ code: "NOT_FOUND", message: "Stripe 결제 수단이 없습니다." });
       }
 
       let existingConfig: Record<string, string> = {};
@@ -130,7 +130,7 @@ export const stripeRouter = router({
         ...existingConfig,
         publishableKey: row.de_stripe_pkey,
         secretKey: row.de_stripe_skey,
-        currency: row.de_stripe_currency || "jpy",
+        currency: row.de_stripe_currency || "krw",
       };
 
       const updated = await db.updatePaymentMethod(method.id, {
@@ -147,12 +147,12 @@ export const stripeRouter = router({
   // 관리자: Stripe 키 삭제
   adminDeleteKeys: protectedProcedure.mutation(async ({ ctx }) => {
     if (ctx.user.role !== "admin") {
-      throw new TRPCError({ code: "FORBIDDEN", message: "管理者権限が必要です。" });
+      throw new TRPCError({ code: "FORBIDDEN", message: "관리자 권한이 필요합니다." });
     }
 
     const method = await db.getPaymentMethodByCode("stripe");
     if (!method) {
-      throw new TRPCError({ code: "NOT_FOUND", message: "Stripe決済方法がありません。" });
+      throw new TRPCError({ code: "NOT_FOUND", message: "Stripe 결제 수단이 없습니다." });
     }
 
     const updated = await db.updatePaymentMethod(method.id, {

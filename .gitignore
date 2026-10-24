@@ -63,3 +63,7 @@ Thumbs.db
 *.jks
 **/google-services.json
 **/GoogleService-Info.plist
+
+# Generated native build project (recreated by Expo prebuild)
+artifacts/seoulmono-app/android/
+artifacts/seoulmono-app/ios/

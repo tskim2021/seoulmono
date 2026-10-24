@@ -41,9 +41,9 @@ const DEVICE_ICONS: Record<string, React.ReactNode> = {
 };
 
 const DEVICE_LABELS: Record<string, string> = {
-  desktop: "デスクトップ",
-  mobile: "モバイル",
-  tablet: "タブレット",
+  desktop: "데스킱",
+  mobile: "모바일",
+  tablet: "탭릿",
 };
 
 export default function AdminVisitorStats() {
@@ -134,7 +134,7 @@ export default function AdminVisitorStats() {
               variant={periodDays === d ? "default" : "outline"}
               onClick={() => setPeriodDays(d as any)}
             >
-              {d}日
+              {d}일
             </Button>
           ))}
         </div>
@@ -145,7 +145,7 @@ export default function AdminVisitorStats() {
         <Card className="p-4">
           <div className="flex items-center gap-2 mb-2">
             <Eye className="w-4 h-4 text-indigo-500" />
-            <span className="text-sm text-muted-foreground">総訪問数</span>
+            <span className="text-sm text-muted-foreground">総訪問</span>
           </div>
           <p className="text-2xl font-bold">{summary.totalVisits.toLocaleString()}</p>
         </Card>

@@ -26,10 +26,10 @@ export default function AdminPointHistory() {
 
   const getTypeLabel = (t: string) => {
     switch (t) {
-      case "earn": return "付与";
-      case "use": return "使用";
-      case "admin": return "管理者付与";
-      case "refund": return "返金";
+      case "earn": return "적립";
+      case "use": return "사용";
+      case "admin": return "관리자 지급";
+      case "refund": return "환불";
       default: return t;
     }
   };
@@ -99,7 +99,7 @@ export default function AdminPointHistory() {
                 }}
                 className="w-full"
               >
-                リセット
+                초기화
               </Button>
             </div>
           </div>
@@ -109,7 +109,7 @@ export default function AdminPointHistory() {
       {/* History Table */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-lg">ポイント履歴 ({data?.total ?? 0}件)</CardTitle>
+          <CardTitle className="text-lg">포인트 내역 ({data?.total ?? 0}건)</CardTitle>
         </CardHeader>
         <CardContent>
           {isLoading ? (
@@ -138,7 +138,7 @@ export default function AdminPointHistory() {
                         <td className="py-3 px-4 text-sm">{h.id}</td>
                         <td className="py-3 px-4 text-sm">
                           <div>
-                            <p className="font-medium">{h.userName ?? "不明"}</p>
+                            <p className="font-medium">{h.userName ?? "알 수 없음"}</p>
                             <p className="text-xs text-muted-foreground">ID: {h.userId}</p>
                           </div>
                         </td>
@@ -178,7 +178,7 @@ export default function AdminPointHistory() {
                   <div key={h.id} className="border rounded-lg p-4 space-y-2">
                     <div className="flex items-start justify-between">
                       <div>
-                        <p className="font-medium">{h.userName ?? "不明"}</p>
+                        <p className="font-medium">{h.userName ?? "알 수 없음"}</p>
                         <p className="text-xs text-muted-foreground">ID: {h.userId}</p>
                       </div>
                       <Badge variant={getTypeBadgeVariant(h.type) as any}>
@@ -202,7 +202,7 @@ export default function AdminPointHistory() {
                       </span>
                     </div>
                     {h.orderNumber && (
-                      <p className="text-xs text-muted-foreground">注文番号: #{formatOrderNumber(h.orderNumber)}</p>
+                      <p className="text-xs text-muted-foreground">주문번호: #{formatOrderNumber(h.orderNumber)}</p>
                     )}
                   </div>
                 ))}

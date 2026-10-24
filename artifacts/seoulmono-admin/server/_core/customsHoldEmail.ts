@@ -47,11 +47,11 @@ export function generateCustomsHoldEmail(data: CustomsHoldEmailData): string {
 
   return `
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="ko">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>通関検査のお知らせ（返送が必要です）</title>
+  <title>통관검사 안내 (반송 필요)</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: -apple-system, BlinkMacSystemFont, 'Pretendard', 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: #1a1a1a; background: #f8f7f5; -webkit-text-size-adjust: 100%; }
@@ -150,43 +150,43 @@ export function generateCustomsHoldEmail(data: CustomsHoldEmailData): string {
   <div class="wrapper">
     <div class="card">
       <div class="header">
-        <img src="${LOGO_URL}" alt="ソウルモノ" />
+        <img src="${LOGO_URL}" alt="탈모학교" />
       </div>
       <div class="body">
-        <div class="title">通関検査のお知らせ（返送が必要です）</div>
+        <div class="title">통관검사 안내 (반송 필수)</div>
         <div class="content">
-          <p>いつもご利用ありがとうございます。<strong>${customerName}</strong>様</p>
-          <p>ご注文の商品が税関の通関検査の対象となりました。</p>
+          <p>안녕하세요, <strong>${customerName}</strong>님!</p>
+          <p>주문하신 상품이 세관의 통관검사 대상으로 선정되었습니다.</p>
           <div class="info">
-            <div class="info-row"><span class="info-label">ご注文番号</span><span class="info-value">${orderNumber}</span></div>
-            <div class="info-row"><span class="info-label">現在の状況</span><span class="info-value" style="color:${ALERT};">通関検査対象 → 返送が必要</span></div>
-            ${customsNumber ? `<div class="info-row"><span class="info-label">通関番号</span><span class="info-value">${customsNumber}</span></div>` : ""}
+            <div class="info-row"><span class="info-label">주문번호</span><span class="info-value">${orderNumber}</span></div>
+            <div class="info-row"><span class="info-label">현재 상태</span><span class="info-value" style="color:${ALERT};">통관검사 대상 → 반송 필요</span></div>
+            ${customsNumber ? `<div class="info-row"><span class="info-label">통관번호</span><span class="info-value">${customsNumber}</span></div>` : ""}
           </div>
 
           <div class="notice">
-            <h4>⚠️ 必ずご確認いただきたい事項</h4>
+            <h4>⚠️ 반드시 알아두시면 되는 사항</h4>
             <ul>
-              <li>通関検査の対象となった商品は、<strong>医師の所見書がないと通関が進みません</strong>。</li>
-              <li>通関検査により配送ができない場合、ソウルモノが<strong>追加費用なしで新しい商品を再発送</strong>いたします。</li>
-              <li>通関が複数回進まなかった場合でも、その履歴がお客様の不利益になることはなく、お客様情報に別途蓄積されることもありません。</li>
-              <li>再発送となる場合、営業日で<strong>3〜5日以内</strong>に配送情報へ新しい追跡番号が登録されます。</li>
+              <li>통관검사 대상으로 선정된 상품은 <strong>의사 소견서 없이 통관이 진행되지 않습니다</strong>.</li>
+              <li>통관검사로 인해 배송이 불가한 경우, 탈모학교에서 <strong>추가 비용 없이 새 상품을 재발송</strong>해 드립니다.</li>
+              <li>통관이 여러 차례 진행되지 않더라도 해당 이력은 고객에게 불이익으로 남지 않으며, 고객 정보에 별도로 누적되지 않습니다.</li>
+              <li>재배송이 진행되는 경우, 영업일 기준 <strong>3~5일 이내</strong>에 배송정보에 새로운 송장번호가 등록됩니다.</li>
             </ul>
           </div>
 
           <div class="reassurance">
-            <strong>🛡️ ソウルモノがただちに新しい商品の再発送を開始します</strong>
+            <strong>🛡️ 탈모학교에서 즉시 새제품으로 재배송을 시작합니다</strong>
           </div>
 
           <div class="action">
-            <a href="${mailtoLink}" class="btn-secondary" style="margin-bottom:10px;display:inline-block;">✉️ 返送メールを今すぐ送る</a>
+            <a href="${mailtoLink}" class="btn-secondary" style="margin-bottom:10px;display:inline-block;">✉️ 반송메일 바로 보내기</a>
           </div>
 
           <div class="mail-guide">
-            <h5>✓ ボタンをクリックすると自動入力される情報</h5>
+            <h5>✓ 버튼 클릭 후 자동 입력되는 정보</h5>
             <ol>
-              <li>宛先: <code>minwon9@korea.kr</code></li>
-              <li>件名: <code>${customsNumber ? `${customsNumber}, ${customerName}, ${customerPhone ?? ""}, 반송 요청합니다.` : "통관번호, 성명, 전화번호, 반송 요청합니다."}</code></li>
-              <li>本文: <code>${customsNumber ? `${customsNumber}, ${customerName}, ${customerPhone ?? ""}, 반송 요청합니다.` : "통관번호, 성명, 전화번호, 반송 요청합니다."}</code></li>
+              <li>받는 사람: <code>minwon9@korea.kr</code></li>
+              <li>제목: <code>${customsNumber ? `${customsNumber}, ${customerName}, ${customerPhone ?? ""}, 반송 요청합니다.` : "통관번호, 성명, 전화번호, 반송 요청합니다."}</code></li>
+              <li>본문: <code>${customsNumber ? `${customsNumber}, ${customerName}, ${customerPhone ?? ""}, 반송 요청합니다.` : "통관번호, 성명, 전화번호, 반송 요청합니다."}</code></li>
             </ol>
             <p style="margin-top:8px;font-size:11px;color:#9a3412;">
               * 아래 버튼을 눌러면 메일 프로그램이 자동으로 실행되며 위 정보이 자동 입력됩니다.
@@ -194,23 +194,23 @@ export function generateCustomsHoldEmail(data: CustomsHoldEmailData): string {
           </div>
 
           <div class="action">
-            <a href="${orderUrl}" class="btn">ご注文詳細を確認</a>
+            <a href="${orderUrl}" class="btn">주문 상세 확인</a>
           </div>
         </div>
       </div>
       <div class="divider"></div>
       <div class="footer">
         <div class="notice-box">
-          <strong>⚠️ このメールは送信専用です</strong><br>
-          ご返信いただいてもお答えできません。<br>
-          お問い合わせはソウルモノの［個別お問い合わせ］までお願いいたします。
+          <strong>⚠️ 본 메일은 발신 전용 메일입니다</strong><br>
+          회신하셔도 답변을 받으실 수 없습니다.<br>
+          문의사항은 탈모학교 [1:1문의]로 연락 부탁드립니다.
         </div>
         <div class="contact-links">
-          <a href="https://talmoschool.com/mypage/inquiry">個別お問い合わせ</a>
-          <a href="https://talmoschool.com/">ソウルモノのショップへ</a>
+          <a href="https://talmoschool.com/mypage/inquiry">1:1문의</a>
+          <a href="https://talmoschool.com/">탈모학교 쇼핑몰 바로가기</a>
         </div>
-        <p>このメールは送信専用です。</p>
-        <p>&copy; 2026 ソウルモノ</p>
+        <p>본 메일은 발신 전용입니다.</p>
+        <p>&copy; 2026 탈모학교</p>
       </div>
     </div>
   </div>

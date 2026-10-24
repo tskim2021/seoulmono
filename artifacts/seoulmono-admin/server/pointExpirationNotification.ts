@@ -11,14 +11,14 @@ export async function sendPointExpirationEmail(
   earliestExpiration: Date
 ): Promise<boolean> {
   try {
-    const userName = name || "お客様";
-    const expirationDate = earliestExpiration.toLocaleDateString("ja-JP", {
+    const userName = name || "회원";
+    const expirationDate = earliestExpiration.toLocaleDateString("ko-KR", {
       year: "numeric",
       month: "long",
       day: "numeric",
     });
 
-    const subject = `[ソウルモノ] ${totalExpiring.toLocaleString()}ポイントがまもなく失効します`;
+    const subject = `[탈모학교] ${totalExpiring.toLocaleString()}P 포인트가 곧 만료됩니다`;
     const html = `
       <!DOCTYPE html>
       <html>
@@ -38,29 +38,29 @@ export async function sendPointExpirationEmail(
       <body>
         <div class="container">
           <div class="header">
-            <h1 style="margin: 0;">⏰ ポイント失効予定のお知らせ</h1>
+            <h1 style="margin: 0;">⏰ 포인트 만료 예정 안내</h1>
           </div>
           <div class="content">
-            <p>${userName}様、いつもご利用ありがとうございます。</p>
+            <p>${userName}님, 안녕하세요!</p>
             
             <div class="alert-box">
-              <p style="margin: 0; font-weight: 600;">保有ポイントがまもなく失効します。</p>
+              <p style="margin: 0; font-weight: 600;">보유하신 포인트가 곧 만료됩니다.</p>
             </div>
             
-            <p><strong>失効予定ポイント:</strong></p>
+            <p><strong>만료 예정 포인트:</strong></p>
             <div class="points">${totalExpiring.toLocaleString()}P</div>
             
-            <p><strong>失効予定日:</strong> ${expirationDate}</p>
+            <p><strong>만료 예정일:</strong> ${expirationDate}</p>
             
-            <p>失効前にポイントをご利用いただくと、さまざまな特典をお受けいただけます。</p>
+            <p>만료 전에 포인트를 사용하시면 다양한 혜택을 받으실 수 있습니다.</p>
             
             <a href="${process.env.VITE_APP_URL || "https://youngcart.manus.space"}/mypage/points" class="button">
-              ポイント履歴を確認する
+              포인트 내역 확인하기
             </a>
             
             <div class="footer">
-              <p>このメールは送信専用です。お問い合わせはカスタマーサポートまでお願いいたします。</p>
-              <p>&copy; 2025 ソウルモノ. All rights reserved.</p>
+              <p>이 메일은 발신 전용입니다. 문의사항은 고객센터를 이용해주세요.</p>
+              <p>&copy; 2025 탈모학교. All rights reserved.</p>
             </div>
           </div>
         </div>
@@ -90,7 +90,7 @@ export async function sendPointExpirationPush(
   earliestExpiration: Date
 ): Promise<boolean> {
   try {
-    const expirationDate = earliestExpiration.toLocaleDateString("ja-JP", {
+    const expirationDate = earliestExpiration.toLocaleDateString("ko-KR", {
       month: "long",
       day: "numeric",
     });
@@ -98,8 +98,8 @@ export async function sendPointExpirationPush(
     await db.createNotification(
       userId,
       "point",
-      "ポイント失効予定のお知らせ",
-      `${totalExpiring.toLocaleString()}ポイントが${expirationDate}に失効します。今すぐご利用ください！`,
+      "포인트 만료 예정 안내",
+      `${totalExpiring.toLocaleString()}P가 ${expirationDate}에 만료됩니다. 지금 사용하세요!`,
       "/mypage/points"
     );
 

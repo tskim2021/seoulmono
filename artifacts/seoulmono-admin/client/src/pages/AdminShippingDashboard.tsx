@@ -66,7 +66,7 @@ export default function AdminShippingDashboard() {
       refetch();
       setSyncRunning(false);
       const r = data.result;
-      toast.success(`配送同期が完了しました: ${r.syncedCount}件成功、${r.failedCount}件失敗 (${r.total}件中)`);
+      toast.success(`배송 동기화 완료: ${r.syncedCount}건 성공, ${r.failedCount}건 실패 (${r.total}건 중)`);
     },
     onError: () => {
       setSyncRunning(false);
@@ -109,7 +109,7 @@ export default function AdminShippingDashboard() {
           size="sm"
         >
           <RefreshCw className={`w-4 h-4 mr-2 ${refreshing ? "animate-spin" : ""}`} />
-          再読み込み
+          새로고침
         </Button>
       </div>
       
@@ -171,7 +171,7 @@ export default function AdminShippingDashboard() {
         <Card className="p-6 border-orange-200 bg-orange-50">
           <div className="flex items-center gap-2 mb-4">
             <AlertCircle className="w-5 h-5 text-orange-600" />
-            <h2 className="text-xl font-semibold text-orange-900">配送遅延の注文 ({delayedShipments.length}件)</h2>
+            <h2 className="text-xl font-semibold text-orange-900">배송 지연 주문 ({delayedShipments.length}건)</h2>
           </div>
           <p className="text-sm text-orange-700 mb-4">3日以上配送準備中の注文があります。ご確認ください。</p>
           <div className="space-y-2">
@@ -179,12 +179,12 @@ export default function AdminShippingDashboard() {
               <div key={shipment.id} className="flex items-center justify-between p-3 bg-white border border-orange-200 rounded-lg">
                 <div className="flex-1">
                   <p className="font-medium text-sm">注文番号: {formatOrderNumber(shipment.orderNumber)}</p>
-                  <p className="text-xs text-muted-foreground">お客様: {shipment.user?.name} ({shipment.user?.email})</p>
-                  <p className="text-xs text-muted-foreground">追跡番号: {shipment.trackingNumber || "未登録"}</p>
+                  <p className="text-xs text-muted-foreground">고객: {shipment.user?.name} ({shipment.user?.email})</p>
+                  <p className="text-xs text-muted-foreground">운송장: {shipment.trackingNumber || "미등록"}</p>
                 </div>
                 <div className="text-right">
                   <span className="inline-block px-2 py-1 text-xs rounded bg-orange-100 text-orange-800">
-                    {shipment.delayedDays}日遅延
+                    {shipment.delayedDays}일 지연
                   </span>
                   <p className="text-xs text-muted-foreground mt-1">
                     {new Date(shipment.createdAt).toLocaleDateString()}
@@ -207,7 +207,7 @@ export default function AdminShippingDashboard() {
                 <div key={carrier.carrierId} className="border-b pb-3">
                   <div className="flex justify-between items-center mb-1">
                     <span className="font-medium">{carrier.carrierName}</span>
-                    <span className="text-sm text-muted-foreground">合計 {carrier.totalShipments}件</span>
+                    <span className="text-sm text-muted-foreground">총 {carrier.totalShipments}건</span>
                   </div>
                   <div className="grid grid-cols-3 gap-2 text-sm">
                     <div>
@@ -216,11 +216,11 @@ export default function AdminShippingDashboard() {
                     </div>
                     <div>
                       <p className="text-muted-foreground">平均配送日数</p>
-                      <p className="font-medium">{carrier.avgDeliveryDays ? `${Number(carrier.avgDeliveryDays).toFixed(1)}日` : "N/A"}</p>
+                      <p className="font-medium">{carrier.avgDeliveryDays ? `${Number(carrier.avgDeliveryDays).toFixed(1)}일` : "N/A"}</p>
                     </div>
                     <div>
                       <p className="text-muted-foreground">配達完了</p>
-                      <p className="font-medium">{carrier.deliveredShipments}件</p>
+                      <p className="font-medium">{carrier.deliveredShipments}건</p>
                     </div>
                   </div>
                 </div>
@@ -240,8 +240,8 @@ export default function AdminShippingDashboard() {
                 <div key={idx} className="flex justify-between items-center border-b pb-2">
                   <span className="font-medium">{region.region}</span>
                   <div className="text-right">
-                    <p className="text-sm font-medium">{region.avgDeliveryDays ? `${Number(region.avgDeliveryDays).toFixed(1)}日` : "N/A"}</p>
-                    <p className="text-xs text-muted-foreground">{region.totalShipments}件</p>
+                    <p className="text-sm font-medium">{region.avgDeliveryDays ? `${Number(region.avgDeliveryDays).toFixed(1)}일` : "N/A"}</p>
+                    <p className="text-xs text-muted-foreground">{region.totalShipments}건</p>
                   </div>
                 </div>
               ))}
@@ -353,7 +353,7 @@ export default function AdminShippingDashboard() {
           <h2 className="text-xl font-semibold">配送同期スケジューラー</h2>
         </div>
         <p className="text-sm text-muted-foreground mb-6">
-          17track APIを通じて配送状況を自動で更新する間隔を設定します。配送完了、通関検査などの状態変更が検知されると、お客様に自動で通知とメールが送信されます。
+          17track API를 통해 배송 상태를 자동으로 새로고침하는 주기를 설정합니다. 배송 완료, 통관검사 등의 상태 변경이 감지되면 고객에게 자동으로 알림과 이메일이 발송됩니다.
         </p>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -367,7 +367,7 @@ export default function AdminShippingDashboard() {
                 disabled={updateScheduler.isPending}
               />
               <span className={`text-sm font-medium ${schedulerConfig?.enabled !== false ? 'text-emerald-600' : 'text-muted-foreground'}`}>
-                {schedulerConfig?.enabled !== false ? '有効' : '無効'}
+                {schedulerConfig?.enabled !== false ? "有効化" : "無効化"}
               </span>
             </div>
           </div>
@@ -404,7 +404,7 @@ export default function AdminShippingDashboard() {
               className="gap-1.5"
             >
               <Play className={`w-3.5 h-3.5 ${syncRunning ? 'animate-pulse' : ''}`} />
-              {syncRunning ? '同期中...' : '今すぐ実行'}
+              {syncRunning ? "同期中..." : "今すぐ実行"}
             </Button>
           </div>
         </div>
@@ -416,11 +416,11 @@ export default function AdminShippingDashboard() {
               <Clock className="w-4 h-4 text-muted-foreground" />
               <span className="text-muted-foreground">最終実行:</span>
               <span className="font-medium">
-                {new Date(schedulerConfig.lastRunAt).toLocaleString('ja-JP', { timeZone: 'Asia/Seoul' })}
+                {new Date(schedulerConfig.lastRunAt).toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' })}
               </span>
               {lastRunResult && (
                 <span className="text-xs text-muted-foreground ml-2">
-                  (成功 {lastRunResult.syncedCount}件 / 失敗 {lastRunResult.failedCount}件 / 合計 {lastRunResult.total}件)
+                  (성공 {lastRunResult.syncedCount}건 / 실패 {lastRunResult.failedCount}건 / 총 {lastRunResult.total}건)
                 </span>
               )}
             </div>
@@ -437,7 +437,7 @@ export default function AdminShippingDashboard() {
               <div key={shipment.id} className="flex items-center justify-between p-3 border rounded-lg">
                 <div className="flex-1">
                   <p className="font-medium">注文番号: {formatOrderNumber(shipment.orderNumber)}</p>
-                  <p className="text-sm text-muted-foreground">追跡番号: {shipment.trackingNumber}</p>
+                  <p className="text-sm text-muted-foreground">운송장: {shipment.trackingNumber}</p>
                   <p className="text-xs text-muted-foreground">{shipment.carrier?.name}</p>
                 </div>
                 <div className="text-right">
@@ -451,13 +451,13 @@ export default function AdminShippingDashboard() {
                     "bg-gray-100 text-gray-800"
                   }`}>
                     {shipment.status === "delivered" ? "配達完了" :
-                     shipment.status === "out_for_delivery" ? "現地配送" :
-                     shipment.status === "in_transit" || shipment.status === "in_transit_intl" ? "国際輸送" :
-                     shipment.status === "export_customs" ? "発送国通関" :
-                     shipment.status === "import_customs" ? "到着国通関" :
-                     shipment.status === "customs_cleared" ? "通関完了" :
-                     (shipment.status === "picked_up" || shipment.status === "accepted") ? "受付" :
-                     "配送準備"}
+                     shipment.status === "out_for_delivery" ? "현지배송" :
+                     shipment.status === "in_transit" || shipment.status === "in_transit_intl" ? "국제운송" :
+                     shipment.status === "export_customs" ? "출발국 통관" :
+                     shipment.status === "import_customs" ? "도착국 통관" :
+                     shipment.status === "customs_cleared" ? "통관완료" :
+                     (shipment.status === "picked_up" || shipment.status === "accepted") ? "접수" :
+                     "배송준비"}
                   </span>
                   <p className="text-xs text-muted-foreground mt-1">
                     {new Date(shipment.createdAt).toLocaleDateString()}

@@ -51,7 +51,7 @@ export default function Wishlist() {
           <div className="flex items-center gap-2 mb-4">
             <Heart className="w-5 h-5 text-primary" />
             <h2 className="font-semibold text-base">気になる商品</h2>
-            {wishItems.length > 0 && <span className="text-xs text-muted-foreground">({wishItems.length}点)</span>}
+            {wishItems.length > 0 && <span className="text-xs text-muted-foreground">({wishItems.length}개)</span>}
           </div>
 
           {wishLoading ? (
@@ -92,14 +92,14 @@ export default function Wishlist() {
             <TrendingDown className="w-5 h-5 text-primary" />
             <h2 className="font-semibold text-base">価格変動アラート</h2>
             {changedAlerts.length > 0 && (
-              <Badge className="bg-emerald-100 text-emerald-700 border-0 text-xs">{changedAlerts.length}件変動</Badge>
+              <Badge className="bg-emerald-100 text-emerald-700 border-0 text-xs">{changedAlerts.length}개 변동</Badge>
             )}
           </div>
 
           <div className="bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-xl p-4 mb-4">
             <p className="text-sm text-blue-900 dark:text-blue-200">
               <Bell className="w-4 h-4 inline mr-1" />
-              お気に入りに入れた商品の価格が変動すると（値上げ・値下げとも）通知でお知らせします。
+              위시리스트에 담긴 상품의 가격이 변동되면(인상·인하 모두) 알림으로 안내해 드립니다.
             </p>
           </div>
 
@@ -133,17 +133,17 @@ export default function Wishlist() {
                         <div className="flex items-start gap-2 mb-1.5 flex-wrap">
                           <Link href={productHref(alert.product?.slug)}>
                             <h3 className="font-semibold text-sm hover:text-primary transition-colors line-clamp-1">
-                              {alert.product?.name || "商品情報なし"}
+                              {alert.product?.name || "상품 정보 없음"}
                             </h3>
                           </Link>
                           {hasChanged && isDown && (
                             <Badge className="bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300 border-0 text-xs shrink-0">
-                              <TrendingDown className="w-3 h-3 mr-1" />値下げ
+                              <TrendingDown className="w-3 h-3 mr-1" />가격 인하
                             </Badge>
                           )}
                           {hasChanged && isUp && (
                             <Badge className="bg-rose-100 text-rose-700 dark:bg-rose-900/40 dark:text-rose-300 border-0 text-xs shrink-0">
-                              <TrendingUp className="w-3 h-3 mr-1" />値上げ
+                              <TrendingUp className="w-3 h-3 mr-1" />가격 인상
                             </Badge>
                           )}
                         </div>

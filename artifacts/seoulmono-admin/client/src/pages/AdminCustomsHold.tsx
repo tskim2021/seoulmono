@@ -20,13 +20,13 @@ export default function AdminCustomsHold() {
     try {
       const result = await refreshMut.mutateAsync({ orderId });
       if (result.success) {
-        toast.success(`配送情報を更新しました。(${result.eventsCount}件追加)`);
+        toast.success(`배송 정보가 업데이트되었습니다. (${result.eventsCount}건 추가)`);
         refetch();
       } else {
-        toast.error(result.message || "配送情報を取得できません。");
+        toast.error(result.message || "배송 정보를 조회할 수 없습니다.");
       }
     } catch (e: any) {
-      toast.error(e.message || "再読み込みに失敗しました");
+      toast.error(e.message || "새로고침 실패");
     } finally {
       setRefreshingIds(prev => {
         const next = new Set(prev);
@@ -79,15 +79,15 @@ export default function AdminCustomsHold() {
         <div>
           <h2 className="text-2xl font-bold flex items-center gap-2">
             <Shield className="w-6 h-6 text-red-500" />
-            通関検査状況
+            통관검사 현황
           </h2>
           <p className="text-sm text-muted-foreground mt-1">
-            通関検査で留め置かれている注文をリアルタイムで監視します
+            통관검사에 걸린 주문을 실시간으로 모니터링합니다
           </p>
         </div>
         <Button onClick={handleRefreshAll} variant="outline" className="gap-2" disabled={holdCount === 0}>
           <RefreshCw className="w-4 h-4" />
-          すべて再読み込み
+          전체 새로고침
         </Button>
       </div>
 
@@ -101,7 +101,7 @@ export default function AdminCustomsHold() {
               </div>
               <div>
                 <p className="text-sm text-muted-foreground">通関検査待ち</p>
-                <p className="text-2xl font-bold">{holdCount}件</p>
+                <p className="text-2xl font-bold">{holdCount}건</p>
               </div>
             </div>
           </CardContent>
@@ -118,7 +118,7 @@ export default function AdminCustomsHold() {
                   {customsHoldList?.filter(item => {
                     const days = getDaysHeld(item.customsHoldAt);
                     return days !== null && days >= 7;
-                  }).length || 0}件
+                  }).length || 0}건
                 </p>
               </div>
             </div>
@@ -136,7 +136,7 @@ export default function AdminCustomsHold() {
                   {customsHoldList?.filter(item => {
                     const days = getDaysHeld(item.customsHoldAt);
                     return days !== null && days >= 14;
-                  }).length || 0}件
+                  }).length || 0}건
                 </p>
               </div>
             </div>
@@ -151,7 +151,7 @@ export default function AdminCustomsHold() {
             <Shield className="w-12 h-12 text-green-500 mx-auto mb-3" />
             <h3 className="text-lg font-semibold">通関検査待ちの注文はありません</h3>
             <p className="text-sm text-muted-foreground mt-1">
-              すべての注文が正常に通関処理されています
+              모든 주문이 정상적으로 통관 처리되고 있습니다
             </p>
           </CardContent>
         </Card>
@@ -175,11 +175,11 @@ export default function AdminCustomsHold() {
                         </Link>
                         <Badge variant="destructive" className="gap-1">
                           <AlertTriangle className="w-3 h-3" />
-                          通関検査待ち
+                          통관검사 대기
                         </Badge>
                         {daysHeld !== null && (
                           <span className={`text-sm ${getDaysHeldColor(daysHeld)}`}>
-                            {daysHeld}日目の滞留中
+                            {daysHeld}일째 체류 중
                           </span>
                         )}
                       </div>
@@ -249,12 +249,12 @@ export default function AdminCustomsHold() {
                         ) : (
                           <RefreshCw className="w-4 h-4" />
                         )}
-                        再読み込み
+                        새로고침
                       </Button>
                       <Link href={`/admin/orders/${item.orderId}`}>
                         <Button size="sm" variant="outline" className="gap-2 w-full">
                           <Package className="w-4 h-4" />
-                          注文詳細
+                          주문 상세
                         </Button>
                       </Link>
                       <a
@@ -264,7 +264,7 @@ export default function AdminCustomsHold() {
                       >
                         <Button size="sm" variant="outline" className="gap-2 w-full">
                           <ExternalLink className="w-4 h-4" />
-                          郵便局で追跡
+                          우체국 조회
                         </Button>
                       </a>
                     </div>
@@ -282,7 +282,7 @@ export default function AdminCustomsHold() {
           <h4 className="font-semibold text-amber-800 dark:text-amber-200 mb-2">通関検査のご案内</h4>
           <ul className="text-sm text-amber-700 dark:text-amber-300 space-y-1">
             <li>• 通関検査待ちの状態は、郵便局サイトを直接クロールして検知します。</li>
-            <li>• 「인천공항본부세관 통관번호:XXXXXX」形式の赤色表示が検知されると、自動的に通関検査の状態に切り替わります。</li>
+            <li>• "인천공항본부세관 통관번호:XXXXXX" 형태의 빨간색 표시가 감지되면 자동으로 통관검사 상태로 전환됩니다.</li>
             <li>• 配送同期スケジューラーが定期的に自動確認しますが、手動で再読み込みすることもできます。</li>
             <li>• 通関検査が検知されると、管理者に通知が送信されます。</li>
             <li>• 14日以上滞留した場合は、税関へ直接お問い合わせください。</li>

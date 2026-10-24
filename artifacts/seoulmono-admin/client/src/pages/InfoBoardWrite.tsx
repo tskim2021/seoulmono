@@ -38,7 +38,7 @@ export default function InfoBoardWrite() {
       navigate(`/info-board/${(result as any).id}`);
     },
     onError: (err) => {
-      toast.error(err.message || "投稿の登録に失敗しました。");
+      toast.error(err.message || "게시글 등록에 실패했습니다.");
       setIsSaving(false);
     },
   });
@@ -49,7 +49,7 @@ export default function InfoBoardWrite() {
       navigate(`/info-board/${editId}`);
     },
     onError: (err) => {
-      toast.error(err.message || "投稿の更新に失敗しました。");
+      toast.error(err.message || "게시글 수정에 실패했습니다.");
       setIsSaving(false);
     },
   });
@@ -96,7 +96,7 @@ export default function InfoBoardWrite() {
         {/* 상단 네비게이션 */}
         <Link href="/bbs/board.php?bo_table=info" className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-700 mb-6">
           <ArrowLeft className="w-4 h-4" />
-          情報共有一覧
+          정보나눔 목록
         </Link>
 
         <h1 className="text-2xl font-bold text-gray-900 mb-6">

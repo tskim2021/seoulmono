@@ -19,13 +19,13 @@ export default function AdminPointExpiration() {
   });
   const expirePointsMut = trpc.user.adminExpirePoints.useMutation({
     onSuccess: (result) => {
-      toast.success(`${result.expiredCount}件のポイントが失効しました。(合計 ${result.totalExpiredPoints.toLocaleString()}P)`);
+      toast.success(`${result.expiredCount}건의 포인트가 만료되었습니다. (총 ${result.totalExpiredPoints.toLocaleString()}P)`);
     },
     onError: (err) => toast.error(err.message),
   });
   const testNotificationMut = trpc.user.adminTestExpirationNotification.useMutation({
     onSuccess: (result) => {
-      toast.success(`通知送信完了: ${result.totalUsers}名 (メール: ${result.emailSent}、プッシュ: ${result.pushSent}、失敗: ${result.failed})`);
+      toast.success(`알림 발송 완료: ${result.totalUsers}명 (이메일: ${result.emailSent}, 푸시: ${result.pushSent}, 실패: ${result.failed})`);
     },
     onError: (err) => toast.error(err.message),
   });
@@ -48,7 +48,7 @@ export default function AdminPointExpiration() {
   };
 
   const handleExpireNow = () => {
-    if (!confirm("失効したポイントを今すぐ処理しますか？")) return;
+    if (!confirm("만료된 포인트를 즉시 처리하시겠습니까?")) return;
     expirePointsMut.mutate();
   };
 
@@ -91,7 +91,7 @@ export default function AdminPointExpiration() {
                 <span className="text-sm text-muted-foreground">か月</span>
               </div>
               <p className="text-xs text-muted-foreground mt-1">
-                ポイント付与日から{expirationMonths}か月後に自動的に失効します。
+                포인트 적립일로부터 {expirationMonths}개월 후 자동 소멸됩니다.
               </p>
             </div>
 
@@ -99,14 +99,14 @@ export default function AdminPointExpiration() {
             <div className="bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
               <p className="text-sm font-medium text-blue-900 dark:text-blue-200 mb-2">適用例</p>
               <div className="text-sm text-blue-700 dark:text-blue-400 space-y-1">
-                <p>• 2026年1月1日付与 → {new Date(new Date(2026, 0, 1).setMonth(expirationMonths)).toLocaleDateString('ja-JP', { year: 'numeric', month: 'long', day: 'numeric' })} 失効</p>
-                <p>• 2026年6月15日付与 → {new Date(new Date(2026, 5, 15).setMonth(5 + expirationMonths)).toLocaleDateString('ja-JP', { year: 'numeric', month: 'long', day: 'numeric' })} 失効</p>
+                <p>• 2026년 1월 1일 적립 → {new Date(new Date(2026, 0, 1).setMonth(expirationMonths)).toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' })} 期限切れ</p>
+                <p>• 2026년 6월 15일 적립 → {new Date(new Date(2026, 5, 15).setMonth(5 + expirationMonths)).toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' })} 期限切れ</p>
               </div>
             </div>
 
             <Button onClick={handleSave} disabled={setMonthsMut.isPending} className="w-full">
               {setMonthsMut.isPending ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : null}
-              設定を保存
+              설정 저장
             </Button>
           </div>
         </Card>
@@ -145,7 +145,7 @@ export default function AdminPointExpiration() {
               ) : (
                 <Play className="w-4 h-4 mr-2" />
               )}
-              失効ポイントを今すぐ処理
+              만료 포인트 즉시 처리
             </Button>
           </div>
         </Card>
@@ -184,7 +184,7 @@ export default function AdminPointExpiration() {
               ) : (
                 <Bell className="w-4 h-4 mr-2" />
               )}
-              通知テストを実行
+              알림 테스트 실행
             </Button>
           </div>
         </Card>

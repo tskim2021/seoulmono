@@ -42,7 +42,7 @@ export default function MyReviews() {
   });
 
   const handleDelete = (reviewId: number) => {
-    if (confirm("本当にこのレビューを削除しますか？")) {
+    if (confirm("정말 이 리뷰를 삭제하시겠습니까?")) {
       deleteReview.mutate({ reviewId });
     }
   };
@@ -70,13 +70,13 @@ export default function MyReviews() {
                 <h3 className="font-bold text-amber-900 dark:text-amber-200">レビュー投稿待ち</h3>
                 <p className="text-xs text-amber-700 dark:text-amber-400">
                   {isPointEnabled ? (
-                    <>レビュー投稿で最大 <strong>{totalPossiblePoints.toLocaleString()}P</strong> 獲得！</>
+                    <>レビュー投稿で最大 <strong>{totalPossiblePoints.toLocaleString()}P</strong> 적립!</>
                   ) : "ご購入商品のレビューをお寄せください"}
                 </p>
               </div>
             </div>
             <Badge variant="secondary" className="bg-amber-500/20 text-amber-700 dark:text-amber-300 border-amber-300">
-              {reviewPending!.length}件
+              {reviewPending!.length}건
             </Badge>
           </div>
           <div className="space-y-2">
@@ -91,13 +91,13 @@ export default function MyReviews() {
                   {isPointEnabled && (
                     <div className="flex items-center gap-1 mt-0.5">
                       <Gift className="w-3 h-3 text-amber-500" />
-                      <span className="text-xs text-amber-600 dark:text-amber-400 font-medium">テキスト {textPoints}P + フォト {photoPoints}P</span>
+                      <span className="text-xs text-amber-600 dark:text-amber-400 font-medium">텍스트 {textPoints}P + 포토 {photoPoints}P</span>
                     </div>
                   )}
                 </div>
                 <Link href={`/mypage/orders/${order.orderId}`}>
                   <Button size="sm" className="text-xs h-7 gap-1 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white border-0 flex-shrink-0">
-                    <Star className="w-3 h-3" />レビューを書く
+                    <Star className="w-3 h-3" />리뷰작성
                   </Button>
                 </Link>
               </div>
@@ -108,7 +108,7 @@ export default function MyReviews() {
 
       <div className="flex items-center justify-between mb-4">
         <h3 className="font-semibold text-lg">レビュー一覧</h3>
-        <span className="text-sm text-muted-foreground">合計 {reviewData?.total ?? 0}件</span>
+        <span className="text-sm text-muted-foreground">총 {reviewData?.total ?? 0}건</span>
       </div>
 
         {!reviewData || reviewData.total === 0 ? (
@@ -186,7 +186,7 @@ export default function MyReviews() {
                       onClick={() => setEditingReview(review)}
                     >
                       <Pencil className="w-3 h-3 mr-1" />
-                      編集
+                      수정
                     </Button>
                     <Button
                       size="sm"
@@ -195,7 +195,7 @@ export default function MyReviews() {
                       disabled={deleteReview.isPending}
                     >
                       <Trash2 className="w-3 h-3 mr-1" />
-                      削除
+                      삭제
                     </Button>
                   </div>
                 </div>

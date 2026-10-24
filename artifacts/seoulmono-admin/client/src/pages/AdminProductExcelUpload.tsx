@@ -24,8 +24,8 @@ export default function AdminProductExcelUpload() {
     
     const ws = XLSX.utils.json_to_sheet(templateQuery.data.template);
     const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, "商品リスト");
-    XLSX.writeFile(wb, "商品_アップロードテンプレート.xlsx");
+    XLSX.utils.book_append_sheet(wb, ws, "상품목록");
+    XLSX.writeFile(wb, "상품_업로드_템플릿.xlsx");
     toast.success("テンプレートをダウンロードしました");
   };
 
@@ -77,14 +77,14 @@ export default function AdminProductExcelUpload() {
         setValidationResult(result);
 
         if (result.success) {
-          toast.success(`検証完了: ${result.validRows}件の商品をアップロードできます`);
+          toast.success(`검증 완료: ${result.validRows}개 상품 업로드 가능`);
         } else {
-          toast.error(`検証失敗: ${result.errorRows}件のエラーが見つかりました`);
+          toast.error(`검증 실패: ${result.errorRows}개 오류 발견`);
         }
       };
       reader.readAsArrayBuffer(file);
     } catch (error: any) {
-      toast.error(error.message || "検証中にエラーが発生しました");
+      toast.error(error.message || "검증 중 오류가 발생했습니다");
     }
   };
 
@@ -101,9 +101,9 @@ export default function AdminProductExcelUpload() {
         products: validationResult.validatedData,
       });
       setUploadResult(result);
-      toast.success(`アップロード完了: 成功 ${result.successCount}件、失敗 ${result.failCount}件`);
+      toast.success(`업로드 완료: 성공 ${result.successCount}건, 실패 ${result.failCount}건`);
     } catch (error: any) {
-      toast.error(error.message || "アップロード中にエラーが発生しました");
+      toast.error(error.message || "업로드 중 오류가 발생했습니다");
     } finally {
       setUploading(false);
     }
@@ -122,13 +122,13 @@ export default function AdminProductExcelUpload() {
           <div>
             <h3 className="font-semibold mb-1 flex items-center gap-2">
               <FileSpreadsheet className="w-5 h-5" />
-              Excelテンプレートのダウンロード
+              엑셀 템플릿 다운로드
             </h3>
             <p className="text-sm text-muted-foreground">正しい形式のExcelファイルをダウンロードして作成してください</p>
           </div>
           <Button onClick={handleDownloadTemplate} variant="outline">
             <Download className="w-4 h-4 mr-2" />
-            テンプレートをダウンロード
+            템플릿 다운로드
           </Button>
         </div>
       </Card>
@@ -146,7 +146,7 @@ export default function AdminProductExcelUpload() {
           />
           <Button onClick={() => fileInputRef.current?.click()} variant="outline">
             <Upload className="w-4 h-4 mr-2" />
-            ファイルを選択
+            파일 선택
           </Button>
           {file && (
             <div className="flex items-center gap-2 text-sm">
@@ -201,29 +201,29 @@ export default function AdminProductExcelUpload() {
           <div className="space-y-3">
             <div className="flex items-center gap-2">
               <span className="text-sm text-muted-foreground">全行数:</span>
-              <span className="font-medium">{validationResult.totalRows}件</span>
+              <span className="font-medium">{validationResult.totalRows}개</span>
             </div>
             <div className="flex items-center gap-2">
               <CheckCircle2 className="w-4 h-4 text-green-600" />
               <span className="text-sm text-muted-foreground">有効な行:</span>
-              <span className="font-medium text-green-600">{validationResult.validRows}件</span>
+              <span className="font-medium text-green-600">{validationResult.validRows}개</span>
             </div>
             {validationResult.errorRows > 0 && (
               <>
                 <div className="flex items-center gap-2">
                   <XCircle className="w-4 h-4 text-destructive" />
                   <span className="text-sm text-muted-foreground">エラー行:</span>
-                  <span className="font-medium text-destructive">{validationResult.errorRows}件</span>
+                  <span className="font-medium text-destructive">{validationResult.errorRows}개</span>
                 </div>
                 <div className="mt-4 p-4 bg-destructive/10 rounded-lg">
                   <h4 className="font-medium mb-2 flex items-center gap-2">
                     <AlertCircle className="w-4 h-4" />
-                    エラー詳細
+                    오류 상세
                   </h4>
                   <div className="space-y-2 text-sm">
                     {validationResult.errors.map((err: any, i: number) => (
                       <div key={i} className="flex gap-2">
-                        <span className="font-medium">{err.row}行目:</span>
+                        <span className="font-medium">행 {err.row}:</span>
                         <span className="text-destructive">{err.errors.join(", ")}</span>
                       </div>
                     ))}
@@ -235,7 +235,7 @@ export default function AdminProductExcelUpload() {
           {validationResult.success && (
             <div className="mt-4">
               <Button onClick={handleUpload} disabled={uploading}>
-                {uploading ? "アップロード中..." : `${validationResult.validRows}件の商品をアップロード`}
+                {uploading ? "アップロード中..." : `${validationResult.validRows}개 상품 업로드`}
               </Button>
             </div>
           )}
@@ -250,14 +250,14 @@ export default function AdminProductExcelUpload() {
             <div className="flex items-center gap-2">
               <CheckCircle2 className="w-4 h-4 text-green-600" />
               <span className="text-sm text-muted-foreground">成功:</span>
-              <span className="font-medium text-green-600">{uploadResult.successCount}件</span>
+              <span className="font-medium text-green-600">{uploadResult.successCount}건</span>
             </div>
             {uploadResult.failCount > 0 && (
               <>
                 <div className="flex items-center gap-2">
                   <XCircle className="w-4 h-4 text-destructive" />
                   <span className="text-sm text-muted-foreground">失敗:</span>
-                  <span className="font-medium text-destructive">{uploadResult.failCount}件</span>
+                  <span className="font-medium text-destructive">{uploadResult.failCount}건</span>
                 </div>
                 <div className="mt-4 p-4 bg-destructive/10 rounded-lg">
                   <h4 className="font-medium mb-2">失敗詳細</h4>

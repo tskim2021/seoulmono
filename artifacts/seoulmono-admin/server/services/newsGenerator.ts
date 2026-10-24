@@ -6,9 +6,9 @@ const NEWS_SECTIONS = ["domestic", "international", "research"] as const;
 type NewsSection = (typeof NEWS_SECTIONS)[number];
 
 const SECTION_LABELS: Record<NewsSection, string> = {
-  domestic: "国内ニュース",
-  international: "海外ニュース",
-  research: "研究・論文",
+  domestic: "국내 뉴스",
+  international: "해외 뉴스",
+  research: "연구/논문",
 };
 
 interface RssNewsItem {
@@ -37,7 +37,7 @@ async function fetchGoogleNewsRss(
 ): Promise<RssNewsItem[]> {
   const langParams =
     lang === "ko"
-      ? { hl: "ja", gl: "JP", ceid: "JP:ja" }
+      ? { hl: "ko", gl: "KR", ceid: "KR:ko" }
       : { hl: "en", gl: "US", ceid: "US:en" };
 
   const encodedQuery = encodeURIComponent(query);
@@ -107,7 +107,7 @@ export async function generateNewsForCategory(
 
   const setting = await db.getNewsAutoSettingByCategory(categoryId);
   if (!setting) {
-    return { success: false, generated: 0, errors: ["カテゴリ設定が見つかりません。"] };
+    return { success: false, generated: 0, errors: ["카테고리 설정을 찾을 수 없습니다."] };
   }
 
   const sectionsToGenerate = specificSection ? [specificSection] : NEWS_SECTIONS;
@@ -135,7 +135,7 @@ export async function generateNewsForCategory(
       }
     } catch (err: any) {
       console.error(`[NewsGenerator] Error generating ${section} for category ${categoryId}:`, err);
-      errors.push(`${SECTION_LABELS[section]} 生成に失敗しました: ${err.message}`);
+      errors.push(`${SECTION_LABELS[section]} 생성 실패: ${err.message}`);
     }
   }
 
@@ -166,7 +166,7 @@ async function generateArticleFromRealNews(
   const newsListText = newsItems
     .map(
       (item, idx) =>
-        `${idx + 1}. タイトル: ${item.title}\n   出典: ${item.source}\n   発行日: ${item.pubDate}\n   リンク: ${item.link}`
+        `${idx + 1}. 제목: ${item.title}\n   출처: ${item.source}\n   발행일: ${item.pubDate}\n   링크: ${item.link}`
     )
     .join("\n\n");
 
@@ -175,34 +175,34 @@ async function generateArticleFromRealNews(
 
   const systemPrompt =
     customPrompt ||
-    `あなたは健康・医薬品分野の専門ニュースエディターです。
-実際のニュース記事を分析し、読者に役立つ要約・解説記事を作成します。
-記事は日本語で、専門的でありながら一般の読者にも分かりやすく書きます。
-必ず実際のニュースの出典を明記し、元記事の要点を正確に伝えます。
-誇張した表現は避け、客観的な視点で書きます。`;
+    `당신은 건강/의약품 분야의 전문 뉴스 에디터입니다.
+실제 뉴스 기사들을 분석하여 독자에게 유용한 요약 및 해설 기사를 작성합니다.
+기사는 한국어로 작성하며, 전문적이면서도 일반 독자가 이해하기 쉽게 작성합니다.
+반드시 실제 뉴스 출처를 명시하고, 원문 기사의 핵심 내용을 정확하게 전달합니다.
+과장된 표현은 피하고, 객관적인 시각으로 작성합니다.`;
 
-  const userPrompt = `今日の日付: ${today}
+  const userPrompt = `오늘 날짜: ${today}
 
-以下は「${keywords}」に関する最新の${SECTION_LABELS[section]}一覧です。
-これらの実際のニュースをもとに、総合的な要約・解説記事を1件作成してください。
+아래는 "${keywords}" 관련 최신 ${SECTION_LABELS[section]} 목록입니다.
+이 실제 뉴스들을 바탕으로 종합 요약/해설 기사를 1개 작성해주세요.
 
-=== 収集した実際のニュース ===
+=== 수집된 실제 뉴스 ===
 ${newsListText}
 ========================
 
 ${sectionGuide}
 
-作成ルール:
-1. 最も重要で新しいニュースを1〜3件選び、総合記事を作成してください。
-2. 必ず元記事の出典（報道機関名）を本文に明記してください（例: 「朝日新聞によると…」「共同通信の報道によれば…」）
-3. 記事の末尾に「出典: [報道機関名]」の形式で参照した出典を列挙してください。
-4. 元記事の要点を正確に伝えつつ、読者が理解しやすいよう解説を加えてください。
+작성 규칙:
+1. 가장 중요하고 최신인 뉴스 1~3개를 선택하여 종합 기사를 작성하세요.
+2. 반드시 원문 출처(언론사명)를 기사 본문에 명시하세요 (예: "조선일보에 따르면...", "뉴시스 보도에 의하면...")
+3. 기사 말미에 "출처: [언론사명]" 형태로 참고한 원문 출처를 나열하세요.
+4. 원문의 핵심 내용을 정확하게 전달하되, 독자가 이해하기 쉽게 해설을 추가하세요.
 
-次のJSON形式で回答してください:
+다음 JSON 형식으로 응답해주세요:
 {
-  "title": "要約記事のタイトル（要点を表す簡潔なタイトル）",
-  "content": "要約・解説記事の本文（Markdown形式、500文字以上、小見出し・段落分けを含む、出典を明記）",
-  "mainSourceIndex": 最も重要なニュースの番号（1から始まる数字）
+  "title": "요약 기사 제목 (핵심 내용을 담은 간결한 제목)",
+  "content": "요약/해설 기사 본문 (마크다운 형식, 최소 500자 이상, 소제목/단락 구분 포함, 출처 명시)",
+  "mainSourceIndex": 가장 핵심이 되는 뉴스의 번호 (1부터 시작하는 숫자)
 }`;
 
   const response = await invokeLLM({
@@ -218,9 +218,9 @@ ${sectionGuide}
         schema: {
           type: "object",
           properties: {
-            title: { type: "string", description: "要約記事のタイトル" },
-            content: { type: "string", description: "要約・解説記事の本文（Markdown）" },
-            mainSourceIndex: { type: "integer", description: "主要ニュースの番号（1から）" },
+            title: { type: "string", description: "요약 기사 제목" },
+            content: { type: "string", description: "요약/해설 기사 본문 (마크다운)" },
+            mainSourceIndex: { type: "integer", description: "핵심 뉴스 번호 (1부터)" },
           },
           required: ["title", "content", "mainSourceIndex"],
           additionalProperties: false,
@@ -276,7 +276,7 @@ function buildSearchQuery(
   switch (section) {
     case "domestic": {
       // 국내 뉴스: 한국어 키워드로 한국 뉴스 검색
-      const q = kwList.length > 0 ? kwList.slice(0, 3).join(" OR ") : "健康";
+      const q = kwList.length > 0 ? kwList.slice(0, 3).join(" OR ") : "건강";
       return { query: q, lang: "ko" };
     }
     case "international": {
@@ -295,26 +295,26 @@ function buildSearchQuery(
 function getSectionPrompt(section: NewsSection): string {
   switch (section) {
     case "domestic":
-      return `[国内ニュース要約ガイド]
-- 国内の関連ニュース、政策の変化、市場動向を中心に要約します。
-- 厚生労働省、PMDAなど国内機関の発表があれば強調します。
-- 日本の消費者に実際に役立つ情報を提供します。
-- 元記事の要点を正確に伝えます。`;
+      return `[국내 뉴스 요약 가이드]
+- 한국 내 관련 뉴스, 정책 변화, 시장 동향을 중심으로 요약합니다.
+- 식약처, 건강보험심사평가원 등 국내 기관의 발표가 있으면 강조합니다.
+- 한국 소비자에게 실질적으로 도움이 되는 정보를 제공합니다.
+- 원문 기사의 핵심 내용을 정확하게 전달합니다.`;
 
     case "international":
-      return `[海外ニュース要約ガイド]
-- FDA、EMAなど海外規制当局の最新の承認・規制ニュースを中心に要約します。
-- グローバル製薬企業の新薬開発、臨床試験結果を含めます。
-- 海外ニュースのため、日本語に翻訳して解説します。
-- 日本市場への影響があれば分析を加えます。`;
+      return `[해외 뉴스 요약 가이드]
+- FDA, EMA 등 해외 규제기관의 최신 승인/규제 소식을 중심으로 요약합니다.
+- 글로벌 제약사의 신약 개발, 임상시험 결과를 포함합니다.
+- 해외 뉴스이므로 한국어로 번역하여 해설합니다.
+- 한국 시장에 미치는 영향이 있다면 분석을 추가합니다.`;
 
     case "research":
-      return `[研究・論文要約ガイド]
-- 最新の学術研究の結果を一般の方にも分かるよう解説します。
-- 研究の主要な発見、方法論、限界点を明確に説明します。
-- 臨床試験の結果は段階（Phase 1/2/3）を明記します。
-- 海外の研究の場合は日本語に翻訳して解説します。
-- 研究の実生活への応用可能性と今後の展望を含めます。`;
+      return `[연구/논문 요약 가이드]
+- 최신 학술 연구 결과를 일반인이 이해할 수 있게 해설합니다.
+- 연구의 핵심 발견, 방법론, 한계점을 명확히 설명합니다.
+- 임상시험 결과는 단계(Phase 1/2/3)를 명시합니다.
+- 해외 연구인 경우 한국어로 번역하여 해설합니다.
+- 연구의 실생활 적용 가능성과 향후 전망을 포함합니다.`;
   }
 }
 

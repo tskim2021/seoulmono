@@ -6,21 +6,21 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function formatPrice(price: number): string {
-  return price.toLocaleString("ja-JP") + "円";
+  return price.toLocaleString("ko-KR") + "엔";
 }
 
 export function formatDate(date: Date | string | null | undefined): string {
   if (!date) return "-";
   const d = typeof date === "string" ? new Date(date) : date;
   if (isNaN(d.getTime())) return "-";
-  return d.toLocaleDateString("ja-JP", { year: "numeric", month: "2-digit", day: "2-digit" });
+  return d.toLocaleDateString("ko-KR", { year: "numeric", month: "2-digit", day: "2-digit" });
 }
 
 export function formatDateTime(date: Date | string | null | undefined): string {
   if (!date) return "-";
   const d = typeof date === "string" ? new Date(date) : date;
   if (isNaN(d.getTime())) return "-";
-  return d.toLocaleString("ja-JP", { year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit" });
+  return d.toLocaleString("ko-KR", { year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit" });
 }
 
 export function getDiscountPercent(price: number, salePrice: number | null): number | null {
@@ -29,7 +29,7 @@ export function getDiscountPercent(price: number, salePrice: number | null): num
 }
 
 export function getGradeLabel(grade: string): string {
-  const map: Record<string, string> = { bronze: "ブロンズ", silver: "シルバー", gold: "ゴールド", vip: "VIP", vvip: "VVIP" };
+  const map: Record<string, string> = { bronze: "브론즈", silver: "실버", gold: "골드", vip: "VIP", vvip: "VVIP" };
   return map[grade] ?? grade;
 }
 
@@ -39,7 +39,7 @@ export function getGradeColor(grade: string): string {
 }
 
 export function getOrderStatusLabel(status: string): string {
-  const map: Record<string, string> = { pending: "注文受付", paid: "決済完了", preparing: "商品準備中", shipping: "配送中", delivered: "配送完了", cancelled: "注文キャンセル", refunded: "返金完了", customs_hold: "通関検査", partial_cancel: "一部キャンセル" };
+  const map: Record<string, string> = { pending: "주문접수", paid: "결제완료", preparing: "상품준비중", shipping: "배송중", delivered: "배송완료", cancelled: "주문취소", refunded: "환불완료", customs_hold: "통관검사", partial_cancel: "일부취소" };
   return map[status] ?? status;
 }
 

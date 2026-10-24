@@ -12,7 +12,7 @@ const SERVICE_LINKS = [
   { label: "リワード", href: "/mypage/coupons", icon: Star, badge: "2" },
   { label: "マガジン", href: "/news", icon: Newspaper },
   { label: "リアルタイムレビュー", href: "/shop/itemuselist.php", icon: MessageSquare, badge: "N" },
-  { label: "お問い合わせ", href: "/customer-service", icon: HelpCircle },
+  { label: "カスタマーセンター", href: "/customer-service", icon: HelpCircle },
   { label: "ブランド紹介", href: "/about", icon: Info },
 ];
 
@@ -21,7 +21,7 @@ function LoginCard() {
   if (isAuthenticated) {
     return (
       <div className="rounded-2xl bg-gradient-to-br from-accent to-secondary p-6 text-center">
-        <p className="text-[15px] font-bold leading-snug">{user?.name ?? "会員"}様、<br />今日も素敵な一日をお過ごしください</p>
+        <p className="text-[15px] font-bold leading-snug">{user?.name ?? "회원"}님,<br />오늘도 좋은 하루 되세요</p>
         <Link href="/mypage">
           <button className="mt-4 w-full h-11 rounded-full bg-foreground text-background text-[15px] font-bold">マイページ</button>
         </Link>
@@ -157,7 +157,7 @@ function RecentProducts() {
           className="flex items-center gap-1 text-[10px] text-muted-foreground hover:text-foreground transition-colors mt-2 mx-auto"
         >
           <X className="w-3 h-3" />
-          すべて削除
+          전체 삭제
         </button>
       )}
     </div>
@@ -168,16 +168,16 @@ function RecentProducts() {
 export function ShoppingSidebarContent() {
   return (
     <>
-      {/* ログインカード */}
+      {/* 로그인 카드 */}
       <LoginCard />
 
-      {/* 人気サービス */}
+      {/* 인기 서비스 */}
       <ServiceGrid />
 
-      {/* イベントバナー */}
+      {/* 이벤트 배너 */}
       <EventBanner />
 
-      {/* 最近見た商品 */}
+      {/* 최근 본 상품 */}
       <div className="bg-card rounded-xl border p-4 elegant-shadow">
         <div className="flex items-center gap-2 mb-3 pb-2.5 border-b border-border/60">
           <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center">

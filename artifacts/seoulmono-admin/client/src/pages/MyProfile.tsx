@@ -65,7 +65,7 @@ export default function MyProfile() {
   };
 
   return (
-    <MyPageLayout title="会員情報の編集">
+    <MyPageLayout title="会員情報編集">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch">
         {/* 기본 정보 */}
         <div className="bg-card border rounded-xl p-6 flex flex-col">
@@ -74,13 +74,13 @@ export default function MyProfile() {
               <User className="w-8 h-8 text-primary" />
             </div>
             <div>
-              <p className="font-semibold">{profile?.name ?? "会員"}</p>
+              <p className="font-semibold">{profile?.name ?? "회원"}</p>
               <p className="text-sm text-muted-foreground">{profile?.email}</p>
             </div>
           </div>
           <div className="space-y-4 flex-1 flex flex-col justify-between">
-            <div><Label className="text-sm mb-1.5 block">お名前</Label><Input value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} /></div>
-            <div><Label className="text-sm mb-1.5 block">連絡先</Label><Input value={form.phone} onChange={e => setForm(f => ({ ...f, phone: e.target.value }))} placeholder="090-0000-0000" /></div>
+            <div><Label className="text-sm mb-1.5 block">氏名</Label><Input value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} /></div>
+            <div><Label className="text-sm mb-1.5 block">連絡先</Label><Input value={form.phone} onChange={e => setForm(f => ({ ...f, phone: e.target.value }))} placeholder="010-0000-0000" /></div>
             <div><Label className="text-sm mb-1.5 block">ID (メールアドレス)</Label><Input value={form.email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))} type="email" /></div>
             <Button className="w-full mt-2" onClick={() => updateProfile.mutate({ 
               ...form, 
@@ -103,7 +103,7 @@ export default function MyProfile() {
               <Lock className="w-8 h-8 text-primary" />
             </div>
             <div>
-              <p className="font-semibold">パスワード変更</p>
+              <p className="font-semibold">パスワードを変更</p>
               <p className="text-sm text-muted-foreground">セキュリティのため、定期的に変更してください</p>
             </div>
           </div>

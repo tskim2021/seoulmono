@@ -56,12 +56,12 @@ export default function NewsDetail() {
   );
 
   useSEO({
-    title: news ? `${news.title} - 健康ニュース` : "健康ニュース",
+    title: news ? `${news.title} - 건강뉴스` : "건강뉴스",
     description: news ? news.content.slice(0, 160) : undefined,
   });
 
   const formatDate = (date: string | Date) => {
-    return new Date(date).toLocaleDateString("ja-JP", {
+    return new Date(date).toLocaleDateString("ko-KR", {
       year: "numeric",
       month: "long",
       day: "numeric",
@@ -113,7 +113,7 @@ export default function NewsDetail() {
         <div className="container py-6 max-w-4xl mx-auto">
           {/* 뒤로가기 */}
           <Button variant="ghost" size="sm" className="mb-4 -ml-2" onClick={() => setLocation("/news")}>
-            <ArrowLeft className="w-4 h-4 mr-1" /> ニュース一覧
+            <ArrowLeft className="w-4 h-4 mr-1" /> 뉴스 목록
           </Button>
 
           {/* 기사 헤더 */}
@@ -143,11 +143,11 @@ export default function NewsDetail() {
               </span>
               <span className="flex items-center gap-1">
                 <Eye className="w-4 h-4" />
-                閲覧 {news.viewCount}
+                조회 {news.viewCount}
               </span>
               <span className="flex items-center gap-1">
                 <MessageCircle className="w-4 h-4" />
-                コメント {news.commentCount}
+                댓글 {news.commentCount}
               </span>
               {news.sourceUrl && (
                 <a
@@ -157,7 +157,7 @@ export default function NewsDetail() {
                   className="flex items-center gap-1 text-primary hover:underline"
                 >
                   <ExternalLink className="w-4 h-4" />
-                  元記事を見る
+                  원문 보기
                 </a>
               )}
             </div>
@@ -174,7 +174,7 @@ export default function NewsDetail() {
                     rel="noopener noreferrer"
                     className="text-sm text-blue-700 hover:text-blue-900 underline break-all"
                   >
-                    元記事を見る →
+                    원문 기사 보기 →
                   </a>
                 </div>
               </div>
@@ -190,7 +190,7 @@ export default function NewsDetail() {
           <section className="mt-8 pt-8 border-t">
             <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
               <MessageCircle className="w-5 h-5" />
-              コメント {commentsData?.length ? `(${commentsData.length})` : ""}
+              댓글 {commentsData?.length ? `(${commentsData.length})` : ""}
             </h2>
 
             {/* 댓글 작성 */}
@@ -210,7 +210,7 @@ export default function NewsDetail() {
                     disabled={!commentText.trim() || createComment.isPending}
                   >
                     <Send className="w-4 h-4 mr-1" />
-                    {createComment.isPending ? "投稿中..." : "コメントを投稿"}
+                    {createComment.isPending ? "登録中..." : "コメントを投稿"}
                   </Button>
                 </div>
               </div>
@@ -235,7 +235,7 @@ export default function NewsDetail() {
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-1">
-                        <span className="text-sm font-medium">{comment.userName || "匿名"}</span>
+                        <span className="text-sm font-medium">{comment.userName || "익명"}</span>
                         {comment.isAdmin === 1 && (
                           <Badge variant="secondary" className="text-xs">管理者</Badge>
                         )}
@@ -250,7 +250,7 @@ export default function NewsDetail() {
               </div>
             ) : (
               <p className="text-sm text-muted-foreground text-center py-8">
-                まだコメントがありません。最初のコメントを投稿してみましょう！
+                아직 댓글이 없습니다. 첫 번째 댓글을 남겨보세요!
               </p>
             )}
           </section>

@@ -84,7 +84,7 @@ export default function Checkout() {
   );
   const redeemPromoMut = trpc.promoCode.redeem.useMutation({
     onSuccess: (data) => {
-      toast.success(`「${data.promoCodeName}」プロモコードを適用しました`);
+      toast.success(`"${data.promoCodeName}" 프로모코드가 적용되었습니다`);
     },
     onError: (err) => toast.error(err.message),
   });
@@ -95,11 +95,11 @@ export default function Checkout() {
     try {
       const result = await validatePromo.refetch();
       if (!result.data?.valid) {
-        toast.error(result.data?.message ?? "無効なプロモコードです");
+        toast.error(result.data?.message ?? "유효하지 않은 프로모코드입니다");
         return;
       }
       setAppliedPromo(result.data.promo);
-      toast.success(`「${result.data.promo.name}」プロモコードを適用しました (${result.data.discountText})`);
+      toast.success(`"${result.data.promo.name}" 프로모코드 적용됨 (${result.data.discountText})`);
     } catch (err: any) {
       toast.error(err.message);
     }
@@ -299,22 +299,22 @@ export default function Checkout() {
           {isBankTransfer && orderComplete.bankAccount && (
             <div className="mb-8 rounded-xl border-2 border-amber-300 bg-amber-50 p-6">
               <h2 className="font-bold text-amber-800 text-lg mb-4 flex items-center gap-2">
-                <span>📌</span> お振込先のご案内
+                <span>📌</span> 입금 계좌 안내
               </h2>
               <table className="w-full text-sm">
                 <tbody className="divide-y divide-amber-200">
                   <tr><td className="py-2 text-amber-700 font-medium w-24">振込先口座</td><td className="py-2 font-semibold">{orderComplete.bankAccount.bankName} {orderComplete.bankAccount.accountNumber}</td></tr>
                   <tr><td className="py-2 text-amber-700 font-medium">口座名義</td><td className="py-2">{orderComplete.bankAccount.accountHolder}</td></tr>
-                  <tr><td className="py-2 text-amber-700 font-medium">お振込金額</td><td className="py-2 font-bold text-lg">{(orderComplete.depositAmount ?? 0).toLocaleString()}円</td></tr>
+                  <tr><td className="py-2 text-amber-700 font-medium">振込金額</td><td className="py-2 font-bold text-lg">{(orderComplete.depositAmount ?? 0).toLocaleString()}円</td></tr>
                   <tr><td className="py-2 text-amber-700 font-medium">振込名義</td><td className="py-2">{orderComplete.depositorName}</td></tr>
                   {orderComplete.expiresAt && (
-                    <tr><td className="py-2 text-amber-700 font-medium">お振込期限</td><td className="py-2 text-red-600 font-semibold">{orderComplete.expiresAt.toLocaleString("ja-JP")}</td></tr>
+                    <tr><td className="py-2 text-amber-700 font-medium">振込期限</td><td className="py-2 text-red-600 font-semibold">{orderComplete.expiresAt.toLocaleString("ko-KR")}</td></tr>
                   )}
                 </tbody>
               </table>
               <p className="mt-4 text-xs text-amber-700 bg-amber-100 rounded p-3">
-                ⚠️ お振込期限内にご入金がない場合、ご注文は自動的にキャンセルされます。<br />
-                振込名義と注文者名が異なる場合、確認が遅れることがあります。
+                ⚠️ 입금 기한 내에 입금하지 않으면 주문이 자동으로 취소됩니다.<br />
+                입금자명과 주문자명이 다를 경우 확인이 지연될 수 있습니다.
               </p>
             </div>
           )}
@@ -393,7 +393,7 @@ export default function Checkout() {
         if (result.requiresAction && result.clientSecret) {
           const stripe = await loadStripe(stripeKeyData!.publishableKey);
           const { error } = await stripe!.handleNextAction({ clientSecret: result.clientSecret });
-          if (error) throw new Error(error.message ?? "3Dセキュア認証に失敗しました");
+          if (error) throw new Error(error.message ?? "3D Secure 인증 실패");
         }
 
         // 4. 결제 완료 → 주문 저장 (Stripe와 동일한 주문번호 사용)
@@ -406,10 +406,10 @@ export default function Checkout() {
             setOrderComplete({ orderNumber: data.orderNumber, paymentMethod: "stripe" });
             toast.success("お支払いとご注文が完了しました");
           },
-          onError: (err) => toast.error("注文保存エラー: " + err.message),
+          onError: (err) => toast.error("주문 저장 오류: " + err.message),
         });
       } catch (err: any) {
-        toast.error(err.message ?? "お支払い中にエラーが発生しました");
+        toast.error(err.message ?? "결제 중 오류가 발생했습니다");
       } finally {
         setIsStripeProcessing(false);
       }
@@ -421,10 +421,10 @@ export default function Checkout() {
 
   const formatCouponLabel = (coupon: { name: string; discountType: string; discountValue: number; maxDiscountAmount: number | null }) => {
     if (coupon.discountType === "percent") {
-      const maxStr = coupon.maxDiscountAmount ? ` (最大 ${formatPrice(coupon.maxDiscountAmount)})` : "";
-      return `${coupon.name} - ${coupon.discountValue}% 割引${maxStr}`;
+      const maxStr = coupon.maxDiscountAmount ? ` (최대 ${formatPrice(coupon.maxDiscountAmount)})` : "";
+      return `${coupon.name} - ${coupon.discountValue}% 할인${maxStr}`;
     }
-    return `${coupon.name} - ${formatPrice(coupon.discountValue)} 割引`;
+    return `${coupon.name} - ${formatPrice(coupon.discountValue)} 할인`;
   };
 
   const defaultAddr = addresses?.find(a => a.isDefault) ?? addresses?.[0];
@@ -445,7 +445,7 @@ export default function Checkout() {
                 {addresses && addresses.length > 0 && (
                   <div className="mb-5 p-3 bg-muted/40 rounded-lg border">
                     <label className="text-xs text-muted-foreground mb-2 flex items-center gap-1">
-                      <MapPin className="w-3 h-3" /> 保存済みの配送先から選択
+                      <MapPin className="w-3 h-3" /> 저장된 배송지에서 선택
                     </label>
                     <select
                       className="w-full text-sm border rounded-md px-3 py-2 bg-background focus:outline-none focus:ring-1 focus:ring-primary mt-1"
@@ -475,7 +475,7 @@ export default function Checkout() {
                 {/* 국제배송 무료배송 안내 */}
                 <div className="mb-4 p-3 bg-emerald-50 dark:bg-emerald-950/20 rounded-lg flex items-center gap-2 text-sm text-emerald-700 dark:text-emerald-300">
                   <Truck className="w-4 h-4 shrink-0" />
-                  <span>国際配送 <strong>送料無料</strong> | 配送予定日: 7〜14日</span>
+                  <span>国際配送 <strong>送料無料</strong> | 예상 배송일: 7~14일</span>
                 </div>
 
                 <div className="space-y-4 mb-6">
@@ -484,7 +484,7 @@ export default function Checkout() {
                     <Input
                       value={form.recipientName}
                       onChange={handleRecipientNameChange}
-                      placeholder="お名前"
+                      placeholder="氏名"
                     />
                   </div>
 
@@ -536,7 +536,7 @@ export default function Checkout() {
 
               {/* Items */}
               <div className="bg-card border rounded-xl p-6">
-                <h2 className="font-semibold mb-4">注文商品 ({items.length})</h2>
+                <h2 className="font-semibold mb-4">주문 상품 ({items.length})</h2>
                 <div className="space-y-3">
                   {items.map(item => {
                     const product = item.product as any;
@@ -551,7 +551,7 @@ export default function Checkout() {
                         </div>
                         <div className="flex-1 min-w-0">
                           <p className="text-sm font-medium line-clamp-1">{product?.name}</p>
-                          <p className="text-xs text-muted-foreground">数量: {item.quantity}</p>
+                          <p className="text-xs text-muted-foreground">수량: {item.quantity}</p>
                           {selectedCoupon && isNoDiscount && (
                             <span className="inline-block text-[11px] text-orange-500 font-medium bg-orange-50 dark:bg-orange-950/20 px-1.5 py-0.5 rounded mt-0.5">割引対象外商品</span>
                           )}
@@ -575,7 +575,7 @@ export default function Checkout() {
 
               {/* Payment Method */}
               <div className="bg-card border rounded-xl p-6">
-                <h2 className="font-semibold mb-4 flex items-center gap-2"><CreditCard className="w-4 h-4" /> お支払い方法</h2>
+                <h2 className="font-semibold mb-4 flex items-center gap-2"><CreditCard className="w-4 h-4" /> 결제 방식</h2>
                 {enabledMethods && enabledMethods.length > 0 ? (
                   <div className="grid grid-cols-2 gap-3">
                     {enabledMethods.map(method => {
@@ -591,7 +591,7 @@ export default function Checkout() {
                         airwallex: "Airwallex",
                         "2checkout": "2Checkout",
                         payoneer: "Payoneer",
-                        bank_transfer: "銀行振込",
+                        bank_transfer: "무통장 입금",
                       };
                       const Icon = icons[method.methodCode] || CreditCard;
                       const label = labels[method.methodCode] || method.methodName;
@@ -656,7 +656,7 @@ export default function Checkout() {
                             >
                               <p className="font-medium text-sm">{account.bankName}</p>
                               <p className="text-sm text-muted-foreground mt-0.5">{account.accountNumber}</p>
-                              <p className="text-xs text-muted-foreground mt-0.5">口座名義: {account.accountHolder}</p>
+                              <p className="text-xs text-muted-foreground mt-0.5">예금주: {account.accountHolder}</p>
                             </button>
                           ))}
                         </div>
@@ -666,8 +666,8 @@ export default function Checkout() {
                     </div>
                     <div className="bg-amber-50 border border-amber-200 rounded-lg p-3">
                       <p className="text-xs text-amber-800 leading-relaxed">
-                        ⚠️ ご注文後48時間以内にご入金がない場合、ご注文は自動的にキャンセルされます。<br />
-                        入金確認後に商品の準備を開始し、発送開始時に別途ご案内いたします。
+                        ⚠️ 주문 후 48시간 이내에 입금하지 않으시면 주문이 자동으로 취소됩니다.<br />
+                        입금 확인 후 상품 준비를 시작하며, 배송 시작 시 별도로 안내드립니다.
                       </p>
                     </div>
                   </div>
@@ -676,11 +676,11 @@ export default function Checkout() {
 
               {/* Coupon / Promo Code */}
               <div className="bg-card border rounded-xl p-6">
-                <h2 className="font-semibold mb-4 flex items-center gap-2"><Ticket className="w-4 h-4" /> クーポン / プロモコードの適用</h2>
+                <h2 className="font-semibold mb-4 flex items-center gap-2"><Ticket className="w-4 h-4" /> 쿠폰 / 프로모코드 적용</h2>
 
                 {/* Promo Code 입력 */}
                 <div className="mb-4">
-                  <p className="text-xs text-muted-foreground mb-2 flex items-center gap-1"><Tag className="w-3 h-3" /> プロモコード (割引コード)</p>
+                  <p className="text-xs text-muted-foreground mb-2 flex items-center gap-1"><Tag className="w-3 h-3" /> 프로모코드 (할인코드)</p>
                   {appliedPromo ? (
                     <div className="flex items-center justify-between bg-primary/5 border border-primary/20 rounded-lg p-3">
                       <div>
@@ -715,7 +715,7 @@ export default function Checkout() {
                 <Separator className="mb-4" />
 
                 {/* 보유 쿠폰 선택 */}
-                <p className="text-xs text-muted-foreground mb-2 flex items-center gap-1"><Ticket className="w-3 h-3" /> 保有クーポン</p>
+                <p className="text-xs text-muted-foreground mb-2 flex items-center gap-1"><Ticket className="w-3 h-3" /> 보유 쿠폰</p>
                 {selectedCoupon ? (
                   <div className="flex items-center justify-between bg-primary/5 border border-primary/20 rounded-lg p-3">
                     <div>
@@ -730,7 +730,7 @@ export default function Checkout() {
                   <div>
                     <Button type="button" variant="outline" className="w-full justify-between" onClick={() => setShowCouponSelect(!showCouponSelect)}>
                       <span className="text-muted-foreground">
-                        {availableCoupons && availableCoupons.length > 0 ? `ご利用可能なクーポン ${availableCoupons.length}枚` : "ご利用可能なクーポンがありません"}
+                        {availableCoupons && availableCoupons.length > 0 ? `사용 가능한 쿠폰 ${availableCoupons.length}장` : "ご利用可能なクーポンはありません"}
                       </span>
                       <ChevronDown className={`w-4 h-4 transition-transform ${showCouponSelect ? "rotate-180" : ""}`} />
                     </Button>
@@ -745,7 +745,7 @@ export default function Checkout() {
                           >
                             <p className="text-sm font-medium">{formatCouponLabel(uc.coupon)}</p>
                             {uc.coupon.minOrderAmount > 0 && (
-                              <p className="text-xs text-muted-foreground">{formatPrice(uc.coupon.minOrderAmount)} 以上のご購入で</p>
+                              <p className="text-xs text-muted-foreground">{formatPrice(uc.coupon.minOrderAmount)} 이상 구매 시</p>
                             )}
                           </button>
                         ))}
@@ -758,10 +758,10 @@ export default function Checkout() {
               {/* Points */}
               {profile && profile.points > 0 && (
                 <div className="bg-card border rounded-xl p-6">
-                  <h2 className="font-semibold mb-4">ポイントの利用</h2>
+                  <h2 className="font-semibold mb-4">ポイント利用</h2>
                   <div className="flex items-center gap-3">
                     <Input type="number" min={0} max={Math.min(profile.points, subtotal)} value={form.pointsUsed} onChange={e => setForm(f => ({ ...f, pointsUsed: Math.min(Number(e.target.value) || 0, profile.points, subtotal) }))} className="w-40" />
-                    <span className="text-sm text-muted-foreground">保有: {profile.points.toLocaleString()}P</span>
+                    <span className="text-sm text-muted-foreground">보유: {profile.points.toLocaleString()}P</span>
                     <Button type="button" variant="outline" size="sm" onClick={() => setForm(f => ({ ...f, pointsUsed: Math.min(profile.points, subtotal) }))}>全額使用</Button>
                   </div>
                 </div>
@@ -779,12 +779,12 @@ export default function Checkout() {
                   {couponDiscount > 0 && <div className="flex justify-between"><span className="text-muted-foreground">クーポン割引</span><span className="text-destructive price-text">-{formatPrice(couponDiscount)}</span></div>}
                   {form.pointsUsed > 0 && <div className="flex justify-between"><span className="text-muted-foreground">ポイント割引</span><span className="text-destructive price-text">-{formatPrice(form.pointsUsed)}</span></div>}
                   <Separator />
-                  <div className="flex justify-between font-bold text-lg"><span>お支払い合計</span><span className="text-primary price-text">{formatPrice(total)}</span></div>
+                  <div className="flex justify-between font-bold text-lg"><span>累計決済金額</span><span className="text-primary price-text">{formatPrice(total)}</span></div>
                 </div>
                 <Button type="submit" className="w-full mt-6" size="lg" disabled={createOrder.isPending || isStripeProcessing}>
                   {(createOrder.isPending || isStripeProcessing) ? (
                     <><Loader2 className="w-4 h-4 mr-2 animate-spin" />{isStripeProcessing ? "カード決済処理中..." : "注文処理中..."}</>
-                  ) : `${formatPrice(total)} を支払う`}
+                  ) : `${formatPrice(total)} 결제하기`}
                 </Button>
                 <p className="text-[11px] text-muted-foreground text-center mt-3">ご注文の完了をもって、利用規約に同意したものとみなします。</p>
               </div>

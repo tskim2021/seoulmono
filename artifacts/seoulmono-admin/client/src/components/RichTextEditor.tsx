@@ -20,7 +20,7 @@ interface RichTextEditorProps {
   minHeight?: number;
 }
 
-export default function RichTextEditor({ value, onChange, placeholder = "内容を入力してください...", minHeight = 300 }: RichTextEditorProps) {
+export default function RichTextEditor({ value, onChange, placeholder = "내용을 입력하세요...", minHeight = 300 }: RichTextEditorProps) {
   const editor = useEditor({
     extensions: [
       StarterKit,
@@ -49,7 +49,7 @@ export default function RichTextEditor({ value, onChange, placeholder = "内容�
 
   const setLink = useCallback(() => {
     if (!editor) return;
-    const url = window.prompt("リンクURLを入力");
+    const url = window.prompt("링크 URL 입력");
     if (url === null) return;
     if (url === "") {
       editor.chain().focus().extendMarkRange("link").unsetLink().run();
@@ -60,7 +60,7 @@ export default function RichTextEditor({ value, onChange, placeholder = "内容�
 
   const addImage = useCallback(() => {
     if (!editor) return;
-    const url = window.prompt("画像URLを入力");
+    const url = window.prompt("이미지 URL 입력");
     if (url) editor.chain().focus().setImage({ src: url }).run();
   }, [editor]);
 

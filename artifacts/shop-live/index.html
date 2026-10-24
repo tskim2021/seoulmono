@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, viewport-fit=cover" />
+    <title>seoulmono - 良い商品を、納得の価格で</title>
+    <meta name="description" content="seoulmonoは韓国の人気商品をお得な価格でお届けする通販サイトです。食品・美容・健康食品など幅広い商品を取り揃えています。" />
+    <link rel="canonical" href="https://seoulmono.com/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="seoulmono" />
+    <meta property="og:title" content="seoulmono - 良い商品を、納得の価格で" />
+    <meta property="og:description" content="seoulmonoは韓国の人気商品をお得な価格でお届けする通販サイトです。食品・美容・健康食品など幅広い商品を取り揃えています。" />
+    <meta property="og:image" content="https://seoulmono.com/opengraph.jpg" />
+    <meta property="og:url" content="https://seoulmono.com/" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <!-- 첫 배너 preload (LCP 최적화) -->
+    <script src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.4/kakao.min.js"
+      integrity="sha384-DKYJZ8NLiK8MN4/C5P2dtSmLQ4KwPaoqAfyA/DfmEc1VDxu4yyC7wy6K1Hs90nka"
+      crossorigin="anonymous"></script>
+    <script>
+      window.__shippingConfig = { fee: 990, additionalFee: 590 };
+      fetch("/api/shop/shipping-config").then(function (r) { return r.json(); }).then(function (c) {
+        if (c && typeof c.fee === "number" && typeof c.additionalFee === "number") {
+          window.__shippingConfig = c;
+        }
+      }).catch(function () {});
+      (function () {
+        var reported = 0;
+        function report(payload) {
+          if (reported >= 5) return;
+          reported++;
+          try {
+            var body = JSON.stringify(payload);
+            if (navigator.sendBeacon) {
+              navigator.sendBeacon("/api/shop/client-error", new Blob([body], { type: "application/json" }));
+            } else {
+              fetch("/api/shop/client-error", { method: "POST", headers: { "Content-Type": "application/json" }, body: body, keepalive: true }).catch(function () {});
+            }
+          } catch (e) {}
+        }
+        window.addEventListener("error", function (e) {
+          report({
+            type: "error",
+            message: e.message || "",
+            stack: e.error && e.error.stack ? String(e.error.stack) : "",
+            url: e.filename || location.href,
+            line: e.lineno,
+            col: e.colno,
+            userAgent: navigator.userAgent
+          });
+        });
+        window.addEventListener("unhandledrejection", function (e) {
+          var reason = e.reason;
+          report({
+            type: "unhandledrejection",
+            message: reason && reason.message ? String(reason.message) : String(reason),
+            stack: reason && reason.stack ? String(reason.stack) : "",
+            url: location.href,
+            userAgent: navigator.userAgent
+          });
+        });
+      })();
+    </script>
+    <script src="/sorosoro-brand-guard.js?v=20260808"></script>
+    <script src="/sorosoro-language-switcher.js?v=20261013a"></script>
+    <script src="/sorosoro-banner-grid.js?v=20261013b"></script>
+    <script src="/sorosoro-moa.js?v=seoulmono-20261024" defer></script>
+    <script src="/sorosoro-login.js?v=20261018g" defer></script>
+    <script type="module" crossorigin src="/assets/index-HYmBH18r.js"></script>
+    <link rel="modulepreload" crossorigin href="/assets/router-DOhF4AUX.js">
+    <link rel="modulepreload" crossorigin href="/assets/vendor-DWWkU_55.js">
+    <link rel="modulepreload" crossorigin href="/assets/icons-BOv_fPi-.js">
+    <link rel="stylesheet" crossorigin href="/assets/index-Bbn3-8qo.css?v=20260829d">
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>

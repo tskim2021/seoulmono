@@ -101,7 +101,7 @@ export default function PostEdit() {
     <Layout>
       <div className="container py-8 max-w-3xl mx-auto">
         <button onClick={() => window.history.back()} className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground mb-6">
-          <ArrowLeft className="w-4 h-4" />戻る
+          <ArrowLeft className="w-4 h-4" />돌아가기
         </button>
 
         <div className="bg-card border rounded-xl p-6 md:p-8">

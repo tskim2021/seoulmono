@@ -18,7 +18,7 @@ export default function MyCoupons() {
 
   const downloadByCode = trpc.coupon.downloadByCode.useMutation({
     onSuccess: (data) => {
-      toast.success(`「${data.couponName}」クーポンを登録しました`);
+      toast.success(`"${data.couponName}" 쿠폰이 등록되었습니다`);
       setCouponCode("");
       utils.coupon.myCoupons.invalidate();
     },
@@ -31,7 +31,7 @@ export default function MyCoupons() {
 
   const formatDiscount = (coupon: { discountType: string; discountValue: number; maxDiscountAmount: number | null }) => {
     if (coupon.discountType === "percent") {
-      const max = coupon.maxDiscountAmount ? ` (最大 ${formatPrice(coupon.maxDiscountAmount)})` : "";
+      const max = coupon.maxDiscountAmount ? ` (최대 ${formatPrice(coupon.maxDiscountAmount)})` : "";
       return `${coupon.discountValue}%${max}`;
     }
     return formatPrice(coupon.discountValue);
@@ -55,7 +55,7 @@ export default function MyCoupons() {
             onClick={() => couponCode.trim() && downloadByCode.mutate({ code: couponCode.trim() })}
             disabled={!couponCode.trim() || downloadByCode.isPending}
           >
-            登録
+            등록
           </Button>
         </div>
       </div>
@@ -84,7 +84,7 @@ export default function MyCoupons() {
               {uc.coupon.description && <p className="text-xs text-muted-foreground mt-0.5">{uc.coupon.description}</p>}
               <div className="flex items-center gap-3 mt-2 text-xs text-muted-foreground">
                 <span className="flex items-center gap-1"><Clock className="w-3 h-3" /> ~{new Date(uc.coupon.endDate).toLocaleDateString()}</span>
-                {uc.coupon.minOrderAmount > 0 && <span>{formatPrice(uc.coupon.minOrderAmount)} 以上のご購入で</span>}
+                {uc.coupon.minOrderAmount > 0 && <span>{formatPrice(uc.coupon.minOrderAmount)} 이상 구매 시</span>}
               </div>
             </div>
           </div>
@@ -107,8 +107,8 @@ export default function MyCoupons() {
                   <p className="font-medium text-sm">{uc.coupon.name}</p>
                   <p className="text-xs text-muted-foreground mt-1">
                     {uc.isUsed
-                      ? `使用日: ${uc.usedAt ? new Date(uc.usedAt).toLocaleDateString() : "-"}`
-                      : `有効期限: ${new Date(uc.coupon.endDate).toLocaleDateString()}`}
+                      ? `사용일: ${uc.usedAt ? new Date(uc.usedAt).toLocaleDateString() : "-"}`
+                      : `만료일: ${new Date(uc.coupon.endDate).toLocaleDateString()}`}
                   </p>
                 </div>
               </div>

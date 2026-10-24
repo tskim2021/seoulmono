@@ -33,7 +33,7 @@ export const infoBoardRouter = router({
     )
     .query(async ({ input }) => {
       const board = await getBoardBySlug("info");
-      if (!board) throw new Error("情報シェア掲示板が見つかりません。");
+      if (!board) throw new Error("정보나눔 게시판을 찾을 수 없습니다.");
       const result = await getPosts(board.id, input.page, input.limit, input.search, input.categoryId);
       return result;
     }),
@@ -50,15 +50,15 @@ export const infoBoardRouter = router({
   createPost: protectedProcedure
     .input(
       z.object({
-        title: z.string().min(1, "タイトルを入力してください"),
-        content: z.string().min(1, "内容を入力してください"),
+        title: z.string().min(1, "제목을 입력해주세요"),
+        content: z.string().min(1, "내용을 입력해주세요"),
         images: z.array(z.string()).optional(),
         categoryId: z.number().optional(),
       })
     )
     .mutation(async ({ ctx, input }) => {
       const board = await getBoardBySlug("info");
-      if (!board) throw new Error("情報シェア掲示板が見つかりません。");
+      if (!board) throw new Error("정보나눔 게시판을 찾을 수 없습니다.");
       const result = await createPost({
         boardId: board.id,
         userId: ctx.user.id,
@@ -115,7 +115,7 @@ export const infoBoardRouter = router({
     .input(
       z.object({
         postId: z.number(),
-        content: z.string().min(1, "コメントを入力してください"),
+        content: z.string().min(1, "댓글을 입력해주세요"),
         parentId: z.number().optional(),
       })
     )
@@ -135,8 +135,8 @@ export const infoBoardRouter = router({
           await createNotification(
             post.userId,
             "comment",
-            "情報シェア記事に新しいコメント",
-            `「${post.title}」に${ctx.user.name || "匿名"}さんがコメントしました。`,
+            "정보나눔 게시글에 새 댓글",
+            `"${post.title}"에 ${ctx.user.name || "익명"}님이 댓글을 달았습니다.`,
             `/info-board/${input.postId}`
           );
         }

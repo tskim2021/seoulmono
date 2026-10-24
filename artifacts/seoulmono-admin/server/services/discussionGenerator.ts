@@ -4,43 +4,43 @@ import * as db from "../db";
 import type { DiscussionAutoSetting } from "../../drizzle/schema";
 
 const STYLE_LABELS: Record<string, string> = {
-  debate: "賛否討論型",
-  opinion: "意見交換型",
-  question: "質問・討議型",
-  poll: "投票・アンケート型",
-  experience: "体験共有型",
+  debate: "찬반 토론형",
+  opinion: "의견 교환형",
+  question: "질문/토의형",
+  poll: "투표/설문형",
+  experience: "경험 공유형",
 };
 
 const STYLE_PROMPTS: Record<string, string> = {
-  debate: `[賛否討論型 作成ガイド]
-- 賛成・反対がはっきり分かれるテーマを選びます。
-- 双方の立場の根拠をバランスよく示します。
-- 読者が自分の意見を述べたくなるように促します。
-- 結論は出さず、オープンな問いかけで締めくくります。`,
+  debate: `[찬반 토론형 작성 가이드]
+- 명확한 찬반 입장이 나뉠 수 있는 주제를 선정합니다.
+- 양쪽 입장의 근거를 균형 있게 제시합니다.
+- 독자가 자신의 의견을 밝히고 싶어지도록 유도합니다.
+- 결론을 내리지 않고 열린 질문으로 마무리합니다.`,
 
-  opinion: `[意見交換型 作成ガイド]
-- さまざまな観点から考えられるテーマを扱います。
-- 唯一の正解がないテーマを選びます。
-- まず自分の意見を示しつつ、他の意見も歓迎するトーンで書きます。
-- 具体的な体験や事例を盛り込み、共感を促します。`,
+  opinion: `[의견 교환형 작성 가이드]
+- 다양한 관점에서 생각해볼 수 있는 주제를 다룹니다.
+- 하나의 정답이 없는 주제를 선정합니다.
+- 자신의 의견을 먼저 제시하되, 다른 의견도 환영하는 톤으로 작성합니다.
+- 구체적인 경험이나 사례를 포함하여 공감을 유도합니다.`,
 
-  question: `[質問・討議型 作成ガイド]
-- コミュニティの皆さんの知識や経験を集められる質問を投げかけます。
-- 具体的で明確な質問を示します。
-- 質問の背景と文脈を十分に説明します。
-- 回答者がさまざまな観点から答えられるよう、オープンな質問を用います。`,
+  question: `[질문/토의형 작성 가이드]
+- 커뮤니티 구성원들의 지식과 경험을 모을 수 있는 질문을 던집니다.
+- 구체적이고 명확한 질문을 제시합니다.
+- 질문의 배경과 맥락을 충분히 설명합니다.
+- 답변자들이 다양한 관점에서 응답할 수 있도록 열린 질문을 사용합니다.`,
 
-  poll: `[投票・アンケート型 作成ガイド]
-- 2〜5個の選択肢を提示する形で書きます。
-- 各選択肢に簡単な説明を添えます。
-- 投票への参加を促す興味を引く導入を書きます。
-- 選択肢以外にも自由に意見を書けるよう案内します。`,
+  poll: `[투표/설문형 작성 가이드]
+- 2~5개의 선택지를 제시하는 형태로 작성합니다.
+- 각 선택지에 대한 간략한 설명을 포함합니다.
+- 투표 참여를 유도하는 흥미로운 도입부를 작성합니다.
+- 선택지 외에도 자유 의견을 남길 수 있도록 안내합니다.`,
 
-  experience: `[体験共有型 作成ガイド]
-- 特定の製品や健康に関する体験を共有する形で書きます。
-- 具体的な使用体験、効果、注意事項などを含めます。
-- 他のユーザーにも体験を共有してもらえるよう促します。
-- 率直でバランスの取れたトーンで書きます。`,
+  experience: `[경험 공유형 작성 가이드]
+- 특정 제품이나 건강 관련 경험을 공유하는 형태로 작성합니다.
+- 구체적인 사용 경험, 효과, 주의사항 등을 포함합니다.
+- 다른 사용자들도 자신의 경험을 공유하도록 유도합니다.
+- 솔직하고 균형 잡힌 톤으로 작성합니다.`,
 };
 
 interface GeneratedDiscussion {
@@ -93,13 +93,13 @@ export async function generateDiscussionPost(
       await db.createDiscussionAutoLog({
         settingId: setting.id,
         status: "failed",
-        errorMessage: "AIディスカッション題材の生成に失敗しました: LLMの応答がありません",
+        errorMessage: "AI 토론 주제 생성 실패: LLM 응답 없음",
         executionTimeMs: elapsed,
         triggeredBy,
         discussionId: null,
         generatedTitle: null,
       });
-      return { success: false, error: "AIディスカッション題材の生成に失敗しました" };
+      return { success: false, error: "AI 토론 주제 생성 실패" };
     }
 
     // 2) 이미지 자동 생성 (설정이 활성화된 경우)
@@ -137,7 +137,7 @@ export async function generateDiscussionPost(
     return { success: true, discussionId: Number(discussionId), title: generated.title };
   } catch (err: any) {
     const elapsed = Date.now() - startTime;
-    const errorMsg = err.message || "不明なエラー";
+    const errorMsg = err.message || "알 수 없는 오류";
     await db.createDiscussionAutoLog({
       settingId: setting.id,
       status: "failed",
@@ -156,45 +156,45 @@ export async function generateDiscussionPost(
  * LLM을 사용하여 토론광장 토론 주제를 생성합니다.
  */
 async function generateDiscussionContent(setting: DiscussionAutoSetting): Promise<GeneratedDiscussion | null> {
-  const styleLabel = STYLE_LABELS[setting.discussionStyle] || "賛否討論型";
+  const styleLabel = STYLE_LABELS[setting.discussionStyle] || "찬반 토론형";
   const styleGuide = STYLE_PROMPTS[setting.discussionStyle] || STYLE_PROMPTS.debate;
-  const today = new Date().toLocaleDateString("ja-JP", { year: "numeric", month: "long", day: "numeric" });
+  const today = new Date().toLocaleDateString("ko-KR", { year: "numeric", month: "long", day: "numeric" });
 
   const systemPrompt =
     setting.promptTemplate ||
-    `あなたは健康・医薬品・栄養分野のコミュニティのディスカッション進行役です。
-ディスカッション広場に投稿する、興味深く参加を促す討論テーマを作成します。
-文章は日本語で、親しみやすく、かつ専門的なトーンで書きます。
-さまざまな意見が出せるオープンなテーマを選びます。
-Markdown形式で書き、小見出し(##)、リスト、強調(**)などを適切に活用します。`;
+    `당신은 건강/의약품/영양 분야의 커뮤니티 토론 진행자입니다.
+토론광장에 올릴 흥미롭고 참여를 유도하는 토론 주제를 작성합니다.
+글은 한국어로 작성하며, 친근하면서도 전문적인 톤으로 작성합니다.
+다양한 의견이 나올 수 있는 개방적인 주제를 선정합니다.
+마크다운 형식으로 작성하되, 소제목(##), 목록, 강조(**) 등을 적절히 활용합니다.`;
 
-  const keywordsInfo = setting.keywords ? `\n関連キーワード: ${setting.keywords}` : "";
-  const keywordsEnInfo = setting.keywordsEn ? `\n英語キーワード: ${setting.keywordsEn}` : "";
+  const keywordsInfo = setting.keywords ? `\n관련 키워드: ${setting.keywords}` : "";
+  const keywordsEnInfo = setting.keywordsEn ? `\n영어 키워드: ${setting.keywordsEn}` : "";
 
-  const userPrompt = `今日の日付: ${today}
+  const userPrompt = `오늘 날짜: ${today}
 
-テーマ分野: ${setting.topic}${keywordsInfo}${keywordsEnInfo}
+주제 분야: ${setting.topic}${keywordsInfo}${keywordsEnInfo}
 
-ディスカッションのスタイル: ${styleLabel}
+토론 스타일: ${styleLabel}
 
 ${styleGuide}
 
-上記のテーマとスタイルに合ったディスカッション広場の投稿を1件作成してください。
+위 주제와 스타일에 맞는 토론광장 글을 1개 작성해주세요.
 
-作成ルール:
-1. タイトルは議論への参加を促す興味深い問いやテーマにしてください（50文字以内）。
-2. 本文はMarkdown形式で最低500文字以上書いてください。
-3. 議論の背景と文脈を十分に説明してください。
-4. さまざまな観点から意見交換できるよう、オープンな問いを含めてください。
-5. 以前の投稿と重複しないよう、新しい観点やテーマを扱ってください。
-6. コメントで意見を書き込むよう促す一文を含めてください。
-7. 関連タグを3〜5個提案してください。
+작성 규칙:
+1. 제목은 토론 참여를 유도하는 흥미로운 질문이나 주제여야 합니다 (50자 이내).
+2. 본문은 마크다운 형식으로 최소 500자 이상 작성합니다.
+3. 토론의 배경과 맥락을 충분히 설명합니다.
+4. 다양한 관점에서 의견을 나눌 수 있도록 열린 질문을 포함합니다.
+5. 이전에 작성한 글과 중복되지 않도록 새로운 관점이나 주제를 다룹니다.
+6. 댓글로 의견을 남기도록 유도하는 문구를 포함합니다.
+7. 관련 태그를 3~5개 제안합니다.
 
-次のJSON形式で回答してください:
+다음 JSON 형식으로 응답해주세요:
 {
-  "title": "ディスカッションのタイトル",
-  "content": "ディスカッション本文（Markdown形式）",
-  "tags": ["タグ1", "タグ2", "タグ3"]
+  "title": "토론 제목",
+  "content": "토론 본문 (마크다운 형식)",
+  "tags": ["태그1", "태그2", "태그3"]
 }`;
 
   const response = await invokeLLM({
@@ -210,9 +210,9 @@ ${styleGuide}
         schema: {
           type: "object",
           properties: {
-            title: { type: "string", description: "ディスカッションのタイトル" },
-            content: { type: "string", description: "ディスカッション本文（Markdown）" },
-            tags: { type: "array", items: { type: "string" }, description: "関連タグ一覧" },
+            title: { type: "string", description: "토론 제목" },
+            content: { type: "string", description: "토론 본문 (마크다운)" },
+            tags: { type: "array", items: { type: "string" }, description: "관련 태그 목록" },
           },
           required: ["title", "content", "tags"],
           additionalProperties: false,
