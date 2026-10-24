@@ -60,7 +60,7 @@ async function unregisterToken(auth: string) {
   const token = await AsyncStorage.getItem(TOKEN_KEY);
   if (!token) return;
   const response = await pushFetch(BASE_URL + "/push/devices", { method: "DELETE", headers: { "Content-Type": "application/json", Authorization: `Bearer ${auth}` }, body: JSON.stringify({ token }) });
-  if (!response.ok && response.status !== 401) throw new Error("通知の停止に失敗しました。通信環境を確認してください。");
+  if (!response.ok) throw new Error(response.status === 401 ? "ログインし直して通知設定を変更してください。" : "通知の停止に失敗しました。通信環境を確認してください。");
   await AsyncStorage.removeItem(TOKEN_KEY);
 }
 export function disablePush() {
