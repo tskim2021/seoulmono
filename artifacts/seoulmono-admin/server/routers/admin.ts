@@ -201,7 +201,7 @@ export const adminRouter = router({
     await db.logAdminAction({
       adminId: ctx.user.id, adminName: ctx.user.name || ctx.user.email || `admin#${ctx.user.id}`,
       action: "order.updateAdminNotes", entityType: "order", entityId: input.orderId,
-      description: `주문 #${input.orderId} 메모 수정`,
+      description: `注文 #${input.orderId} メモ編集`,
       detail: { orderId: input.orderId, notes: input.notes.substring(0, 100) },
     });
     return { success: true };
@@ -227,7 +227,7 @@ export const adminRouter = router({
     await db.logAdminAction({
       adminId: ctx.user.id, adminName: ctx.user.name || ctx.user.email || `admin#${ctx.user.id}`,
       action: "order.bulkUpdateStatus", entityType: "order",
-      description: `주문 ${input.orderIds.length}건 일괄 상태 변경 → ${input.status}`,
+      description: `注文${input.orderIds.length}件の一括ステータス変更 → ${input.status}`,
       detail: { orderIds: input.orderIds, status: input.status },
     });
     return { success: true, count: input.orderIds.length };
@@ -257,7 +257,7 @@ export const adminRouter = router({
     await db.logAdminAction({
       adminId: ctx.user.id, adminName: ctx.user.name || ctx.user.email || `admin#${ctx.user.id}`,
       action: "order.updateStatus", entityType: "order", entityId: input.id,
-      description: `주문 #${orderBefore?.orderNumber ?? input.id} 상태 변경: ${orderBefore?.status ?? "?"} → ${input.status}`,
+      description: `注文 #${orderBefore?.orderNumber ?? input.id} ステータス変更: ${orderBefore?.status ?? "?"} → ${input.status}`,
       detail: { orderId: input.id, orderNumber: orderBefore?.orderNumber, from: orderBefore?.status, to: input.status },
     });
     return { success: true };
@@ -369,14 +369,14 @@ export const adminRouter = router({
   }),
   resetUserPassword: adminProcedure.input(z.object({
     id: z.number(),
-    password: z.string().min(6, "비밀번호는 6자 이상이어야 합니다"),
+    password: z.string().min(6, "パスワードは6文字以上で入力してください"),
   })).mutation(async ({ input, ctx }) => {
     const hashed = gnuboardPasswordHash(input.password);
     await db.updateUserPassword(input.id, hashed);
     await db.logAdminAction({
       adminId: ctx.user.id, adminName: ctx.user.name || ctx.user.email || `admin#${ctx.user.id}`,
       action: "user.resetPassword", entityType: "user", entityId: input.id,
-      description: `회원 #${input.id} 비밀번호 초기화`,
+      description: `会員 #${input.id} パスワード初期化`,
       detail: { userId: input.id },
     });
     return { success: true };
@@ -473,10 +473,10 @@ export const adminRouter = router({
   // ─── Top Banner Text ───
   getTopBannerText: adminProcedure.query(async () => {
     const val = await db.getSetting("topBannerText");
-    return { text: val ?? "🌿 인도 직배송 해외직구 전문 쇼핑몰 · 탈모학교" };
+    return { text: val ?? "🌿 インド直送・海外個人輸入専門ショップ · ソウルモノ" };
   }),
   setTopBannerText: adminProcedure.input(z.object({ text: z.string() })).mutation(async ({ input }) => {
-    await db.upsertSetting("topBannerText", input.text, "상단 공지 배너 텍스트");
+    await db.upsertSetting("topBannerText", input.text, "上部お知らせバナーテキスト");
     return { success: true };
   }),
 
@@ -745,11 +745,11 @@ export const adminRouter = router({
 
       if (input.type === "review_request") {
         return {
-          subject: "[탈모학교] 배송이 완료되었습니다 - 리뷰를 남겨주세요",
+          subject: "[ソウルモノ] 配送が完了しました - レビューをお寄せください",
           html: generateReviewRequestEmail({
-            customerName: "김탈모",
+            customerName: "山田太郎",
             orderNumber: "ORD-2026-001234",
-            productName: "탈모케어 샴푸 500ml",
+            productName: "ヘアケアシャンプー 500ml",
             reviewUrl: "https://talmoschool.com/shop/itemusewrite.php",
           }),
         };
@@ -757,9 +757,9 @@ export const adminRouter = router({
 
       if (input.type === "customs_hold") {
         return {
-          subject: "[탈모학교] 통관검사 안내 - 배송이 잠시 지연됩니다",
+          subject: "[ソウルモノ] 通関検査のお知らせ - 配送が遅れる場合があります",
           html: generateCustomsHoldEmail({
-            customerName: "김탈모",
+            customerName: "山田太郎",
             orderNumber: "ORD-2026-001234",
             orderId: 999,
             customsNumber: "123456789",
@@ -770,84 +770,84 @@ export const adminRouter = router({
 
       if (input.type === "order_confirm") {
         return {
-          subject: "[탈모학교] 주문이 접수되었습니다",
+          subject: "[ソウルモノ] ご注文を承りました",
           html: await generateEmailTemplate({
-            title: "주문이 접수되었습니다",
-            content: `안녕하세요, <strong>김탈모</strong>님!\n\n주문이 정상적으로 접수되었습니다.\n\n• 주문번호: ORD-2026-001234\n• 상품명: 탈모케어 샴푸 500ml\n• 주문금액: 32,000원\n\n입금 확인 후 배송이 시작됩니다.\n감사합니다!`,
+            title: "ご注文を承りました",
+            content: `いつもご利用ありがとうございます。<strong>山田太郎</strong>様\n\nご注文を正常に承りました。\n\n• ご注文番号: ORD-2026-001234\n• 商品名: ヘアケアシャンプー 500ml\n• ご注文金額: 32,000円\n\nご入金確認後、発送を開始いたします。\nどうぞよろしくお願いいたします。`,
             actionUrl: "https://talmoschool.com/mypage/orders",
-            actionText: "주문 내역 확인",
+            actionText: "ご注文履歴を確認",
           }),
         };
       }
 
       if (input.type === "payment_confirm") {
         return {
-          subject: "[\uD0C8\uBAA8\uD559\uAD50] \uC785\uAE08 \uD655\uC778 \uC644\uB8CC - \uBC30\uC1A1\uC744 \uC900\uBE44\uD558\uACE0 \uC788\uC2B5\uB2C8\uB2E4",
+          subject: "[ソウルモノ] ご入金を確認しました - 発送の準備をしています",
           html: await generateEmailTemplate({
-            title: "\uC785\uAE08 \uD655\uC778 \uC644\uB8CC",
-            content: `\uC548\uB155\uD558\uC138\uC694, <strong>\uAE40\uD0C8\uBAA8</strong>\uB2D8!\n\n\uC8FC\uBB38\uAE08 \uC785\uAE08\uC774 \uC815\uC0C1\uC801\uC73C\uB85C \uD655\uC778\uB418\uC5C8\uC2B5\uB2C8\uB2E4.\n\n\u2022 \uC8FC\uBB38\uBC88\uD638: ORD-2026-001234\n\u2022 \uC785\uAE08\uC561: 32,000\uC6D0\n\u2022 \uCD9C\uAE08\uC740\uD589: \uAD6D\uBBFC\uC740\uD589\n\n\uC0C1\uD488 \uBC1C\uC1A1\uC744 \uC900\uBE44\uD558\uACE0 \uC788\uC73C\uBA70, \uBC30\uC1A1 \uC2DC\uC791 \uC2DC \uB2E4\uC2DC \uC54C\uB824\uB4DC\uB9AC\uACA0\uC2B5\uB2C8\uB2E4.\n\uAC10\uC0AC\uD569\uB2C8\uB2E4!`,
+            title: "ご入金確認完了",
+            content: `いつもご利用ありがとうございます。<strong>山田太郎</strong>様\n\nご注文代金のご入金を確認いたしました。\n\n• ご注文番号: ORD-2026-001234\n• ご入金額: 32,000円\n• お振込元銀行: ○○銀行\n\n商品の発送準備を進めております。発送開始時に改めてお知らせいたします。\nどうぞよろしくお願いいたします。`,
             actionUrl: "https://talmoschool.com/mypage/orders",
-            actionText: "\uC8FC\uBB38 \uB0B4\uC5ED \uD655\uC778",
+            actionText: "ご注文履歴を確認",
           }),
         };
       }
 
       if (input.type === "shipping_start") {
         return {
-          subject: "[\uBC30\uC1A1\uC2DC\uC791] \uC8FC\uBB38\uBC88\uD638 ORD-2026-001234 - CJ\uB300\uD55C\uD1B5\uC6B4",
+          subject: "[発送のお知らせ] ご注文番号 ORD-2026-001234 - CJ大韓通運",
           html: await generateEmailTemplate({
-            title: "\uC0C1\uD488\uC774 \uBC1C\uC1A1\uB418\uC5C8\uC2B5\uB2C8\uB2E4",
-            content: `\uC548\uB155\uD558\uC138\uC694, <strong>\uAE40\uD0C8\uBAA8</strong>\uB2D8!\n\n\uC8FC\uBB38\uD558\uC2E0 \uC0C1\uD488\uC774 \uBC1C\uC1A1\uB418\uC5C8\uC2B5\uB2C8\uB2E4.\n\n\u2022 \uC8FC\uBB38\uBC88\uD638: ORD-2026-001234\n\u2022 \uC6B4\uC1A1\uC0AC: CJ\uB300\uD55C\uD1B5\uC6B4\n\u2022 \uC1A1\uC7A5\uBC88\uD638: 123456789012\n\n\uBC30\uC1A1 \uD604\uD669\uC740 \uB9C8\uC774\uD398\uC774\uC9C0\uC5D0\uC11C \uD655\uC778\uD558\uC2E4 \uC218 \uC788\uC2B5\uB2C8\uB2E4.\n\uAC10\uC0AC\uD569\uB2C8\uB2E4!`,
+            title: "商品を発送しました",
+            content: `いつもご利用ありがとうございます。<strong>山田太郎</strong>様\n\nご注文の商品を発送いたしました。\n\n• ご注文番号: ORD-2026-001234\n• 配送業者: CJ大韓通運\n• 追跡番号: 123456789012\n\n配送状況はマイページでご確認いただけます。\nどうぞよろしくお願いいたします。`,
             actionUrl: "https://talmoschool.com/mypage/orders",
-            actionText: "\uBC30\uC1A1 \uD604\uD669 \uD655\uC778",
+            actionText: "配送状況を確認",
           }),
         };
       }
 
       if (input.type === "welcome") {
         return {
-          subject: "[\uD0C8\uBAA8\uD559\uAD50] \uD68C\uC6D0\uAC00\uC785\uC744 \uD658\uC601\uD569\uB2C8\uB2E4!",
+          subject: "[ソウルモノ] ご登録ありがとうございます！",
           html: await generateEmailTemplate({
-            title: "\uAE40\uD0C8\uBAA8\uB2D8, \uD0C8\uBAA8\uD559\uAD50\uC5D0 \uC624\uC2E0 \uAC83\uC744 \uD658\uC601\uD569\uB2C8\uB2E4!",
-            content: `\uC548\uB155\uD558\uC138\uC694, \uAE40\uD0C8\uBAA8\uB2D8!\n\n\uD0C8\uBAA8\uD559\uAD50\uC5D0 \uAC00\uC785\uD574 \uC8FC\uC154\uC11C \uAC10\uC0AC\uD569\uB2C8\uB2E4.\n\n\uD0C8\uBAA8\uD559\uAD50\uB294 \uC778\uB3C4 \uC758\uC57D\uD488 \uD574\uC678\uC9C1\uAD6C \uC804\uBB38 \uC1FC\uD551\uBAB4\uB85C, \uD0C8\uBAA8, \uC131\uAE30\uB2A5, \uD53C\uBD80\uBBF8\uC6A9, \uB2E4\uC774\uC5B4\uD2B8 \uB4F1 \uB2E4\uC591\uD55C \uC81C\uD488\uC744 \uD569\uB9AC\uC801\uC778 \uAC00\uACA9\uC5D0 \uC81C\uACF5\uD558\uACE0 \uC788\uC2B5\uB2C8\uB2E4.\n\n\uC9C0\uAE08 \uBC14\uB85C \uC1FC\uD551\uC744 \uC2DC\uC791\uD574 \uBCF4\uC138\uC694!`,
+            title: "山田太郎様、ソウルモノへようこそ！",
+            content: `いつもご利用ありがとうございます。山田太郎様\n\nソウルモノにご登録いただきありがとうございます。\n\nソウルモノはインドの医薬品などを個人輸入でお届けする専門ショップで、薄毛ケア、男性機能、スキンケア、ダイエットなど、さまざまな商品をお手頃な価格でご提供しています。\n\nさっそくお買い物を始めましょう！`,
             actionUrl: "https://talmoschool.com/products",
-            actionText: "\uC1FC\uD551 \uC2DC\uC791\uD558\uAE30",
+            actionText: "ショッピングを始める",
           }),
         };
       }
 
       if (input.type === "auto_cancel") {
         return {
-          subject: "[\uC790\uB3D9 \uCDE8\uC18C] \uC8FC\uBB38\uBC88\uD638 ORD-2026-001234 - \uC785\uAE08 \uAE30\uD55C \uB9CC\uB8CC",
+          subject: "[自動キャンセル] ご注文番号 ORD-2026-001234 - お振込期限切れ",
           html: await generateEmailTemplate({
-            title: "\uC8FC\uBB38 \uC790\uB3D9 \uCDE8\uC18C \uC548\uB0B4",
-            content: `\uC548\uB155\uD558\uC138\uC694, <strong>\uAE40\uD0C8\uBAA8</strong>\uB2D8.\n\n\uC8FC\uBB38\uD558\uC2E0 \uC8FC\uBB38\uC758 \uC785\uAE08 \uAE30\uD55C\uC774 \uB9CC\uB8CC\uB418\uC5B4 \uC790\uB3D9 \uCDE8\uC18C\uB418\uC5C8\uC2B5\uB2C8\uB2E4.\n\n\u2022 \uC8FC\uBB38\uBC88\uD638: ORD-2026-001234\n\u2022 \uCDE8\uC18C\uC0AC\uC720: \uC785\uAE08 \uAE30\uD55C \uB9CC\uB8CC\n\n\uC7AC\uC8FC\uBB38\uC744 \uC6D0\uD558\uC2DC\uBA74 \uC0C8\uB85C \uC8FC\uBB38\uD574 \uC8FC\uC138\uC694.\n\uBB38\uC758\uC0AC\uD56D\uC740 1:1\uBB38\uC758\uB97C \uC774\uC6A9\uD574 \uC8FC\uC138\uC694.`,
+            title: "ご注文の自動キャンセルのお知らせ",
+            content: `いつもご利用ありがとうございます。<strong>山田太郎</strong>様\n\nご注文のお振込期限を過ぎたため、自動的にキャンセルされました。\n\n• ご注文番号: ORD-2026-001234\n• キャンセル理由: お振込期限切れ\n\n再度ご注文をご希望の場合は、あらためてご注文ください。\nご不明な点は個別お問い合わせをご利用ください。`,
             actionUrl: "https://talmoschool.com/mypage/inquiry",
-            actionText: "1:1 \uBB38\uC758\uD558\uAE30",
+            actionText: "個別に問い合わせる",
           }),
         };
       }
 
       if (input.type === "point_expire") {
         return {
-          subject: "[\uD0C8\uBAA8\uD559\uAD50] \uD3EC\uC778\uD2B8 \uC18C\uBA78 \uC608\uC815 \uC54C\uB9BC",
+          subject: "[ソウルモノ] ポイント失効予定のお知らせ",
           html: await generateEmailTemplate({
-            title: "\uC18C\uBA78 \uC608\uC815 \uD3EC\uC778\uD2B8 \uC54C\uB9BC",
-            content: `\uC548\uB155\uD558\uC138\uC694, \uAE40\uD0C8\uBAA8\uB2D8.\n\n\uBCF4\uC720 \uC911\uC778 \uD3EC\uC778\uD2B8 \uC911 <strong>5,000P</strong>\uAC00 30\uC77C \uB0B4\uC5D0 \uC18C\uBA78\uB429\uB2C8\uB2E4.\n\n\u2022 \uC18C\uBA78 \uC608\uC815\uC77C: 2026-07-15\n\u2022 \uC18C\uBA78 \uC608\uC815 \uD3EC\uC778\uD2B8: 5,000P\n\n\uC18C\uBA78\uC744 \uB9C9\uAE30 \uC704\uD574\uC11C\uB294 \uC9C0\uAE08 \uBC14\uB85C \uC0AC\uC6A9\uD574 \uC8FC\uC138\uC694!`,
+            title: "失効予定ポイントのお知らせ",
+            content: `いつもご利用ありがとうございます。山田太郎様\n\n保有ポイントのうち<strong>5,000ポイント</strong>が30日以内に失効します。\n\n• 失効予定日: 2026-07-15\n• 失効予定ポイント: 5,000ポイント\n\n失効を防ぐため、今すぐご利用ください！`,
             actionUrl: "https://talmoschool.com/products",
-            actionText: "\uCF00\uC774\uC2A4 \uC1FC\uD551\uD558\uAE30",
+            actionText: "ショッピングをする",
           }),
         };
       }
 
       // generic
       return {
-        subject: "[탈모학교] 중요 알림",
+        subject: "[ソウルモノ] 重要なお知らせ",
         html: await generateEmailTemplate({
-          title: "이메일 알림 제목",
-          content: `안녕하세요!\n\n이것은 일반 알림 이메일 예시입니다.\n\n중요한 내용을 여기에 작성합니다.\n라인 간격, 강조 텍스트 등 기본 스타일을 미리 확인해 보세요.`,
+          title: "メール通知のタイトル",
+          content: `こんにちは。\n\nこれは一般的なお知らせメールのサンプルです。\n\n重要な内容をここに記載します。\n行間や強調テキストなどの基本スタイルをあらかじめご確認ください。`,
           actionUrl: "https://talmoschool.com",
-          actionText: "탈모학교 바로가기",
+          actionText: "ソウルモノへ",
         }),
       };
     }),
@@ -922,7 +922,7 @@ export const adminRouter = router({
       input.postId,
       input.content,
       String(ctx.user.id),
-      ctx.user.name || "관리자",
+      ctx.user.name || "管理者",
       ctx.user.email || ""
     );
     return { id };
@@ -967,8 +967,8 @@ export const adminRouter = router({
     registrationPoints: z.number().min(0),
     defaultProductPointRate: z.number().min(0).max(100),
   })).mutation(async ({ input }) => {
-    await db.upsertSetting("registrationPoints", String(input.registrationPoints), "회원가입 적립 포인트");
-    await db.upsertSetting("defaultProductPointRate", String(input.defaultProductPointRate), "기본 상품 포인트 적립률(%)");
+    await db.upsertSetting("registrationPoints", String(input.registrationPoints), "会員登録ポイント");
+    await db.upsertSetting("defaultProductPointRate", String(input.defaultProductPointRate), "基本商品ポイント還元率(%)");
     return { success: true };
   }),
 
@@ -1003,7 +1003,7 @@ export const adminRouter = router({
       user: settings.smtpUser ?? "",
       pass: settings.smtpPass ? "********" : "",
       from: settings.smtpFrom ?? "",
-      fromName: settings.smtpFromName ?? "탈모학교",
+      fromName: settings.smtpFromName ?? "ソウルモノ",
       secure: settings.smtpSecure === "true",
       bcc: settings.smtpBcc ?? "",
     };
@@ -1019,17 +1019,17 @@ export const adminRouter = router({
     secure: z.boolean(),
     bcc: z.string().optional(),
   })).mutation(async ({ input }) => {
-    await db.upsertSetting("smtpHost", input.host, "SMTP 호스트");
-    await db.upsertSetting("smtpPort", String(input.port), "SMTP 포트");
-    await db.upsertSetting("smtpUser", input.user, "SMTP 사용자");
+    await db.upsertSetting("smtpHost", input.host, "SMTPホスト");
+    await db.upsertSetting("smtpPort", String(input.port), "SMTPポート");
+    await db.upsertSetting("smtpUser", input.user, "SMTPユーザー");
     if (input.pass && input.pass !== "********") {
-      await db.upsertSetting("smtpPass", input.pass, "SMTP 비밀번호");
+      await db.upsertSetting("smtpPass", input.pass, "SMTPパスワード");
     }
     const fromAddr = input.from?.trim() || input.user;
-    await db.upsertSetting("smtpFrom", fromAddr, "발신 이메일");
-    await db.upsertSetting("smtpFromName", input.fromName ?? "탈모학교", "발신자 이름");
+    await db.upsertSetting("smtpFrom", fromAddr, "送信元メールアドレス");
+    await db.upsertSetting("smtpFromName", input.fromName ?? "ソウルモノ", "送信者名");
     await db.upsertSetting("smtpSecure", String(input.secure), "SMTP SSL");
-    await db.upsertSetting("smtpBcc", input.bcc?.trim() ?? "", "숨은 참조 (BCC)");
+    await db.upsertSetting("smtpBcc", input.bcc?.trim() ?? "", "BCC（非表示の宛先）");
     return { success: true };
   }),
 
@@ -1039,8 +1039,8 @@ export const adminRouter = router({
     const { sendEmailViaSMTP } = await import("../_core/email");
     const result = await sendEmailViaSMTP({
       to: input.to,
-      subject: "[탈모학교] SMTP 테스트 메일",
-      html: "<h2>SMTP 연동 테스트</h2><p>이 메일이 수신되었다면 SMTP 설정이 정상적으로 완료된 것입니다.</p><p>탈모학교 관리자 시스템</p>",
+      subject: "[ソウルモノ] SMTPテストメール",
+      html: "<h2>SMTP連携テスト</h2><p>このメールが届いていれば、SMTP設定は正常に完了しています。</p><p>ソウルモノ 管理システム</p>",
     });
     return result;
   }),
@@ -1061,30 +1061,30 @@ export const adminRouter = router({
     token: z.string(),
     enabled: z.boolean(),
   })).mutation(async ({ input }) => {
-    await db.upsertSetting("gnuApiBaseUrl", input.baseUrl, "탈모1 API 기본 URL");
-    await db.upsertSetting("gnuApiToken", input.token, "탈모1 API 토큰");
-    await db.upsertSetting("gnuApiEnabled", String(input.enabled), "탈모1 API 동기화 사용");
+    await db.upsertSetting("gnuApiBaseUrl", input.baseUrl, "旧システムAPI ベースURL");
+    await db.upsertSetting("gnuApiToken", input.token, "旧システムAPI トークン");
+    await db.upsertSetting("gnuApiEnabled", String(input.enabled), "旧システムAPI 同期を使用");
     return { success: true };
   }),
 
   syncGnuApiOrders: adminProcedure.mutation(async () => {
     const { getGnuApiConfig, syncOrdersFromApi } = await import("../jobs/gnuApiSync");
     const cfg = await getGnuApiConfig();
-    if (!cfg.baseUrl || !cfg.token) throw new Error("API 설정이 없습니다. 먼저 기본 URL과 토큰을 저장하세요.");
+    if (!cfg.baseUrl || !cfg.token) throw new Error("API設定がありません。先にベースURLとトークンを保存してください。");
     return syncOrdersFromApi(cfg);
   }),
 
   syncGnuApiProducts: adminProcedure.mutation(async () => {
     const { getGnuApiConfig, syncProductsFromApi } = await import("../jobs/gnuApiSync");
     const cfg = await getGnuApiConfig();
-    if (!cfg.baseUrl || !cfg.token) throw new Error("API 설정이 없습니다.");
+    if (!cfg.baseUrl || !cfg.token) throw new Error("API設定がありません。");
     return syncProductsFromApi(cfg);
   }),
 
   syncGnuApiMembers: adminProcedure.mutation(async () => {
     const { getGnuApiConfig, syncMembersFromApi } = await import("../jobs/gnuApiSync");
     const cfg = await getGnuApiConfig();
-    if (!cfg.baseUrl || !cfg.token) throw new Error("API 설정이 없습니다.");
+    if (!cfg.baseUrl || !cfg.token) throw new Error("API設定がありません。");
     return syncMembersFromApi(cfg);
   }),
 
@@ -1118,7 +1118,7 @@ export const adminRouter = router({
 
     try {
       const [boardRows] = await appDb.query(`SELECT id FROM \`boards\` WHERE slug='review' LIMIT 1`) as any[];
-      if (!boardRows.length) return { error: "review board 없음" };
+      if (!boardRows.length) return { error: "レビュー掲示板がありません" };
       const boardId = boardRows[0].id as number;
 
       await appDb.query(`DELETE FROM \`posts\` WHERE \`boardId\`=?`, [boardId]);
@@ -1167,7 +1167,7 @@ export const adminRouter = router({
         const userId = userMap.get(r.mb_id) ?? adminUserId;
         const createdAt = r.is_time && !String(r.is_time).startsWith("0000") ? new Date(r.is_time) : new Date();
         const content = (r.is_content ?? "").trim() || r.is_subject || "";
-        const title = (r.is_subject ?? "").trim() || "상품 후기";
+        const title = (r.is_subject ?? "").trim() || "商品レビュー";
         const rating = Math.min(5, Math.max(1, Number(r.is_score) || 5));
         const imagesJson = images.length > 0 ? JSON.stringify(images) : null;
 
@@ -1209,7 +1209,7 @@ export const adminRouter = router({
     }))
     .mutation(async ({ input }) => {
       const descriptions: Record<string, string> = {
-        seventeentrack_api_key: "17track 배송 추적 API 키",
+        seventeentrack_api_key: "17track 配送追跡APIキー",
       };
       await db.upsertSetting(input.key, input.value, descriptions[input.key]);
       return { success: true };
@@ -1236,7 +1236,7 @@ export const adminRouter = router({
         keyToTest = settings["seventeentrack_api_key"] ?? "";
       }
       if (!keyToTest) {
-        return { success: false, message: "API 키가 설정되지 않았습니다." };
+        return { success: false, message: "APIキーが設定されていません。" };
       }
       try {
         const response = await fetch("https://api.17track.net/track/v2.4/gettrackinfo", {
@@ -1249,18 +1249,18 @@ export const adminRouter = router({
           signal: AbortSignal.timeout(8000),
         });
         if (response.status === 401 || response.status === 403) {
-          return { success: false, message: "API 키가 유효하지 않습니다. (인증 실패)" };
+          return { success: false, message: "APIキーが無効です。（認証失敗）" };
         }
         const data = await response.json();
         if (data.code === 0 || (data.code >= -18019999 && data.code <= -18019000)) {
-          return { success: true, message: "API 키가 정상 작동합니다." };
+          return { success: true, message: "APIキーは正常に動作しています。" };
         }
         if (data.code === -18010009) {
-          return { success: false, message: "API 키가 유효하지 않습니다." };
+          return { success: false, message: "APIキーが無効です。" };
         }
-        return { success: true, message: `연결 성공 (코드: ${data.code})` };
+        return { success: true, message: `接続に成功しました (コード: ${data.code})` };
       } catch (e: any) {
-        return { success: false, message: "연결 실패: " + e.message };
+        return { success: false, message: "接続に失敗しました: " + e.message };
       }
     }),
 

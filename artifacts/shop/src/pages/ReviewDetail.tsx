@@ -37,7 +37,7 @@ export default function ReviewDetailPage() {
 
   const stars = review ? Array.from({ length: 5 }, (_, i) => i < review.is_score) : [];
   const dateStr = review?.is_time
-    ? new Date(review.is_time).toLocaleDateString("ko-KR", { year: "numeric", month: "2-digit", day: "2-digit" })
+    ? new Date(review.is_time).toLocaleDateString("ja-JP", { year: "numeric", month: "2-digit", day: "2-digit" })
         .replace(/\. /g, "-").replace(".", "")
     : "";
 

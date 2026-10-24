@@ -12,7 +12,7 @@ import Paginator from "@/components/Paginator";
 import { useSEO } from "@/hooks/useSEO";
 
 export default function InfoBoardList() {
-  useSEO({ title: "정보나눔 - 건강 정보 공유 게시판" });
+  useSEO({ title: "情報共有 - 健康情報シェア掲示板" });
   const { user } = useAuth();
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
@@ -48,10 +48,10 @@ export default function InfoBoardList() {
     const now = new Date();
     const diffMs = now.getTime() - d.getTime();
     const diffH = Math.floor(diffMs / 3600000);
-    if (diffH < 1) return "방금 전";
-    if (diffH < 24) return `${diffH}시간 전`;
+    if (diffH < 1) return "たった今";
+    if (diffH < 24) return `${diffH}時間前`;
     const diffD = Math.floor(diffH / 24);
-    if (diffD < 3) return `${diffD}일 전`;
+    if (diffD < 3) return `${diffD}日前`;
     return `${String(d.getMonth() + 1).padStart(2, "0")}/${String(d.getDate()).padStart(2, "0")}`;
   };
 
@@ -70,22 +70,22 @@ export default function InfoBoardList() {
                   <BookOpen className="w-5 h-5 text-green-700" />
                 </div>
                 <div>
-                  <h1 className="text-xl font-bold tracking-tight">정보나눔</h1>
-                  <p className="text-sm text-muted-foreground">건강 관련 유용한 정보를 자유롭게 공유하세요</p>
+                  <h1 className="text-xl font-bold tracking-tight">情報共有</h1>
+                  <p className="text-sm text-muted-foreground">健康に関する役立つ情報を自由にシェアしましょう</p>
                 </div>
               </div>
               {user ? (
                 <Link href="/info-board/write">
                   <Button size="sm" className="gap-1.5">
                     <PenLine className="w-4 h-4" />
-                    글쓰기
+                    投稿する
                   </Button>
                 </Link>
               ) : (
                 <a href={getLoginUrl()}>
                   <Button variant="outline" size="sm" className="gap-1.5">
                     <PenLine className="w-4 h-4" />
-                    로그인 후 글쓰기
+                    ログインして投稿
                   </Button>
                 </a>
               )}
@@ -104,7 +104,7 @@ export default function InfoBoardList() {
                   : "bg-white border border-border text-muted-foreground hover:border-green-500 hover:text-green-700"
               }`}
             >
-              전체
+              すべて
             </button>
             {categories.map((cat: any) => (
               <button
@@ -124,22 +124,22 @@ export default function InfoBoardList() {
           {/* 검색 + 통계 */}
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-4">
             <p className="text-sm text-muted-foreground">
-              총 <span className="font-semibold text-foreground">{data?.total ?? 0}</span>개의 글
+              全 <span className="font-semibold text-foreground">{data?.total ?? 0}</span>件
               {search && (
-                <span className="ml-1.5 text-green-700">· &ldquo;{search}&rdquo; 검색 결과</span>
+                <span className="ml-1.5 text-green-700">· &ldquo;{search}&rdquo; の検索結果</span>
               )}
             </p>
             <form onSubmit={handleSearch} className="flex gap-2">
               <div className="relative">
                 <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground" />
                 <Input
-                  placeholder="제목 검색..."
+                  placeholder="タイトルを検索..."
                   value={searchInput}
                   onChange={(e) => setSearchInput(e.target.value)}
                   className="pl-8 h-9 w-52 text-sm"
                 />
               </div>
-              <Button type="submit" size="sm" variant="outline">검색</Button>
+              <Button type="submit" size="sm" variant="outline">検索</Button>
             </form>
           </div>
 
@@ -148,11 +148,11 @@ export default function InfoBoardList() {
             <table className="w-full">
               <thead>
                 <tr className="bg-secondary/60 text-xs text-muted-foreground border-b">
-                  <th className="py-3 px-4 text-center font-medium w-14 hidden sm:table-cell">번호</th>
-                  <th className="py-3 px-4 text-left font-medium">제목</th>
-                  <th className="py-3 px-4 text-center font-medium w-24 hidden md:table-cell">작성자</th>
-                  <th className="py-3 px-4 text-center font-medium w-20 hidden md:table-cell">날짜</th>
-                  <th className="py-3 px-4 text-center font-medium w-14 hidden sm:table-cell">조회</th>
+                  <th className="py-3 px-4 text-center font-medium w-14 hidden sm:table-cell">番号</th>
+                  <th className="py-3 px-4 text-left font-medium">タイトル</th>
+                  <th className="py-3 px-4 text-center font-medium w-24 hidden md:table-cell">投稿者</th>
+                  <th className="py-3 px-4 text-center font-medium w-20 hidden md:table-cell">日付</th>
+                  <th className="py-3 px-4 text-center font-medium w-14 hidden sm:table-cell">閲覧</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border/50">
@@ -215,7 +215,7 @@ export default function InfoBoardList() {
                             </div>
                             {/* 모바일 메타 */}
                             <div className="flex items-center gap-1.5 text-xs text-muted-foreground md:hidden">
-                              <span>{post.userName || "익명"}</span>
+                              <span>{post.userName || "匿名"}</span>
                               <span>·</span>
                               <span>{formatDate(post.createdAt)}</span>
                               <span>·</span>
@@ -227,7 +227,7 @@ export default function InfoBoardList() {
 
                         {/* 작성자 */}
                         <td className="py-3.5 px-4 text-sm text-muted-foreground text-center hidden md:table-cell">
-                          <span className="max-w-[80px] truncate block mx-auto">{post.userName || "익명"}</span>
+                          <span className="max-w-[80px] truncate block mx-auto">{post.userName || "匿名"}</span>
                         </td>
 
                         {/* 날짜 */}
@@ -250,9 +250,9 @@ export default function InfoBoardList() {
                     <td colSpan={5} className="py-20 text-center">
                       <BookOpen className="w-10 h-10 text-muted-foreground/20 mx-auto mb-3" />
                       <p className="text-sm text-muted-foreground">
-                        {search ? `"${search}" 검색 결과가 없습니다.` : "등록된 게시글이 없습니다."}
+                        {search ? `「${search}」の検索結果がありません。` : "登録された投稿がありません。"}
                       </p>
-                      <p className="text-xs text-muted-foreground/60 mt-1">첫 번째 정보를 공유해보세요!</p>
+                      <p className="text-xs text-muted-foreground/60 mt-1">最初の情報をシェアしてみましょう！</p>
                     </td>
                   </tr>
                 )}
@@ -268,7 +268,7 @@ export default function InfoBoardList() {
                 <Link href="/info-board/write">
                   <Button size="sm" className="gap-1.5">
                     <PenLine className="w-3.5 h-3.5" />
-                    글쓰기
+                    投稿する
                   </Button>
                 </Link>
               </div>

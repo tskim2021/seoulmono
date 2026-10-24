@@ -107,11 +107,11 @@ export default function AdminProducts() {
   const deleteMutation = useMutation({
     mutationFn: (id: string) => customFetch(`/api/admin/products/${id}`, { method: "DELETE" }),
     onSuccess: () => {
-      toast({ title: "삭제 완료" });
+      toast({ title: "削除完了" });
       queryClient.invalidateQueries({ queryKey: ["admin-products"] });
     },
     onError: (err: any) => {
-      toast({ title: "삭제 실패", description: err?.message, variant: "destructive" });
+      toast({ title: "削除に失敗しました", description: err?.message, variant: "destructive" });
     },
   });
 
@@ -123,13 +123,13 @@ export default function AdminProducts() {
         body: JSON.stringify({ product_ids: ids }),
       }),
     onSuccess: () => {
-      toast({ title: "일괄 삭제 완료", description: `${selectedIds.size}개 상품이 삭제되었습니다.` });
+      toast({ title: "一括削除完了", description: `${selectedIds.size}件の商品を削除しました。` });
       setSelectedIds(new Set());
       setActiveBatchTab("none");
       queryClient.invalidateQueries({ queryKey: ["admin-products"] });
     },
     onError: (err: any) => {
-      toast({ title: "삭제 실패", description: err?.message, variant: "destructive" });
+      toast({ title: "削除に失敗しました", description: err?.message, variant: "destructive" });
     },
   });
 
@@ -144,7 +144,7 @@ export default function AdminProducts() {
       queryClient.invalidateQueries({ queryKey: ["admin-products"] });
     },
     onError: (err: any) => {
-      toast({ title: "상태 변경 실패", description: err?.message, variant: "destructive" });
+      toast({ title: "ステータス変更に失敗しました", description: err?.message, variant: "destructive" });
     },
   });
 
@@ -156,24 +156,24 @@ export default function AdminProducts() {
         body: JSON.stringify(data),
       }),
     onSuccess: (_: any, variables: { product_ids: string[]; it_use: string }) => {
-      const label = variables.it_use === "1" ? "판매중" : "판매중지";
-      toast({ title: `일괄 ${label} 완료`, description: `${selectedIds.size}개 상품이 ${label} 처리되었습니다.` });
+      const label = variables.it_use === "1" ? "販売中" : "販売停止";
+      toast({ title: `一括${label} 完了`, description: `${selectedIds.size}件の商品を${label}にしました。` });
       queryClient.invalidateQueries({ queryKey: ["admin-products"] });
     },
     onError: (err: any) => {
-      toast({ title: "상태 변경 실패", description: err?.message, variant: "destructive" });
+      toast({ title: "ステータス変更に失敗しました", description: err?.message, variant: "destructive" });
     },
   });
 
   const copyMutation = useMutation({
     mutationFn: (id: string) => customFetch<any>(`/api/admin/products/${id}/copy`, { method: "POST" }),
     onSuccess: (data: any) => {
-      toast({ title: "상품 복사 완료", description: "복사된 상품의 수정 페이지로 이동합니다." });
+      toast({ title: "商品のコピー完了", description: "コピーした商品の編集ページに移動します。" });
       queryClient.invalidateQueries({ queryKey: ["admin-products"] });
       navigate(`/admin/products/${data.it_id}`);
     },
     onError: (err: any) => {
-      toast({ title: "복사 실패", description: err?.message, variant: "destructive" });
+      toast({ title: "コピーに失敗しました", description: err?.message, variant: "destructive" });
     },
   });
 
@@ -185,13 +185,13 @@ export default function AdminProducts() {
         body: JSON.stringify(data),
       }),
     onSuccess: () => {
-      toast({ title: "가격 수정 완료", description: `${selectedIds.size}개 상품의 가격이 수정되었습니다.` });
+      toast({ title: "価格の更新完了", description: `${selectedIds.size}件の商品の価格を更新しました。` });
       setPriceValue("");
       setActiveBatchTab("none");
       queryClient.invalidateQueries({ queryKey: ["admin-products"] });
     },
     onError: (err: any) => {
-      toast({ title: "가격 수정 실패", description: err?.message, variant: "destructive" });
+      toast({ title: "価格の更新に失敗しました", description: err?.message, variant: "destructive" });
     },
   });
 
@@ -203,19 +203,19 @@ export default function AdminProducts() {
         body: JSON.stringify(data),
       }),
     onSuccess: () => {
-      toast({ title: "유통기한 일괄 변경 완료", description: `${selectedIds.size}개 상품의 유통기한이 변경되었습니다.` });
+      toast({ title: "賞味期限の一括変更完了", description: `${selectedIds.size}件の商品の賞味期限を変更しました。` });
       setShelfLifeValue("");
       setActiveBatchTab("none");
       queryClient.invalidateQueries({ queryKey: ["admin-products"] });
     },
     onError: (err: any) => {
-      toast({ title: "유통기한 변경 실패", description: err?.message, variant: "destructive" });
+      toast({ title: "賞味期限の変更に失敗しました", description: err?.message, variant: "destructive" });
     },
   });
 
   const handleBatchShelfLife = () => {
     if (!shelfLifeValue.trim()) {
-      toast({ title: "유통기한을 입력해주세요", variant: "destructive" });
+      toast({ title: "賞味期限を入力してください", variant: "destructive" });
       return;
     }
     batchShelfLifeMutation.mutate({ product_ids: Array.from(selectedIds), shelf_life: shelfLifeValue.trim() });
@@ -224,7 +224,7 @@ export default function AdminProducts() {
   const handleBatchPrice = () => {
     const val = Number(priceValue);
     if (isNaN(val) || val <= 0) {
-      toast({ title: "0보다 큰 숫자를 입력해주세요", variant: "destructive" });
+      toast({ title: "0より大きい数値を入力してください", variant: "destructive" });
       return;
     }
     const finalValue = priceDirection === "down" ? -val : val;
@@ -251,7 +251,7 @@ export default function AdminProducts() {
   };
 
   const handleCopy = (p: any) => {
-    if (confirm(`"${p.it_name}" 상품을 복사하시겠습니까?`)) {
+    if (confirm(`「${p.it_name}」をコピーしますか？`)) {
       copyMutation.mutate(p.it_id);
     }
   };
@@ -282,12 +282,12 @@ export default function AdminProducts() {
   };
 
   const handleDelete = (product: any) => {
-    if (!confirm(`"${product.it_name}" 상품을 삭제하시겠습니까?`)) return;
+    if (!confirm(`「${product.it_name}」を削除してもよろしいですか？`)) return;
     deleteMutation.mutate(product.it_id);
   };
 
   const handleBatchDelete = () => {
-    if (!confirm(`선택한 ${selectedIds.size}개 상품을 삭제하시겠습니까?\n이 작업은 되돌릴 수 없습니다.`)) return;
+    if (!confirm(`選択した${selectedIds.size}件の商品を削除してもよろしいですか？\nこの操作は元に戻せません。`)) return;
     batchDeleteMutation.mutate(Array.from(selectedIds));
   };
 
@@ -295,11 +295,11 @@ export default function AdminProducts() {
     <div className="animate-in fade-in duration-300 space-y-6">
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-black text-slate-900 tracking-tight">상품 관리</h1>
-          <p className="text-slate-500 mt-1 font-medium">상품을 등록, 수정, 삭제합니다. 총 {total}개</p>
+          <h1 className="text-3xl font-black text-slate-900 tracking-tight">商品管理</h1>
+          <p className="text-slate-500 mt-1 font-medium">商品の登録・編集・削除を行います。合計 {total}件</p>
         </div>
         <Button onClick={() => navigate("/admin/products/new")} className="h-10">
-          <Plus className="w-4 h-4 mr-1.5" /> 상품 등록
+          <Plus className="w-4 h-4 mr-1.5" /> 商品登録
         </Button>
       </div>
 
@@ -316,14 +316,14 @@ export default function AdminProducts() {
         }}
       >
         <span style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "14px" }}>
-          🔶 이미지 교체가 필요한 상품
+          🔶 画像の差し替えが必要な商品
           <span style={{
             fontSize: "11px", fontWeight: 500, padding: "2px 8px", borderRadius: "9999px",
             backgroundColor: imgSourceFilter === "kakao" ? "rgba(255,255,255,0.25)" : "#fed7aa",
             color: imgSourceFilter === "kakao" ? "#fff" : "#9a3412",
-          }}>클릭하면 해당 상품만 보입니다</span>
+          }}>クリックすると該当商品のみ表示されます</span>
         </span>
-        <span style={{ fontSize: "24px", fontWeight: 900 }}>{Number(summary?.kakao_img_count || 0).toLocaleString()}개</span>
+        <span style={{ fontSize: "24px", fontWeight: 900 }}>{Number(summary?.kakao_img_count || 0).toLocaleString()}件</span>
       </button>
 
       {/* 카테고리별 통계 */}
@@ -332,11 +332,11 @@ export default function AdminProducts() {
           {/* 요약 바 */}
           <div className="grid grid-cols-2 md:grid-cols-5 gap-2">
             {[
-              { label: "전체", value: summary.total, color: "bg-slate-100 text-slate-700", filter: () => { setUseFilter(""); setCategoryFilter(""); setImgSourceFilter(""); } },
-              { label: "판매중", value: summary.use_on, color: "bg-emerald-50 text-emerald-700", filter: () => { setUseFilter("1"); setCategoryFilter(""); setImgSourceFilter(""); } },
-              { label: "미노출", value: summary.use_off, color: "bg-amber-50 text-amber-700", filter: () => { setUseFilter("0"); setCategoryFilter(""); setImgSourceFilter(""); } },
-              { label: "품절", value: summary.soldout, color: "bg-red-50 text-red-600", filter: null },
-              { label: "카테고리 미지정 ⚠️", value: summary.unassigned, color: "bg-purple-50 text-purple-700", filter: null },
+              { label: "すべて", value: summary.total, color: "bg-slate-100 text-slate-700", filter: () => { setUseFilter(""); setCategoryFilter(""); setImgSourceFilter(""); } },
+              { label: "販売中", value: summary.use_on, color: "bg-emerald-50 text-emerald-700", filter: () => { setUseFilter("1"); setCategoryFilter(""); setImgSourceFilter(""); } },
+              { label: "非表示", value: summary.use_off, color: "bg-amber-50 text-amber-700", filter: () => { setUseFilter("0"); setCategoryFilter(""); setImgSourceFilter(""); } },
+              { label: "品切れ", value: summary.soldout, color: "bg-red-50 text-red-600", filter: null },
+              { label: "カテゴリ未設定 ⚠️", value: summary.unassigned, color: "bg-purple-50 text-purple-700", filter: null },
             ].map((s) => (
               <div key={s.label} className={`rounded-xl p-3 ${s.color} ${s.filter ? "cursor-pointer hover:opacity-80 transition-opacity" : ""}`}
                 onClick={() => s.filter?.()}>
@@ -352,7 +352,7 @@ export default function AdminProducts() {
               onClick={() => setCategoryFilter("")}
               className={`px-3 py-1.5 rounded-full text-xs font-bold transition-all ${!categoryFilter ? "bg-slate-800 text-white" : "bg-slate-100 text-slate-600 hover:bg-slate-200"}`}
             >
-              전체 {Number(summary.total || 0).toLocaleString()}
+              すべて {Number(summary.total || 0).toLocaleString()}
             </button>
             {catStats.filter(c => c.ca_name).map((c) => (
               <button
@@ -361,14 +361,14 @@ export default function AdminProducts() {
                 className={`px-3 py-1.5 rounded-full text-xs font-bold transition-all ${categoryFilter === c.ca_2 ? "bg-emerald-600 text-white" : "bg-white border border-slate-200 text-slate-600 hover:border-emerald-400 hover:text-emerald-700"}`}
               >
                 {c.ca_name} <span className="opacity-70">{Number(c.total || 0)}</span>
-                {Number(c.use_off) > 0 && <span className="ml-1 text-amber-500">({c.use_off}미노출)</span>}
+                {Number(c.use_off) > 0 && <span className="ml-1 text-amber-500">({c.use_off}非表示)</span>}
               </button>
             ))}
             {catStats.filter(c => !c.ca_name).map((c) => (
               <button key="uncat"
                 onClick={() => { setCategoryFilter(c.ca_2 || ""); setPage(1); }}
                 className="px-3 py-1.5 rounded-full text-xs font-bold bg-purple-50 border border-purple-200 text-purple-700 hover:bg-purple-100 transition-all">
-                미분류 {Number(c.total || 0)}
+                未分類 {Number(c.total || 0)}
               </button>
             ))}
           </div>
@@ -378,9 +378,9 @@ export default function AdminProducts() {
       <Card className="p-5 space-y-4">
         <div className="flex items-center gap-2">
           <Filter className="w-4 h-4 text-slate-500" />
-          <span className="text-sm font-bold text-slate-700">검색 및 필터</span>
+          <span className="text-sm font-bold text-slate-700">検索・フィルター</span>
           <button onClick={clearFilters} className="ml-auto text-xs text-blue-600 hover:text-blue-800 font-bold flex items-center gap-1">
-            <X className="w-3 h-3" /> 초기화
+            <X className="w-3 h-3" /> リセット
           </button>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-12 gap-3">
@@ -389,7 +389,7 @@ export default function AdminProducts() {
             value={categoryFilter}
             onChange={(e) => { setCategoryFilter(e.target.value); setPage(1); }}
           >
-            <option value="">카테고리 1차</option>
+            <option value="">カテゴリ 第1階層</option>
             {activeCategories.filter((c: any) => c.ca_id.length === 2).map((c: any) => (
               <option key={c.ca_id} value={c.ca_id}>{c.ca_name}</option>
             ))}
@@ -399,7 +399,7 @@ export default function AdminProducts() {
             value={categoryFilter}
             onChange={(e) => { setCategoryFilter(e.target.value); setPage(1); }}
           >
-            <option value="">카테고리 2차</option>
+            <option value="">カテゴリ 第2階層</option>
             {activeCategories.filter((c: any) => c.ca_id.length === 4).map((c: any) => (
               <option key={c.ca_id} value={c.ca_id}>{c.ca_name}</option>
             ))}
@@ -409,7 +409,7 @@ export default function AdminProducts() {
             value={categoryFilter}
             onChange={(e) => { setCategoryFilter(e.target.value); setPage(1); }}
           >
-            <option value="">카테고리 3차</option>
+            <option value="">カテゴリ 第3階層</option>
             {activeCategories.filter((c: any) => c.ca_id.length === 6).map((c: any) => (
               <option key={c.ca_id} value={c.ca_id}>{c.ca_name}</option>
             ))}
@@ -420,7 +420,7 @@ export default function AdminProducts() {
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
             <input
               className="w-full h-10 pl-9 pr-3 rounded-xl bg-white border border-slate-200 text-sm focus:outline-none focus:border-primary transition-all"
-              placeholder="상품명, 상품코드 검색..."
+              placeholder="商品名・商品コードで検索..."
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && handleSearch()}
@@ -428,7 +428,7 @@ export default function AdminProducts() {
           </div>
           <input
             className="h-10 px-3 rounded-xl bg-white border border-slate-200 text-sm focus:outline-none focus:border-primary transition-all md:col-span-3"
-            placeholder="제조사 검색..."
+            placeholder="メーカーで検索..."
             value={makerFilter}
             onChange={(e) => { setMakerFilter(e.target.value); setPage(1); }}
           />
@@ -437,18 +437,18 @@ export default function AdminProducts() {
             value={useFilter}
             onChange={(e) => { setUseFilter(e.target.value); setPage(1); }}
           >
-            <option value="">전체 상태</option>
-            <option value="1">판매중</option>
-            <option value="0">판매중지</option>
+            <option value="">すべてのステータス</option>
+            <option value="1">販売中</option>
+            <option value="0">販売停止</option>
           </select>
           <select
             className="h-10 px-3 rounded-xl bg-white border border-slate-200 text-sm font-medium focus:outline-none focus:border-primary transition-all md:col-span-3"
             value={imgSourceFilter}
             onChange={(e) => { setImgSourceFilter(e.target.value); setPage(1); }}
           >
-            <option value="">전체 이미지</option>
-            <option value="kakao">🔶 카카오 임시이미지</option>
-            <option value="original">원본 이미지</option>
+            <option value="">すべての画像</option>
+            <option value="kakao">🔶 カカオ仮画像</option>
+            <option value="original">元の画像</option>
           </select>
         </div>
         <div className="flex justify-end gap-3">
@@ -457,10 +457,10 @@ export default function AdminProducts() {
             value={sortKey}
             onChange={(e) => setSortKey(e.target.value as SortKey)}
           >
-            <option value="newest">등록순</option>
-            <option value="price_desc">가격 높은순</option>
-            <option value="price_asc">가격 낮은순</option>
-            <option value="name_asc">이름순</option>
+            <option value="newest">登録順</option>
+            <option value="price_desc">価格の高い順</option>
+            <option value="price_asc">価格の低い順</option>
+            <option value="name_asc">名前順</option>
           </select>
           <select
             className="h-10 px-3 rounded-xl bg-white border border-slate-200 text-sm font-medium focus:outline-none focus:border-primary transition-all"
@@ -468,7 +468,7 @@ export default function AdminProducts() {
             onChange={(e) => setPageSize(Number(e.target.value))}
           >
             {PAGE_SIZES.map((size) => (
-              <option key={size} value={size}>{size}개씩 보기</option>
+              <option key={size} value={size}>{size}件ずつ表示</option>
             ))}
           </select>
         </div>
@@ -477,14 +477,14 @@ export default function AdminProducts() {
       <div className="bg-white border border-slate-200 rounded-xl overflow-hidden">
         <div className="flex items-center border-b border-slate-200 bg-slate-50/80 overflow-x-auto">
           {selectedIds.size > 0 && (
-            <span className="px-3 py-2 text-xs font-bold text-blue-600 bg-blue-50 border-r border-slate-200 whitespace-nowrap">{selectedIds.size}개 선택</span>
+            <span className="px-3 py-2 text-xs font-bold text-blue-600 bg-blue-50 border-r border-slate-200 whitespace-nowrap">{selectedIds.size}件選択</span>
           )}
           {([
-            { key: "delete" as BatchTab, label: "선택삭제", icon: Trash2, color: "text-red-600" },
-            { key: "sale" as BatchTab, label: "판매변경", icon: ShoppingBag, color: "text-emerald-600" },
-            { key: "display" as BatchTab, label: "전시변경", icon: Eye, color: "text-violet-600" },
-            { key: "price" as BatchTab, label: "판매가변경", icon: DollarSign, color: "text-blue-600" },
-            { key: "shelflife" as BatchTab, label: "유통기한변경", icon: CalendarClock, color: "text-orange-600" },
+            { key: "delete" as BatchTab, label: "選択削除", icon: Trash2, color: "text-red-600" },
+            { key: "sale" as BatchTab, label: "販売変更", icon: ShoppingBag, color: "text-emerald-600" },
+            { key: "display" as BatchTab, label: "表示変更", icon: Eye, color: "text-violet-600" },
+            { key: "price" as BatchTab, label: "販売価格変更", icon: DollarSign, color: "text-blue-600" },
+            { key: "shelflife" as BatchTab, label: "賞味期限変更", icon: CalendarClock, color: "text-orange-600" },
           ]).map(({ key, label, icon: Icon, color }) => (
             <button
               key={key}
@@ -510,81 +510,81 @@ export default function AdminProducts() {
         {activeBatchTab !== "none" && (
           <div className="px-4 py-3 border-b border-slate-200 bg-slate-50/30">
             {selectedIds.size === 0 ? (
-              <p className="text-sm text-slate-500">변경할 상품을 먼저 선택해주세요.</p>
+              <p className="text-sm text-slate-500">変更する商品を先に選択してください。</p>
             ) : activeBatchTab === "delete" ? (
               <div className="flex items-center gap-3">
-                <p className="text-sm text-slate-600">선택한 <b>{selectedIds.size}개</b> 상품을 삭제합니다.</p>
+                <p className="text-sm text-slate-600">選択した<b>{selectedIds.size}件</b>の商品を削除します。</p>
                 <Button size="sm" variant="outline" className="border-red-200 text-red-600 hover:bg-red-50 h-8" onClick={handleBatchDelete} disabled={batchDeleteMutation.isPending}>
                   {batchDeleteMutation.isPending ? <Loader2 className="w-3.5 h-3.5 animate-spin mr-1" /> : <Trash2 className="w-3.5 h-3.5 mr-1" />}
-                  {batchDeleteMutation.isPending ? "삭제 중..." : "삭제 실행"}
+                  {batchDeleteMutation.isPending ? "削除中..." : "削除を実行"}
                 </Button>
               </div>
             ) : activeBatchTab === "sale" ? (
               <div className="flex items-center gap-3 flex-wrap">
-                <p className="text-sm text-slate-600">선택한 <b>{selectedIds.size}개</b> 상품의 판매상태를 변경합니다.</p>
+                <p className="text-sm text-slate-600">選択した<b>{selectedIds.size}件</b>の商品の販売ステータスを変更します。</p>
                 <Button size="sm" className="bg-emerald-600 hover:bg-emerald-700 text-white h-8" onClick={() => batchStatusMutation.mutate({ product_ids: Array.from(selectedIds), it_use: "1" })} disabled={batchStatusMutation.isPending}>
-                  판매중으로 변경
+                  販売中に変更
                 </Button>
                 <Button size="sm" variant="outline" className="border-slate-300 text-slate-600 hover:bg-slate-100 h-8" onClick={() => batchStatusMutation.mutate({ product_ids: Array.from(selectedIds), it_use: "0" })} disabled={batchStatusMutation.isPending}>
-                  판매중지로 변경
+                  販売停止に変更
                 </Button>
               </div>
             ) : activeBatchTab === "display" ? (
               <div className="flex items-center gap-3 flex-wrap">
-                <p className="text-sm text-slate-600">선택한 <b>{selectedIds.size}개</b> 상품의 전시(노출)상태를 변경합니다.</p>
+                <p className="text-sm text-slate-600">選択した<b>{selectedIds.size}件</b>の商品の表示ステータスを変更します。</p>
                 <Button size="sm" className="bg-violet-600 hover:bg-violet-700 text-white h-8" onClick={() => batchStatusMutation.mutate({ product_ids: Array.from(selectedIds), it_use: "1" })} disabled={batchStatusMutation.isPending}>
-                  전시함
+                  表示する
                 </Button>
                 <Button size="sm" variant="outline" className="border-slate-300 text-slate-600 hover:bg-slate-100 h-8" onClick={() => batchStatusMutation.mutate({ product_ids: Array.from(selectedIds), it_use: "0" })} disabled={batchStatusMutation.isPending}>
-                  전시안함
+                  表示しない
                 </Button>
-                <span className="text-xs text-slate-400">※ 전시상태와 판매상태는 동일하게 관리됩니다.</span>
+                <span className="text-xs text-slate-400">※ 表示ステータスと販売ステータスは同一に管理されます。</span>
               </div>
             ) : activeBatchTab === "price" ? (
               <div className="space-y-3">
-                <p className="text-sm text-slate-600">선택한 <b>{selectedIds.size}개</b> 상품의 판매가를 변경합니다.</p>
+                <p className="text-sm text-slate-600">選択した<b>{selectedIds.size}件</b>の商品の販売価格を変更します。</p>
                 <div className="flex items-end gap-3 flex-wrap">
                   <div>
-                    <Label className="text-xs text-slate-500 mb-1">수정 방식</Label>
+                    <Label className="text-xs text-slate-500 mb-1">変更方法</Label>
                     <select
                       className="h-9 px-3 rounded-lg bg-white border border-slate-300 text-sm font-bold"
                       value={priceAction}
                       onChange={(e) => setPriceAction(e.target.value)}
                     >
-                      <option value="adjust_price_percent">판매가 비율 조정 (%)</option>
-                      <option value="adjust_price_amount">판매가 금액 조정 (원)</option>
-                      <option value="set_price">판매가 일괄 설정</option>
-                      <option value="set_cust_price">소비자가 일괄 설정</option>
+                      <option value="adjust_price_percent">販売価格の割合調整 (%)</option>
+                      <option value="adjust_price_amount">販売価格の金額調整 (円)</option>
+                      <option value="set_price">販売価格を一括設定</option>
+                      <option value="set_cust_price">希望小売価格を一括設定</option>
                     </select>
                   </div>
                   {(priceAction === "adjust_price_percent" || priceAction === "adjust_price_amount") && (
                     <div className="flex gap-1">
-                      <button className={cn("h-9 px-3 rounded-lg text-sm font-bold border transition-all", priceDirection === "up" ? "bg-red-50 border-red-300 text-red-600" : "bg-white border-slate-300 text-slate-400")} onClick={() => setPriceDirection("up")}>▲ 인상</button>
-                      <button className={cn("h-9 px-3 rounded-lg text-sm font-bold border transition-all", priceDirection === "down" ? "bg-blue-50 border-blue-300 text-blue-600" : "bg-white border-slate-300 text-slate-400")} onClick={() => setPriceDirection("down")}>▼ 인하</button>
+                      <button className={cn("h-9 px-3 rounded-lg text-sm font-bold border transition-all", priceDirection === "up" ? "bg-red-50 border-red-300 text-red-600" : "bg-white border-slate-300 text-slate-400")} onClick={() => setPriceDirection("up")}>▲ 値上げ</button>
+                      <button className={cn("h-9 px-3 rounded-lg text-sm font-bold border transition-all", priceDirection === "down" ? "bg-blue-50 border-blue-300 text-blue-600" : "bg-white border-slate-300 text-slate-400")} onClick={() => setPriceDirection("down")}>▼ 値下げ</button>
                     </div>
                   )}
                   <div>
                     <Label className="text-xs text-slate-500 mb-1">
-                      {priceAction === "set_price" ? "판매가 (원)" :
-                       priceAction === "set_cust_price" ? "소비자가 (원)" :
-                       priceAction.includes("percent") ? "비율 (%)" : "금액 (원)"}
+                      {priceAction === "set_price" ? "販売価格 (円)" :
+                       priceAction === "set_cust_price" ? "希望小売価格 (円)" :
+                       priceAction.includes("percent") ? "割合 (%)" : "金額 (円)"}
                     </Label>
                     <Input type="number" min="0" className="h-9 w-32" value={priceValue} onChange={(e: any) => setPriceValue(e.target.value)} placeholder={priceAction.includes("percent") ? "10" : "1000"} />
                   </div>
                   <Button size="sm" className="h-9" onClick={handleBatchPrice} disabled={batchPriceMutation.isPending || !priceValue}>
                     {batchPriceMutation.isPending ? <Loader2 className="w-3.5 h-3.5 animate-spin mr-1" /> : null}
-                    적용
+                    適用
                   </Button>
                 </div>
                 {selectedProducts.length > 0 && Number(priceValue) > 0 && (
                   <div className="border rounded-lg overflow-hidden max-h-48 overflow-y-auto">
                     <table className="w-full text-xs">
                       <thead><tr className="bg-slate-50 border-b text-slate-500">
-                        <th className="text-left px-2 py-1.5 font-medium">상품명</th>
-                        <th className="text-right px-2 py-1.5 font-medium w-24">현재가</th>
+                        <th className="text-left px-2 py-1.5 font-medium">商品名</th>
+                        <th className="text-right px-2 py-1.5 font-medium w-24">現在価格</th>
                         <th className="text-center px-2 py-1.5 w-6">→</th>
-                        <th className="text-right px-2 py-1.5 font-medium w-24">변경후</th>
-                        <th className="text-right px-2 py-1.5 font-medium w-20">차이</th>
+                        <th className="text-right px-2 py-1.5 font-medium w-24">変更後</th>
+                        <th className="text-right px-2 py-1.5 font-medium w-20">差額</th>
                       </tr></thead>
                       <tbody>
                         {selectedProducts.slice(0, 10).map((p: any) => {
@@ -603,20 +603,20 @@ export default function AdminProducts() {
                         })}
                       </tbody>
                     </table>
-                    {selectedProducts.length > 10 && <div className="text-center text-xs text-slate-400 py-1 border-t bg-slate-50">외 {selectedProducts.length - 10}개</div>}
+                    {selectedProducts.length > 10 && <div className="text-center text-xs text-slate-400 py-1 border-t bg-slate-50">他 {selectedProducts.length - 10}件</div>}
                   </div>
                 )}
               </div>
             ) : activeBatchTab === "shelflife" ? (
               <div className="flex items-end gap-3 flex-wrap">
-                <p className="text-sm text-slate-600 self-center">선택한 <b>{selectedIds.size}개</b> 상품의 유통기한을 변경합니다.</p>
+                <p className="text-sm text-slate-600 self-center">選択した<b>{selectedIds.size}件</b>の商品の賞味期限を変更します。</p>
                 <div>
-                  <Label className="text-xs text-slate-500 mb-1">유통기한</Label>
-                  <Input className="h-9 w-48" value={shelfLifeValue} onChange={(e: any) => setShelfLifeValue(e.target.value)} placeholder="예: 6개월, 2025-12-31" />
+                  <Label className="text-xs text-slate-500 mb-1">賞味期限</Label>
+                  <Input className="h-9 w-48" value={shelfLifeValue} onChange={(e: any) => setShelfLifeValue(e.target.value)} placeholder="例: 6か月、2025-12-31" />
                 </div>
                 <Button size="sm" className="h-9 bg-orange-600 hover:bg-orange-700" onClick={handleBatchShelfLife} disabled={batchShelfLifeMutation.isPending || !shelfLifeValue.trim()}>
                   {batchShelfLifeMutation.isPending ? <Loader2 className="w-3.5 h-3.5 animate-spin mr-1" /> : null}
-                  적용
+                  適用
                 </Button>
               </div>
             ) : null}
@@ -629,7 +629,7 @@ export default function AdminProducts() {
       ) : products.length === 0 ? (
         <Card className="py-20 text-center">
           <Package className="w-16 h-16 text-slate-200 mx-auto mb-4" />
-          <h3 className="text-xl font-bold text-slate-700">상품이 없습니다</h3>
+          <h3 className="text-xl font-bold text-slate-700">商品がありません</h3>
         </Card>
       ) : (
         <Card className="p-0 overflow-hidden">
@@ -642,15 +642,15 @@ export default function AdminProducts() {
                       {selectedIds.size === products.length && products.length > 0 ? <CheckSquare className="w-5 h-5 text-blue-600" /> : <Square className="w-5 h-5" />}
                     </button>
                   </th>
-                  <th className="px-4 py-3 text-xs font-bold text-slate-500 uppercase tracking-wide">상품</th>
-                  <th className="px-3 py-3 text-xs font-bold text-slate-500 uppercase tracking-wide text-center whitespace-nowrap">박스입수</th>
-                  <th className="px-3 py-3 text-xs font-bold text-slate-500 uppercase tracking-wide text-right whitespace-nowrap">낱개판매가</th>
-                  <th className="px-3 py-3 text-xs font-bold text-slate-500 uppercase tracking-wide text-right whitespace-nowrap">소비자가</th>
-                  <th className="px-3 py-3 text-xs font-bold text-slate-500 uppercase tracking-wide text-center whitespace-nowrap">재고</th>
-                  <th className="px-3 py-3 text-xs font-bold text-slate-500 uppercase tracking-wide text-center whitespace-nowrap">부가정보</th>
-                  <th className="px-3 py-3 text-xs font-bold text-slate-500 uppercase tracking-wide text-center whitespace-nowrap">쇼핑몰노출</th>
-                  <th className="px-3 py-3 text-xs font-bold text-slate-500 uppercase tracking-wide text-center whitespace-nowrap w-24">상태</th>
-                  <th className="px-3 py-3 text-xs font-bold text-slate-500 uppercase tracking-wide text-center whitespace-nowrap">관리</th>
+                  <th className="px-4 py-3 text-xs font-bold text-slate-500 uppercase tracking-wide">商品</th>
+                  <th className="px-3 py-3 text-xs font-bold text-slate-500 uppercase tracking-wide text-center whitespace-nowrap">ケース入数</th>
+                  <th className="px-3 py-3 text-xs font-bold text-slate-500 uppercase tracking-wide text-right whitespace-nowrap">単品販売価格</th>
+                  <th className="px-3 py-3 text-xs font-bold text-slate-500 uppercase tracking-wide text-right whitespace-nowrap">希望小売価格</th>
+                  <th className="px-3 py-3 text-xs font-bold text-slate-500 uppercase tracking-wide text-center whitespace-nowrap">在庫</th>
+                  <th className="px-3 py-3 text-xs font-bold text-slate-500 uppercase tracking-wide text-center whitespace-nowrap">付加情報</th>
+                  <th className="px-3 py-3 text-xs font-bold text-slate-500 uppercase tracking-wide text-center whitespace-nowrap">ショップ表示</th>
+                  <th className="px-3 py-3 text-xs font-bold text-slate-500 uppercase tracking-wide text-center whitespace-nowrap w-24">ステータス</th>
+                  <th className="px-3 py-3 text-xs font-bold text-slate-500 uppercase tracking-wide text-center whitespace-nowrap">管理</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
@@ -703,7 +703,7 @@ export default function AdminProducts() {
                           <div className="mt-1 flex items-center gap-1 flex-wrap">
                             {p.image_source === "kakao" && (
                               <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-orange-50 text-orange-500 border border-orange-200">
-                                🔶 카카오 임시
+                                🔶 カカオ仮画像
                               </span>
                             )}
                             {p.ca_name ? (
@@ -722,7 +722,7 @@ export default function AdminProducts() {
                               </>
                             ) : (
                               <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-amber-50 text-amber-500 border border-amber-200">
-                                ⚠ 미분류
+                                ⚠ 未分類
                               </span>
                             )}
                           </div>
@@ -734,9 +734,9 @@ export default function AdminProducts() {
                     <td className="px-3 py-3 text-center">
                       {boxQty ? (
                         <div className="flex flex-col items-center gap-0.5">
-                          <span className="text-sm font-bold text-slate-700">{boxQty}<span className="text-xs font-normal text-slate-400">입</span></span>
+                          <span className="text-sm font-bold text-slate-700">{boxQty}<span className="text-xs font-normal text-slate-400">入</span></span>
                           {unitPrice !== null && (
-                            <span className="text-[11px] text-slate-400 whitespace-nowrap">개당 {formatCurrency(unitPrice)}</span>
+                            <span className="text-[11px] text-slate-400 whitespace-nowrap">1個あたり {formatCurrency(unitPrice)}</span>
                           )}
                         </div>
                       ) : (
@@ -767,9 +767,9 @@ export default function AdminProducts() {
                     <td className="px-3 py-3 text-center">
                       <div className="flex flex-col items-center gap-1">
                         {String(p.it_notax) === "1" ? (
-                          <Badge className="bg-emerald-50 text-emerald-600 text-[10px] px-2 py-0.5 font-semibold border border-emerald-100">면세</Badge>
+                          <Badge className="bg-emerald-50 text-emerald-600 text-[10px] px-2 py-0.5 font-semibold border border-emerald-100">非課税</Badge>
                         ) : (
-                          <Badge className="bg-amber-50 text-amber-600 text-[10px] px-2 py-0.5 font-semibold border border-amber-100">과세</Badge>
+                          <Badge className="bg-amber-50 text-amber-600 text-[10px] px-2 py-0.5 font-semibold border border-amber-100">課税</Badge>
                         )}
                         {p.it_shelf_life ? (
                           <span className="text-[10px] text-slate-400 whitespace-nowrap">{p.it_shelf_life}</span>
@@ -787,14 +787,14 @@ export default function AdminProducts() {
                         const hasCat = !!p.ca_name;
                         if (!visible) return (
                           <div className="flex flex-col items-center gap-1">
-                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-red-50 text-red-500 border border-red-200 whitespace-nowrap">🔴 판매중지</span>
+                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-red-50 text-red-500 border border-red-200 whitespace-nowrap">🔴 販売停止</span>
                           </div>
                         );
                         const issues: string[] = [];
-                        if (!hasImg) issues.push("이미지없음");
-                        if (!hasCat) issues.push("미분류");
+                        if (!hasImg) issues.push("画像なし");
+                        if (!hasCat) issues.push("未分類");
                         if (issues.length === 0) return (
-                          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-600 border border-emerald-200 whitespace-nowrap">✅ 노출중</span>
+                          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-600 border border-emerald-200 whitespace-nowrap">✅ 表示中</span>
                         );
                         return (
                           <div className="flex flex-col items-center gap-1">
@@ -809,12 +809,12 @@ export default function AdminProducts() {
                     {/* 상태 */}
                     <td className="px-3 py-3 text-center whitespace-nowrap" onClick={(e) => e.stopPropagation()}>
                       {p.it_use === "1" ? (
-                        <button onClick={() => toggleStatusMutation.mutate({ id: p.it_id, it_use: "0" })} title="클릭하면 판매중지">
-                          <Badge className="bg-emerald-500 text-white text-[10px] cursor-pointer hover:bg-emerald-600 transition-colors whitespace-nowrap px-2.5 py-1 font-semibold shadow-sm">판매중</Badge>
+                        <button onClick={() => toggleStatusMutation.mutate({ id: p.it_id, it_use: "0" })} title="クリックで販売停止">
+                          <Badge className="bg-emerald-500 text-white text-[10px] cursor-pointer hover:bg-emerald-600 transition-colors whitespace-nowrap px-2.5 py-1 font-semibold shadow-sm">販売中</Badge>
                         </button>
                       ) : (
-                        <button onClick={() => toggleStatusMutation.mutate({ id: p.it_id, it_use: "1" })} title="클릭하면 판매중">
-                          <Badge className="bg-slate-200 text-slate-500 text-[10px] cursor-pointer hover:bg-slate-300 transition-colors whitespace-nowrap px-2.5 py-1 font-semibold">판매중지</Badge>
+                        <button onClick={() => toggleStatusMutation.mutate({ id: p.it_id, it_use: "1" })} title="クリックで販売中">
+                          <Badge className="bg-slate-200 text-slate-500 text-[10px] cursor-pointer hover:bg-slate-300 transition-colors whitespace-nowrap px-2.5 py-1 font-semibold">販売停止</Badge>
                         </button>
                       )}
                     </td>
@@ -822,11 +822,11 @@ export default function AdminProducts() {
                     {/* 관리 */}
                     <td className="px-3 py-3 text-center whitespace-nowrap" onClick={(e) => e.stopPropagation()}>
                       <div className="flex items-center justify-center gap-0.5">
-                        <Link href={`/admin/products/${p.it_id}`} className="px-2 py-1 text-[11px] font-semibold text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">수정</Link>
+                        <Link href={`/admin/products/${p.it_id}`} className="px-2 py-1 text-[11px] font-semibold text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">編集</Link>
                         <button onClick={() => handleCopy(p)} disabled={copyMutation.isPending} className="px-2 py-1 text-[11px] font-semibold text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors flex items-center gap-0.5">
-                          <Copy className="w-3 h-3" />복사
+                          <Copy className="w-3 h-3" />コピー
                         </button>
-                        <button onClick={() => handleDelete(p)} className="px-2 py-1 text-[11px] font-semibold text-red-400 hover:bg-red-50 hover:text-red-600 rounded-lg transition-colors">삭제</button>
+                        <button onClick={() => handleDelete(p)} className="px-2 py-1 text-[11px] font-semibold text-red-400 hover:bg-red-50 hover:text-red-600 rounded-lg transition-colors">削除</button>
                       </div>
                     </td>
                     </tr>
@@ -838,7 +838,7 @@ export default function AdminProducts() {
 
           {totalPages > 1 && (
             <div className="px-5 py-4 border-t border-slate-100 flex items-center justify-between">
-              <p className="text-sm text-slate-500">총 {total}개 중 {pageStart}-{pageEnd}개</p>
+              <p className="text-sm text-slate-500">全{total}件中 {pageStart}-{pageEnd}件</p>
               <div className="flex items-center gap-2 flex-wrap justify-end">
                 <Button variant="outline" size="sm" disabled={page <= 1} onClick={() => setPage(p => p - 1)}>
                   <ChevronLeft className="w-4 h-4" />

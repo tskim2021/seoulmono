@@ -91,17 +91,17 @@ function mapStatus(status: number): string {
  */
 function getStatusText(status: number): string {
   const texts: Record<number, string> = {
-    0: "추적 정보 없음",
-    1: "정보 수신됨",
-    2: "운송 중",
-    3: "픽업 완료",
-    4: "배송 중",
-    5: "배송 실패",
-    6: "배송 완료",
-    7: "예외 발생",
-    8: "만료됨",
+    0: "追跡情報なし",
+    1: "情報受信済み",
+    2: "輸送中",
+    3: "集荷完了",
+    4: "配達中",
+    5: "配達失敗",
+    6: "配達完了",
+    7: "例外発生",
+    8: "期限切れ",
   };
-  return texts[status] || "알 수 없음";
+  return texts[status] || "不明";
 }
 
 export const webhooksRouter = router({
@@ -199,7 +199,7 @@ export const webhooksRouter = router({
                 if (user && user.email) {
                   await sendShippingStatusEmail({
                     customerEmail: user.email,
-                    customerName: user.name || "고객",
+                    customerName: user.name || "お客様",
                     orderNumber: order.orderNumber,
                     trackingNumber: data.number,
                     status: systemStatus,

@@ -13,9 +13,9 @@ import { useState, useMemo } from "react";
 import { toast } from "sonner";
 
 const SECTION_LABELS: Record<string, string> = {
-  domestic: "국내 뉴스",
-  international: "해외 뉴스",
-  research: "연구/논문",
+  domestic: "国内ニュース",
+  international: "海外ニュース",
+  research: "研究・論文",
 };
 
 const SECTION_COLORS: Record<string, string> = {
@@ -55,7 +55,7 @@ export default function AdminNewsManagement() {
 
   const createMutation = trpc.news.create.useMutation({
     onSuccess: () => {
-      toast.success("뉴스가 등록되었습니다.");
+      toast.success("ニュースを登録しました。");
       setShowCreateDialog(false);
       resetForm();
       refetch();
@@ -65,7 +65,7 @@ export default function AdminNewsManagement() {
 
   const updateMutation = trpc.news.update.useMutation({
     onSuccess: () => {
-      toast.success("뉴스가 수정되었습니다.");
+      toast.success("ニュースを更新しました。");
       setShowEditDialog(false);
       setEditingNews(null);
       refetch();
@@ -75,7 +75,7 @@ export default function AdminNewsManagement() {
 
   const deleteMutation = trpc.news.delete.useMutation({
     onSuccess: () => {
-      toast.success("뉴스가 삭제되었습니다.");
+      toast.success("ニュースを削除しました。");
       setShowDeleteConfirm(false);
       setDeletingId(null);
       refetch();
@@ -85,7 +85,7 @@ export default function AdminNewsManagement() {
 
   const generateMutation = trpc.news.generateNow.useMutation({
     onSuccess: (result) => {
-      toast.success(`뉴스 ${result.generated}건이 생성되었습니다.`);
+      toast.success(`ニュース${result.generated}件を生成しました。`);
       refetch();
     },
     onError: (err) => toast.error(err.message),
@@ -101,7 +101,7 @@ export default function AdminNewsManagement() {
 
   const handleCreate = () => {
     if (!formTitle.trim() || !formContent.trim() || !formCategory) {
-      toast.error("필수 항목을 모두 입력해주세요.");
+      toast.error("必須項目をすべて入力してください。");
       return;
     }
     createMutation.mutate({
@@ -151,23 +151,23 @@ export default function AdminNewsManagement() {
         <div className="flex items-center gap-3">
           <Newspaper className="w-6 h-6 text-primary" />
           <div>
-            <h1 className="text-2xl font-bold">뉴스 관리</h1>
-            <p className="text-sm text-muted-foreground">건강뉴스 게시글을 관리합니다.</p>
+            <h1 className="text-2xl font-bold">ニュース管理</h1>
+            <p className="text-sm text-muted-foreground">健康ニュースの記事を管理します。</p>
           </div>
         </div>
         <div className="flex gap-2">
           <Button variant="outline" size="sm" onClick={() => {
             if (!selectedCategory || selectedCategory === "all") {
-              toast.error("카테고리를 선택해주세요.");
+              toast.error("カテゴリーを選択してください。");
               return;
             }
             generateMutation.mutate({ categoryId: Number(selectedCategory) });
           }} disabled={generateMutation.isPending}>
             {generateMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin mr-1" /> : <Zap className="w-4 h-4 mr-1" />}
-            AI 뉴스 생성
+            AIニュース生成
           </Button>
           <Button size="sm" onClick={() => { resetForm(); setShowCreateDialog(true); }}>
-            <Plus className="w-4 h-4 mr-1" /> 뉴스 작성
+            <Plus className="w-4 h-4 mr-1" /> ニュース作成
           </Button>
         </div>
       </div>
@@ -176,10 +176,10 @@ export default function AdminNewsManagement() {
       <div className="flex flex-wrap gap-3 mb-4">
         <Select value={selectedCategory} onValueChange={(v) => { setSelectedCategory(v); setPage(1); }}>
           <SelectTrigger className="w-40">
-            <SelectValue placeholder="카테고리" />
+            <SelectValue placeholder="カテゴリー" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">전체 카테고리</SelectItem>
+            <SelectItem value="all">すべてのカテゴリー</SelectItem>
             {categories.map((cat: any) => (
               <SelectItem key={cat.id} value={String(cat.id)}>{cat.name}</SelectItem>
             ))}
@@ -188,20 +188,20 @@ export default function AdminNewsManagement() {
 
         <Select value={selectedSection} onValueChange={(v) => { setSelectedSection(v); setPage(1); }}>
           <SelectTrigger className="w-36">
-            <SelectValue placeholder="섹션" />
+            <SelectValue placeholder="セクション" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">전체 섹션</SelectItem>
-            <SelectItem value="domestic">국내 뉴스</SelectItem>
-            <SelectItem value="international">해외 뉴스</SelectItem>
-            <SelectItem value="research">연구/논문</SelectItem>
+            <SelectItem value="all">すべてのセクション</SelectItem>
+            <SelectItem value="domestic">国内ニュース</SelectItem>
+            <SelectItem value="international">海外ニュース</SelectItem>
+            <SelectItem value="research">研究・論文</SelectItem>
           </SelectContent>
         </Select>
 
         <div className="relative flex-1 min-w-48">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
           <Input
-            placeholder="제목 검색..."
+            placeholder="タイトルを検索..."
             value={searchQuery}
             onChange={(e) => { setSearchQuery(e.target.value); setPage(1); }}
             className="pl-9"
@@ -215,18 +215,18 @@ export default function AdminNewsManagement() {
           <thead className="bg-muted/50">
             <tr>
               <th className="text-left px-4 py-3 font-medium">ID</th>
-              <th className="text-left px-4 py-3 font-medium">섹션</th>
-              <th className="text-left px-4 py-3 font-medium">카테고리</th>
-              <th className="text-left px-4 py-3 font-medium">제목</th>
-              <th className="text-left px-4 py-3 font-medium">조회</th>
-              <th className="text-left px-4 py-3 font-medium">작성일</th>
-              <th className="text-left px-4 py-3 font-medium">타입</th>
-              <th className="text-right px-4 py-3 font-medium">관리</th>
+              <th className="text-left px-4 py-3 font-medium">セクション</th>
+              <th className="text-left px-4 py-3 font-medium">カテゴリー</th>
+              <th className="text-left px-4 py-3 font-medium">タイトル</th>
+              <th className="text-left px-4 py-3 font-medium">閲覧</th>
+              <th className="text-left px-4 py-3 font-medium">作成日</th>
+              <th className="text-left px-4 py-3 font-medium">タイプ</th>
+              <th className="text-right px-4 py-3 font-medium">操作</th>
             </tr>
           </thead>
           <tbody>
             {isLoading ? (
-              <tr><td colSpan={8} className="text-center py-8 text-muted-foreground">로딩 중...</td></tr>
+              <tr><td colSpan={8} className="text-center py-8 text-muted-foreground">読み込み中...</td></tr>
             ) : data?.posts && data.posts.length > 0 ? (
               data.posts.map((news: any) => (
                 <tr key={news.id} className="border-t hover:bg-muted/30">
@@ -250,7 +250,7 @@ export default function AdminNewsManagement() {
                     {news.isAutoGenerated === 1 ? (
                       <Badge variant="outline" className="text-xs text-blue-600">AI</Badge>
                     ) : (
-                      <Badge variant="outline" className="text-xs">수동</Badge>
+                      <Badge variant="outline" className="text-xs">手動</Badge>
                     )}
                   </td>
                   <td className="px-4 py-3">
@@ -269,7 +269,7 @@ export default function AdminNewsManagement() {
                 </tr>
               ))
             ) : (
-              <tr><td colSpan={8} className="text-center py-8 text-muted-foreground">등록된 뉴스가 없습니다.</td></tr>
+              <tr><td colSpan={8} className="text-center py-8 text-muted-foreground">登録されたニュースはありません。</td></tr>
             )}
           </tbody>
         </table>
@@ -282,15 +282,15 @@ export default function AdminNewsManagement() {
       <Dialog open={showCreateDialog} onOpenChange={setShowCreateDialog}>
         <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>뉴스 작성</DialogTitle>
-            <DialogDescription>새로운 건강뉴스를 작성합니다.</DialogDescription>
+            <DialogTitle>ニュース作成</DialogTitle>
+            <DialogDescription>新しい健康ニュースを作成します。</DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="text-sm font-medium mb-1 block">카테고리 *</label>
+                <label className="text-sm font-medium mb-1 block">カテゴリー *</label>
                 <Select value={formCategory} onValueChange={setFormCategory}>
-                  <SelectTrigger><SelectValue placeholder="카테고리 선택" /></SelectTrigger>
+                  <SelectTrigger><SelectValue placeholder="カテゴリーを選択" /></SelectTrigger>
                   <SelectContent>
                     {categories.map((cat: any) => (
                       <SelectItem key={cat.id} value={String(cat.id)}>{cat.name}</SelectItem>
@@ -299,35 +299,35 @@ export default function AdminNewsManagement() {
                 </Select>
               </div>
               <div>
-                <label className="text-sm font-medium mb-1 block">뉴스 섹션 *</label>
+                <label className="text-sm font-medium mb-1 block">ニュースセクション *</label>
                 <Select value={formSection} onValueChange={setFormSection}>
                   <SelectTrigger><SelectValue /></SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="domestic">국내 뉴스</SelectItem>
-                    <SelectItem value="international">해외 뉴스</SelectItem>
-                    <SelectItem value="research">연구/논문</SelectItem>
+                    <SelectItem value="domestic">国内ニュース</SelectItem>
+                    <SelectItem value="international">海外ニュース</SelectItem>
+                    <SelectItem value="research">研究・論文</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
             </div>
             <div>
-              <label className="text-sm font-medium mb-1 block">제목 *</label>
-              <Input value={formTitle} onChange={(e) => setFormTitle(e.target.value)} placeholder="뉴스 제목" />
+              <label className="text-sm font-medium mb-1 block">タイトル *</label>
+              <Input value={formTitle} onChange={(e) => setFormTitle(e.target.value)} placeholder="ニュースのタイトル" />
             </div>
             <div>
-              <label className="text-sm font-medium mb-1 block">본문 * (마크다운 지원)</label>
-              <Textarea value={formContent} onChange={(e) => setFormContent(e.target.value)} placeholder="뉴스 본문을 작성하세요..." rows={12} />
+              <label className="text-sm font-medium mb-1 block">本文 * (Markdown対応)</label>
+              <Textarea value={formContent} onChange={(e) => setFormContent(e.target.value)} placeholder="ニュース本文を入力してください..." rows={12} />
             </div>
             <div>
-              <label className="text-sm font-medium mb-1 block">출처 URL (선택)</label>
+              <label className="text-sm font-medium mb-1 block">出典URL (任意)</label>
               <Input value={formSourceUrl} onChange={(e) => setFormSourceUrl(e.target.value)} placeholder="https://..." />
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setShowCreateDialog(false)}>취소</Button>
+            <Button variant="outline" onClick={() => setShowCreateDialog(false)}>キャンセル</Button>
             <Button onClick={handleCreate} disabled={createMutation.isPending}>
               {createMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin mr-1" /> : null}
-              등록
+              登録
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -337,15 +337,15 @@ export default function AdminNewsManagement() {
       <Dialog open={showEditDialog} onOpenChange={setShowEditDialog}>
         <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>뉴스 수정</DialogTitle>
-            <DialogDescription>뉴스 내용을 수정합니다.</DialogDescription>
+            <DialogTitle>ニュース編集</DialogTitle>
+            <DialogDescription>ニュースの内容を編集します。</DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="text-sm font-medium mb-1 block">카테고리</label>
+                <label className="text-sm font-medium mb-1 block">カテゴリー</label>
                 <Select value={formCategory} onValueChange={setFormCategory}>
-                  <SelectTrigger><SelectValue placeholder="카테고리 선택" /></SelectTrigger>
+                  <SelectTrigger><SelectValue placeholder="カテゴリーを選択" /></SelectTrigger>
                   <SelectContent>
                     {categories.map((cat: any) => (
                       <SelectItem key={cat.id} value={String(cat.id)}>{cat.name}</SelectItem>
@@ -354,35 +354,35 @@ export default function AdminNewsManagement() {
                 </Select>
               </div>
               <div>
-                <label className="text-sm font-medium mb-1 block">뉴스 섹션</label>
+                <label className="text-sm font-medium mb-1 block">ニュースセクション</label>
                 <Select value={formSection} onValueChange={setFormSection}>
                   <SelectTrigger><SelectValue /></SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="domestic">국내 뉴스</SelectItem>
-                    <SelectItem value="international">해외 뉴스</SelectItem>
-                    <SelectItem value="research">연구/논문</SelectItem>
+                    <SelectItem value="domestic">国内ニュース</SelectItem>
+                    <SelectItem value="international">海外ニュース</SelectItem>
+                    <SelectItem value="research">研究・論文</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
             </div>
             <div>
-              <label className="text-sm font-medium mb-1 block">제목</label>
+              <label className="text-sm font-medium mb-1 block">タイトル</label>
               <Input value={formTitle} onChange={(e) => setFormTitle(e.target.value)} />
             </div>
             <div>
-              <label className="text-sm font-medium mb-1 block">본문 (마크다운 지원)</label>
+              <label className="text-sm font-medium mb-1 block">本文 (Markdown対応)</label>
               <Textarea value={formContent} onChange={(e) => setFormContent(e.target.value)} rows={12} />
             </div>
             <div>
-              <label className="text-sm font-medium mb-1 block">출처 URL</label>
+              <label className="text-sm font-medium mb-1 block">出典URL</label>
               <Input value={formSourceUrl} onChange={(e) => setFormSourceUrl(e.target.value)} />
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setShowEditDialog(false)}>취소</Button>
+            <Button variant="outline" onClick={() => setShowEditDialog(false)}>キャンセル</Button>
             <Button onClick={handleUpdate} disabled={updateMutation.isPending}>
               {updateMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin mr-1" /> : null}
-              수정
+              更新
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -392,14 +392,14 @@ export default function AdminNewsManagement() {
       <Dialog open={showDeleteConfirm} onOpenChange={setShowDeleteConfirm}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>뉴스 삭제</DialogTitle>
-            <DialogDescription>이 뉴스를 삭제하시겠습니까? 삭제된 뉴스는 복구할 수 없습니다.</DialogDescription>
+            <DialogTitle>ニュース削除</DialogTitle>
+            <DialogDescription>このニュースを削除しますか？削除したニュースは復元できません。</DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setShowDeleteConfirm(false)}>취소</Button>
+            <Button variant="outline" onClick={() => setShowDeleteConfirm(false)}>キャンセル</Button>
             <Button variant="destructive" onClick={() => deletingId && deleteMutation.mutate({ id: deletingId })} disabled={deleteMutation.isPending}>
               {deleteMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin mr-1" /> : null}
-              삭제
+              削除
             </Button>
           </DialogFooter>
         </DialogContent>

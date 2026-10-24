@@ -16,12 +16,12 @@ import { formatShippingDescription as formatShippingDesc } from "@/lib/shippingD
 
 // 국제배송 단계
 const intlShipmentSteps = [
-  { key: "accepted", label: "접수", icon: Package },
-  { key: "export_customs", label: "출발국 통관", icon: Shield },
-  { key: "in_transit_intl", label: "국제운송", icon: Plane },
-  { key: "import_customs", label: "도착국 통관", icon: Globe },
-  { key: "out_for_delivery", label: "현지배송", icon: Truck },
-  { key: "delivered", label: "배달완료", icon: CheckCircle2 },
+  { key: "accepted", label: "受付", icon: Package },
+  { key: "export_customs", label: "発送国通関", icon: Shield },
+  { key: "in_transit_intl", label: "国際輸送", icon: Plane },
+  { key: "import_customs", label: "到着国通関", icon: Globe },
+  { key: "out_for_delivery", label: "現地配送", icon: Truck },
+  { key: "delivered", label: "配達完了", icon: CheckCircle2 },
 ];
 
 // shipment status를 국제배송 단계에 매핑
@@ -57,7 +57,7 @@ function InternationalProgressBar({ status }: { status: string }) {
     return (
       <div className="flex items-center gap-2 p-2 bg-destructive/10 rounded-lg text-destructive text-xs">
         <AlertCircle className="w-3.5 h-3.5 shrink-0" />
-        <span>{status === "returned" ? "반송 처리되었습니다." : status === "alert" ? "배송 주의 — 고객센터 문의 필요" : "배송 오류 — 고객센터 문의 필요"}</span>
+        <span>{status === "returned" ? "返送処理されました。" : status === "alert" ? "配送に注意が必要です — カスタマーセンターへお問い合わせください" : "配送エラー — カスタマーセンターへお問い合わせください"}</span>
       </div>
     );
   }
@@ -140,11 +140,11 @@ function OrderItemRow({ item, orderStatus, onReviewSuccess, pointSettings, itemD
           <div className="flex items-center gap-2 flex-wrap">
             <Link href={productHref(item.product?.slug)} className={`text-sm font-medium hover:text-primary hover:underline transition-colors ${isCancelled ? "line-through text-muted-foreground" : ""}`}>{item.productName}</Link>
             {isCancelled && (
-              <span className="text-[10px] px-1.5 py-0.5 rounded bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400 font-medium shrink-0">취소됨</span>
+              <span className="text-[10px] px-1.5 py-0.5 rounded bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400 font-medium shrink-0">キャンセル済み</span>
             )}
             {isCancelled && item.refundedAt && (
               <span className="text-[10px] px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400 font-medium shrink-0">
-                환불 완료 {new Date(item.refundedAt).toLocaleString("ko-KR", { year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit", hour12: false })}
+                返金完了 {new Date(item.refundedAt).toLocaleString("ja-JP", { year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit", hour12: false })}
               </span>
             )}
           </div>
@@ -155,9 +155,9 @@ function OrderItemRow({ item, orderStatus, onReviewSuccess, pointSettings, itemD
                 .join(", ")}
             </p>
           )}
-          <p className="text-xs text-muted-foreground">수량: {item.quantity}</p>
+          <p className="text-xs text-muted-foreground">数量: {item.quantity}</p>
           {isCancelled && item.cancelReason && (
-            <p className="text-xs text-red-500 dark:text-red-400 mt-0.5">취소 사유: {item.cancelReason}</p>
+            <p className="text-xs text-red-500 dark:text-red-400 mt-0.5">キャンセル理由: {item.cancelReason}</p>
           )}
           
           {!isCancelled && orderStatus === "delivered" && (
@@ -165,7 +165,7 @@ function OrderItemRow({ item, orderStatus, onReviewSuccess, pointSettings, itemD
               {reviewStatus?.hasReview ? (
                 <div className="flex items-center gap-1 text-xs text-muted-foreground">
                   <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />
-                  <span>리뷰 작성 완료</span>
+                  <span>レビュー投稿済み</span>
                 </div>
               ) : (
                 <Button
@@ -174,7 +174,7 @@ function OrderItemRow({ item, orderStatus, onReviewSuccess, pointSettings, itemD
                   className="h-7 text-xs gap-1 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white"
                 >
                   <Star className="w-3 h-3" />
-                  리뷰 작성하고 {reviewPoints}P 받기
+                  レビューを書いて{reviewPoints}Pゲット
                 </Button>
               )}
             </div>
@@ -185,7 +185,7 @@ function OrderItemRow({ item, orderStatus, onReviewSuccess, pointSettings, itemD
             {formatPrice(item.price * item.quantity)}
           </span>
           {itemDiscount > 0 && !isCancelled && (
-            <p className="text-xs text-emerald-600 font-medium mt-0.5">-{formatPrice(itemDiscount)} 할인</p>
+            <p className="text-xs text-emerald-600 font-medium mt-0.5">-{formatPrice(itemDiscount)} 割引</p>
           )}
         </div>
       </div>
@@ -221,7 +221,7 @@ function ItemTrackingSection({
     return (
       <div className="mt-3 flex items-center gap-2 p-3 bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800 rounded-lg">
         <Clock className="w-4 h-4 text-amber-600 dark:text-amber-500 shrink-0" />
-        <p className="text-xs text-amber-700 dark:text-amber-300">운송장 미등록 — 관리자가 운송장 번호를 등록하면 배송 추적이 가능합니다.</p>
+        <p className="text-xs text-amber-700 dark:text-amber-300">追跡番号未登録 — 管理者が追跡番号を登録すると配送追跡ができます。</p>
       </div>
     );
   }
@@ -238,10 +238,10 @@ function ItemTrackingSection({
           <Truck className="w-3.5 h-3.5 text-primary shrink-0" />
           <span className="text-xs font-mono text-muted-foreground truncate">{shipment.trackingNumber}</span>
           {estimatedDate && shipment.status !== "delivered" && (
-            <span className="text-[10px] text-primary shrink-0">· {estimatedDate} 예상</span>
+            <span className="text-[10px] text-primary shrink-0">· {estimatedDate} 予定</span>
           )}
           {shipment.status === "delivered" && shipment.actualDeliveryDate && (
-            <span className="text-[10px] text-emerald-600 shrink-0">· {formatDateTime(shipment.actualDeliveryDate)} 배달완료</span>
+            <span className="text-[10px] text-emerald-600 shrink-0">· {formatDateTime(shipment.actualDeliveryDate)} 配達完了</span>
           )}
         </div>
         <div className="flex items-center gap-1 shrink-0">
@@ -253,7 +253,7 @@ function ItemTrackingSection({
           {shipment.history && shipment.history.length > 0 && (
             <Button size="sm" variant="outline" className="text-xs h-7 gap-1" onClick={() => onShowTimeline(shipment)}>
               <Clock className="w-3 h-3" />
-              배송추적이력 ({shipment.history.length}건)
+              配送追跡履歴 ({shipment.history.length}件)
             </Button>
           )}
         </div>
@@ -286,15 +286,15 @@ export default function OrderDetail() {
     onSuccess: (data) => {
       setRefreshingShipmentId(null);
       if (!data.success) {
-        toast.info(data.message || "배송 정보를 아직 조회할 수 없습니다.");
+        toast.info(data.message || "配送情報をまだ照会できません。");
         return;
       }
       if (data.delivered) {
-        toast.success("배송이 완료되었습니다! 리뷰를 작성해주세요.");
+        toast.success("配送が完了しました！レビューを投稿してください。");
       } else if (data.eventsCount > 0) {
-        toast.success(`배송 정보가 업데이트되었습니다. (${data.eventsCount}개 새 이벤트)`);
+        toast.success(`配送情報を更新しました。(新規イベント ${data.eventsCount}件)`);
       } else {
-        toast.info("배송 정보가 최신 상태입니다.");
+        toast.info("配送情報は最新の状態です。");
       }
       utils.order.getById.invalidate({ id: orderId });
       utils.shipping.trackOrderItems.invalidate({ orderId });
@@ -302,7 +302,7 @@ export default function OrderDetail() {
     onError: (err: any) => { setRefreshingShipmentId(null); toast.error(err.message); },
   });
   const confirmPayment = trpc.order.confirmPayment.useMutation({
-    onSuccess: () => { toast.success("결제가 확인되었습니다"); utils.order.getById.invalidate({ id: orderId }); },
+    onSuccess: () => { toast.success("お支払いを確認しました"); utils.order.getById.invalidate({ id: orderId }); },
   });
 
   const [showCancelDialog, setShowCancelDialog] = useState(false);
@@ -314,8 +314,8 @@ export default function OrderDetail() {
   const cancelItems = trpc.order.cancelItems.useMutation({
     onSuccess: (result) => {
       const msg = result.allCancelled
-        ? `주문이 전체 취소되었습니다. 환불 금액: ${formatPrice(result.refundAmount)}`
-        : `${result.cancelledCount}개 상품이 취소되었습니다. 환불 금액: ${formatPrice(result.refundAmount)}`;
+        ? `注文全体をキャンセルしました。返金額: ${formatPrice(result.refundAmount)}`
+        : `${result.cancelledCount}点の商品をキャンセルしました。返金額: ${formatPrice(result.refundAmount)}`;
       toast.success(msg);
       setShowCancelDialog(false);
       setCancelItemIds([]);
@@ -330,29 +330,29 @@ export default function OrderDetail() {
 
 
 
-  if (isLoading) return <MyPageLayout title="주문 상세"><div className="animate-pulse space-y-4"><div className="h-8 bg-secondary rounded w-1/3" /><div className="h-40 bg-secondary rounded" /></div></MyPageLayout>;
-  if (error || !order) return <MyPageLayout title="주문 상세"><div className="text-center py-20"><div className="flex flex-col items-center gap-4"><AlertCircle className="w-12 h-12 text-muted-foreground" /><h2 className="text-xl font-bold">주문을 찾을 수 없습니다</h2><p className="text-muted-foreground">요청하신 주문 정보가 존재하지 않거나 접근 권한이 없습니다.</p><Link href="/mypage/orders"><Button variant="outline"><ArrowLeft className="w-4 h-4 mr-2" />주문내역으로</Button></Link></div></div></MyPageLayout>;
+  if (isLoading) return <MyPageLayout title="注文詳細"><div className="animate-pulse space-y-4"><div className="h-8 bg-secondary rounded w-1/3" /><div className="h-40 bg-secondary rounded" /></div></MyPageLayout>;
+  if (error || !order) return <MyPageLayout title="注文詳細"><div className="text-center py-20"><div className="flex flex-col items-center gap-4"><AlertCircle className="w-12 h-12 text-muted-foreground" /><h2 className="text-xl font-bold">注文が見つかりません</h2><p className="text-muted-foreground">お探しの注文情報が存在しないか、アクセス権限がありません。</p><Link href="/mypage/orders"><Button variant="outline"><ArrowLeft className="w-4 h-4 mr-2" />注文履歴へ</Button></Link></div></div></MyPageLayout>;
 
   // 배송비 표시 텍스트
   const shippingFeeText = (() => {
     if (order.shippingFee === 0) {
       if (shippingPolicy) {
         if (shippingPolicy.freeShipping) {
-          return "무료 (국제배송)";
+          return "無料 (国際配送)";
         }
         if (shippingPolicy.freeShippingThreshold > 0 && order.totalAmount >= shippingPolicy.freeShippingThreshold) {
-          return `무료 (${formatPrice(shippingPolicy.freeShippingThreshold)} 이상 구매)`;
+          return `無料 (${formatPrice(shippingPolicy.freeShippingThreshold)} 以上のご購入)`;
         }
       }
-      return "무료 (국제배송)";
+      return "無料 (国際配送)";
     }
     return formatPrice(order.shippingFee);
   })();
 
   return (
-    <MyPageLayout title="주문 상세">
+    <MyPageLayout title="注文詳細">
         <div className="flex items-center justify-between mb-6 flex-wrap gap-2">
-          <p className="text-sm text-muted-foreground">주문번호: {formatOrderNumber(order.orderNumber)} · {formatDateTime(order.createdAt)}</p>
+          <p className="text-sm text-muted-foreground">注文番号: {formatOrderNumber(order.orderNumber)} · {formatDateTime(order.createdAt)}</p>
           <div className="flex items-center gap-2">
             {order.items.some((i: any) => i.cancelledAt) && order.items.some((i: any) => !i.cancelledAt) && (
               <span className={`text-sm px-3 py-1.5 rounded-full font-medium ${getOrderStatusColor("partial_cancel")}`}>{getOrderStatusLabel("partial_cancel")}</span>
@@ -369,10 +369,10 @@ export default function OrderDetail() {
                 <Shield className="w-4 h-4 text-rose-600" />
               </div>
               <div className="flex-1">
-                <h4 className="text-sm font-semibold text-rose-800 dark:text-rose-200">통관검사대기</h4>
+                <h4 className="text-sm font-semibold text-rose-800 dark:text-rose-200">通関検査待ち</h4>
                 <p className="text-xs text-rose-600 dark:text-rose-400 mt-1 leading-relaxed">
-                  고객님의 주문상품이 세관의 통관검사 대상으로 선정되었습니다.<br />
-                  자세한 내용은 공지사항의 [통관검사대기 안내] 글을 참고 부탁드립니다.
+                  お客様のご注文商品が、税関の通関検査の対象となりました。<br />
+                  詳細は、お知らせの[通関検査待ちのご案内]をご確認ください。
                 </p>
                 <Link href="/bbs/board.php?bo_table=notice">
                   <Button
@@ -380,7 +380,7 @@ export default function OrderDetail() {
                     variant="outline"
                     className="mt-3 text-xs h-7 border-rose-300 text-rose-700 hover:bg-rose-100 dark:border-rose-700 dark:text-rose-300 dark:hover:bg-rose-900/30"
                   >
-                    공지사항 바로가기
+                    お知らせへ
                   </Button>
                 </Link>
               </div>
@@ -391,7 +391,7 @@ export default function OrderDetail() {
         {/* Items */}
         <div className="bg-card border rounded-xl p-6 mb-6">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="font-semibold">주문 상품</h3>
+            <h3 className="font-semibold">注文商品</h3>
             {["pending", "paid"].includes(order.status) && order.items.some((i: any) => !i.cancelledAt) && (
               <Button
                 size="sm"
@@ -400,7 +400,7 @@ export default function OrderDetail() {
                 onClick={() => { setCancelItemIds([]); setCancelReason(""); setShowCancelDialog(true); }}
               >
                 <XCircle className="w-3.5 h-3.5" />
-                상품 취소 신청
+                商品キャンセルの申請
               </Button>
             )}
           </div>
@@ -453,7 +453,7 @@ export default function OrderDetail() {
                 <Link key={item.id} href={productHref(item.product?.slug)}>
                   <Button size="sm" variant="outline" className="text-xs h-8 gap-1.5 hover:bg-primary/5 hover:border-primary/30">
                     <ShoppingBag className="w-3.5 h-3.5" />
-                    {order.items.length > 1 ? `${(item.productName as string).slice(0, 12)}${(item.productName as string).length > 12 ? '...' : ''} 다시 구매` : '같은 상품 다시 구매'}
+                    {order.items.length > 1 ? `${(item.productName as string).slice(0, 12)}${(item.productName as string).length > 12 ? '...' : ''} をもう一度購入` : '同じ商品をもう一度購入'}
                   </Button>
                 </Link>
               ))}
@@ -463,21 +463,21 @@ export default function OrderDetail() {
 
         {/* Shipping */}
         <div className="bg-card border rounded-xl p-6 mb-6">
-          <h3 className="font-semibold mb-4">배송 정보</h3>
+          <h3 className="font-semibold mb-4">配送情報</h3>
           <div className="space-y-2 text-sm">
-            <div className="flex"><span className="text-muted-foreground w-20">수령인</span><span>{order.recipientName}{(order as any).recipientNameEn ? ` (${(order as any).recipientNameEn})` : ""}</span></div>
-            <div className="flex"><span className="text-muted-foreground w-20">연락처</span><span>{order.recipientPhone}</span></div>
-            <div className="flex"><span className="text-muted-foreground w-20">주소</span><span>[{order.zipCode}] {order.address1} {order.address2}</span></div>
+            <div className="flex"><span className="text-muted-foreground w-20">受取人</span><span>{order.recipientName}{(order as any).recipientNameEn ? ` (${(order as any).recipientNameEn})` : ""}</span></div>
+            <div className="flex"><span className="text-muted-foreground w-20">連絡先</span><span>{order.recipientPhone}</span></div>
+            <div className="flex"><span className="text-muted-foreground w-20">住所</span><span>[{order.zipCode}] {order.address1} {order.address2}</span></div>
             {(order as any).addressEn1 && (
-              <div className="flex"><span className="text-muted-foreground w-20">영문주소</span><span className="text-blue-600 dark:text-blue-400 text-xs">{(order as any).addressEn2 ? `${(order as any).addressEn2}, ${(order as any).addressEn1}` : (order as any).addressEn1}</span></div>
+              <div className="flex"><span className="text-muted-foreground w-20">英語住所</span><span className="text-blue-600 dark:text-blue-400 text-xs">{(order as any).addressEn2 ? `${(order as any).addressEn2}, ${(order as any).addressEn1}` : (order as any).addressEn1}</span></div>
             )}
-            {order.memo && <div className="flex"><span className="text-muted-foreground w-20">메모</span><span>{order.memo}</span></div>}
+            {order.memo && <div className="flex"><span className="text-muted-foreground w-20">メモ</span><span>{order.memo}</span></div>}
           </div>
         </div>
 
         {/* Payment */}
         <div className="bg-card border rounded-xl p-6 mb-6">
-          <h3 className="font-semibold mb-4">결제 정보</h3>
+          <h3 className="font-semibold mb-4">お支払い情報</h3>
           {(() => {
             const couponDiscount = (order as any).couponDiscount ?? 0;
             const discountAmount = (order as any).discountAmount ?? 0;
@@ -487,12 +487,12 @@ export default function OrderDetail() {
             <div className="space-y-2 text-sm">
               {hasCancelledItems && (
                 <p className="text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded px-2 py-1">
-                  일부 취소 후 잔여 금액 기준입니다
+                  一部キャンセル後の残額基準です
                 </p>
               )}
               {/* 상품금액 (active items only after cancellation) */}
               <div className="flex justify-between">
-                <span className="text-muted-foreground">상품금액</span>
+                <span className="text-muted-foreground">商品金額</span>
                 <span className="price-text">{formatPrice(order.totalAmount)}</span>
               </div>
               {/* 등급 할인 (grade portion only) */}
@@ -500,7 +500,7 @@ export default function OrderDetail() {
                 <div className="flex justify-between">
                   <span className="text-muted-foreground flex items-center gap-1">
                     <Gift className="w-3 h-3" />
-                    등급 할인
+                    会員ランク割引
                   </span>
                   <span className="text-emerald-600 price-text">-{formatPrice(gradeDiscount)}</span>
                 </div>
@@ -510,7 +510,7 @@ export default function OrderDetail() {
                 <div className="flex justify-between">
                   <span className="text-muted-foreground flex items-center gap-1 flex-wrap">
                     <Gift className="w-3 h-3" />
-                    쿠폰 할인
+                    クーポン割引
                     {(order as any).couponName && (
                       <span className="text-xs px-1.5 py-0.5 bg-rose-50 text-rose-600 border border-rose-200 rounded font-medium">{(order as any).couponName}</span>
                     )}
@@ -520,19 +520,19 @@ export default function OrderDetail() {
               )}
               {/* 배송비 */}
               <div className="flex justify-between">
-                <span className="text-muted-foreground">배송비</span>
+                <span className="text-muted-foreground">送料</span>
                 <span className={`price-text ${order.shippingFee === 0 ? "text-emerald-600" : ""}`}>{shippingFeeText}</span>
               </div>
               {/* 포인트 사용 */}
               {order.pointsUsed > 0 && (
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">포인트 사용</span>
+                  <span className="text-muted-foreground">ポイント利用</span>
                   <span className="text-destructive price-text">-{formatPrice(order.pointsUsed)}</span>
                 </div>
               )}
               <Separator />
               <div className="flex justify-between font-bold text-base">
-                <span>총 결제금액</span>
+                <span>お支払い合計</span>
                 <span className="text-primary price-text">
                   {formatPrice(order.totalAmount - discountAmount + order.shippingFee - order.pointsUsed)}
                 </span>
@@ -540,7 +540,7 @@ export default function OrderDetail() {
             </div>
             );
           })()}
-            {order.pointsEarned > 0 && <p className="text-xs text-muted-foreground">적립 예정 포인트: {order.pointsEarned.toLocaleString()}P</p>}
+            {order.pointsEarned > 0 && <p className="text-xs text-muted-foreground">付与予定ポイント: {order.pointsEarned.toLocaleString()}P</p>}
         </div>
 
         {/* 취소/환불 정보 - 결제 완료 후 취소된 경우 (미입금 상태 제외) */}
@@ -563,33 +563,33 @@ export default function OrderDetail() {
             <div className="bg-pink-50 dark:bg-pink-950/20 border border-pink-200 dark:border-pink-800/40 rounded-xl p-5 mb-6">
               <div className="flex items-center gap-2 font-medium mb-3">
                 <XCircle className="w-4 h-4 text-rose-500" />
-                <span className="text-rose-700 dark:text-rose-400 font-semibold">취소 / 환불 정보</span>
+                <span className="text-rose-700 dark:text-rose-400 font-semibold">キャンセル / 返金情報</span>
               </div>
               <div className="space-y-1.5 text-sm">
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">취소 상품 ({cancelledItems.length}개)</span>
+                  <span className="text-muted-foreground">キャンセル商品 ({cancelledItems.length}点)</span>
                   <span className="font-medium">{formatPrice(cancelledTotal)}</span>
                 </div>
                 {couponReduction > 0 && (
                   <div className="flex justify-between">
-                    <span className="text-muted-foreground">쿠폰 할인 차감</span>
+                    <span className="text-muted-foreground">クーポン割引の差引</span>
                     <span className="text-rose-500">-{formatPrice(couponReduction)}</span>
                   </div>
                 )}
                 {gradeReduction > 0 && (
                   <div className="flex justify-between">
-                    <span className="text-muted-foreground">등급 할인 차감</span>
+                    <span className="text-muted-foreground">会員ランク割引の差引</span>
                     <span className="text-rose-500">-{formatPrice(gradeReduction)}</span>
                   </div>
                 )}
                 <div className="flex justify-between font-bold border-t border-pink-200 dark:border-pink-800/40 pt-2 mt-1">
-                  <span className="text-rose-700 dark:text-rose-400">환불 금액</span>
+                  <span className="text-rose-700 dark:text-rose-400">返金額</span>
                   <span className="text-rose-600 text-base">{formatPrice(refundAmount)}</span>
                 </div>
                 {cancelledItems.some((i: any) => i.refundedAt) && (
                   <div className="mt-2 flex items-center gap-1.5 text-sm text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/20 border border-emerald-200 dark:border-emerald-800/40 rounded-lg px-3 py-2">
                     <CheckCircle2 className="w-4 h-4 flex-shrink-0" />
-                    <span className="font-semibold">환불 완료</span>
+                    <span className="font-semibold">返金完了</span>
                     <span className="text-xs text-muted-foreground ml-1">{new Date(cancelledItems.find((i: any) => i.refundedAt)?.refundedAt).toLocaleString("ko-KR", { year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit", hour12: false })}</span>
                   </div>
                 )}
@@ -605,48 +605,48 @@ export default function OrderDetail() {
           }`}>
             <h3 className="font-semibold mb-4 flex items-center gap-2">
               {payment.status === "pending" ? (
-                <><Clock className="w-4 h-4 text-amber-600" /><span className="text-amber-900">입금 대기 중</span></>
+                <><Clock className="w-4 h-4 text-amber-600" /><span className="text-amber-900">入金待ち</span></>
               ) : (
-                <><CheckCircle2 className="w-4 h-4 text-emerald-600" /><span className="text-emerald-900">입금 확인 완료</span></>
+                <><CheckCircle2 className="w-4 h-4 text-emerald-600" /><span className="text-emerald-900">入金確認完了</span></>
               )}
             </h3>
             {payment.status === "pending" ? (
               <div className="space-y-3">
                 <div className="bg-white border border-amber-300 rounded-lg p-4">
-                  <p className="text-sm font-medium text-amber-900 mb-2">입금 계좌 정보</p>
+                  <p className="text-sm font-medium text-amber-900 mb-2">振込先口座情報</p>
                   <div className="space-y-1.5 text-sm">
-                    <div className="flex justify-between"><span className="text-muted-foreground">은행명</span><span className="font-medium">{payment.bankAccount?.bankName}</span></div>
-                    <div className="flex justify-between"><span className="text-muted-foreground">계좌번호</span><span className="font-mono font-medium">{payment.bankAccount?.accountNumber}</span></div>
-                    <div className="flex justify-between"><span className="text-muted-foreground">예금주</span><span className="font-medium">{payment.bankAccount?.accountHolder}</span></div>
+                    <div className="flex justify-between"><span className="text-muted-foreground">銀行名</span><span className="font-medium">{payment.bankAccount?.bankName}</span></div>
+                    <div className="flex justify-between"><span className="text-muted-foreground">口座番号</span><span className="font-mono font-medium">{payment.bankAccount?.accountNumber}</span></div>
+                    <div className="flex justify-between"><span className="text-muted-foreground">口座名義</span><span className="font-medium">{payment.bankAccount?.accountHolder}</span></div>
                     <Separator className="my-2" />
-                    <div className="flex justify-between"><span className="text-muted-foreground">입금금액</span><span className="font-bold text-amber-900 price-text">{formatPrice(payment.depositAmount ?? 0)}</span></div>
-                    {payment.depositorName && <div className="flex justify-between"><span className="text-muted-foreground">입금자명</span><span className="font-medium">{payment.depositorName}</span></div>}
+                    <div className="flex justify-between"><span className="text-muted-foreground">振込金額</span><span className="font-bold text-amber-900 price-text">{formatPrice(payment.depositAmount ?? 0)}</span></div>
+                    {payment.depositorName && <div className="flex justify-between"><span className="text-muted-foreground">振込名義</span><span className="font-medium">{payment.depositorName}</span></div>}
                   </div>
                 </div>
                 {payment.expiresAt && (
                   <div className="bg-amber-100 border border-amber-300 rounded-lg p-3">
                     <p className="text-xs text-amber-900 leading-relaxed">
-                      ⚠️ <strong>{new Date(payment.expiresAt).toLocaleString("ko-KR")}</strong>까지 입금하지 않으시면 주문이 자동 취소됩니다.
+                      ⚠️ <strong>{new Date(payment.expiresAt).toLocaleString("ja-JP")}</strong>までにご入金がない場合、ご注文は自動キャンセルされます。
                     </p>
                   </div>
                 )}
                 <div className="bg-amber-50 border border-amber-300 rounded-lg p-3 space-y-2">
                   <p className="text-xs text-amber-900 leading-relaxed">
-                    <strong className="text-amber-800">입금 확인은 관리자가 수동으로 처리하고 있으며, 1일 2회 확인이 진행됩니다.</strong>
+                    <strong className="text-amber-800">入金確認は管理者が手動で処理しており、1日2回確認を行っています。</strong>
                   </p>
                   <p className="text-xs text-amber-900 leading-relaxed">
-                    <strong className="text-amber-800">입금 후 24시간 이내에는 확인까지 시간이 소요될 수 있으며, 주말 및 공휴일에는 처리가 지연될 수 있습니다.</strong>
+                    <strong className="text-amber-800">ご入金後24時間以内は確認までお時間をいただく場合があり、土日祝日は処理が遅れることがあります。</strong>
                   </p>
                   <p className="text-xs text-amber-900 leading-relaxed">
-                    <strong className="text-amber-800">24시간이 지나도 입금 확인이 되지 않을 경우 고객센터로 문의해 주시기 바랍니다.</strong>
+                    <strong className="text-amber-800">24時間経過しても入金が確認されない場合は、カスタマーセンターへお問い合わせください。</strong>
                   </p>
                 </div>
               </div>
             ) : (
               <div className="bg-white border border-emerald-300 rounded-lg p-4">
-                <p className="text-sm text-emerald-900 mb-2">입금이 확인되었습니다. 배송 준비 중입니다.</p>
+                <p className="text-sm text-emerald-900 mb-2">ご入金を確認しました。配送準備中です。</p>
                 {payment.confirmedAt && (
-                  <p className="text-xs text-muted-foreground">확인 시간: {formatDateTime(payment.confirmedAt)}</p>
+                  <p className="text-xs text-muted-foreground">確認日時: {formatDateTime(payment.confirmedAt)}</p>
                 )}
               </div>
             )}
@@ -659,7 +659,7 @@ export default function OrderDetail() {
           <DialogHeader className="flex-shrink-0">
             <DialogTitle className="flex items-center gap-2 text-rose-600">
               <XCircle className="w-5 h-5" />
-              상품 취소 신청
+              商品キャンセルの申請
             </DialogTitle>
           </DialogHeader>
           {(() => {
@@ -714,16 +714,16 @@ export default function OrderDetail() {
                         <div className="flex-1 min-w-0">
                           <p className="text-sm font-medium leading-snug truncate">{item.productName}</p>
                           <div className="flex items-center gap-2 mt-0.5 flex-wrap">
-                            <span className="text-xs text-muted-foreground">수량 {item.quantity}개 · {formatPrice(itemTotal)}</span>
+                            <span className="text-xs text-muted-foreground">数量 {item.quantity}個 · {formatPrice(itemTotal)}</span>
                             {itemCoupon > 0 && (
-                              <span className="text-xs text-rose-600 bg-rose-100 dark:bg-rose-950/30 px-1.5 py-0.5 rounded font-medium">쿠폰 -{formatPrice(itemCoupon)}</span>
+                              <span className="text-xs text-rose-600 bg-rose-100 dark:bg-rose-950/30 px-1.5 py-0.5 rounded font-medium">クーポン -{formatPrice(itemCoupon)}</span>
                             )}
                             {itemGrade > 0 && (
-                              <span className="text-xs text-orange-600 bg-orange-50 dark:bg-orange-950/30 px-1.5 py-0.5 rounded font-medium">할인 -{formatPrice(itemGrade)}</span>
+                              <span className="text-xs text-orange-600 bg-orange-50 dark:bg-orange-950/30 px-1.5 py-0.5 rounded font-medium">割引 -{formatPrice(itemGrade)}</span>
                             )}
                           </div>
                           {!isPendingPayment && (itemCoupon > 0 || itemGrade > 0) && (
-                            <p className="text-xs font-semibold text-emerald-700 dark:text-emerald-400 mt-0.5">환불 예상: {formatPrice(itemRefund)}</p>
+                            <p className="text-xs font-semibold text-emerald-700 dark:text-emerald-400 mt-0.5">返金予定: {formatPrice(itemRefund)}</p>
                           )}
                         </div>
                       </label>
@@ -733,28 +733,28 @@ export default function OrderDetail() {
 
                 {cancelItemIds.length > 0 && !isPendingPayment && (
                   <div className="rounded-lg bg-muted/50 border p-3 text-sm space-y-1.5">
-                    <p className="font-semibold text-sm mb-1">환불 예상 내역</p>
+                    <p className="font-semibold text-sm mb-1">返金予定の内訳</p>
                     <div className="flex justify-between text-muted-foreground">
-                      <span>취소 상품 합계 ({cancelItemIds.length}개)</span>
+                      <span>キャンセル商品合計 ({cancelItemIds.length}点)</span>
                       <span>{formatPrice(selectedTotal)}</span>
                     </div>
                     {couponReduction > 0 && (
                       <div className="flex justify-between text-rose-600">
                         <span className="flex items-center gap-1">
-                          <span className="text-xs px-1 py-0.5 bg-rose-100 dark:bg-rose-950/30 text-rose-600 rounded font-semibold">쿠폰</span>
-                          차감
+                          <span className="text-xs px-1 py-0.5 bg-rose-100 dark:bg-rose-950/30 text-rose-600 rounded font-semibold">クーポン</span>
+                          差引
                         </span>
                         <span>-{formatPrice(couponReduction)}</span>
                       </div>
                     )}
                     {gradeReduction > 0 && (
                       <div className="flex justify-between text-orange-600">
-                        <span>상품 할인 차감</span>
+                        <span>商品割引の差引</span>
                         <span>-{formatPrice(gradeReduction)}</span>
                       </div>
                     )}
                     <div className="flex justify-between font-bold border-t pt-1.5">
-                      <span>환불 금액</span>
+                      <span>返金額</span>
                       <span className="text-emerald-700 dark:text-emerald-400">{formatPrice(refundAmount)}</span>
                     </div>
                   </div>
@@ -763,10 +763,10 @@ export default function OrderDetail() {
                 {/* 무통장송금 환불 계좌 입력 (입금 확인된 경우만) */}
                 {isBankTransfer && !isPendingPayment && (
                   <div className="rounded-lg border border-amber-200 bg-amber-50 dark:bg-amber-950/20 dark:border-amber-800/40 p-3 space-y-2">
-                    <p className="text-sm font-semibold text-amber-800 dark:text-amber-300">환불 받을 계좌 정보</p>
-                    <p className="text-xs text-amber-700 dark:text-amber-400">무통장송금 주문 취소 시 환불 계좌가 필요합니다.</p>
+                    <p className="text-sm font-semibold text-amber-800 dark:text-amber-300">返金先口座情報</p>
+                    <p className="text-xs text-amber-700 dark:text-amber-400">銀行振込でのご注文をキャンセルする場合、返金先口座が必要です。</p>
                     <div className="space-y-1.5">
-                      <label className="text-xs font-medium text-muted-foreground">예금주 (본인 명의만 가능)</label>
+                      <label className="text-xs font-medium text-muted-foreground">口座名義 (ご本人名義のみ)</label>
                       <Input
                         className="h-9 text-sm bg-muted/50"
                         value={user?.name ?? ""}
@@ -775,19 +775,19 @@ export default function OrderDetail() {
                       />
                     </div>
                     <div className="space-y-1.5">
-                      <label className="text-xs font-medium text-muted-foreground">은행명 <span className="text-rose-500">*</span></label>
+                      <label className="text-xs font-medium text-muted-foreground">銀行名 <span className="text-rose-500">*</span></label>
                       <Input
                         className="h-9 text-sm"
-                        placeholder="예: 신한은행, 국민은행..."
+                        placeholder="例: みずほ銀行、三菱UFJ銀行..."
                         value={refundBankName}
                         onChange={e => setRefundBankName(e.target.value)}
                       />
                     </div>
                     <div className="space-y-1.5">
-                      <label className="text-xs font-medium text-muted-foreground">계좌번호 <span className="text-rose-500">*</span></label>
+                      <label className="text-xs font-medium text-muted-foreground">口座番号 <span className="text-rose-500">*</span></label>
                       <Input
                         className="h-9 text-sm"
-                        placeholder="숫자만 입력 (예: 110-123-456789)"
+                        placeholder="数字のみ入力 (例: 1234567)"
                         value={refundAccountNumber}
                         onChange={e => setRefundAccountNumber(e.target.value)}
                       />
@@ -796,17 +796,17 @@ export default function OrderDetail() {
                 )}
 
                 <div className="space-y-1.5">
-                  <label className="text-sm font-medium">취소 사유 (선택)</label>
+                  <label className="text-sm font-medium">キャンセル理由 (任意)</label>
                   <Input
                     className="h-9 text-sm"
-                    placeholder="단순 변심, 주문 실수 등..."
+                    placeholder="気が変わった、注文ミスなど..."
                     value={cancelReason}
                     onChange={e => setCancelReason(e.target.value)}
                   />
                 </div>
                 </div>{/* end scrollable area */}
                 <DialogFooter className="gap-2 mt-2 flex-shrink-0">
-                  <Button variant="outline" size="sm" onClick={() => setShowCancelDialog(false)} disabled={cancelItems.isPending}>닫기</Button>
+                  <Button variant="outline" size="sm" onClick={() => setShowCancelDialog(false)} disabled={cancelItems.isPending}>閉じる</Button>
                   <Button
                     size="sm"
                     className="bg-rose-600 hover:bg-rose-700 text-white"
@@ -818,7 +818,7 @@ export default function OrderDetail() {
                       refundBankInfo: isBankTransfer ? { bankName: refundBankName.trim(), accountNumber: refundAccountNumber.trim(), accountHolder: user?.name ?? "" } : undefined,
                     })}
                   >
-                    {cancelItems.isPending ? "처리 중..." : isPendingPayment ? `${cancelItemIds.length}개 취소 신청` : `${cancelItemIds.length}개 취소 (환불 ${formatPrice(refundAmount)})`}
+                    {cancelItems.isPending ? "処理中..." : isPendingPayment ? `${cancelItemIds.length}点のキャンセルを申請` : `${cancelItemIds.length}点をキャンセル (返金 ${formatPrice(refundAmount)})`}
                   </Button>
                 </DialogFooter>
               </>
@@ -842,9 +842,9 @@ export default function OrderDetail() {
               <div>
                 <div className="flex items-center gap-2">
                   <Truck className="w-4 h-4 text-primary" />
-                  <span className="font-bold text-base">배송 타임라인</span>
+                  <span className="font-bold text-base">配送タイムライン</span>
                   {trackingModalShipment.history && (
-                    <span className="text-sm text-muted-foreground">{trackingModalShipment.history.length}건</span>
+                    <span className="text-sm text-muted-foreground">{trackingModalShipment.history.length}件</span>
                   )}
                 </div>
                 <p className="text-sm text-muted-foreground mt-0.5">{trackingModalShipment.trackingNumber}</p>
@@ -859,7 +859,7 @@ export default function OrderDetail() {
 
             {/* 추적번호 박스 */}
             <div className="mx-4 mt-4 border rounded-xl p-4 flex-shrink-0">
-              <p className="text-[11px] text-muted-foreground mb-0.5">운송장 번호</p>
+              <p className="text-[11px] text-muted-foreground mb-0.5">追跡番号</p>
               <div className="flex items-center justify-between gap-2">
                 <p className="font-bold text-base font-mono">{trackingModalShipment.trackingNumber}</p>
                 <div className="flex items-center gap-1.5 flex-shrink-0">
@@ -867,9 +867,9 @@ export default function OrderDetail() {
                     size="sm"
                     variant="outline"
                     className="h-7 text-xs gap-1"
-                    onClick={() => { navigator.clipboard.writeText(trackingModalShipment.trackingNumber ?? ""); toast.success("복사됨"); }}
+                    onClick={() => { navigator.clipboard.writeText(trackingModalShipment.trackingNumber ?? ""); toast.success("コピーしました"); }}
                   >
-                    <Copy className="w-3 h-3" />복사
+                    <Copy className="w-3 h-3" />コピー
                   </Button>
                   <Button size="sm" className="h-7 text-xs gap-1 bg-blue-600 hover:bg-blue-700 text-white" asChild>
                     <a href={`https://t.17track.net/en#nums=${trackingModalShipment.trackingNumber}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1">
@@ -885,8 +885,8 @@ export default function OrderDetail() {
               {!trackingModalShipment.history || trackingModalShipment.history.length === 0 ? (
                 <div className="text-center py-8 text-muted-foreground">
                   <Truck className="w-10 h-10 mx-auto mb-2 opacity-30" />
-                  <p className="text-sm">아직 배송 이력이 없습니다</p>
-                  <p className="text-xs mt-1">배송 정보 새로고침 후 다시 확인해주세요</p>
+                  <p className="text-sm">まだ配送履歴がありません</p>
+                  <p className="text-xs mt-1">配送情報を再読み込みしてから、もう一度ご確認ください</p>
                 </div>
               ) : (
                 <div className="space-y-0">
@@ -911,7 +911,7 @@ export default function OrderDetail() {
                               {displayDesc}
                             </span>
                             {isFirst && (
-                              <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-semibold border ${isDelivered ? "bg-blue-50 text-blue-600 border-blue-200" : "bg-primary/10 text-primary border-primary/20"}`}>현재</span>
+                              <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-semibold border ${isDelivered ? "bg-blue-50 text-blue-600 border-blue-200" : "bg-primary/10 text-primary border-primary/20"}`}>現在</span>
                             )}
                           </div>
                           {entry.location && (
@@ -930,7 +930,7 @@ export default function OrderDetail() {
 
             {/* 푸터 */}
             <div className="flex items-center justify-end px-5 py-3 border-t flex-shrink-0">
-              <Button size="sm" variant="outline" onClick={() => setTrackingModalShipment(null)} className="h-7 text-xs">닫기</Button>
+              <Button size="sm" variant="outline" onClick={() => setTrackingModalShipment(null)} className="h-7 text-xs">閉じる</Button>
             </div>
           </div>
         </div>

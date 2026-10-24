@@ -28,7 +28,7 @@ export const restockAlertRouter = router({
       );
       
       if (existing.length > 0) {
-        return { success: false, message: "이미 알림 신청한 상품입니다" };
+        return { success: false, message: "すでに通知を申し込み済みの商品です" };
       }
       
       await db.insert(restockAlerts).values({
@@ -38,7 +38,7 @@ export const restockAlertRouter = router({
         optionValue: input.optionValue,
       });
       
-      return { success: true, message: "재입고 알림이 신청되었습니다" };
+      return { success: true, message: "再入荷通知を受け付けました" };
     }),
   
   // 내 재입고 알림 목록
@@ -135,7 +135,7 @@ export const restockAlertRouter = router({
         await createNotification(
           alert.userId,
           "system",
-          `[재입고] ${product[0].name}${alert.optionValue ? ` (${alert.optionValue})` : ""} 상품이 재입고되었습니다!`,
+          `[再入荷] ${product[0].name}${alert.optionValue ? ` (${alert.optionValue})` : ""} が再入荷しました！`,
           "/product/" + product[0].slug
         );
         

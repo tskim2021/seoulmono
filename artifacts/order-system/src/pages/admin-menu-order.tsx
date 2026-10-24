@@ -35,10 +35,10 @@ export default function AdminMenuOrder() {
       }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["menu-order"] });
-      toast({ title: "저장 완룋", description: "메뉴 순서가 변경되었습니다." });
+      toast({ title: "保存完了", description: "メニューの順序を変更しました。" });
     },
     onError: () => {
-      toast({ title: "오류", description: "저장 실패", variant: "destructive" });
+      toast({ title: "エラー", description: "保存に失敗しました", variant: "destructive" });
     },
   });
 
@@ -58,17 +58,17 @@ export default function AdminMenuOrder() {
 
   return (
     <div className="max-w-3xl mx-auto p-6">
-      <h1 className="text-xl font-bold mb-4">상단 메뉴 순서 설정</h1>
+      <h1 className="text-xl font-bold mb-4">上部メニューの順序設定</h1>
       <Card className="p-4">
         {isLoading ? (
           <div className="flex items-center gap-2 text-gray-500">
             <Loader2 className="animate-spin" size={18} />
-            불러오는 중...
+            読み込み中...
           </div>
         ) : (
           <>
             <p className="text-sm text-gray-500 mb-4">
-              ↑↓ 버튼으로 메뉴 순서를 바꾸고 저장해 주세요.
+              ↑↓ボタンでメニューの順序を変更して保存してください。
             </p>
             <div className="space-y-2">
               {items.map((item, i) => (
@@ -110,7 +110,7 @@ export default function AdminMenuOrder() {
                 ) : (
                   <Save size={16} className="mr-2" />
                 )}
-                저장
+                保存
               </Button>
             </div>
           </>

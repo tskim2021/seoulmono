@@ -155,8 +155,8 @@ export const productRouter = router({
             await db.createNotification(
               alert.userId,
               "system",
-              "재입고 알림",
-              `신청하신 상품 "${prevProduct.name}"이 재입고되었습니다. 지금 바로 구매하세요!`,
+              "再入荷のお知らせ",
+              `お申し込みの商品「${prevProduct.name}」が再入荷しました。今すぐご購入いただけます！`,
               `/products/${prevProduct.slug}`
             );
           } catch (e) {
@@ -255,6 +255,6 @@ export const productRouter = router({
   }),
   topBannerText: publicProcedure.query(async () => {
     const val = await db.getSetting("topBannerText");
-    return { text: val ?? "🌿 인도 직배송 해외직구 전문 쇼핑몰 · 탈모학교" };
+    return { text: val ?? "🌿 インド直送・海外個人輸入専門ショップ · ソウルモノ" };
   }),
 });

@@ -8,7 +8,7 @@ import { toast } from "sonner";
 import { useSEO } from "@/hooks/useSEO";
 
 export default function Login() {
-  useSEO({ title: "로그인" });
+  useSEO({ title: "ログイン" });
 
   const [, setLocation] = useLocation();
   const [isRegister, setIsRegister] = useState(false);
@@ -45,7 +45,7 @@ export default function Login() {
       if (!val || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val)) return;
       try {
         const res = await utils.localAuth.checkAvailability.fetch({ email: val });
-        if (res.emailTaken) setEmailError("이미 가입된 이메일입니다.");
+        if (res.emailTaken) setEmailError("すでに登録されているメールアドレスです。");
       } catch {}
     }, 500);
   };
@@ -59,14 +59,14 @@ export default function Login() {
       if (!val || val.length < 9) return;
       try {
         const res = await utils.localAuth.checkAvailability.fetch({ phone: val });
-        if (res.phoneTaken) setPhoneError("이미 가입된 연락처입니다.");
+        if (res.phoneTaken) setPhoneError("すでに登録されている連絡先です。");
       } catch {}
     }, 500);
   };
 
   const loginMutation = trpc.localAuth.login.useMutation({
     onSuccess: async () => {
-      toast.success("로그인되었습니다.");
+      toast.success("ログインしました。");
       await utils.auth.me.invalidate();
       await utils.auth.me.refetch();
       setLocation("/");
@@ -78,14 +78,14 @@ export default function Login() {
 
   const registerMutation = trpc.localAuth.register.useMutation({
     onSuccess: async () => {
-      toast.success("회원가입이 완료되었습니다.");
+      toast.success("会員登録が完了しました。");
       await utils.auth.me.invalidate();
       await utils.auth.me.refetch();
       setLocation("/");
     },
     onError: (err) => {
-      if (err.message.includes("이메일")) setEmailError(err.message);
-      else if (err.message.includes("연락처")) setPhoneError(err.message);
+      if (err.message.includes("이메일") || err.message.includes("メール")) setEmailError(err.message);
+      else if (err.message.includes("연락처") || err.message.includes("連絡先")) setPhoneError(err.message);
       else toast.error(err.message);
     },
   });
@@ -93,9 +93,9 @@ export default function Login() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (isRegister) {
-      if (password !== confirmPassword) { toast.error("비밀번호가 일치하지 않습니다."); return; }
-      if (password.length < 6) { toast.error("비밀번호는 6자 이상이어야 합니다."); return; }
-      if (!phone.trim()) { toast.error("연락처를 입력해주세요."); return; }
+      if (password !== confirmPassword) { toast.error("パスワードが一致しません。"); return; }
+      if (password.length < 6) { toast.error("パスワードは6文字以上で入力してください。"); return; }
+      if (!phone.trim()) { toast.error("連絡先を入力してください。"); return; }
       if (emailError || phoneError) return;
       registerMutation.mutate({ email, password, name, phone });
     } else {
@@ -117,10 +117,10 @@ export default function Login() {
               </div>
             </div>
             <CardTitle className="text-2xl">
-              {isRegister ? "회원가입" : "로그인"}
+              {isRegister ? "会員登録" : "ログイン"}
             </CardTitle>
             <p className="text-sm text-muted-foreground mt-1">
-              {isRegister ? "새 계정을 만들어 보세요" : "관리자 계정으로 로그인하세요"}
+              {isRegister ? "新しいアカウントを作成しましょう" : "管理者アカウントでログインしてください"}
             </p>
           </CardHeader>
           <CardContent>
@@ -128,10 +128,10 @@ export default function Login() {
               {isRegister && (
                 <>
                   <div>
-                    <label className="block text-sm font-medium mb-1.5">이름</label>
+                    <label className="block text-sm font-medium mb-1.5">お名前</label>
                     <Input
                       type="text"
-                      placeholder="이름을 입력하세요"
+                      placeholder="お名前を入力してください"
                       value={name}
                       onChange={(e) => setName(e.target.value)}
                       required
@@ -139,7 +139,7 @@ export default function Login() {
                   </div>
                   <div>
                     <label className="block text-sm font-medium mb-1.5">
-                      연락처 <span className="text-destructive">*</span>
+                      連絡先 <span className="text-destructive">*</span>
                     </label>
                     <Input
                       type="tel"
@@ -156,13 +156,13 @@ export default function Login() {
                 </>
               )}
               <div>
-                <label className="block text-sm font-medium mb-1.5">아이디 (또는 이메일)</label>
+                <label className="block text-sm font-medium mb-1.5">ID (またはメールアドレス)</label>
                 {/* seoulmono-admin: 그누보드 아이디(admin)로도 로그인하므로
                     로그인 시에는 type="email" 을 쓰면 브라우저 검증에 막힌다. */}
                 <Input
                   type={isRegister ? "email" : "text"}
                   autoComplete="username"
-                  placeholder={isRegister ? "아이디로 사용할 이메일을 입력하세요" : "아이디 또는 이메일을 입력하세요"}
+                  placeholder={isRegister ? "IDとして使用するメールアドレスを入力してください" : "IDまたはメールアドレスを入力してください"}
                   value={email}
                   onChange={(e) => handleEmailChange(e.target.value)}
                   className={emailError ? "border-destructive focus-visible:ring-destructive" : ""}
@@ -173,10 +173,10 @@ export default function Login() {
                 )}
               </div>
               <div>
-                <label className="block text-sm font-medium mb-1.5">비밀번호</label>
+                <label className="block text-sm font-medium mb-1.5">パスワード</label>
                 <Input
                   type="password"
-                  placeholder="비밀번호를 입력하세요"
+                  placeholder="パスワードを入力してください"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
@@ -186,22 +186,22 @@ export default function Login() {
               </div>
               {isRegister && (
                 <div>
-                  <label className="block text-sm font-medium mb-1.5">비밀번호 확인</label>
+                  <label className="block text-sm font-medium mb-1.5">パスワード（確認）</label>
                   <Input
                     type="password"
-                    placeholder="비밀번호를 다시 입력하세요"
+                    placeholder="パスワードをもう一度入力してください"
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     required
                     autoComplete="new-password"
                   />
                   {confirmPassword && password !== confirmPassword && (
-                    <p className="text-xs text-destructive mt-1">비밀번호가 일치하지 않습니다.</p>
+                    <p className="text-xs text-destructive mt-1">パスワードが一致しません。</p>
                   )}
                 </div>
               )}
               <Button type="submit" className="w-full" disabled={isLoading || !!(emailError || phoneError)}>
-                {isLoading ? "처리 중..." : isRegister ? "회원가입" : "로그인"}
+                {isLoading ? "処理中..." : isRegister ? "会員登録" : "ログイン"}
               </Button>
             </form>
 
@@ -209,7 +209,7 @@ export default function Login() {
                 계정은 쇼핑몰의 g5_member 를 그대로 쓴다. */}
             <div className="mt-6 text-center">
               <p className="text-xs text-muted-foreground">
-                쇼핑몰 관리자 계정으로 로그인합니다.
+                ショップの管理者アカウントでログインします。
               </p>
             </div>
           </CardContent>

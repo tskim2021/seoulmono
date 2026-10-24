@@ -27,9 +27,9 @@ const HERO_BANNERS = [
     image: "/banner-talmoschool.png",
   },
   {
-    tag: "인도 직배송 특가",
-    title: "탈모 치료제\n직구 1위",
-    sub: "피나스테리드, 미녹시딜, 두타스테리드",
+    tag: "インド直送 特価",
+    title: "薄毛治療薬\n個人輸入 No.1",
+    sub: "フィナステリド、ミノキシジル、デュタステリド",
     href: "/products?filter=best",
     bg: "from-[#7B6B5A] to-[#A08060]",
     accent: "#F5E6C8",
@@ -37,9 +37,9 @@ const HERO_BANNERS = [
     decoPos: "bottom-6 right-8 text-[120px] opacity-20",
   },
   {
-    tag: "피부미용 전문",
-    title: "맑고 탄탄한\n피부의 비밀",
-    sub: "트레티노인, 아젤라산, 피부과 성분 직구",
+    tag: "美肌専門",
+    title: "澄んだハリ肌の\n秘密",
+    sub: "トレチノイン、アゼライン酸、皮膚科成分の個人輸入",
     href: "/products?category=skin",
     bg: "from-[#5A6B7A] to-[#7A9BB5]",
     accent: "#D6EAF8",
@@ -47,9 +47,9 @@ const HERO_BANNERS = [
     decoPos: "bottom-4 right-6 text-[110px] opacity-20",
   },
   {
-    tag: "건강 보조제",
-    title: "건강한 삶을\n위한 선택",
-    sub: "비타민, 오메가3, 프로바이오틱스 해외직구",
+    tag: "健康サプリメント",
+    title: "健やかな暮らしの\nための選択",
+    sub: "ビタミン、オメガ3、プロバイオティクス 海外直送",
     href: "/products?category=health",
     bg: "from-[#5A7A5A] to-[#7AAB7A]",
     accent: "#D5F5E3",
@@ -57,9 +57,9 @@ const HERO_BANNERS = [
     decoPos: "bottom-4 right-6 text-[110px] opacity-20",
   },
   {
-    tag: "회원 전용 혜택",
-    title: "등급별 할인\n최대 15%",
-    sub: "브론즈·실버·골드·VIP 회원 특별 혜택",
+    tag: "会員限定特典",
+    title: "ランク別割引\n最大15%",
+    sub: "ブロンズ・シルバー・ゴールド・VIP会員の特別特典",
     href: "/bbs/board.php?bo_table=info",
     bg: "from-[#7A5A7A] to-[#9B7AAB]",
     accent: "#E8D5F5",
@@ -121,7 +121,7 @@ function HeroBannerCarousel({ slides }: { slides: BannerSlide[] }) {
           >
             {b.image ? (
               <Link href={b.href}>
-                <img src={b.image} alt="배너" className="w-full h-full object-contain cursor-pointer" draggable={false} />
+                <img src={b.image} alt="バナー" className="w-full h-full object-contain cursor-pointer" draggable={false} />
               </Link>
             ) : (
               <>
@@ -134,7 +134,7 @@ function HeroBannerCarousel({ slides }: { slides: BannerSlide[] }) {
                   <p className="text-sm text-white/75 mb-5">{b.sub}</p>
                   <Link href={b.href}>
                     <span className="inline-flex items-center gap-1 text-xs font-semibold px-3 py-1.5 rounded-full bg-white/20 text-white hover:bg-white/30 transition-colors backdrop-blur-sm cursor-pointer">
-                      바로가기 <ArrowRight className="w-3 h-3" />
+                      詳しく見る <ArrowRight className="w-3 h-3" />
                     </span>
                   </Link>
                 </div>
@@ -185,20 +185,20 @@ function HeroSection() {
     <section className="relative bg-gradient-to-br from-primary/5 via-accent/30 to-secondary/50 overflow-hidden">
       <div className="container py-12 md:py-16">
         <div className="max-w-2xl">
-          <Badge variant="secondary" className="mb-4 text-xs font-medium px-3 py-1">커뮤니티 + 쇼핑</Badge>
+          <Badge variant="secondary" className="mb-4 text-xs font-medium px-3 py-1">コミュニティ + ショッピング</Badge>
           <h1 className="text-3xl md:text-5xl font-bold tracking-tight mb-4 leading-tight">
-            탈모, 피부, 건강을 위한<br />
-            <span className="text-primary">해외직구 전문</span> 쇼핑몰
+            薄毛・美肌・健康のための<br />
+            <span className="text-primary">海外直送専門</span>のショップ
           </h1>
           <p className="text-muted-foreground text-base md:text-lg mb-8 leading-relaxed">
-            인도 의약품 직배송 - 탈모, 성기능, 피부미용, 다이어트 전문 쇼핑몰 탈모학교입니다.
+            インドからの医薬品直送 - 薄毛、男性機能、美肌、ダイエット専門のショップ、ソウルモノです。
           </p>
           <div className="flex flex-wrap gap-3">
             <Button asChild size="lg" className="rounded-full px-6">
-              <Link href="/products">쇼핑 시작하기 <ArrowRight className="w-4 h-4 ml-1" /></Link>
+              <Link href="/products">ショッピングを始める <ArrowRight className="w-4 h-4 ml-1" /></Link>
             </Button>
             <Button asChild variant="outline" size="lg" className="rounded-full px-6">
-              <Link href="/bbs/board.php?bo_table=info">정보나눔</Link>
+              <Link href="/bbs/board.php?bo_table=info">情報共有</Link>
             </Button>
           </div>
         </div>
@@ -209,10 +209,10 @@ function HeroSection() {
 
 function FeaturesBar() {
   const features = [
-    { icon: Truck, label: "해외직구 배송", desc: "인도 직배송" },
-    { icon: Shield, label: "카드결제", desc: "신용/체크카드 가능" },
-    { icon: Star, label: "포인트 적립", desc: "구매금액 3% 적립" },
-    { icon: Clock, label: "주문마감 10시", desc: "당일 출고 요청" },
+    { icon: Truck, label: "海外直送", desc: "インドから直送" },
+    { icon: Shield, label: "カード決済", desc: "クレジット/デビットカード対応" },
+    { icon: Star, label: "ポイント還元", desc: "購入金額の3%還元" },
+    { icon: Clock, label: "注文締切10時", desc: "当日出荷を依頼" },
   ];
   return (
     <section className="border-b border-border/60">
@@ -246,7 +246,7 @@ function ProductSection({ title, subtitle, queryOpts, viewAllHref }: { title: st
             <p className="text-sm text-muted-foreground mt-1">{subtitle}</p>
           </div>
           <Link href={viewAllHref} className="text-sm font-medium text-primary hover:underline flex items-center gap-1">
-            전체보기 <ArrowRight className="w-3.5 h-3.5" />
+            すべて見る <ArrowRight className="w-3.5 h-3.5" />
           </Link>
         </div>
         {isLoading ? (
@@ -269,7 +269,7 @@ function ProductSection({ title, subtitle, queryOpts, viewAllHref }: { title: st
         {!isLoading && (data?.products ?? []).length === 0 && (
           <div className="text-center py-16 text-muted-foreground">
             <ShoppingBag className="w-12 h-12 mx-auto mb-3 opacity-30" />
-            <p className="text-sm">아직 등록된 상품이 없습니다</p>
+            <p className="text-sm">まだ登録された商品がありません</p>
           </div>
         )}
       </div>
@@ -284,8 +284,8 @@ function CommunityPreview() {
       <div className="container">
         <div className="flex items-end justify-between mb-8">
           <div>
-            <h2 className="text-2xl font-bold tracking-tight">커뮤니티</h2>
-            <p className="text-sm text-muted-foreground mt-1">회원들과 자유롭게 소통하세요</p>
+            <h2 className="text-2xl font-bold tracking-tight">コミュニティ</h2>
+            <p className="text-sm text-muted-foreground mt-1">会員の皆さまと自由に交流しましょう</p>
           </div>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -320,9 +320,9 @@ const NEWS_SECTION_ICONS: Record<string, any> = {
 };
 
 const NEWS_SECTION_LABELS: Record<string, string> = {
-  domestic: "국내",
-  international: "해외",
-  research: "연구",
+  domestic: "国内",
+  international: "海外",
+  research: "研究",
 };
 
 const NEWS_SECTION_COLORS: Record<string, string> = {
@@ -340,10 +340,10 @@ function NewsPreviewSection() {
     const now = new Date();
     const diff = now.getTime() - d.getTime();
     const hours = Math.floor(diff / (1000 * 60 * 60));
-    if (hours < 1) return "방금 전";
-    if (hours < 24) return `${hours}시간 전`;
+    if (hours < 1) return "たった今";
+    if (hours < 24) return `${hours}時間前`;
     const days = Math.floor(hours / 24);
-    if (days < 7) return `${days}일 전`;
+    if (days < 7) return `${days}日前`;
     return d.toLocaleDateString("ko-KR", { month: "short", day: "numeric" });
   };
 
@@ -364,8 +364,8 @@ function NewsPreviewSection() {
         <div className="container">
           <div className="flex items-end justify-between mb-8">
             <div>
-              <h2 className="text-2xl font-bold tracking-tight">건강뉴스</h2>
-              <p className="text-sm text-muted-foreground mt-1">카테고리별 최신 건강 뉴스와 연구 정보</p>
+              <h2 className="text-2xl font-bold tracking-tight">健康ニュース</h2>
+              <p className="text-sm text-muted-foreground mt-1">カテゴリー別の最新健康ニュースと研究情報</p>
             </div>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -389,11 +389,11 @@ function NewsPreviewSection() {
       <div className="container">
         <div className="flex items-end justify-between mb-8">
           <div>
-            <h2 className="text-2xl font-bold tracking-tight">건강뉴스</h2>
-            <p className="text-sm text-muted-foreground mt-1">카테고리별 최신 건강 뉴스와 연구 정보</p>
+            <h2 className="text-2xl font-bold tracking-tight">健康ニュース</h2>
+            <p className="text-sm text-muted-foreground mt-1">カテゴリー別の最新健康ニュースと研究情報</p>
           </div>
           <Link href="/news" className="text-sm font-medium text-primary hover:underline flex items-center gap-1">
-            전체보기 <ArrowRight className="w-3.5 h-3.5" />
+            すべて見る <ArrowRight className="w-3.5 h-3.5" />
           </Link>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
@@ -434,10 +434,10 @@ function NewsPreviewSection() {
 
 const SECTION_TYPE_CONFIG: Record<string, { icon: any; label: string; color: string }> = {
   faq: { icon: HelpCircle, label: "FAQ", color: "bg-blue-100 text-blue-700" },
-  usage: { icon: BookOpen, label: "사용방법", color: "bg-green-100 text-green-700" },
-  dosage: { icon: Pill, label: "용량/용법", color: "bg-amber-100 text-amber-700" },
-  sideEffects: { icon: AlertTriangle, label: "부작용", color: "bg-red-100 text-red-700" },
-  precautions: { icon: FileText, label: "주의사항", color: "bg-purple-100 text-purple-700" },
+  usage: { icon: BookOpen, label: "使用方法", color: "bg-green-100 text-green-700" },
+  dosage: { icon: Pill, label: "用量・用法", color: "bg-amber-100 text-amber-700" },
+  sideEffects: { icon: AlertTriangle, label: "副作用", color: "bg-red-100 text-red-700" },
+  precautions: { icon: FileText, label: "注意事項", color: "bg-purple-100 text-purple-700" },
 };
 
 function PopularDiscussionsSection() {
@@ -449,8 +449,8 @@ function PopularDiscussionsSection() {
         <div className="container">
           <div className="flex items-end justify-between mb-8">
             <div>
-              <h2 className="text-2xl font-bold tracking-tight">인기 토론</h2>
-              <p className="text-sm text-muted-foreground mt-1">회원들이 가장 활발하게 논의하는 주제</p>
+              <h2 className="text-2xl font-bold tracking-tight">人気ディスカッション</h2>
+              <p className="text-sm text-muted-foreground mt-1">会員の皆さまが最も活発に議論しているテーマ</p>
             </div>
           </div>
           <div className="space-y-3">
@@ -473,11 +473,11 @@ function PopularDiscussionsSection() {
       <div className="container">
         <div className="flex items-end justify-between mb-8">
           <div>
-            <h2 className="text-2xl font-bold tracking-tight">인기 토론 Top 5</h2>
-            <p className="text-sm text-muted-foreground mt-1">회원들이 가장 활발하게 논의하는 주제</p>
+            <h2 className="text-2xl font-bold tracking-tight">人気ディスカッション Top 5</h2>
+            <p className="text-sm text-muted-foreground mt-1">会員の皆さまが最も活発に議論しているテーマ</p>
           </div>
           <Link href="/discussions" className="text-sm font-medium text-primary hover:underline flex items-center gap-1">
-            전체보기 <ArrowRight className="w-3.5 h-3.5" />
+            すべて見る <ArrowRight className="w-3.5 h-3.5" />
           </Link>
         </div>
         <div className="space-y-3">
@@ -494,11 +494,11 @@ function PopularDiscussionsSection() {
                 </div>
                 <div className="flex-1 min-w-0">
                   <h3 className="font-semibold text-sm group-hover:text-primary transition-colors truncate">
-                    {d.isPinned ? <span className="text-primary mr-1">[고정]</span> : null}
+                    {d.isPinned ? <span className="text-primary mr-1">[固定]</span> : null}
                     {d.title}
                   </h3>
                   <div className="flex items-center gap-3 mt-1 text-xs text-muted-foreground">
-                    <span>{d.displayName || d.userName || "익명"}</span>
+                    <span>{d.displayName || d.userName || "匿名"}</span>
                     <span className="flex items-center gap-0.5"><ThumbsUp className="w-3 h-3" />{d.likeCount}</span>
                     <span className="flex items-center gap-0.5"><MessageSquare className="w-3 h-3" />{d.commentCount}</span>
                     <span className="flex items-center gap-0.5"><Eye className="w-3 h-3" />{d.viewCount}</span>
@@ -540,8 +540,8 @@ function ProductInfoHighlightsSection() {
         <div className="container">
           <div className="flex items-end justify-between mb-8">
             <div>
-              <h2 className="text-2xl font-bold tracking-tight">상품 정보 하이라이트</h2>
-              <p className="text-sm text-muted-foreground mt-1">최근 업데이트된 상품 정보</p>
+              <h2 className="text-2xl font-bold tracking-tight">商品情報ハイライト</h2>
+              <p className="text-sm text-muted-foreground mt-1">最近更新された商品情報</p>
             </div>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -565,8 +565,8 @@ function ProductInfoHighlightsSection() {
       <div className="container">
         <div className="flex items-end justify-between mb-8">
           <div>
-            <h2 className="text-2xl font-bold tracking-tight">상품 정보 하이라이트</h2>
-            <p className="text-sm text-muted-foreground mt-1">최근 업데이트된 FAQ, 사용방법, 부작용 정보</p>
+            <h2 className="text-2xl font-bold tracking-tight">商品情報ハイライト</h2>
+            <p className="text-sm text-muted-foreground mt-1">最近更新されたFAQ、使用方法、副作用の情報</p>
           </div>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
@@ -618,7 +618,7 @@ function BoardPreviewColumn({ slug, title, href, limit = 5, postLinkFn }: { slug
       <div className="flex items-center justify-between mb-5">
         <h3 className="text-xl font-bold">{title}</h3>
         <Link href={href} className="text-sm text-muted-foreground hover:text-primary transition-colors flex items-center gap-0.5">
-          더보기 <ChevronRight className="w-4 h-4" />
+          もっと見る <ChevronRight className="w-4 h-4" />
         </Link>
       </div>
       {isLoading ? (
@@ -638,7 +638,7 @@ function BoardPreviewColumn({ slug, title, href, limit = 5, postLinkFn }: { slug
             </li>
           ))}
           {(!data || data.length === 0) && (
-            <li className="text-sm text-muted-foreground py-6 text-center">게시글이 없습니다</li>
+            <li className="text-sm text-muted-foreground py-6 text-center">投稿がありません</li>
           )}
         </ul>
       )}
@@ -647,7 +647,7 @@ function BoardPreviewColumn({ slug, title, href, limit = 5, postLinkFn }: { slug
 }
 
 function ReviewCard({ post }: { post: any }) {
-  const name = post.displayName || (post.userName ?? "익명");
+  const name = post.displayName || (post.userName ?? "匿名");
   const stars = Math.min(5, Math.max(1, post.rating ?? 5));
   const dateStr = post.createdAt
     ? new Date(post.createdAt).toLocaleDateString("ko-KR", { year: "numeric", month: "2-digit", day: "2-digit" }).replace(/\. /g, "-").replace(/\.$/, "")
@@ -679,7 +679,7 @@ function ReviewCard({ post }: { post: any }) {
       {/* 하단: 이미지 + 작성자/날짜 */}
       <div className="flex items-end justify-between gap-2 mt-auto pt-1">
         {thumbSrc ? (
-          <img src={proxyImage(thumbSrc)} alt={post.productName ?? "리뷰 이미지"} className="w-12 h-12 object-cover rounded-md border flex-shrink-0" />
+          <img src={proxyImage(thumbSrc)} alt={post.productName ?? "レビュー画像"} className="w-12 h-12 object-cover rounded-md border flex-shrink-0" />
         ) : (
           <div className="w-12 h-12 bg-muted rounded-md border flex items-center justify-center flex-shrink-0">
             <ShoppingBag className="w-5 h-5 text-muted-foreground/30" />
@@ -711,9 +711,9 @@ function CustomerReviewSection() {
     <section className="py-10">
       <div className="container">
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-xl font-bold">고객 리뷰</h2>
+          <h2 className="text-xl font-bold">お客様レビュー</h2>
           <Link href="/shop/itemuselist.php" className="text-sm text-muted-foreground hover:text-primary flex items-center gap-1 transition-colors">
-            더 보기 <ChevronRight className="w-4 h-4" />
+            もっと見る <ChevronRight className="w-4 h-4" />
           </Link>
         </div>
         {isLoading ? (
@@ -764,13 +764,13 @@ function InfoBanner() {
     <Link href="/bbs/board.php?bo_table=info" className="block py-4 hover:opacity-95 transition-opacity">
       <div className="w-full rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-500 px-8 py-6 flex items-center justify-between shadow-md">
         <div className="text-white space-y-1">
-          <p className="text-xs font-semibold tracking-widest opacity-80 uppercase">탈모학교 커뮤니티</p>
-          <p className="text-lg font-bold leading-snug">탈모지식인 — 탈모정보 공유하고<br />현금포인트 적립하기</p>
-          <p className="text-xs opacity-75 mt-1">정보를 나누면 포인트가 쌓입니다</p>
+          <p className="text-xs font-semibold tracking-widest opacity-80 uppercase">ソウルモノ コミュニティ</p>
+          <p className="text-lg font-bold leading-snug">情報共有広場 — 情報をシェアして<br />ポイントを貯めよう</p>
+          <p className="text-xs opacity-75 mt-1">情報を共有するとポイントが貯まります</p>
         </div>
         <div className="flex flex-col items-center gap-1 text-white opacity-90 shrink-0 ml-6">
           <span className="text-4xl">💚</span>
-          <span className="text-xs font-bold bg-white/20 rounded-full px-3 py-0.5">지금 참여하기</span>
+          <span className="text-xs font-bold bg-white/20 rounded-full px-3 py-0.5">今すぐ参加</span>
         </div>
       </div>
     </Link>
@@ -781,19 +781,19 @@ function PromoCard() {
   return (
     <div className="min-w-0 flex flex-col items-center justify-center bg-gradient-to-b from-blue-50 to-white dark:from-blue-950/20 dark:to-background border border-border rounded-xl p-5 gap-2 h-full">
       <span className="text-[11px] text-blue-600 dark:text-blue-400 font-semibold tracking-wide border border-blue-200 dark:border-blue-800 rounded-full px-3 py-0.5">
-        정품보증 · 안심품질
+        正規品保証 · 安心品質
       </span>
       <div className="flex items-center gap-1.5 mt-1">
-        <span className="bg-blue-600 text-white text-xs font-bold px-3 py-1 rounded-full">최저가</span>
+        <span className="bg-blue-600 text-white text-xs font-bold px-3 py-1 rounded-full">最安値</span>
         <span className="bg-primary text-primary-foreground text-xs font-bold px-3 py-1 rounded-full">PLUS</span>
       </div>
-      <p className="text-base font-bold tracking-widest text-foreground mt-1">세 일</p>
-      <p className="text-3xl font-extrabold text-red-500 leading-none">10<span className="text-xl">%할인</span></p>
+      <p className="text-base font-bold tracking-widest text-foreground mt-1">セール</p>
+      <p className="text-3xl font-extrabold text-red-500 leading-none">10<span className="text-xl">%OFF</span></p>
       <Link href="/products" className="mt-2 flex items-center gap-1 bg-amber-400 hover:bg-amber-500 transition-colors text-white text-xs font-bold px-5 py-2 rounded-full shadow">
-        <Star className="w-3 h-3 fill-white" /> 전상품 대상 <Star className="w-3 h-3 fill-white" />
+        <Star className="w-3 h-3 fill-white" /> 全商品対象 <Star className="w-3 h-3 fill-white" />
       </Link>
       <p className="text-[10px] text-muted-foreground mt-1 text-center leading-snug">
-        지금 바로 고객 리뷰를 남겨주세요!
+        今すぐお客様レビューを投稿しましょう！
       </p>
     </div>
   );
@@ -803,44 +803,44 @@ function CommunitySectionMenu() {
   const items = [
     {
       icon: <Newspaper className="w-5 h-5 text-primary" />,
-      title: "건강뉴스",
-      desc: "카테고리별 국내외 건강 뉴스 및 연구 정보",
+      title: "健康ニュース",
+      desc: "カテゴリー別の国内外の健康ニュースと研究情報",
       href: "/news",
     },
     {
       icon: <BookOpen className="w-5 h-5 text-primary" />,
-      title: "정보나눔",
-      desc: "상품 관련 정보를 자유롭게 공유하는 게시판입니다.",
+      title: "情報共有",
+      desc: "商品に関する情報を自由に共有する掲示板です。",
       href: "/info-board",
     },
     {
       icon: <Star className="w-5 h-5 text-primary" />,
-      title: "고객리뷰",
-      desc: "구매하신 상품의 후기를 남겨주세요.",
+      title: "お客様レビュー",
+      desc: "ご購入商品の感想をお寄せください。",
       href: "/community/review",
     },
     {
       icon: <FileText className="w-5 h-5 text-primary" />,
-      title: "공지사항",
-      desc: "쇼핑몰의 중요한 소식을 전해드립니다.",
+      title: "お知らせ",
+      desc: "ショップの重要なお知らせをお届けします。",
       href: "/bbs/board.php?bo_table=notice",
     },
     {
       icon: <HelpCircle className="w-5 h-5 text-primary" />,
       title: "FAQ",
-      desc: "자주 묻는 질문과 답변을 확인하세요.",
+      desc: "よくあるご質問と回答をご確認ください。",
       href: "/customer-service/faq",
     },
     {
       icon: <ShoppingBag className="w-5 h-5 text-primary" />,
-      title: "장바구니",
-      desc: "담아두신 상품을 확인하고 구매하세요.",
+      title: "カート",
+      desc: "カートに入れた商品を確認してご購入ください。",
       href: "/cart",
     },
     {
       icon: <Users className="w-5 h-5 text-primary" />,
-      title: "마이페이지",
-      desc: "주문 내역, 포인트, 나의 정보를 확인하세요.",
+      title: "マイページ",
+      desc: "注文履歴、ポイント、ご自身の情報を確認できます。",
       href: "/mypage",
     },
   ];
@@ -849,8 +849,8 @@ function CommunitySectionMenu() {
     <section className="py-12 bg-secondary/20">
       <div className="container">
         <div className="mb-8">
-          <h2 className="text-2xl font-bold tracking-tight">커뮤니티</h2>
-          <p className="text-sm text-muted-foreground mt-1">회원들과 자유롭게 소통하세요</p>
+          <h2 className="text-2xl font-bold tracking-tight">コミュニティ</h2>
+          <p className="text-sm text-muted-foreground mt-1">会員の皆さまと自由に交流しましょう</p>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {items.map((item) => (
@@ -880,26 +880,26 @@ function BoardPreviewSection() {
 
           {/* 1. 공지사항 — col-span-5 */}
           <div className="md:col-span-5 py-6 md:py-2 md:pr-10">
-            <BoardPreviewColumn slug="notice" title="공지사항" href="/bbs/board.php?bo_table=notice" limit={3} postLinkFn={(post) => `/bbs/board.php?bo_table=notice&wr_id=${post.id}`} />
+            <BoardPreviewColumn slug="notice" title="お知らせ" href="/bbs/board.php?bo_table=notice" limit={3} postLinkFn={(post) => `/bbs/board.php?bo_table=notice&wr_id=${post.id}`} />
           </div>
 
           {/* 2. 1:1 문의 — col-span-4 */}
           <div className="md:col-span-4 py-6 md:py-2 md:px-10 flex flex-col gap-3">
-            <p className="text-xs text-muted-foreground font-medium">고객센터</p>
-            <p className="text-base font-semibold leading-snug">궁금하신 점이 있으신가요?<br /><span className="text-primary">1:1 문의</span>로 빠르게 답변해드립니다.</p>
+            <p className="text-xs text-muted-foreground font-medium">カスタマーセンター</p>
+            <p className="text-base font-semibold leading-snug">ご不明な点はありませんか？<br /><span className="text-primary">お問い合わせ</span>で迅速にご回答します。</p>
             <Link href="/customer-service/inquiry">
               <span className="inline-flex items-center justify-center w-full px-4 py-2.5 rounded-lg bg-primary text-primary-foreground text-sm font-bold hover:bg-primary/90 transition-colors cursor-pointer shadow-sm">
-                1:1 문의하기
+                お問い合わせ
               </span>
             </Link>
           </div>
 
           {/* 3. 앱 다운로드 — col-span-3 */}
           <div className="md:col-span-3 py-6 md:py-2 md:pl-10 flex flex-col gap-3">
-            <p className="text-xs text-muted-foreground font-medium">앱 다운로드</p>
+            <p className="text-xs text-muted-foreground font-medium">アプリのダウンロード</p>
             <div className="flex gap-3">
               <button
-                onClick={() => toast.info("앱 서비스 준비 중입니다. 조금만 기다려 주세요! 😊")}
+                onClick={() => toast.info("アプリは準備中です。もうしばらくお待ちください！😊")}
                 className="flex flex-col items-center gap-1.5 px-4 py-3 rounded-xl border border-border hover:bg-accent transition-colors"
               >
                 <svg viewBox="0 0 24 24" className="w-8 h-8" fill="none">
@@ -908,16 +908,16 @@ function BoardPreviewSection() {
                   <path d="M17.55 15.36L13.88 11.7 3.18 22.4c.41.43 1.07.49 1.82.05l12.55-7.09" fill="#34A853"/>
                   <path d="M17.55 8.04L5 .95C4.25.51 3.59.57 3.18 1l10.7 10.71 3.67-3.67z" fill="#EA4335"/>
                 </svg>
-                <span className="text-xs text-muted-foreground">구글플레이</span>
+                <span className="text-xs text-muted-foreground">Google Play</span>
               </button>
               <button
-                onClick={() => toast.info("앱 서비스 준비 중입니다. 조금만 기다려 주세요! 😊")}
+                onClick={() => toast.info("アプリは準備中です。もうしばらくお待ちください！😊")}
                 className="flex flex-col items-center gap-1.5 px-4 py-3 rounded-xl border border-border hover:bg-accent transition-colors"
               >
                 <svg viewBox="0 0 24 24" className="w-8 h-8" fill="currentColor">
                   <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
                 </svg>
-                <span className="text-xs text-muted-foreground">앱스토어</span>
+                <span className="text-xs text-muted-foreground">App Store</span>
               </button>
             </div>
           </div>
@@ -1016,7 +1016,7 @@ function PersonalizedSection() {
 
   if (!isAuthenticated || products.length === 0) return null;
 
-  const userName = (user as any)?.name ?? "회원";
+  const userName = (user as any)?.name ?? "会員";
 
   return (
     <section className="py-10">
@@ -1024,9 +1024,9 @@ function PersonalizedSection() {
         <div className="flex items-center justify-between mb-6">
           <div>
             <h2 className="text-xl font-bold">
-              <span className="text-primary">{userName}</span>님 전용 AI 추천
+              <span className="text-primary">{userName}</span>様専用 AIおすすめ
             </h2>
-            <p className="text-sm text-muted-foreground mt-1">구매 이력 기반 맞춤 추천 상품입니다</p>
+            <p className="text-sm text-muted-foreground mt-1">購入履歴に基づくおすすめ商品です</p>
           </div>
         </div>
         <div
@@ -1102,7 +1102,7 @@ function RenewalPopup() {
         <div className="bg-primary px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <AlertTriangle className="w-5 h-5 text-primary-foreground" />
-            <span className="text-primary-foreground font-bold text-base">사이트 리뉴얼 안내</span>
+            <span className="text-primary-foreground font-bold text-base">サイトリニューアルのお知らせ</span>
           </div>
           <button onClick={close} className="text-primary-foreground/70 hover:text-primary-foreground transition-colors">
             <X className="w-5 h-5" />
@@ -1111,16 +1111,16 @@ function RenewalPopup() {
         {/* Body */}
         <div className="px-6 py-5 space-y-3">
           <p className="text-sm text-foreground leading-relaxed">
-            현재 <span className="font-semibold text-primary">사이트 리뉴얼 작업</span>이 진행 중입니다.
+            現在、<span className="font-semibold text-primary">サイトリニューアル作業</span>を実施しております。
           </p>
           <p className="text-sm text-muted-foreground leading-relaxed">
-            이 과정에서 기존 로그인 정보 및 주문 내역이 일시적으로 일치하지 않을 수 있습니다.
-            불편을 드려 죄송하며, 빠르게 안정화될 수 있도록 최선을 다하겠습니다.
+            この作業中、従来のログイン情報および注文履歴が一時的に一致しない場合があります。
+            ご不便をおかけし申し訳ございません。できるだけ早く安定するよう努めてまいります。
           </p>
           <div className="bg-muted rounded-xl px-4 py-3 flex items-center gap-2">
             <MessageCircle className="w-4 h-4 text-primary flex-shrink-0" />
             <div>
-              <p className="text-xs text-muted-foreground">문의 및 불편사항 접수</p>
+              <p className="text-xs text-muted-foreground">お問い合わせ・ご不便の受付</p>
               <a href="mailto:hlschool.cs@gmail.com" className="text-sm font-semibold text-primary hover:underline">
                 hlschool.cs@gmail.com
               </a>
@@ -1133,13 +1133,13 @@ function RenewalPopup() {
             onClick={closeToday}
             className="flex-1 text-sm text-muted-foreground hover:text-foreground border rounded-lg py-2 transition-colors"
           >
-            오늘 하루 보지 않기
+            本日は表示しない
           </button>
           <button
             onClick={close}
             className="flex-1 text-sm font-semibold bg-primary text-primary-foreground rounded-lg py-2 hover:bg-primary/90 transition-colors"
           >
-            확인
+            確認
           </button>
         </div>
       </div>
@@ -1150,8 +1150,8 @@ function RenewalPopup() {
 export default function Home() {
   useSEO({
     title: undefined,
-    description: "커뮤니티와 쇼핑이 하나로 연결된 새로운 쇼핑 경험을 만나보세요.",
-    keywords: "쇼핑몰, 커뮤니티, 이커머스, 상품리뷰, 온라인쇼핑",
+    description: "コミュニティとショッピングが一つにつながる新しいショッピング体験をお楽しみください。",
+    keywords: "ショッピング, コミュニティ, Eコマース, 商品レビュー, オンラインショップ",
   });
   const newOpts = useMemo(() => ({ isNew: true, limit: 8 }), []);
   const bestOpts = useMemo(() => ({ isBest: true, limit: 8 }), []);
@@ -1168,13 +1168,13 @@ export default function Home() {
               <HeroBannerCarousel slides={HERO_BANNERS} />
             </div>
             <div className="mt-8">
-              <ProductSection title="베스트상품" subtitle="회원들이 가장 많이 찾는 베스트셀러" queryOpts={bestOpts} viewAllHref="/products?filter=best" />
+              <ProductSection title="ベストセラー" subtitle="会員の皆さまに最も人気のベストセラー" queryOpts={bestOpts} viewAllHref="/products?filter=best" />
             </div>
             <PopularKeywords />
-            <ProductSection title="특가상품" subtitle="할인 중인 상품을 지금 바로 확인하세요" queryOpts={saleOpts} viewAllHref="/products?filter=sale" />
-            <ProductSection title="신규상품" subtitle="새로 입고된 상품을 확인하세요" queryOpts={newOpts} viewAllHref="/products?filter=new" />
+            <ProductSection title="特価商品" subtitle="割引中の商品を今すぐチェック" queryOpts={saleOpts} viewAllHref="/products?filter=sale" />
+            <ProductSection title="新着商品" subtitle="新しく入荷した商品をチェック" queryOpts={newOpts} viewAllHref="/products?filter=new" />
             <InfoBanner />
-            <ProductSection title="추천상품" subtitle="탈모학교가 엄선한 추천 상품" queryOpts={featuredOpts} viewAllHref="/products?filter=featured" />
+            <ProductSection title="おすすめ商品" subtitle="ソウルモノ厳選のおすすめ商品" queryOpts={featuredOpts} viewAllHref="/products?filter=featured" />
           </div>
           {/* Sidebar - desktop only, aligned with hero from the top */}
           <div className="hidden xl:block w-[300px] shrink-0">

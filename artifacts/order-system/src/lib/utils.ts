@@ -6,10 +6,7 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function formatCurrency(amount: number) {
-  return new Intl.NumberFormat('ko-KR', { 
-    style: 'currency', 
-    currency: 'KRW' 
-  }).format(amount);
+  return `${new Intl.NumberFormat('ja-JP').format(amount)}円`;
 }
 
 export function getStatusColor(status: string) {

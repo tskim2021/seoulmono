@@ -61,11 +61,11 @@ function useImageUploader(initialImages: string[] = []) {
     const files = e.target.files;
     if (!files || files.length === 0) return;
     const remainingSlots = MAX_REPLY_IMAGES - images.length;
-    if (remainingSlots <= 0) { toast.error(`이미지는 최대 ${MAX_REPLY_IMAGES}장까지 첨부할 수 있습니다.`); return; }
+    if (remainingSlots <= 0) { toast.error(`画像は最大${MAX_REPLY_IMAGES}枚まで添付できます。`); return; }
     const filesToUpload = Array.from(files).slice(0, remainingSlots);
     for (const file of filesToUpload) {
-      if (!ALLOWED_TYPES.includes(file.type)) { toast.error(`${file.name}: 이미지 파일만 업로드할 수 있습니다.`); return; }
-      if (file.size > MAX_FILE_SIZE) { toast.error(`${file.name}: 10MB를 초과할 수 없습니다.`); return; }
+      if (!ALLOWED_TYPES.includes(file.type)) { toast.error(`${file.name}: 画像ファイルのみアップロードできます。`); return; }
+      if (file.size > MAX_FILE_SIZE) { toast.error(`${file.name}: 10MBを超えることはできません。`); return; }
     }
     setUploading(true);
     try {
@@ -76,7 +76,7 @@ function useImageUploader(initialImages: string[] = []) {
         urls.push(r.url);
       }
       setImages(prev => [...prev, ...urls]);
-    } catch { toast.error("이미지 업로드에 실패했습니다."); }
+    } catch { toast.error("画像のアップロードに失敗しました。"); }
     finally { setUploading(false); if (e.target) e.target.value = ""; }
   }, [images.length, uploadImage]);
 
@@ -95,12 +95,12 @@ function ImageUploadSection({ images, uploading, fileInputRef, handleFileSelect,
 }) {
   return (
     <div className="mb-4">
-      <p className="text-sm text-muted-foreground mb-2">스크린샷이나 안내 이미지를 첨부할 수 있습니다. (최대 {MAX_REPLY_IMAGES}장, 각 10MB 이하)</p>
+      <p className="text-sm text-muted-foreground mb-2">スクリーンショットや案内画像を添付できます。(最大{MAX_REPLY_IMAGES}枚、各10MB以下)</p>
       {images.length > 0 && (
         <div className="grid grid-cols-3 sm:grid-cols-4 gap-2 mb-3">
           {images.map((url, index) => (
             <div key={index} className="relative group rounded-lg overflow-hidden border bg-muted aspect-square">
-              <img src={url} alt={`첨부 이미지 ${index + 1}`} className="w-full h-full object-cover" />
+              <img src={url} alt={`添付画像 ${index + 1}`} className="w-full h-full object-cover" />
               <button type="button" onClick={() => removeImage(index)} className="absolute top-1 right-1 bg-black/60 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity">
                 <X className="w-3 h-3" />
               </button>
@@ -112,7 +112,7 @@ function ImageUploadSection({ images, uploading, fileInputRef, handleFileSelect,
         <div>
           <input ref={fileInputRef} type="file" accept="image/jpeg,image/png,image/gif,image/webp" multiple onChange={handleFileSelect} className="hidden" id={inputId} />
           <Button type="button" variant="outline" size="sm" onClick={() => fileInputRef.current?.click()} disabled={uploading}>
-            {uploading ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" />업로드 중...</> : <><ImagePlus className="w-4 h-4 mr-2" />이미지 첨부 ({images.length}/{MAX_REPLY_IMAGES})</>}
+            {uploading ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" />アップロード中...</> : <><ImagePlus className="w-4 h-4 mr-2" />画像を添付 ({images.length}/{MAX_REPLY_IMAGES})</>}
           </Button>
         </div>
       )}
@@ -131,7 +131,7 @@ export default function InquiryDetail() {
 
   const isAdmin = user?.role === "admin";
 
-  useSEO({ title: "1:1 문의 상세", description: "탈모학교 1:1 문의 상세 페이지", noindex: true });
+  useSEO({ title: "お問い合わせ詳細", description: "ソウルモノ お問い合わせ詳細ページ", noindex: true });
 
   const { data: post, isLoading, refetch } = trpc.community.postById.useQuery({ id: Number(id) });
   const { data: adminReplies, refetch: refetchAdminReplies } = trpc.admin.getInquiryReplies.useQuery(
@@ -150,36 +150,36 @@ export default function InquiryDetail() {
 
   const createReply = trpc.admin.createInquiryReply.useMutation({
     onSuccess: () => {
-      toast.success("답변이 등록되었습니다. 문의자에게 알림이 발송됩니다.");
+      toast.success("回答を登録しました。お問い合わせ者に通知が送信されます。");
       setReplyContent("");
       newReplyUploader.resetImages([]);
       refetch();
       refetchReplies();
     },
-    onError: (e) => toast.error(e.message || "답변 등록에 실패했습니다."),
+    onError: (e) => toast.error(e.message || "回答の登録に失敗しました。"),
   });
 
   const updateReply = trpc.admin.updateInquiryReply.useMutation({
     onSuccess: () => {
-      toast.success("답변이 수정되었습니다.");
+      toast.success("回答を更新しました。");
       setEditingReplyId(null);
       setEditContent("");
       editReplyUploader.resetImages([]);
       refetchReplies();
     },
-    onError: (e) => toast.error(e.message || "답변 수정에 실패했습니다."),
+    onError: (e) => toast.error(e.message || "回答の更新に失敗しました。"),
   });
 
   const requestHuman = trpc.community.requestHumanAgent.useMutation({
     onSuccess: () => {
-      toast.success("상담사 답변이 요청되었습니다. 영업일 1일 이내 답변드립니다.");
+      toast.success("担当者の回答をリクエストしました。営業日1日以内にご回答します。");
       refetch();
     },
     onError: (e) => toast.error(e.message),
   });
 
   const handleSubmitReply = async () => {
-    if (!replyContent.trim()) { toast.error("답변 내용을 입력해주세요."); return; }
+    if (!replyContent.trim()) { toast.error("回答内容を入力してください。"); return; }
     await createReply.mutateAsync({
       postId: Number(id),
       content: replyContent,
@@ -202,8 +202,8 @@ export default function InquiryDetail() {
     });
   };
 
-  if (isLoading) return <MyPageLayout title="1:1 문의 상세"><div className="py-8 text-center">로딩 중...</div></MyPageLayout>;
-  if (!post) return <MyPageLayout title="1:1 문의 상세"><div className="py-8 text-center">문의를 찾을 수 없습니다.</div></MyPageLayout>;
+  if (isLoading) return <MyPageLayout title="お問い合わせ詳細"><div className="py-8 text-center">読み込み中...</div></MyPageLayout>;
+  if (!post) return <MyPageLayout title="お問い合わせ詳細"><div className="py-8 text-center">お問い合わせが見つかりません。</div></MyPageLayout>;
 
   const isAuthor = user?.id === post.userId;
   const hasReplies = replies && replies.length > 0;
@@ -213,10 +213,10 @@ export default function InquiryDetail() {
   const postImages = (post as any).images as string[] | null | undefined;
 
   return (
-    <MyPageLayout title="1:1 문의 상세">
+    <MyPageLayout title="お問い合わせ詳細">
       <Button variant="ghost" onClick={() => navigate("/mypage/inquiries")} className="mb-4 -ml-3">
         <ChevronLeft className="w-4 h-4 mr-2" />
-        목록으로
+        一覧へ
       </Button>
 
       {/* 문의 원문 */}
@@ -226,17 +226,17 @@ export default function InquiryDetail() {
             <div className="flex-1">
               <CardTitle className="text-2xl mb-2">{post.title}</CardTitle>
               <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                <div className="flex items-center gap-1"><User className="w-4 h-4" />{post.userName || "알 수 없음"}</div>
+                <div className="flex items-center gap-1"><User className="w-4 h-4" />{post.userName || "不明"}</div>
                 <div className="flex items-center gap-1"><Calendar className="w-4 h-4" />{formatDateTime(post.createdAt)}</div>
               </div>
             </div>
             {needsHuman
-              ? <Badge className="bg-orange-500 hover:bg-orange-600"><span className="flex items-center gap-1"><Clock className="w-3 h-3" />상담사 답변 대기중</span></Badge>
+              ? <Badge className="bg-orange-500 hover:bg-orange-600"><span className="flex items-center gap-1"><Clock className="w-3 h-3" />担当者の回答待ち</span></Badge>
               : isAnswered
-                ? <Badge className="bg-green-600 hover:bg-green-700"><span className="flex items-center gap-1"><CheckCircle2 className="w-3 h-3" />상담완료</span></Badge>
+                ? <Badge className="bg-green-600 hover:bg-green-700"><span className="flex items-center gap-1"><CheckCircle2 className="w-3 h-3" />対応完了</span></Badge>
                 : hasHumanReply
-                  ? <Badge className="bg-teal-500 hover:bg-teal-600"><span className="flex items-center gap-1"><CheckCircle2 className="w-3 h-3" />상담사 답변 완료</span></Badge>
-                  : <Badge variant="secondary"><span className="flex items-center gap-1"><Clock className="w-3 h-3" />답변 대기</span></Badge>
+                  ? <Badge className="bg-teal-500 hover:bg-teal-600"><span className="flex items-center gap-1"><CheckCircle2 className="w-3 h-3" />担当者回答済み</span></Badge>
+                  : <Badge variant="secondary"><span className="flex items-center gap-1"><Clock className="w-3 h-3" />回答待ち</span></Badge>
             }
           </div>
         </CardHeader>
@@ -245,12 +245,12 @@ export default function InquiryDetail() {
           {postImages && postImages.length > 0 && (
             <div className="mt-6 pt-6 border-t">
               <h4 className="text-sm font-semibold mb-3 flex items-center gap-2 text-muted-foreground">
-                <ImageIcon className="w-4 h-4" />첨부파일 ({postImages.length}개)
+                <ImageIcon className="w-4 h-4" />添付ファイル ({postImages.length}件)
               </h4>
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
                 {postImages.map((url, index) => (
                   <button key={index} type="button" onClick={() => setLightboxImage(url)} className="relative rounded-lg overflow-hidden border bg-muted aspect-square hover:opacity-80 transition-opacity cursor-pointer">
-                    <img src={url} alt={`첨부 이미지 ${index + 1}`} className="w-full h-full object-cover" />
+                    <img src={url} alt={`添付画像 ${index + 1}`} className="w-full h-full object-cover" />
                   </button>
                 ))}
               </div>
@@ -263,7 +263,7 @@ export default function InquiryDetail() {
       {hasReplies && (
         <div className="mt-6 space-y-4">
           <h3 className="text-lg font-semibold flex items-center gap-2">
-            <MessageSquare className="w-5 h-5" />답변 ({replies!.length}개)
+            <MessageSquare className="w-5 h-5" />回答 ({replies!.length}件)
           </h3>
           {replies!.map((reply: any, idx: number) => {
             const isAuto = reply.isAutoReply === 1;
@@ -279,18 +279,18 @@ export default function InquiryDetail() {
                     <div className="flex items-center gap-2 text-sm text-muted-foreground">
                       {isAuto ? (
                         <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-300 dark:bg-blue-950 dark:text-blue-300">
-                          <Zap className="w-3 h-3 mr-1" />자동응답
+                          <Zap className="w-3 h-3 mr-1" />自動応答
                         </Badge>
                       ) : (
                         <Badge variant="outline" className="bg-primary/10">
-                          <UserCheck className="w-3 h-3 mr-1" />상담사
+                          <UserCheck className="w-3 h-3 mr-1" />担当者
                         </Badge>
                       )}
                       <span>{formatDateTime(reply.createdAt)}</span>
                     </div>
                     {isAdmin && !isEditing && (
                       <Button variant="ghost" size="sm" onClick={() => handleStartEdit(reply)} className="text-muted-foreground hover:text-foreground">
-                        <Pencil className="w-3.5 h-3.5 mr-1" />수정
+                        <Pencil className="w-3.5 h-3.5 mr-1" />編集
                       </Button>
                     )}
                   </div>
@@ -301,9 +301,9 @@ export default function InquiryDetail() {
                       <ImageUploadSection images={editReplyUploader.images} uploading={editReplyUploader.uploading} fileInputRef={editReplyUploader.fileInputRef} handleFileSelect={editReplyUploader.handleFileSelect} removeImage={editReplyUploader.removeImage} inputId={`edit-${reply.id}`} />
                       <div className="flex gap-2">
                         <Button size="sm" onClick={handleSaveEdit} disabled={updateReply.isPending}>
-                          {updateReply.isPending ? <><Loader2 className="w-4 h-4 mr-1 animate-spin" />저장 중...</> : <><Save className="w-4 h-4 mr-1" />저장</>}
+                          {updateReply.isPending ? <><Loader2 className="w-4 h-4 mr-1 animate-spin" />保存中...</> : <><Save className="w-4 h-4 mr-1" />保存</>}
                         </Button>
-                        <Button variant="outline" size="sm" onClick={() => { setEditingReplyId(null); setEditContent(""); }}>취소</Button>
+                        <Button variant="outline" size="sm" onClick={() => { setEditingReplyId(null); setEditContent(""); }}>キャンセル</Button>
                       </div>
                     </div>
                   ) : (
@@ -312,18 +312,18 @@ export default function InquiryDetail() {
                       {isLastAuto && (
                         <div className="mt-4 flex items-start gap-2 text-xs text-red-700 dark:text-red-400 bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800 rounded-md px-3 py-2.5">
                           <span className="mt-0.5 shrink-0 text-red-500">⚠️</span>
-                          <span>AI 상담사로 답변이 정확하지 않을 수 있습니다. 좀 더 정확한 상담을 원하시면 아래 <strong>[상담사 답변 요청하기]</strong> 버튼을 눌러주세요.</span>
+                          <span>AIアシスタントによる回答のため、正確でない場合があります。より正確なご相談をご希望の場合は、下の<strong>[担当者の回答をリクエスト]</strong>ボタンを押してください。</span>
                         </div>
                       )}
                       {replyAttachments && replyAttachments.length > 0 && (
                         <div className="mt-4 pt-4 border-t border-border/50">
                           <h5 className="text-xs font-semibold mb-2 flex items-center gap-1.5 text-muted-foreground">
-                            <ImageIcon className="w-3.5 h-3.5" />첨부 이미지 ({replyAttachments.length}개)
+                            <ImageIcon className="w-3.5 h-3.5" />添付画像 ({replyAttachments.length}件)
                           </h5>
                           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
                             {replyAttachments.map((url, index) => (
                               <button key={index} type="button" onClick={() => setLightboxImage(url)} className="relative rounded-lg overflow-hidden border bg-muted aspect-square hover:opacity-80 transition-opacity cursor-pointer">
-                                <img src={url} alt={`답변 첨부 이미지 ${index + 1}`} className="w-full h-full object-cover" />
+                                <img src={url} alt={`回答添付画像 ${index + 1}`} className="w-full h-full object-cover" />
                               </button>
                             ))}
                           </div>
@@ -342,7 +342,7 @@ export default function InquiryDetail() {
       {!isAdmin && isAuthor && hasReplies && !hasHumanReply && (
         <Card className="mt-6">
           <CardContent className="pt-5 pb-5">
-            <p className="text-sm font-medium mb-3 text-center">자동응답이 도움이 되었나요?</p>
+            <p className="text-sm font-medium mb-3 text-center">自動応答はお役に立ちましたか？</p>
             <div className="flex gap-3">
               <Button
                 variant="outline"
@@ -350,12 +350,12 @@ export default function InquiryDetail() {
                 onClick={() => navigate("/mypage/inquiries")}
               >
                 <CheckCircle2 className="w-4 h-4 mr-2" />
-                상담완료
+                対応完了
               </Button>
               {needsHuman ? (
                 <Button variant="outline" className="flex-1 border-orange-400 text-orange-600 bg-orange-50/50" disabled>
                   <MessageSquareText className="w-4 h-4 mr-2" />
-                  상담사 답변 요청됨
+                  担当者の回答をリクエスト済み
                 </Button>
               ) : (
                 <Button
@@ -365,18 +365,18 @@ export default function InquiryDetail() {
                   disabled={requestHuman.isPending}
                 >
                   {requestHuman.isPending ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <MessageSquareText className="w-4 h-4 mr-2" />}
-                  상담사 답변 요청하기
+                  担当者の回答をリクエスト
                 </Button>
               )}
             </div>
             {needsHuman ? (
               <div className="mt-3 bg-orange-50 dark:bg-orange-950/30 border border-orange-200 dark:border-orange-800 rounded-lg px-4 py-3 text-center">
-                <p className="text-sm font-medium text-orange-700 dark:text-orange-400">상담사 답변이 요청되었습니다.</p>
-                <p className="text-xs text-orange-600/80 dark:text-orange-500 mt-0.5">영업일 기준 1일 이내(평일 09:00–18:00)에 담당 상담사가 직접 답변드립니다.</p>
+                <p className="text-sm font-medium text-orange-700 dark:text-orange-400">担当者の回答がリクエストされました。</p>
+                <p className="text-xs text-orange-600/80 dark:text-orange-500 mt-0.5">営業日基準で1日以内（平日 09:00–18:00）に担当者が直接ご回答します。</p>
               </div>
             ) : (
               <p className="text-xs text-muted-foreground text-center mt-2">
-                자동응답이 만족스럽지 않으시면 상담사 답변을 요청해 보세요.
+                自動応答にご満足いただけない場合は、担当者の回答をリクエストしてください。
               </p>
             )}
           </CardContent>
@@ -390,9 +390,9 @@ export default function InquiryDetail() {
             <div className="flex items-start gap-3">
               <Bell className="w-5 h-5 text-blue-500 mt-0.5 flex-shrink-0" />
               <div>
-                <p className="font-medium text-sm mb-1">자동응답 생성 중입니다</p>
+                <p className="font-medium text-sm mb-1">自動応答を作成中です</p>
                 <p className="text-sm text-muted-foreground">
-                  잠시 후 자동응답이 등록됩니다. 자동응답이 만족스럽지 않으시면 [상담사 답변 요청하기] 버튼을 이용해 주세요.
+                  しばらくすると自動応答が登録されます。自動応答にご満足いただけない場合は、[担当者の回答をリクエスト] ボタンをご利用ください。
                 </p>
               </div>
             </div>
@@ -407,9 +407,9 @@ export default function InquiryDetail() {
             <div className="flex items-start gap-3">
               <CheckCircle2 className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
               <div>
-                <p className="font-medium text-sm mb-1">상담사 답변이 등록되었습니다</p>
-                <p className="text-sm text-muted-foreground">추가 문의사항이 있으시면 새로운 문의를 등록해주세요.</p>
-                <Button variant="outline" size="sm" className="mt-2" onClick={() => navigate("/customer-service/inquiry")}>새 문의 작성</Button>
+                <p className="font-medium text-sm mb-1">担当者の回答が登録されました</p>
+                <p className="text-sm text-muted-foreground">追加のご質問がある場合は、新しいお問い合わせを登録してください。</p>
+                <Button variant="outline" size="sm" className="mt-2" onClick={() => navigate("/customer-service/inquiry")}>新規お問い合わせ</Button>
               </div>
             </div>
           </CardContent>
@@ -422,7 +422,7 @@ export default function InquiryDetail() {
           <CardContent className="pt-4 pb-4">
             <div className="flex items-center gap-2 text-orange-700 dark:text-orange-400">
               <MessageSquareText className="w-4 h-4" />
-              <span className="text-sm font-medium">고객이 상담사 직접 답변을 요청했습니다. 영업일 1일 이내에 답변해 주세요.</span>
+              <span className="text-sm font-medium">お客様が担当者の直接回答をリクエストしました。営業日1日以内に回答してください。</span>
             </div>
           </CardContent>
         </Card>
@@ -433,15 +433,15 @@ export default function InquiryDetail() {
         <Card className="mt-6">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              상담사 답변 작성
-              <span className="text-sm font-normal text-muted-foreground">(등록 시 문의자에게 알림 발송)</span>
+              担当者の回答を作成
+              <span className="text-sm font-normal text-muted-foreground">(登録時にお問い合わせ者へ通知を送信)</span>
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <Textarea placeholder="답변 내용을 입력하세요..." value={replyContent} onChange={(e) => setReplyContent(e.target.value)} rows={6} className="mb-4" />
+            <Textarea placeholder="回答内容を入力してください..." value={replyContent} onChange={(e) => setReplyContent(e.target.value)} rows={6} className="mb-4" />
             <ImageUploadSection images={newReplyUploader.images} uploading={newReplyUploader.uploading} fileInputRef={newReplyUploader.fileInputRef} handleFileSelect={newReplyUploader.handleFileSelect} removeImage={newReplyUploader.removeImage} inputId="new-reply-images" />
             <Button onClick={handleSubmitReply} disabled={createReply.isPending || newReplyUploader.uploading}>
-              {createReply.isPending ? "등록 중..." : "답변 등록"}
+              {createReply.isPending ? "登録中..." : "回答を登録"}
             </Button>
           </CardContent>
         </Card>
@@ -451,7 +451,7 @@ export default function InquiryDetail() {
       {lightboxImage && (
         <div className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4" onClick={() => setLightboxImage(null)}>
           <div className="relative max-w-4xl max-h-[90vh]">
-            <img src={lightboxImage} alt="첨부 이미지 확대" className="max-w-full max-h-[90vh] object-contain rounded-lg" />
+            <img src={lightboxImage} alt="添付画像を拡大" className="max-w-full max-h-[90vh] object-contain rounded-lg" />
             <button onClick={() => setLightboxImage(null)} className="absolute top-2 right-2 bg-black/60 text-white rounded-full p-2 hover:bg-black/80 transition-colors">✕</button>
           </div>
         </div>

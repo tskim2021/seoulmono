@@ -55,7 +55,7 @@ function authHeaders() {
 
 async function fetchImageBanners(): Promise<B2BBanner[]> {
   const res = await fetch("/api/admin/image-banners", { headers: authHeaders() });
-  if (!res.ok) throw new Error("불러오기 실패");
+  if (!res.ok) throw new Error("読み込みに失敗しました");
   const data = await res.json();
   return data.banners || [];
 }
@@ -77,7 +77,7 @@ async function fetchShopMainBanners(): Promise<ShopMainBanner[]> {
   const res = await fetch("/api/admin/shop-main-banners", { headers: authHeaders() });
   if (!res.ok) {
     const r2 = await fetch("/api/shop-main-banners");
-    if (!r2.ok) throw new Error("불러오기 실패");
+    if (!r2.ok) throw new Error("読み込みに失敗しました");
     const d = await r2.json();
     return d.banners || [];
   }
@@ -111,11 +111,11 @@ function ShopMainBannerEditor() {
         headers: { ...authHeaders(), "content-type": "application/json" } as any,
         body: JSON.stringify({ ...b, is_active: b.is_active ? 0 : 1 }),
       });
-      if (!res.ok) throw new Error("변경 실패");
+      if (!res.ok) throw new Error("変更に失敗しました");
       return res.json();
     },
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["shop-main-banners"] }),
-    onError: () => toast({ title: "노출 설정 변경 실패", variant: "destructive" }),
+    onError: () => toast({ title: "表示設定の変更に失敗しました", variant: "destructive" }),
   });
 
   const saveMutation = useMutation({
@@ -126,11 +126,11 @@ function ShopMainBannerEditor() {
         headers: { ...authHeaders(), "content-type": "application/json" } as any,
         body: JSON.stringify(draft),
       });
-      if (!res.ok) throw new Error("저장 실패");
+      if (!res.ok) throw new Error("保存に失敗しました");
       return res.json();
     },
     onSuccess: () => {
-      toast({ title: "배너가 수정되었습니다" });
+      toast({ title: "バナーを更新しました" });
       queryClient.invalidateQueries({ queryKey: ["shop-main-banners"] });
       closEdit();
     },
@@ -139,7 +139,7 @@ function ShopMainBannerEditor() {
 
   const set = (key: keyof ShopMainBanner, val: any) => setDraft(d => ({ ...d, [key]: val }));
 
-  const SLIDE_NAMES = ["1번 슬라이드 (초록)", "2번 슬라이드 (네이비)", "3번 슬라이드 (퍼플)"];
+  const SLIDE_NAMES = ["スライド1 (グリーン)", "スライド2 (ネイビー)", "スライド3 (パープル)"];
   const SLIDE_ACCENTS = ["#1b6e45", "#1a3a6b", "#7c3aed"];
 
   if (isLoading) return (
@@ -149,7 +149,7 @@ function ShopMainBannerEditor() {
   return (
     <div className="space-y-4">
       <p className="text-sm text-slate-500 mb-4 bg-blue-50 border border-blue-100 rounded-xl px-4 py-3">
-        쇼핑몰 메인 페이지 슬라이드 배너의 <strong>텍스트 내용</strong>을 수정합니다. 수정 후 쇼핑몰에 실시간 반영됩니다.
+        ショップのトップページのスライドバナーの<strong>テキスト内容</strong>を編集します。編集後、ショップにリアルタイムで反映されます。
       </p>
 
       {banners.map((b, idx) => (
@@ -158,13 +158,13 @@ function ShopMainBannerEditor() {
           <div className="p-4">
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-center gap-2 flex-wrap">
-                <span className="text-sm font-black text-slate-700">{SLIDE_NAMES[idx] ?? `슬라이드 ${idx + 1}`}</span>
+                <span className="text-sm font-black text-slate-700">{SLIDE_NAMES[idx] ?? `スライド ${idx + 1}`}</span>
                 <span className="px-2 py-0.5 rounded-full text-xs font-bold" style={{ background: b.badge_color, color: "#000" }}>
-                  {b.badge_text || "(뱃지 없음)"}
+                  {b.badge_text || "(バッジなし)"}
                 </span>
                 {b.is_active
-                  ? <span className="px-2 py-0.5 rounded-full text-xs font-bold bg-emerald-50 text-emerald-600">노출중</span>
-                  : <span className="px-2 py-0.5 rounded-full text-xs font-bold bg-slate-100 text-slate-500">미노출</span>
+                  ? <span className="px-2 py-0.5 rounded-full text-xs font-bold bg-emerald-50 text-emerald-600">表示中</span>
+                  : <span className="px-2 py-0.5 rounded-full text-xs font-bold bg-slate-100 text-slate-500">非表示</span>
                 }
               </div>
               <div className="flex items-center gap-2">
@@ -173,13 +173,13 @@ function ShopMainBannerEditor() {
                   disabled={toggleActiveMutation.isPending}
                   className={`flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg border transition-colors ${b.is_active ? "border-slate-200 text-slate-500 hover:border-red-200 hover:text-red-500" : "border-emerald-200 text-emerald-600 bg-emerald-50 hover:bg-emerald-100"}`}
                 >
-                  {b.is_active ? <><EyeOff className="w-3 h-3" /> 미노출</> : <><Eye className="w-3 h-3" /> 노출</>}
+                  {b.is_active ? <><EyeOff className="w-3 h-3" /> 非表示</> : <><Eye className="w-3 h-3" /> 表示</>}
                 </button>
                 <button
                   onClick={() => openEdit(b)}
                   className="flex items-center gap-1.5 text-sm font-semibold text-slate-500 hover:text-blue-600 hover:bg-blue-50 px-3 py-1.5 rounded-lg transition-colors"
                 >
-                  <Pencil className="w-3.5 h-3.5" /> 수정
+                  <Pencil className="w-3.5 h-3.5" /> 編集
                 </button>
               </div>
             </div>
@@ -205,8 +205,8 @@ function ShopMainBannerEditor() {
           <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
             <div className="flex items-center justify-between p-6 border-b border-slate-100">
               <div>
-                <h2 className="text-xl font-black text-slate-900">슬라이드 텍스트 수정</h2>
-                <p className="text-sm text-slate-400 mt-0.5">수정 사항은 쇼핑몰에 즉시 반영됩니다</p>
+                <h2 className="text-xl font-black text-slate-900">スライドテキストの編集</h2>
+                <p className="text-sm text-slate-400 mt-0.5">変更内容はショップに即時反映されます</p>
               </div>
               <button onClick={closEdit} className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors">
                 <X className="w-5 h-5" />
@@ -216,7 +216,7 @@ function ShopMainBannerEditor() {
             <div className="mx-6 mt-5 rounded-xl overflow-hidden" style={{ background: draft.bg_gradient || editing.bg_gradient }}>
               <div className="p-5 text-white">
                 <div className="inline-flex px-3 py-1 rounded-full text-xs font-black mb-2" style={{ background: draft.badge_color || editing.badge_color, color: "#000" }}>
-                  {draft.badge_text || editing.badge_text || "뱃지"}
+                  {draft.badge_text || editing.badge_text || "バッジ"}
                 </div>
                 <div className="text-2xl font-black leading-tight">
                   {draft.title_line1 || editing.title_line1}<br />
@@ -232,59 +232,59 @@ function ShopMainBannerEditor() {
             <div className="p-6 space-y-4">
               <div>
                 <label className="flex items-center gap-1.5 text-sm font-semibold text-slate-700 mb-1.5">
-                  <Tag className="w-3.5 h-3.5 text-slate-400" /> 뱃지 텍스트
+                  <Tag className="w-3.5 h-3.5 text-slate-400" /> バッジテキスト
                 </label>
                 <input type="text" value={draft.badge_text ?? ""} onChange={e => set("badge_text", e.target.value)}
                   className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm focus:bg-white focus:border-primary outline-none transition-all"
-                  placeholder="예: ソウルモノ 단독" />
+                  placeholder="例: ソウルモノ限定" />
               </div>
               <div>
                 <label className="flex items-center gap-1.5 text-sm font-semibold text-slate-700 mb-1.5">
-                  <AlignLeft className="w-3.5 h-3.5 text-slate-400" /> 제목 1줄
+                  <AlignLeft className="w-3.5 h-3.5 text-slate-400" /> タイトル1行目
                 </label>
                 <input type="text" value={draft.title_line1 ?? ""} onChange={e => set("title_line1", e.target.value)}
                   className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm focus:bg-white focus:border-primary outline-none transition-all"
-                  placeholder="예: ソウルモノ만의" />
+                  placeholder="例: ソウルモノだけの" />
               </div>
               <div>
                 <label className="flex items-center gap-1.5 text-sm font-semibold text-slate-700 mb-1.5">
-                  <AlignLeft className="w-3.5 h-3.5 text-slate-400" /> 제목 2줄
+                  <AlignLeft className="w-3.5 h-3.5 text-slate-400" /> タイトル2行目
                 </label>
                 <input type="text" value={draft.title_line2 ?? ""} onChange={e => set("title_line2", e.target.value)}
                   className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm focus:bg-white focus:border-primary outline-none transition-all"
-                  placeholder="예: 특별한 브랜드" />
+                  placeholder="例: 特別なブランド" />
               </div>
               <div>
                 <label className="flex items-center gap-1.5 text-sm font-semibold text-slate-700 mb-1.5">
-                  <AlignLeft className="w-3.5 h-3.5 text-slate-400" /> 설명 텍스트
-                  <span className="text-slate-400 font-normal text-xs">(\n으로 줄바꿈)</span>
+                  <AlignLeft className="w-3.5 h-3.5 text-slate-400" /> 説明テキスト
+                  <span className="text-slate-400 font-normal text-xs">(\nで改行)</span>
                 </label>
                 <textarea value={draft.sub_text ?? ""} onChange={e => set("sub_text", e.target.value)} rows={2}
                   className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm focus:bg-white focus:border-primary outline-none transition-all resize-none"
-                  placeholder="예: 엄선된 프리미엄 식품을 합리적인 가격으로" />
+                  placeholder="例: 厳選したプレミアム食品をお求めやすい価格で" />
               </div>
               <div>
                 <label className="flex items-center gap-1.5 text-sm font-semibold text-slate-700 mb-1.5">
-                  <MousePointer className="w-3.5 h-3.5 text-slate-400" /> 버튼 텍스트
+                  <MousePointer className="w-3.5 h-3.5 text-slate-400" /> ボタンテキスト
                 </label>
                 <input type="text" value={draft.cta_text ?? ""} onChange={e => set("cta_text", e.target.value)}
                   className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm focus:bg-white focus:border-primary outline-none transition-all"
-                  placeholder="예: 브랜드 상품 보기" />
+                  placeholder="例: ブランド商品を見る" />
               </div>
               <div>
                 <label className="flex items-center gap-1.5 text-sm font-semibold text-slate-700 mb-1.5">
-                  <Link2 className="w-3.5 h-3.5 text-slate-400" /> 클릭 시 이동 URL
+                  <Link2 className="w-3.5 h-3.5 text-slate-400" /> クリック時の遷移先URL
                 </label>
                 <input type="text" value={draft.link_url ?? ""} onChange={e => set("link_url", e.target.value)}
                   className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm focus:bg-white focus:border-primary outline-none transition-all"
-                  placeholder="예: /list?type=3" />
+                  placeholder="例: /list?type=3" />
               </div>
             </div>
 
             <div className="flex justify-end gap-3 px-6 pb-6">
-              <Button variant="ghost" onClick={closEdit}>취소</Button>
+              <Button variant="ghost" onClick={closEdit}>キャンセル</Button>
               <Button onClick={() => saveMutation.mutate()} disabled={saveMutation.isPending}>
-                {saveMutation.isPending ? <><Loader2 className="w-4 h-4 mr-1 animate-spin" />저장 중...</> : <><Save className="w-4 h-4 mr-1" />저장</>}
+                {saveMutation.isPending ? <><Loader2 className="w-4 h-4 mr-1 animate-spin" />保存中...</> : <><Save className="w-4 h-4 mr-1" />保存</>}
               </Button>
             </div>
           </div>
@@ -318,7 +318,7 @@ function ImageUploadField({
           <img src={preview} alt="" className="w-full h-32 object-cover" />
           <div className="absolute top-1.5 right-1.5 flex gap-1">
             <button onClick={() => ref.current?.click()}
-              className="bg-white/90 rounded-lg px-2 py-1 text-xs font-semibold text-slate-600 shadow hover:bg-white">변경</button>
+              className="bg-white/90 rounded-lg px-2 py-1 text-xs font-semibold text-slate-600 shadow hover:bg-white">変更</button>
             <button onClick={onClear}
               className="bg-white/90 rounded-lg px-2 py-1 text-xs font-semibold text-red-500 shadow hover:bg-white"><X className="w-3 h-3" /></button>
           </div>
@@ -327,7 +327,7 @@ function ImageUploadField({
         <button onClick={() => ref.current?.click()}
           className="w-full h-28 rounded-xl border-2 border-dashed border-slate-300 hover:border-primary hover:bg-primary/5 flex flex-col items-center justify-center gap-2 text-slate-400 hover:text-primary transition-all">
           <Image className="w-6 h-6" />
-          <span className="text-xs font-medium">클릭하여 업로드</span>
+          <span className="text-xs font-medium">クリックしてアップロード</span>
         </button>
       )}
     </div>
@@ -395,11 +395,11 @@ function B2BBannerSection() {
 
       const url = editing ? `/api/admin/image-banners/${editing.id}` : "/api/admin/image-banners";
       const res = await fetch(url, { method: editing ? "PUT" : "POST", headers: authHeaders() as any, body: fd });
-      if (!res.ok) { const err = await res.json().catch(() => ({})); throw new Error(err.error || "저장 실패"); }
+      if (!res.ok) { const err = await res.json().catch(() => ({})); throw new Error(err.error || "保存に失敗しました"); }
       return res.json();
     },
     onSuccess: () => {
-      toast({ title: editing ? "수정되었습니다" : "등록되었습니다" });
+      toast({ title: editing ? "更新しました" : "登録しました" });
       queryClient.invalidateQueries({ queryKey: ["image-banners"] });
       setShowForm(false);
     },
@@ -409,10 +409,10 @@ function B2BBannerSection() {
   const deleteMutation = useMutation({
     mutationFn: async (id: number) => {
       const res = await fetch(`/api/admin/image-banners/${id}`, { method: "DELETE", headers: authHeaders() });
-      if (!res.ok) throw new Error("삭제 실패");
+      if (!res.ok) throw new Error("削除に失敗しました");
     },
-    onSuccess: () => { toast({ title: "삭제되었습니다" }); queryClient.invalidateQueries({ queryKey: ["image-banners"] }); },
-    onError: () => toast({ title: "삭제 실패", variant: "destructive" }),
+    onSuccess: () => { toast({ title: "削除しました" }); queryClient.invalidateQueries({ queryKey: ["image-banners"] }); },
+    onError: () => toast({ title: "削除に失敗しました", variant: "destructive" }),
   });
 
   const toggleMutation = useMutation({
@@ -444,10 +444,10 @@ function B2BBannerSection() {
       {/* Header row */}
       <div className="flex items-center justify-between mb-5">
         <p className="text-sm text-slate-500 bg-amber-50 border border-amber-100 rounded-xl px-4 py-3 flex-1 mr-4">
-          배너 하나에 <strong>PC 이미지</strong>와 <strong>모바일 이미지</strong>를 각각 등록합니다. 화면 크기에 따라 자동으로 전환됩니다.
+          1つのバナーに<strong>PC画像</strong>と<strong>モバイル画像</strong>をそれぞれ登録します。画面サイズに応じて自動で切り替わります。
         </p>
         <Button onClick={() => { setShowForm(true); setEditing(null); }}>
-          <Plus className="w-4 h-4 mr-1" /> 배너 추가
+          <Plus className="w-4 h-4 mr-1" /> バナーを追加
         </Button>
       </div>
 
@@ -456,7 +456,7 @@ function B2BBannerSection() {
       ) : banners.length === 0 ? (
         <Card className="py-16 text-center">
           <Image className="w-10 h-10 text-slate-200 mx-auto mb-3" />
-          <p className="text-slate-400 font-semibold">등록된 배너가 없습니다.</p>
+          <p className="text-slate-400 font-semibold">登録されたバナーがありません。</p>
         </Card>
       ) : (
         <div className="space-y-3">
@@ -483,20 +483,20 @@ function B2BBannerSection() {
                       <div className="flex flex-col items-center gap-1">
                         <div className="w-12 rounded-lg overflow-hidden border border-slate-200 bg-slate-100" style={{ height: 56 }}>
                           {banner.mobile_image_url ? (
-                            <img src={banner.mobile_image_url} alt="모바일" className="w-full h-full object-cover"
+                            <img src={banner.mobile_image_url} alt="モバイル" className="w-full h-full object-cover"
                               onError={e => { (e.target as HTMLImageElement).style.display = "none"; }} />
                           ) : (
                             <div className="w-full h-full flex items-center justify-center text-slate-300"><Smartphone className="w-4 h-4" /></div>
                           )}
                         </div>
-                        <span className="text-xs text-slate-400 font-medium">모바일</span>
+                        <span className="text-xs text-slate-400 font-medium">モバイル</span>
                       </div>
                     </div>
                   ) : (
                     <div className="shrink-0">
                       <div className="w-36 rounded-xl overflow-hidden border border-slate-200" style={{ height: 56, background: banner.bg_color || "#1D8A5A" }}>
                         <div className="p-2 h-full flex flex-col justify-between">
-                          <p className="text-white font-black text-xs leading-tight line-clamp-2">{banner.text_title || "(문구 없음)"}</p>
+                          <p className="text-white font-black text-xs leading-tight line-clamp-2">{banner.text_title || "(文言なし)"}</p>
                           {banner.text_cta && (
                             <span className="self-start text-[9px] font-bold px-1.5 py-0.5 rounded-full" style={{ background: banner.text_cta_bg || "#fff", color: banner.text_cta_color || "#1D8A5A" }}>
                               {banner.text_cta}
@@ -504,21 +504,21 @@ function B2BBannerSection() {
                           )}
                         </div>
                       </div>
-                      <span className="text-xs text-slate-400 font-medium mt-1 block text-center">문구형</span>
+                      <span className="text-xs text-slate-400 font-medium mt-1 block text-center">テキスト型</span>
                     </div>
                   )}
 
                   {/* 정보 */}
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 flex-wrap mb-1">
-                      <span className="font-bold text-slate-900 truncate">{banner.title || "(제목 없음)"}</span>
+                      <span className="font-bold text-slate-900 truncate">{banner.title || "(タイトルなし)"}</span>
                       <span className={`px-2 py-0.5 rounded-full text-xs font-bold ${(banner.banner_type || "image") === "text" ? "bg-violet-50 text-violet-600" : "bg-sky-50 text-sky-600"}`}>
-                        {(banner.banner_type || "image") === "text" ? "문구형" : "이미지형"}
+                        {(banner.banner_type || "image") === "text" ? "テキスト型" : "画像型"}
                       </span>
-                      {!banner.is_active && <span className="px-2 py-0.5 rounded-full text-xs font-bold bg-slate-100 text-slate-500">미노출</span>}
-                      {banner.is_active && expired && <span className="px-2 py-0.5 rounded-full text-xs font-bold bg-red-50 text-red-500">기간만료</span>}
-                      {banner.is_active && scheduled && <span className="px-2 py-0.5 rounded-full text-xs font-bold bg-blue-50 text-blue-500">예정</span>}
-                      {banner.is_active && !expired && !scheduled && <span className="px-2 py-0.5 rounded-full text-xs font-bold bg-emerald-50 text-emerald-600">노출중</span>}
+                      {!banner.is_active && <span className="px-2 py-0.5 rounded-full text-xs font-bold bg-slate-100 text-slate-500">非表示</span>}
+                      {banner.is_active && expired && <span className="px-2 py-0.5 rounded-full text-xs font-bold bg-red-50 text-red-500">期間終了</span>}
+                      {banner.is_active && scheduled && <span className="px-2 py-0.5 rounded-full text-xs font-bold bg-blue-50 text-blue-500">予定</span>}
+                      {banner.is_active && !expired && !scheduled && <span className="px-2 py-0.5 rounded-full text-xs font-bold bg-emerald-50 text-emerald-600">表示中</span>}
                     </div>
                     <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm text-slate-500">
                       {banner.link_url && <span className="flex items-center gap-1"><Link2 className="w-3 h-3" />{banner.link_url}</span>}
@@ -532,10 +532,10 @@ function B2BBannerSection() {
                   <div className="flex items-center gap-2 shrink-0">
                     <button onClick={() => toggleMutation.mutate(banner)}
                       className={`px-3 py-1.5 rounded-lg text-xs font-semibold border transition-colors ${banner.is_active ? "border-slate-200 text-slate-500 hover:border-red-200 hover:text-red-500" : "border-emerald-200 text-emerald-600 bg-emerald-50"}`}>
-                      {banner.is_active ? "비활성화" : "활성화"}
+                      {banner.is_active ? "無効にする" : "有効にする"}
                     </button>
                     <button onClick={() => openEdit(banner)} className="p-2 rounded-lg text-slate-400 hover:text-blue-600 hover:bg-blue-50 transition-colors"><Pencil className="w-4 h-4" /></button>
-                    <button onClick={() => { if (confirm("삭제하시겠습니까?")) deleteMutation.mutate(banner.id); }} className="p-2 rounded-lg text-slate-400 hover:text-red-600 hover:bg-red-50 transition-colors"><Trash2 className="w-4 h-4" /></button>
+                    <button onClick={() => { if (confirm("削除してもよろしいですか？")) deleteMutation.mutate(banner.id); }} className="p-2 rounded-lg text-slate-400 hover:text-red-600 hover:bg-red-50 transition-colors"><Trash2 className="w-4 h-4" /></button>
                   </div>
                 </div>
               </Card>
@@ -549,17 +549,17 @@ function B2BBannerSection() {
         <div className="fixed inset-0 z-50 bg-black/40 flex items-center justify-center p-4" onClick={() => setShowForm(false)}>
           <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
             <div className="flex items-center justify-between p-6 border-b border-slate-100">
-              <h2 className="text-xl font-black text-slate-900">{editing ? "배너 수정" : "배너 추가"}</h2>
+              <h2 className="text-xl font-black text-slate-900">{editing ? "バナーの編集" : "バナーの追加"}</h2>
               <button onClick={() => setShowForm(false)} className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100"><X className="w-5 h-5" /></button>
             </div>
             <div className="p-6 space-y-5">
               {/* 배너 타입 선택 */}
               <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-2">배너 형태</label>
+                <label className="block text-sm font-semibold text-slate-700 mb-2">バナー形式</label>
                 <div className="grid grid-cols-2 gap-3">
                   {[
-                    { val: "image", icon: ImageIcon, label: "이미지형", desc: "PC/모바일 이미지 업로드" },
-                    { val: "text",  icon: Type,      label: "문구형",   desc: "텍스트·배경색 설정" },
+                    { val: "image", icon: ImageIcon, label: "画像型", desc: "PC/モバイル画像をアップロード" },
+                    { val: "text",  icon: Type,      label: "テキスト型",   desc: "テキスト・背景色を設定" },
                   ].map(({ val, icon: Icon, label, desc }) => (
                     <button key={val} type="button"
                       onClick={() => setForm(p => ({ ...p, banner_type: val as "image" | "text" }))}
@@ -580,14 +580,14 @@ function B2BBannerSection() {
               {form.banner_type === "image" && (
                 <div className="grid grid-cols-2 gap-4">
                   <ImageUploadField
-                    label="PC 이미지"
+                    label="PC画像"
                     preview={form.pcPreview}
                     icon={Monitor}
                     onFile={f => setForm(p => ({ ...p, pcFile: f, pcPreview: URL.createObjectURL(f) }))}
                     onClear={() => setForm(p => ({ ...p, pcFile: null, pcPreview: "" }))}
                   />
                   <ImageUploadField
-                    label="모바일 이미지"
+                    label="モバイル画像"
                     preview={form.mobilePreview}
                     icon={Smartphone}
                     onFile={f => setForm(p => ({ ...p, mobileFile: f, mobilePreview: URL.createObjectURL(f) }))}
@@ -602,7 +602,7 @@ function B2BBannerSection() {
                   {/* 미리보기 */}
                   <div className="rounded-xl overflow-hidden border border-slate-200" style={{ background: form.bg_color, minHeight: 80 }}>
                     <div className="p-4 flex flex-col gap-2">
-                      <p className="text-white font-black text-lg leading-tight">{form.text_title || "제목을 입력하세요"}</p>
+                      <p className="text-white font-black text-lg leading-tight">{form.text_title || "タイトルを入力してください"}</p>
                       <p className="text-white/70 text-sm whitespace-pre-line">{form.text_sub}</p>
                       {form.text_cta && (
                         <span className="self-start text-xs font-bold px-3 py-1.5 rounded-full mt-1"
@@ -613,7 +613,7 @@ function B2BBannerSection() {
                     </div>
                   </div>
                   <div>
-                    <label className="block text-sm font-semibold text-slate-700 mb-1.5">배경 색상</label>
+                    <label className="block text-sm font-semibold text-slate-700 mb-1.5">背景色</label>
                     <div className="flex items-center gap-3">
                       <input type="color" value={form.bg_color} onChange={e => setForm(p => ({ ...p, bg_color: e.target.value }))}
                         className="w-10 h-10 rounded-lg border border-slate-200 cursor-pointer p-0.5" />
@@ -622,23 +622,23 @@ function B2BBannerSection() {
                     </div>
                   </div>
                   <div>
-                    <label className="block text-sm font-semibold text-slate-700 mb-1.5">제목 문구</label>
+                    <label className="block text-sm font-semibold text-slate-700 mb-1.5">タイトル文言</label>
                     <input type="text" value={form.text_title} onChange={e => setForm(p => ({ ...p, text_title: e.target.value }))}
-                      className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm focus:bg-white focus:border-primary outline-none" placeholder="예: ソウルモノ만의 특별한 브랜드" />
+                      className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm focus:bg-white focus:border-primary outline-none" placeholder="例: ソウルモノだけの特別なブランド" />
                   </div>
                   <div>
-                    <label className="block text-sm font-semibold text-slate-700 mb-1.5">부제 문구 <span className="text-slate-400 font-normal text-xs">(\n으로 줄바꿈)</span></label>
+                    <label className="block text-sm font-semibold text-slate-700 mb-1.5">サブタイトル文言 <span className="text-slate-400 font-normal text-xs">(\nで改行)</span></label>
                     <textarea value={form.text_sub} onChange={e => setForm(p => ({ ...p, text_sub: e.target.value }))} rows={2}
-                      className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm focus:bg-white focus:border-primary outline-none resize-none" placeholder="예: 엄선된 프리미엄 식품을&#10;합리적인 가격으로" />
+                      className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm focus:bg-white focus:border-primary outline-none resize-none" placeholder="例: 厳選したプレミアム食品を&#10;お求めやすい価格で" />
                   </div>
                   <div>
-                    <label className="block text-sm font-semibold text-slate-700 mb-1.5">버튼 문구</label>
+                    <label className="block text-sm font-semibold text-slate-700 mb-1.5">ボタン文言</label>
                     <input type="text" value={form.text_cta} onChange={e => setForm(p => ({ ...p, text_cta: e.target.value }))}
-                      className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm focus:bg-white focus:border-primary outline-none" placeholder="예: 브랜드 상품 보기" />
+                      className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm focus:bg-white focus:border-primary outline-none" placeholder="例: ブランド商品を見る" />
                   </div>
                   <div className="grid grid-cols-2 gap-3">
                     <div>
-                      <label className="block text-sm font-semibold text-slate-700 mb-1.5">버튼 배경색</label>
+                      <label className="block text-sm font-semibold text-slate-700 mb-1.5">ボタン背景色</label>
                       <div className="flex items-center gap-2">
                         <input type="color" value={form.text_cta_bg} onChange={e => setForm(p => ({ ...p, text_cta_bg: e.target.value }))}
                           className="w-9 h-9 rounded-lg border border-slate-200 cursor-pointer p-0.5 shrink-0" />
@@ -647,7 +647,7 @@ function B2BBannerSection() {
                       </div>
                     </div>
                     <div>
-                      <label className="block text-sm font-semibold text-slate-700 mb-1.5">버튼 글자색</label>
+                      <label className="block text-sm font-semibold text-slate-700 mb-1.5">ボタン文字色</label>
                       <div className="flex items-center gap-2">
                         <input type="color" value={form.text_cta_color} onChange={e => setForm(p => ({ ...p, text_cta_color: e.target.value }))}
                           className="w-9 h-9 rounded-lg border border-slate-200 cursor-pointer p-0.5 shrink-0" />
@@ -660,34 +660,34 @@ function B2BBannerSection() {
               )}
 
               <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-1.5">제목 (관리용)</label>
+                <label className="block text-sm font-semibold text-slate-700 mb-1.5">タイトル (管理用)</label>
                 <input type="text" value={form.title} onChange={e => setForm(p => ({ ...p, title: e.target.value }))}
                   className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm focus:bg-white focus:border-primary outline-none transition-all" />
               </div>
               <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-1.5">링크 URL</label>
+                <label className="block text-sm font-semibold text-slate-700 mb-1.5">リンクURL</label>
                 <input type="text" value={form.link_url} onChange={e => setForm(p => ({ ...p, link_url: e.target.value }))}
                   className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm focus:bg-white focus:border-primary outline-none transition-all" placeholder="https://..." />
                 <label className="flex items-center gap-2 mt-2 cursor-pointer">
                   <input type="checkbox" checked={form.is_new_window} onChange={e => setForm(p => ({ ...p, is_new_window: e.target.checked }))} className="w-4 h-4 rounded accent-primary" />
-                  <span className="text-sm text-slate-600 flex items-center gap-1"><ExternalLink className="w-3 h-3" /> 새 창으로 열기</span>
+                  <span className="text-sm text-slate-600 flex items-center gap-1"><ExternalLink className="w-3 h-3" /> 新しいウィンドウで開く</span>
                 </label>
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-sm font-semibold text-slate-700 mb-1.5">시작일</label>
+                  <label className="block text-sm font-semibold text-slate-700 mb-1.5">開始日</label>
                   <input type="date" value={form.start_date} onChange={e => setForm(p => ({ ...p, start_date: e.target.value }))}
                     className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm focus:bg-white focus:border-primary outline-none transition-all" />
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold text-slate-700 mb-1.5">종료일</label>
+                  <label className="block text-sm font-semibold text-slate-700 mb-1.5">終了日</label>
                   <input type="date" value={form.end_date} onChange={e => setForm(p => ({ ...p, end_date: e.target.value }))}
                     className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm focus:bg-white focus:border-primary outline-none transition-all" />
                 </div>
               </div>
               <div className="flex gap-3 items-end">
                 <div className="flex-1">
-                  <label className="block text-sm font-semibold text-slate-700 mb-1.5">순서</label>
+                  <label className="block text-sm font-semibold text-slate-700 mb-1.5">順序</label>
                   <div className="flex items-center gap-2">
                     <input type="number" value={form.sort_order} onChange={e => setForm(p => ({ ...p, sort_order: Number(e.target.value) }))} min={0}
                       className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm focus:bg-white focus:border-primary outline-none transition-all" />
@@ -699,14 +699,14 @@ function B2BBannerSection() {
                 </div>
                 <label className="flex items-center gap-2 cursor-pointer pb-1">
                   <input type="checkbox" checked={form.is_active} onChange={e => setForm(p => ({ ...p, is_active: e.target.checked }))} className="w-4 h-4 rounded accent-primary" />
-                  <span className="text-sm font-semibold text-slate-700">노출 활성화</span>
+                  <span className="text-sm font-semibold text-slate-700">表示を有効にする</span>
                 </label>
               </div>
             </div>
             <div className="flex justify-end gap-3 px-6 pb-6">
-              <Button variant="ghost" onClick={() => setShowForm(false)}>취소</Button>
+              <Button variant="ghost" onClick={() => setShowForm(false)}>キャンセル</Button>
               <Button onClick={() => saveMutation.mutate()} disabled={saveMutation.isPending}>
-                {saveMutation.isPending ? <><Loader2 className="w-4 h-4 mr-1 animate-spin" />저장 중...</> : editing ? "수정 완료" : "등록"}
+                {saveMutation.isPending ? <><Loader2 className="w-4 h-4 mr-1 animate-spin" />保存中...</> : editing ? "更新完了" : "登録"}
               </Button>
             </div>
           </div>
@@ -735,7 +735,7 @@ function ShopPromoBannerSection() {
     queryKey: ["shop-promo-banners"],
     queryFn: async () => {
       const res = await fetch("/api/shop-admin/promo-banners", { headers: authHeaders() });
-      if (!res.ok) throw new Error("불러오기 실패");
+      if (!res.ok) throw new Error("読み込みに失敗しました");
       const d = await res.json();
       return d.banners || [];
     },
@@ -771,15 +771,15 @@ function ShopPromoBannerSection() {
         headers: authHeaders() as any,
         body: fd,
       });
-      if (!res.ok) throw new Error("업로드 실패");
+      if (!res.ok) throw new Error("アップロードに失敗しました");
       const { image_url } = await res.json();
       setForms(f => ({
         ...f,
         [slot]: { ...f[slot], image_url, preview: image_url },
       }));
-      toast({ title: "이미지가 업로드되었습니다" });
+      toast({ title: "画像をアップロードしました" });
     } catch {
-      toast({ title: "이미지 업로드 실패", variant: "destructive" });
+      toast({ title: "画像のアップロードに失敗しました", variant: "destructive" });
     }
     setUploading(u => ({ ...u, [slot]: false }));
   };
@@ -794,11 +794,11 @@ function ShopPromoBannerSection() {
         headers: { ...authHeaders(), "Content-Type": "application/json" } as any,
         body: JSON.stringify({ image_url: form.image_url, link_url: form.link_url, is_active: form.is_active ? 1 : 0 }),
       });
-      if (!res.ok) throw new Error("저장 실패");
+      if (!res.ok) throw new Error("保存に失敗しました");
       queryClient.invalidateQueries({ queryKey: ["shop-promo-banners"] });
-      toast({ title: "저장되었습니다" });
+      toast({ title: "保存しました" });
     } catch {
-      toast({ title: "저장 실패", variant: "destructive" });
+      toast({ title: "保存に失敗しました", variant: "destructive" });
     }
     setSaving(s => ({ ...s, [slot]: false }));
   };
@@ -814,7 +814,7 @@ function ShopPromoBannerSection() {
   return (
     <div>
       <p className="text-sm text-slate-500 bg-amber-50 border border-amber-100 rounded-xl px-4 py-3 mb-5">
-        쇼핑몰 홈 화면의 <strong>서브 배너 3개</strong>를 이미지로 교체합니다. 이미지를 올리고 저장하면 쇼핑몰에 즉시 반영됩니다.
+        ショップのホーム画面の<strong>サブバナー3つ</strong>を画像で差し替えます。画像をアップロードして保存すると、ショップに即時反映されます。
       </p>
       <div className="space-y-4">
         {banners.map(b => {
@@ -828,7 +828,7 @@ function ShopPromoBannerSection() {
                 <div className="flex items-center justify-between mb-4">
                   <div>
                     <p className="font-black text-slate-800">{b.slot_name}</p>
-                    <p className="text-xs text-slate-400 mt-0.5">슬롯: {b.slot}</p>
+                    <p className="text-xs text-slate-400 mt-0.5">スロット: {b.slot}</p>
                   </div>
                   <button
                     type="button"
@@ -836,15 +836,15 @@ function ShopPromoBannerSection() {
                     className="flex items-center gap-1.5 text-sm font-semibold"
                   >
                     {f.is_active
-                      ? <><ToggleRight className="w-7 h-7 text-emerald-500" /><span className="text-emerald-600">노출</span></>
-                      : <><ToggleLeft className="w-7 h-7 text-slate-300" /><span className="text-slate-400">미노출</span></>}
+                      ? <><ToggleRight className="w-7 h-7 text-emerald-500" /><span className="text-emerald-600">表示</span></>
+                      : <><ToggleLeft className="w-7 h-7 text-slate-300" /><span className="text-slate-400">非表示</span></>}
                   </button>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {/* 이미지 업로드 */}
                   <div>
-                    <label className="block text-sm font-semibold text-slate-700 mb-2">배너 이미지</label>
+                    <label className="block text-sm font-semibold text-slate-700 mb-2">バナー画像</label>
                     <input
                       ref={el => { uploadRefs.current[b.slot] = el; }}
                       type="file" accept="image/*" className="hidden"
@@ -859,7 +859,7 @@ function ShopPromoBannerSection() {
                             disabled={isUp}
                             className="bg-white/90 rounded-lg px-2.5 py-1 text-xs font-semibold text-slate-700 shadow hover:bg-white"
                           >
-                            {isUp ? <Loader2 className="w-3 h-3 animate-spin" /> : "변경"}
+                            {isUp ? <Loader2 className="w-3 h-3 animate-spin" /> : "変更"}
                           </button>
                           <button
                             onClick={() => setForms(prev => ({ ...prev, [b.slot]: { ...prev[b.slot], image_url: "", preview: "" } }))}
@@ -873,24 +873,24 @@ function ShopPromoBannerSection() {
                         disabled={isUp}
                         className="w-full h-36 rounded-xl border-2 border-dashed border-slate-300 hover:border-primary hover:bg-primary/5 flex flex-col items-center justify-center gap-2 text-slate-400 hover:text-primary transition-all"
                       >
-                        {isUp ? <Loader2 className="w-6 h-6 animate-spin" /> : <><Image className="w-6 h-6" /><span className="text-xs font-medium">클릭하여 이미지 업로드</span></>}
+                        {isUp ? <Loader2 className="w-6 h-6 animate-spin" /> : <><Image className="w-6 h-6" /><span className="text-xs font-medium">クリックして画像をアップロード</span></>}
                       </button>
                     )}
-                    <p className="text-xs text-slate-400 mt-1">권장: JPG/PNG, 최대 15MB</p>
+                    <p className="text-xs text-slate-400 mt-1">推奨: JPG/PNG、最大15MB</p>
                   </div>
 
                   {/* 링크 URL */}
                   <div className="flex flex-col justify-between">
                     <div>
-                      <label className="block text-sm font-semibold text-slate-700 mb-2">클릭 시 이동 URL</label>
+                      <label className="block text-sm font-semibold text-slate-700 mb-2">クリック時の遷移先URL</label>
                       <input
                         type="text"
                         value={f.link_url}
                         onChange={e => setForms(prev => ({ ...prev, [b.slot]: { ...prev[b.slot], link_url: e.target.value } }))}
                         className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm focus:bg-white focus:border-primary outline-none transition-all"
-                        placeholder="예: /list?type=4"
+                        placeholder="例: /list?type=4"
                       />
-                      <p className="text-xs text-slate-400 mt-1">비워두면 링크 없이 이미지만 표시됩니다.</p>
+                      <p className="text-xs text-slate-400 mt-1">空欄の場合はリンクなしで画像のみ表示されます。</p>
                     </div>
                     <div className="mt-4">
                       <Button
@@ -898,7 +898,7 @@ function ShopPromoBannerSection() {
                         disabled={isSav}
                         className="w-full flex items-center justify-center gap-2"
                       >
-                        {isSav ? <><Loader2 className="w-4 h-4 animate-spin" />저장 중...</> : <><Save className="w-4 h-4" />저장하기</>}
+                        {isSav ? <><Loader2 className="w-4 h-4 animate-spin" />保存中...</> : <><Save className="w-4 h-4" />保存する</>}
                       </Button>
                     </div>
                   </div>
@@ -949,7 +949,7 @@ async function uploadBannerImage(file: File): Promise<string> {
     headers: token ? { authorization: `Bearer ${token}` } : {},
     body: fd,
   });
-  if (!res.ok) throw new Error("이미지 업로드 실패");
+  if (!res.ok) throw new Error("画像のアップロードに失敗しました");
   const data = await res.json();
   return data.image_url as string;
 }
@@ -968,7 +968,7 @@ function AppBannerSection() {
       const res = await fetch("/api/shop-admin/banners", {
         headers: token ? { authorization: `Bearer ${token}` } : {},
       });
-      if (!res.ok) throw new Error("불러오기 실패");
+      if (!res.ok) throw new Error("読み込みに失敗しました");
       const d = await res.json();
       return d.banners || [];
     },
@@ -1012,11 +1012,11 @@ function AppBannerSection() {
 
       const url = editing ? `/api/shop-admin/banners/${editing.id}` : "/api/shop-admin/banners";
       const res = await fetch(url, { method: editing ? "PUT" : "POST", headers, body: JSON.stringify(body) });
-      if (!res.ok) { const e = await res.json().catch(() => ({})); throw new Error(e.error || "저장 실패"); }
+      if (!res.ok) { const e = await res.json().catch(() => ({})); throw new Error(e.error || "保存に失敗しました"); }
       return res.json();
     },
     onSuccess: () => {
-      toast({ title: editing ? "수정되었습니다" : "등록되었습니다" });
+      toast({ title: editing ? "更新しました" : "登録しました" });
       queryClient.invalidateQueries({ queryKey: ["app-banners"] });
       setShowForm(false);
     },
@@ -1030,10 +1030,10 @@ function AppBannerSection() {
         method: "DELETE",
         headers: token ? { authorization: `Bearer ${token}` } : {},
       });
-      if (!res.ok) throw new Error("삭제 실패");
+      if (!res.ok) throw new Error("削除に失敗しました");
     },
-    onSuccess: () => { toast({ title: "삭제되었습니다" }); queryClient.invalidateQueries({ queryKey: ["app-banners"] }); },
-    onError: () => toast({ title: "삭제 실패", variant: "destructive" }),
+    onSuccess: () => { toast({ title: "削除しました" }); queryClient.invalidateQueries({ queryKey: ["app-banners"] }); },
+    onError: () => toast({ title: "削除に失敗しました", variant: "destructive" }),
   });
 
   const toggleMutation = useMutation({
@@ -1044,26 +1044,26 @@ function AppBannerSection() {
         headers: token ? { authorization: `Bearer ${token}`, "content-type": "application/json" } : { "content-type": "application/json" } as any,
         body: JSON.stringify({ ...b, is_active: b.is_active ? 0 : 1, image_url: b.app_img || b.pc_img || "" }),
       });
-      if (!res.ok) throw new Error("변경 실패");
+      if (!res.ok) throw new Error("変更に失敗しました");
     },
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["app-banners"] }),
-    onError: () => toast({ title: "변경 실패", variant: "destructive" }),
+    onError: () => toast({ title: "変更に失敗しました", variant: "destructive" }),
   });
 
   const IMG_TABS = [
     { key: "pc" as const, label: "PC", icon: Monitor },
-    { key: "mo" as const, label: "모바일", icon: Smartphone },
-    { key: "app" as const, label: "앱", icon: LayoutGrid },
+    { key: "mo" as const, label: "モバイル", icon: Smartphone },
+    { key: "app" as const, label: "アプリ", icon: LayoutGrid },
   ];
 
   return (
     <div>
       <div className="flex items-center justify-between mb-5">
         <p className="text-sm text-slate-500 bg-indigo-50 border border-indigo-100 rounded-xl px-4 py-3 flex-1 mr-4">
-          배너마다 <strong>PC / 모바일 / 앱</strong> 이미지를 각각 등록합니다. 앱 배너는 앱 홈 화면 상단 슬라이드에 표시됩니다.
+          バナーごとに<strong>PC / モバイル / アプリ</strong>の画像をそれぞれ登録します。アプリバナーはアプリのホーム画面上部のスライドに表示されます。
         </p>
         <Button onClick={() => { setShowForm(true); setEditing(null); }}>
-          <Plus className="w-4 h-4 mr-1" /> 배너 추가
+          <Plus className="w-4 h-4 mr-1" /> バナーを追加
         </Button>
       </div>
 
@@ -1072,8 +1072,8 @@ function AppBannerSection() {
       ) : banners.length === 0 ? (
         <Card className="py-16 text-center">
           <Image className="w-10 h-10 text-slate-200 mx-auto mb-3" />
-          <p className="text-slate-400 font-semibold">등록된 배너가 없습니다.</p>
-          <button onClick={() => setShowForm(true)} className="mt-4 text-sm text-primary font-semibold hover:underline">첫 배너 추가하기</button>
+          <p className="text-slate-400 font-semibold">登録されたバナーがありません。</p>
+          <button onClick={() => setShowForm(true)} className="mt-4 text-sm text-primary font-semibold hover:underline">最初のバナーを追加する</button>
         </Card>
       ) : (
         <div className="space-y-3">
@@ -1084,8 +1084,8 @@ function AppBannerSection() {
                 <div className="flex gap-2 shrink-0">
                   {[
                     { label: "PC", src: b.pc_img, icon: Monitor },
-                    { label: "모바일", src: b.mo_img, icon: Smartphone },
-                    { label: "앱", src: b.app_img, icon: LayoutGrid },
+                    { label: "モバイル", src: b.mo_img, icon: Smartphone },
+                    { label: "アプリ", src: b.app_img, icon: LayoutGrid },
                   ].map(({ label, src, icon: Icon }) => (
                     <div key={label} className="flex flex-col items-center gap-1">
                       <div className="w-16 h-10 rounded-lg overflow-hidden border border-slate-200 bg-slate-50 flex items-center justify-center">
@@ -1103,9 +1103,9 @@ function AppBannerSection() {
                 {/* 정보 */}
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 flex-wrap">
-                    <span className="font-bold text-slate-800 text-sm">{b.title || "(제목 없음)"}</span>
+                    <span className="font-bold text-slate-800 text-sm">{b.title || "(タイトルなし)"}</span>
                     <span className={`text-xs px-2 py-0.5 rounded-full font-semibold ${b.is_active ? "bg-emerald-50 text-emerald-600" : "bg-slate-100 text-slate-500"}`}>
-                      {b.is_active ? "노출중" : "미노출"}
+                      {b.is_active ? "表示中" : "非表示"}
                     </span>
                   </div>
                   {b.link_url && (
@@ -1113,20 +1113,20 @@ function AppBannerSection() {
                       <ExternalLink className="w-3 h-3 shrink-0" />{b.link_url}
                     </p>
                   )}
-                  <p className="text-xs text-slate-400 mt-0.5">순서: {b.sort_order}</p>
+                  <p className="text-xs text-slate-400 mt-0.5">順序: {b.sort_order}</p>
                 </div>
 
                 {/* 액션 */}
                 <div className="flex items-center gap-1 shrink-0">
                   <button onClick={() => toggleMutation.mutate(b)} disabled={toggleMutation.isPending}
                     className={`text-xs px-3 py-1.5 rounded-lg border font-semibold transition-colors ${b.is_active ? "border-slate-200 text-slate-500 hover:text-red-500" : "border-emerald-200 text-emerald-600 bg-emerald-50"}`}>
-                    {b.is_active ? <><EyeOff className="w-3 h-3 inline mr-1" />미노출</> : <><Eye className="w-3 h-3 inline mr-1" />노출</>}
+                    {b.is_active ? <><EyeOff className="w-3 h-3 inline mr-1" />非表示</> : <><Eye className="w-3 h-3 inline mr-1" />表示</>}
                   </button>
                   <button onClick={() => openEdit(b)}
                     className="text-xs px-3 py-1.5 rounded-lg border border-slate-200 text-slate-500 hover:text-blue-600 font-semibold transition-colors">
-                    <Pencil className="w-3 h-3 inline mr-1" />수정
+                    <Pencil className="w-3 h-3 inline mr-1" />編集
                   </button>
-                  <button onClick={() => { if (confirm("삭제하시겠습니까?")) deleteMutation.mutate(b.id); }}
+                  <button onClick={() => { if (confirm("削除してもよろしいですか？")) deleteMutation.mutate(b.id); }}
                     className="text-xs px-3 py-1.5 rounded-lg border border-slate-200 text-slate-500 hover:text-red-500 font-semibold transition-colors">
                     <Trash2 className="w-3 h-3 inline" />
                   </button>
@@ -1142,14 +1142,14 @@ function AppBannerSection() {
         <div className="fixed inset-0 z-50 bg-black/40 flex items-center justify-center p-4" onClick={() => setShowForm(false)}>
           <div className="bg-white rounded-2xl shadow-2xl w-full max-w-xl max-h-[92vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
             <div className="flex items-center justify-between p-6 border-b border-slate-100">
-              <h2 className="text-xl font-black text-slate-900">{editing ? "배너 수정" : "배너 추가"}</h2>
+              <h2 className="text-xl font-black text-slate-900">{editing ? "バナーの編集" : "バナーの追加"}</h2>
               <button onClick={() => setShowForm(false)} className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100"><X className="w-5 h-5" /></button>
             </div>
 
             <div className="p-6 space-y-5">
               {/* 이미지 탭 (PC / 모바일 / 앱) */}
               <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-2">이미지 업로드</label>
+                <label className="block text-sm font-semibold text-slate-700 mb-2">画像アップロード</label>
                 <div className="flex gap-1 mb-3 bg-slate-100 rounded-xl p-1 w-fit">
                   {IMG_TABS.map(t => {
                     const Icon = t.icon;
@@ -1165,17 +1165,17 @@ function AppBannerSection() {
                   })}
                 </div>
                 {imgTab === "pc" && (
-                  <ImageUploadField label="PC 이미지 (권장: 1920×500)" preview={form.pcPreview} icon={Monitor}
+                  <ImageUploadField label="PC画像 (推奨: 1920×500)" preview={form.pcPreview} icon={Monitor}
                     onFile={f => setForm(p => ({ ...p, pcFile: f, pcPreview: URL.createObjectURL(f) }))}
                     onClear={() => setForm(p => ({ ...p, pcFile: null, pcPreview: "" }))} />
                 )}
                 {imgTab === "mo" && (
-                  <ImageUploadField label="모바일 이미지 (권장: 768×300)" preview={form.moPreview} icon={Smartphone}
+                  <ImageUploadField label="モバイル画像 (推奨: 768×300)" preview={form.moPreview} icon={Smartphone}
                     onFile={f => setForm(p => ({ ...p, moFile: f, moPreview: URL.createObjectURL(f) }))}
                     onClear={() => setForm(p => ({ ...p, moFile: null, moPreview: "" }))} />
                 )}
                 {imgTab === "app" && (
-                  <ImageUploadField label="앱 이미지 (권장: 750×400)" preview={form.appPreview} icon={LayoutGrid}
+                  <ImageUploadField label="アプリ画像 (推奨: 750×400)" preview={form.appPreview} icon={LayoutGrid}
                     onFile={f => setForm(p => ({ ...p, appFile: f, appPreview: URL.createObjectURL(f) }))}
                     onClear={() => setForm(p => ({ ...p, appFile: null, appPreview: "" }))} />
                 )}
@@ -1183,41 +1183,41 @@ function AppBannerSection() {
 
               {/* 제목 */}
               <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-1.5">배너 제목 (관리용)</label>
+                <label className="block text-sm font-semibold text-slate-700 mb-1.5">バナータイトル (管理用)</label>
                 <input type="text" value={form.title} onChange={e => setForm(p => ({ ...p, title: e.target.value }))}
                   className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm focus:bg-white focus:border-primary outline-none transition-all"
-                  placeholder="예: 5월 프로모션 배너" />
+                  placeholder="例: 5月プロモーションバナー" />
               </div>
 
               {/* 링크 URL */}
               <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-1.5">클릭 시 이동 URL <span className="text-slate-400 font-normal">(선택)</span></label>
+                <label className="block text-sm font-semibold text-slate-700 mb-1.5">クリック時の遷移先URL <span className="text-slate-400 font-normal">(任意)</span></label>
                 <input type="text" value={form.link_url} onChange={e => setForm(p => ({ ...p, link_url: e.target.value }))}
                   className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm focus:bg-white focus:border-primary outline-none transition-all"
-                  placeholder="예: /list?type=3" />
+                  placeholder="例: /list?type=3" />
               </div>
 
               {/* 순서 + 노출 */}
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-semibold text-slate-700 mb-1.5">노출 순서</label>
+                  <label className="block text-sm font-semibold text-slate-700 mb-1.5">表示順</label>
                   <input type="number" value={form.sort_order} onChange={e => setForm(p => ({ ...p, sort_order: Number(e.target.value) }))}
                     className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm focus:bg-white focus:border-primary outline-none" min={0} />
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold text-slate-700 mb-1.5">노출 여부</label>
+                  <label className="block text-sm font-semibold text-slate-700 mb-1.5">表示有無</label>
                   <button type="button" onClick={() => setForm(p => ({ ...p, is_active: !p.is_active }))}
                     className={`flex items-center gap-2 px-4 py-2.5 rounded-xl border-2 text-sm font-semibold transition-all w-full ${form.is_active ? "border-emerald-300 text-emerald-600 bg-emerald-50" : "border-slate-200 text-slate-500"}`}>
-                    {form.is_active ? <><ToggleRight className="w-4 h-4" />노출중</> : <><ToggleLeft className="w-4 h-4" />미노출</>}
+                    {form.is_active ? <><ToggleRight className="w-4 h-4" />表示中</> : <><ToggleLeft className="w-4 h-4" />非表示</>}
                   </button>
                 </div>
               </div>
             </div>
 
             <div className="flex justify-end gap-3 px-6 pb-6">
-              <Button variant="ghost" onClick={() => setShowForm(false)}>취소</Button>
+              <Button variant="ghost" onClick={() => setShowForm(false)}>キャンセル</Button>
               <Button onClick={() => saveMutation.mutate()} disabled={saveMutation.isPending}>
-                {saveMutation.isPending ? <><Loader2 className="w-4 h-4 mr-1 animate-spin" />저장 중...</> : <><Save className="w-4 h-4 mr-1" />저장</>}
+                {saveMutation.isPending ? <><Loader2 className="w-4 h-4 mr-1 animate-spin" />保存中...</> : <><Save className="w-4 h-4 mr-1" />保存</>}
               </Button>
             </div>
           </div>
@@ -1235,17 +1235,17 @@ export default function AdminBanners() {
   const [mainTab, setMainTab] = useState<MainTab>("app");
 
   const TABS: { key: MainTab; label: string; icon: any }[] = [
-    { key: "app",     label: "앱 배너",      icon: LayoutGrid },
-    { key: "main",    label: "쇼핑몰 메인",  icon: LayoutGrid },
-    { key: "promo",   label: "쇼핑몰 배너",  icon: ImageIcon },
-    { key: "banners", label: "B2B 배너",     icon: Image },
+    { key: "app",     label: "アプリバナー",      icon: LayoutGrid },
+    { key: "main",    label: "ショップトップ",  icon: LayoutGrid },
+    { key: "promo",   label: "ショップバナー",  icon: ImageIcon },
+    { key: "banners", label: "B2Bバナー",     icon: Image },
   ];
 
   return (
     <div className="animate-in fade-in duration-300">
       <div className="mb-6">
-        <h1 className="text-3xl font-black text-slate-900 tracking-tight">배너관리</h1>
-        <p className="text-slate-500 mt-2 font-medium">앱·쇼핑몰 배너를 관리합니다.</p>
+        <h1 className="text-3xl font-black text-slate-900 tracking-tight">バナー管理</h1>
+        <p className="text-slate-500 mt-2 font-medium">アプリ・ショップのバナーを管理します。</p>
       </div>
 
       {/* Top tabs */}

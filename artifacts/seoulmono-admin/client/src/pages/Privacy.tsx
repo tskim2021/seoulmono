@@ -3,68 +3,68 @@ import { useSEO } from "@/hooks/useSEO";
 
 export default function Privacy() {
   useSEO({
-    title: "개인정보처리방침 - 탈모학교",
-    description: "탈모학교 개인정보처리방침입니다.",
+    title: "プライバシーポリシー - ソウルモノ",
+    description: "ソウルモノのプライバシーポリシーです。",
   });
 
   return (
     <Layout>
       <div className="container max-w-3xl mx-auto py-12">
-        <h1 className="text-3xl font-bold mb-8">개인정보처리방침</h1>
+        <h1 className="text-3xl font-bold mb-8">プライバシーポリシー</h1>
 
         <section className="mb-8">
-          <h2 className="text-lg font-bold mb-3">제1조 (수집하는 개인정보의 항목 및 수집방법)</h2>
+          <h2 className="text-lg font-bold mb-3">第1条 (収集する個人情報の項目および収集方法)</h2>
           <p className="text-muted-foreground leading-relaxed">
-            서비스는 회원가입 및 거래 등을 위해 아래와 같은 개인정보를 수집합니다.
+            当サービスは、会員登録および取引等のため、以下の個人情報を収集します。
           </p>
           <ul className="list-disc list-inside text-muted-foreground mt-2 space-y-1">
-            <li>필수수집: 성명, 아이디, 비밀번호, 연락처, 주소</li>
-            <li>선택수집: 생년월일, 관심상품, 최근방문일</li>
-            <li>자동수집: 접속기록, IP주소, 쿠키</li>
+            <li>必須項目: 氏名、ID、パスワード、連絡先、住所</li>
+            <li>任意項目: 生年月日、関心商品、最終訪問日</li>
+            <li>自動収集: アクセスログ、IPアドレス、Cookie</li>
           </ul>
         </section>
 
         <section className="mb-8">
-          <h2 className="text-lg font-bold mb-3">제2조 (개인정보 수집 목적)</h2>
+          <h2 className="text-lg font-bold mb-3">第2条 (個人情報の収集目的)</h2>
           <p className="text-muted-foreground leading-relaxed">
-            수집된 개인정보는 다음의 목적을 위해 사용됩니다.
+            収集した個人情報は、以下の目的のために利用します。
           </p>
           <ul className="list-disc list-inside text-muted-foreground mt-2 space-y-1">
-            <li>회원 등록 및 서비스 제공</li>
-            <li>상품 주문 및 배송 처리</li>
-            <li>포인트 적립 및 사용 관리</li>
-            <li>이벤트 정보 안내</li>
+            <li>会員登録およびサービスの提供</li>
+            <li>商品の注文および配送処理</li>
+            <li>ポイントの付与・利用の管理</li>
+            <li>イベント情報のご案内</li>
           </ul>
         </section>
 
         <section className="mb-8">
-          <h2 className="text-lg font-bold mb-3">제3조 (개인정보의 제3자 제공)</h2>
+          <h2 className="text-lg font-bold mb-3">第3条 (個人情報の第三者提供)</h2>
           <p className="text-muted-foreground leading-relaxed">
-            서비스는 원칙적으로 사용자의 동의 없이 제3자에게 개인정보를 제공하지 않습니다.
-            다만, 배송업체 등 서비스 제공을 위해 필요한 경우에 한해 최소한의 범위에서
-            제공할 수 있으며, 이 경우 사전에 고지합니다.
+            当サービスは、原則として利用者の同意なく第三者に個人情報を提供しません。
+            ただし、配送業者など、サービスの提供上必要な場合に限り、最小限の範囲で
+            提供することがあり、その場合は事前にお知らせします。
           </p>
         </section>
 
         <section className="mb-8">
-          <h2 className="text-lg font-bold mb-3">제4조 (개인정보의 수정 및 파기)</h2>
+          <h2 className="text-lg font-bold mb-3">第4条 (個人情報の訂正および破棄)</h2>
           <p className="text-muted-foreground leading-relaxed">
-            사용자는 언제든지 자신의 개인정보에 대해 조회, 수정, 삭제를 요구할 수 있으며,
-            서비스는 이에 대해 지체 없이 조치합니다.
-            또한 회원 탈퇴 시 수집된 개인정보는 관련 법령에 따라 안전하게 파기합니다.
+            利用者はいつでもご自身の個人情報について、照会・訂正・削除を求めることができ、
+            当サービスはこれに対して遅滞なく対応します。
+            また、会員退会時には、収集した個人情報を関連法令に従い安全に破棄します。
           </p>
         </section>
 
         <section className="mb-8">
-          <h2 className="text-lg font-bold mb-3">제5조 (정보보호책임자 및 연락처)</h2>
+          <h2 className="text-lg font-bold mb-3">第5条 (個人情報保護責任者および連絡先)</h2>
           <p className="text-muted-foreground leading-relaxed">
-            개인정보보호책임자: 탈모학교 운영팀<br />
-            연락처: hlschool.cs@gmail.com
+            個人情報保護責任者: ソウルモノ運営チーム<br />
+            連絡先: hlschool.cs@gmail.com
           </p>
         </section>
 
         <p className="text-sm text-muted-foreground mt-12">
-          최종 수정: 2025년 3월 15일
+          最終更新: 2025年3月15日
         </p>
       </div>
     </Layout>

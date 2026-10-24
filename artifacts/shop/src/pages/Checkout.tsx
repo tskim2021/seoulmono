@@ -123,10 +123,10 @@ export default function Checkout() {
 
     const kcpParams = new URLSearchParams(window.location.search);
     if (kcpParams.get("kcp") === "fail") {
-      setError(kcpParams.get("message") || "KCP 결제가 실패했습니다.");
+      setError(kcpParams.get("message") || "KCP決済に失敗しました。");
     }
     if (kcpParams.get("stripe") === "cancel") {
-      setError("Stripe 결제가 취소되었습니다.");
+      setError("Stripe決済がキャンセルされました。");
     }
 
     fetch("/api/settings/payment")
@@ -215,7 +215,7 @@ export default function Checkout() {
   };
 
   const validate = () => {
-    if (!form.name || !form.phone || !form.addr1) { setError("수령인, 연락처, 주소를 모두 입력해주세요"); return false; }
+    if (!form.name || !form.phone || !form.addr1) { setError("お受け取り人、ご連絡先、ご住所をすべて入力してください"); return false; }
     if (!form.nameKana.trim()) { setError("フリガナを入力してください"); return false; }
     if (!/^[゠-ヿー　\s]+$/.test(form.nameKana.trim())) { setError("フリガナは全角カタカナで入力してください"); return false; }
     return true;
@@ -280,18 +280,18 @@ export default function Checkout() {
       }
       let data: any = {};
       try { data = await res.json(); } catch {}
-      if (!res.ok) { setError(data.error || `주문 실패 (${res.status})`); return; }
+      if (!res.ok) { setError(data.error || `注文に失敗しました (${res.status})`); return; }
       setOrderResult(data); sessionStorage.removeItem(CHECKOUT_KEY); setStep("done");
       (window as any).ReactNativeWebView?.postMessage(JSON.stringify({ type: "order_complete", od_id: data?.od_id }));
-    } catch (e: any) { setError(e?.message || "주문 요청 실패"); } finally { setLoading(false); }
+    } catch (e: any) { setError(e?.message || "注文リクエストに失敗しました"); } finally { setLoading(false); }
   };
 
   const submitCardOrder = async () => {
     if (!validate()) return;
-    if (!kcpConfig?.enabled) { setError("카드 결제를 사용할 수 없습니다."); return; }
+    if (!kcpConfig?.enabled) { setError("カード決済をご利用いただけません。"); return; }
     setLoading(true); setError("");
     try {
-      const orderName = items[0].it_name + (items.length > 1 ? ` 외 ${items.length - 1}건` : "");
+      const orderName = items[0].it_name + (items.length > 1 ? ` 他${items.length - 1}点` : "");
 
       const prepRes = await authFetch("/api/shop/kcp/prepare", {
         method: "POST",
@@ -304,7 +304,7 @@ export default function Checkout() {
         }),
       });
       const prep = await prepRes.json();
-      if (!prepRes.ok) throw new Error(prep.error || "KCP 결제 준비 실패");
+      if (!prepRes.ok) throw new Error(prep.error || "KCP決済の準備に失敗しました");
 
       const isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
       const orderInfo: Record<string, string> = {
@@ -330,7 +330,7 @@ export default function Checkout() {
       };
 
       if (isMobile) {
-        if (!prep.approval_key || !prep.pay_url) throw new Error("KCP 모바일 거래등록에 실패했습니다");
+        if (!prep.approval_key || !prep.pay_url) throw new Error("KCPモバイル取引登録に失敗しました");
         Object.assign(orderInfo, {
           approval_key: prep.approval_key,
           PayUrl: prep.pay_url,
@@ -364,7 +364,7 @@ export default function Checkout() {
           const start = Date.now();
           const check = () => {
             if (typeof (window as any).KCP_Pay_Execute_Web === "function") { resolve(); return; }
-            if (Date.now() - start > timeoutMs) { reject(new Error("NHN KCP 결제창을 불러오지 못했습니다. 잠시 후 다시 시도해주세요.")); return; }
+            if (Date.now() - start > timeoutMs) { reject(new Error("NHN KCP決済画面を読み込めませんでした。しばらくしてからもう一度お試しください。")); return; }
             setTimeout(check, 100);
           };
           check();
@@ -383,10 +383,10 @@ export default function Checkout() {
             if ((window as any).GetField) (window as any).GetField(kcpForm, approvalResult);
             const confirmBody: Record<string, string> = { pending_id: prep.pending_id };
             new FormData(kcpForm).forEach((v, k) => { confirmBody[k] = String(v); });
-            if (confirmBody.res_cd !== "0000") throw new Error(confirmBody.res_msg || "KCP 카드 인증이 취소되었습니다");
+            if (confirmBody.res_cd !== "0000") throw new Error(confirmBody.res_msg || "KCPカード認証がキャンセルされました");
             const confRes = await authFetch("/api/shop/kcp/confirm", { method: "POST", body: JSON.stringify(confirmBody) });
             const confData = await confRes.json();
-            if (!confRes.ok) throw new Error(confData.error || "KCP 결제 승인 실패");
+            if (!confRes.ok) throw new Error(confData.error || "KCP決済の承認に失敗しました");
             setOrderResult(confData);
             sessionStorage.removeItem(CHECKOUT_KEY);
             setStep("done");
@@ -402,7 +402,7 @@ export default function Checkout() {
         } catch (err) { reject(err); }
       });
     } catch (e: any) {
-      setError(e?.message || "결제 처리 중 오류가 발생했습니다.");
+      setError(e?.message || "決済処理中にエラーが発生しました。");
     } finally {
       setLoading(false);
     }
@@ -410,7 +410,7 @@ export default function Checkout() {
 
   const submitStripeOrder = async () => {
     if (!validate()) return;
-    if (!stripeConfig?.enabled) { setError("Stripe 결제를 사용할 수 없습니다."); return; }
+    if (!stripeConfig?.enabled) { setError("Stripe決済をご利用いただけません。"); return; }
     setLoading(true); setError("");
     try {
       const res = await authFetch("/api/shop/stripe/create-session", {
@@ -424,8 +424,8 @@ export default function Checkout() {
         }),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Stripe 결제 준비 실패");
-      if (!data.url) throw new Error("Stripe 결제 URL을 받지 못했습니다");
+      if (!res.ok) throw new Error(data.error || "Stripe決済の準備に失敗しました");
+      if (!data.url) throw new Error("Stripe決済URLを取得できませんでした");
       sessionStorage.setItem("stripe_checkout_data", JSON.stringify({
         items, name: form.name, phone: form.phone, email: form.email,
         postcode: form.postcode, addr1: form.addr1, addr2: form.addr2,
@@ -433,23 +433,23 @@ export default function Checkout() {
       }));
       window.location.href = data.url;
     } catch (e: any) {
-      setError(e?.message || "결제 처리 중 오류가 발생했습니다.");
+      setError(e?.message || "決済処理中にエラーが発生しました。");
       setLoading(false);
     }
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!payMethod) { setError("결제수단을 선택해주세요."); return; }
+    if (!payMethod) { setError("お支払い方法を選択してください。"); return; }
     if (payMethod === "card") submitCardOrder();
     else if (payMethod === "stripe") submitStripeOrder();
     else submitBankOrder();
   };
 
   const availableMethods = [
-    paySettings.bank_enabled && { key: "bank" as PayMethod, label: "무통장입금", desc: "주문 후 계좌이체로 입금", icon: <Building2 size={18} color={payMethod === "bank" ? "#8B5E3C" : "#888"} /> },
-    kcpConfig?.enabled && { key: "card" as PayMethod, label: "신용카드", desc: `NHN KCP 해외카드 결제${kcpConfig.mode === "test" ? " (테스트)" : ""}`, icon: <CreditCard size={18} color={payMethod === "card" ? "#8B5E3C" : "#888"} /> },
-    stripeConfig?.enabled && { key: "stripe" as PayMethod, label: "Stripe 카드결제", desc: "Visa, Mastercard 등 해외 카드 결제", icon: <CreditCard size={18} color={payMethod === "stripe" ? "#8B5E3C" : "#888"} /> },
+    paySettings.bank_enabled && { key: "bank" as PayMethod, label: "銀行振込", desc: "ご注文後に口座へお振り込み", icon: <Building2 size={18} color={payMethod === "bank" ? "#8B5E3C" : "#888"} /> },
+    kcpConfig?.enabled && { key: "card" as PayMethod, label: "クレジットカード", desc: `NHN KCP 海外カード決済${kcpConfig.mode === "test" ? " (テスト)" : ""}`, icon: <CreditCard size={18} color={payMethod === "card" ? "#8B5E3C" : "#888"} /> },
+    stripeConfig?.enabled && { key: "stripe" as PayMethod, label: "Stripeカード決済", desc: "Visa、Mastercardなどの海外カード決済", icon: <CreditCard size={18} color={payMethod === "stripe" ? "#8B5E3C" : "#888"} /> },
   ].filter(Boolean) as { key: PayMethod; label: string; desc: string; icon: React.ReactNode }[];
 
   /* ── 완료 화면 ── */
@@ -474,12 +474,12 @@ export default function Checkout() {
           {/* 완료 배너 */}
           <div style={{ background: "#fff", borderRadius: 14, padding: "32px 24px", textAlign: "center", border: "1px solid #eee", marginBottom: 12 }}>
             <CheckCircle size={52} color="#8B5E3C" style={{ marginBottom: 12 }} />
-            <h2 style={{ fontSize: 22, fontWeight: 800, color: "#111", margin: "0 0 6px" }}>주문이 완료되었습니다!</h2>
-            <p style={{ fontSize: 13, color: "#888", margin: 0 }}>주문번호: <strong style={{ color: "#8B5E3C", fontFamily: "monospace" }}>{orderResult.od_id}</strong></p>
+            <h2 style={{ fontSize: 22, fontWeight: 800, color: "#111", margin: "0 0 6px" }}>ご注文が完了しました!</h2>
+            <p style={{ fontSize: 13, color: "#888", margin: 0 }}>注文番号: <strong style={{ color: "#8B5E3C", fontFamily: "monospace" }}>{orderResult.od_id}</strong></p>
           </div>
 
           {/* 주문 상품 */}
-          <DoneSection title="주문 상품" icon={<Package size={15} />}>
+          <DoneSection title="ご注文商品" icon={<Package size={15} />}>
             {items.map((item, i) => (
               <div key={i} style={{ display: "flex", gap: 12, marginBottom: i < items.length - 1 ? 12 : 0, paddingBottom: i < items.length - 1 ? 12 : 0, borderBottom: i < items.length - 1 ? "1px solid #f0f0f0" : "none" }}>
                 <div style={{ width: 52, height: 52, borderRadius: 8, overflow: "hidden", background: "#f5f5f5", border: "1px solid #eee", flexShrink: 0 }}>
@@ -487,55 +487,55 @@ export default function Checkout() {
                 </div>
                 <div style={{ flex: 1 }}>
                   <p style={{ margin: "0 0 2px", fontSize: 13, color: "#222", fontWeight: 600 }}>{item.it_name}</p>
-                  <p style={{ margin: "0 0 2px", fontSize: 11, color: "#aaa", fontFamily: "monospace" }}>상품번호: {item.it_id}</p>
-                  {item.option && <p style={{ margin: "0 0 2px", fontSize: 12, color: "#aaa" }}>옵션: {item.option}</p>}
-                  <p style={{ margin: 0, fontSize: 12, color: "#888" }}>{item.quantity}개 · {formatPrice((item.it_price + (item.option_price || 0)) * item.quantity)}</p>
+                  <p style={{ margin: "0 0 2px", fontSize: 11, color: "#aaa", fontFamily: "monospace" }}>商品番号: {item.it_id}</p>
+                  {item.option && <p style={{ margin: "0 0 2px", fontSize: 12, color: "#aaa" }}>オプション: {item.option}</p>}
+                  <p style={{ margin: 0, fontSize: 12, color: "#888" }}>{item.quantity}点 · {formatPrice((item.it_price + (item.option_price || 0)) * item.quantity)}</p>
                 </div>
               </div>
             ))}
           </DoneSection>
 
           {/* 주문자 정보 */}
-          <DoneSection title="주문자 정보" icon={<User size={15} />}>
-            <DoneRow label="이름" value={form.name} />
-            <DoneRow label="연락처" value={form.phone} />
-            {form.email && <DoneRow label="이메일" value={form.email} />}
+          <DoneSection title="ご注文者情報" icon={<User size={15} />}>
+            <DoneRow label="お名前" value={form.name} />
+            <DoneRow label="ご連絡先" value={form.phone} />
+            {form.email && <DoneRow label="メールアドレス" value={form.email} />}
           </DoneSection>
 
           {/* 배송지 정보 */}
-          <DoneSection title="배송지 정보" icon={<MapPin size={15} />}>
-            <DoneRow label="수령인" value={form.name} />
-            <DoneRow label="연락처" value={form.phone} />
-            <DoneRow label="주소" value={<>{form.postcode && <span style={{ fontSize: 12, background: "#f0f9f4", color: "#8B5E3C", borderRadius: 4, padding: "1px 6px", marginRight: 6 }}>{form.postcode}</span>}{form.addr1} {form.addr2}</>} />
-            {form.memo && <DoneRow label="배송 메모" value={form.memo} />}
+          <DoneSection title="お届け先情報" icon={<MapPin size={15} />}>
+            <DoneRow label="お受け取り人" value={form.name} />
+            <DoneRow label="ご連絡先" value={form.phone} />
+            <DoneRow label="ご住所" value={<>{form.postcode && <span style={{ fontSize: 12, background: "#f0f9f4", color: "#8B5E3C", borderRadius: 4, padding: "1px 6px", marginRight: 6 }}>{form.postcode}</span>}{form.addr1} {form.addr2}</>} />
+            {form.memo && <DoneRow label="配送メモ" value={form.memo} />}
           </DoneSection>
 
           {/* 결제 금액 */}
-          <DoneSection title="결제 금액" icon={<Banknote size={15} />}>
-            <DoneRow label="상품금액" value={formatPrice(orderResult.od_cart_price)} />
-            {orderResult.coupon_discount > 0 && <DoneRow label="쿠폰할인" value={<span style={{ color: "#e53935" }}>-{formatPrice(orderResult.coupon_discount)}</span>} />}
-            {orderResult.point_use > 0 && <DoneRow label="포인트사용" value={<span style={{ color: "#e53935" }}>-{formatPrice(orderResult.point_use)}</span>} />}
-            <DoneRow label="배송비" value={orderResult.od_send_cost === 0 ? <span style={{ color: "#8B5E3C" }}>무료</span> : formatPrice(orderResult.od_send_cost)} />
+          <DoneSection title="お支払い金額" icon={<Banknote size={15} />}>
+            <DoneRow label="商品金額" value={formatPrice(orderResult.od_cart_price)} />
+            {orderResult.coupon_discount > 0 && <DoneRow label="クーポン割引" value={<span style={{ color: "#e53935" }}>-{formatPrice(orderResult.coupon_discount)}</span>} />}
+            {orderResult.point_use > 0 && <DoneRow label="ポイント利用" value={<span style={{ color: "#e53935" }}>-{formatPrice(orderResult.point_use)}</span>} />}
+            <DoneRow label="送料" value={orderResult.od_send_cost === 0 ? <span style={{ color: "#8B5E3C" }}>無料</span> : formatPrice(orderResult.od_send_cost)} />
             <div style={{ display: "flex", justifyContent: "space-between", fontSize: 15, fontWeight: 800, borderTop: "1px solid #eee", paddingTop: 10, marginTop: 6 }}>
-              <span>총 결제금액</span><span style={{ color: "#8B5E3C" }}>{formatPrice(orderResult.od_receipt_price)}</span>
+              <span>お支払い合計</span><span style={{ color: "#8B5E3C" }}>{formatPrice(orderResult.od_receipt_price)}</span>
             </div>
           </DoneSection>
 
           {/* 입금 안내 / 카드 */}
           {isCard ? (
             <div style={{ background: "#f0f9f4", border: "1.5px solid #b8e6cc", borderRadius: 14, padding: "20px", marginBottom: 12 }}>
-              <p style={{ fontSize: 13, fontWeight: 700, color: "#8B5E3C", margin: "0 0 8px", display: "flex", alignItems: "center", gap: 6 }}><CreditCard size={15} /> 신용카드 결제 완료</p>
-              <p style={{ fontSize: 13, color: "#555", margin: 0 }}>결제가 정상적으로 처리되었습니다.</p>
+              <p style={{ fontSize: 13, fontWeight: 700, color: "#8B5E3C", margin: "0 0 8px", display: "flex", alignItems: "center", gap: 6 }}><CreditCard size={15} /> クレジットカード決済完了</p>
+              <p style={{ fontSize: 13, color: "#555", margin: 0 }}>決済は正常に処理されました。</p>
             </div>
           ) : (
             <div style={{ background: "#f0f9f4", border: "1.5px solid #b8e6cc", borderRadius: 14, padding: "20px", marginBottom: 12 }}>
-              <p style={{ fontSize: 14, fontWeight: 700, color: "#8B5E3C", margin: "0 0 14px", display: "flex", alignItems: "center", gap: 6 }}><Building2 size={15} /> 무통장입금 안내</p>
-              <DoneRow label="입금 은행" value={orderResult.bank_name || "정보 없음"} />
-              <DoneRow label="계좌 번호" value={orderResult.bank_num || "정보 없음"} />
-              <DoneRow label="예금주" value={orderResult.bank_holder || "정보 없음"} />
-              <DoneRow label="입금 금액" value={<strong style={{ color: "#8B5E3C", fontSize: 15 }}>{formatPrice(orderResult.od_receipt_price)}</strong>} />
+              <p style={{ fontSize: 14, fontWeight: 700, color: "#8B5E3C", margin: "0 0 14px", display: "flex", alignItems: "center", gap: 6 }}><Building2 size={15} /> 銀行振込のご案内</p>
+              <DoneRow label="振込先銀行" value={orderResult.bank_name || "情報なし"} />
+              <DoneRow label="口座番号" value={orderResult.bank_num || "情報なし"} />
+              <DoneRow label="口座名義" value={orderResult.bank_holder || "情報なし"} />
+              <DoneRow label="お振込金額" value={<strong style={{ color: "#8B5E3C", fontSize: 15 }}>{formatPrice(orderResult.od_receipt_price)}</strong>} />
               <p style={{ fontSize: 12, color: "#888", margin: "12px 0 0", lineHeight: 1.7, background: "#fff", borderRadius: 8, padding: "10px 12px" }}>
-                입금자명을 <strong style={{ color: "#8B5E3C" }}>{form.name}</strong>으로 입력해 주세요.<br />입금 확인 후 배송이 진행됩니다.
+                お振込名義は <strong style={{ color: "#8B5E3C" }}>{form.name}</strong> でお願いします。<br />入金確認後に発送いたします。
               </p>
             </div>
           )}
@@ -545,11 +545,11 @@ export default function Checkout() {
             <div style={{ background: "#fffbeb", border: "1.5px solid #fbbf24", borderRadius: 14, padding: "18px 20px", marginBottom: 12, display: "flex", gap: 12, alignItems: "flex-start" }}>
               <Phone size={20} color="#f59e0b" style={{ marginTop: 2, flexShrink: 0 }} />
               <div>
-                <p style={{ fontSize: 14, fontWeight: 700, color: "#92400e", margin: "0 0 6px" }}>주문번호가 문자로 발송되었습니다</p>
+                <p style={{ fontSize: 14, fontWeight: 700, color: "#92400e", margin: "0 0 6px" }}>注文番号をSMSでお送りしました</p>
                 <p style={{ fontSize: 13, color: "#78350f", margin: 0, lineHeight: 1.6 }}>
-                  입력하신 번호 <strong>{form.phone}</strong>으로<br />
-                  주문번호 <strong style={{ fontFamily: "monospace", color: "#8B5E3C" }}>{orderResult.od_id}</strong>를 문자로 보내드렸습니다.<br />
-                  무통장입금 후 배송이 진행됩니다.
+                  ご入力の番号 <strong>{form.phone}</strong> 宛に<br />
+                  注文番号 <strong style={{ fontFamily: "monospace", color: "#8B5E3C" }}>{orderResult.od_id}</strong> をSMSでお送りしました。<br />
+                  銀行振込のご入金後に発送いたします。
                 </p>
               </div>
             </div>
@@ -558,9 +558,9 @@ export default function Checkout() {
           {/* 버튼 */}
           <div style={{ display: "flex", flexDirection: "column", gap: 10, marginTop: 4 }}>
             {!orderResult.guest && (
-              <button onClick={() => navigate("/mypage")} style={{ height: 50, background: "#8B5E3C", border: "none", borderRadius: 12, color: "#fff", fontSize: 15, fontWeight: 700, cursor: "pointer" }}>주문 내역 확인</button>
+              <button onClick={() => navigate("/mypage")} style={{ height: 50, background: "#8B5E3C", border: "none", borderRadius: 12, color: "#fff", fontSize: 15, fontWeight: 700, cursor: "pointer" }}>注文履歴を確認</button>
             )}
-            <button onClick={() => navigate("/")} style={{ height: 46, background: orderResult.guest ? "#8B5E3C" : "#fff", border: orderResult.guest ? "none" : "1px solid #ddd", borderRadius: 12, color: orderResult.guest ? "#fff" : "#555", fontSize: orderResult.guest ? 15 : 14, fontWeight: orderResult.guest ? 700 : 400, cursor: "pointer" }}>쇼핑 계속하기</button>
+            <button onClick={() => navigate("/")} style={{ height: 46, background: orderResult.guest ? "#8B5E3C" : "#fff", border: orderResult.guest ? "none" : "1px solid #ddd", borderRadius: 12, color: orderResult.guest ? "#fff" : "#555", fontSize: orderResult.guest ? 15 : 14, fontWeight: orderResult.guest ? 700 : 400, cursor: "pointer" }}>ショッピングを続ける</button>
           </div>
         </div>
         <Footer />
@@ -577,7 +577,7 @@ export default function Checkout() {
         <button onClick={() => navigate(-1 as any)} style={{ background: "none", border: "none", cursor: "pointer", padding: 4 }}>
           <ChevronLeft size={22} color="#333" />
         </button>
-        <h1 style={{ fontSize: 17, fontWeight: 700, margin: 0 }}>주문하기</h1>
+        <h1 style={{ fontSize: 17, fontWeight: 700, margin: 0 }}>ご注文手続き</h1>
       </div>
 
       <form onSubmit={handleSubmit}>
@@ -590,7 +590,7 @@ export default function Checkout() {
             <div style={{ display: "flex", flexDirection: "column", gap: 12, minWidth: 0 }}>
 
               {/* 주문 상품 */}
-              <Section title={<><Package size={15} /> 주문 상품</>}>
+              <Section title={<><Package size={15} /> ご注文商品</>}>
                 {items.map((item, i) => (
                   <div key={i} style={{ display: "flex", gap: 12, padding: i > 0 ? "12px 0 0" : "0", borderTop: i > 0 ? "1px solid #f0f0f0" : "none" }}>
                     <div style={{ width: 60, height: 60, borderRadius: 8, overflow: "hidden", background: "#f5f5f5", flexShrink: 0 }}>
@@ -598,9 +598,9 @@ export default function Checkout() {
                     </div>
                     <div style={{ flex: 1, minWidth: 0 }}>
                       <p style={{ fontSize: 14, color: "#222", margin: "0 0 2px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{item.it_name}</p>
-                      <p style={{ fontSize: 11, color: "#aaa", margin: "0 0 4px", fontFamily: "monospace" }}>상품번호: {item.it_id}</p>
-                      {item.option && <p style={{ fontSize: 12, color: "#999", margin: "0 0 4px" }}>옵션: {item.option}</p>}
-                      <p style={{ fontSize: 13, color: "#555", margin: 0 }}>{item.quantity}개 · <strong>{formatPrice(item.it_price * item.quantity)}</strong></p>
+                      <p style={{ fontSize: 11, color: "#aaa", margin: "0 0 4px", fontFamily: "monospace" }}>商品番号: {item.it_id}</p>
+                      {item.option && <p style={{ fontSize: 12, color: "#999", margin: "0 0 4px" }}>オプション: {item.option}</p>}
+                      <p style={{ fontSize: 13, color: "#555", margin: 0 }}>{item.quantity}点 · <strong>{formatPrice(item.it_price * item.quantity)}</strong></p>
                     </div>
                   </div>
                 ))}
@@ -611,17 +611,17 @@ export default function Checkout() {
                 <div style={{ background: "#fffbeb", border: "1.5px solid #fbbf24", borderRadius: 12, padding: "14px 16px", display: "flex", gap: 12, alignItems: "flex-start" }}>
                   <Phone size={18} color="#f59e0b" style={{ marginTop: 2, flexShrink: 0 }} />
                   <div>
-                    <p style={{ margin: "0 0 4px", fontSize: 14, fontWeight: 700, color: "#92400e" }}>비회원 구매</p>
+                    <p style={{ margin: "0 0 4px", fontSize: 14, fontWeight: 700, color: "#92400e" }}>ゲスト購入</p>
                     <p style={{ margin: 0, fontSize: 12.5, color: "#78350f", lineHeight: 1.6 }}>
-                      주문 완료 후 입력하신 연락처로 주문번호를 문자 발송해 드립니다.<br />
-                      쿠폰·포인트 혜택은 로그인 후 이용 가능합니다.
+                      ご注文完了後、ご入力の連絡先に注文番号をSMSでお送りします。<br />
+                      クーポン・ポイント特典はログイン後にご利用いただけます。
                     </p>
                   </div>
                 </div>
               )}
 
               {/* 주문자 정보 */}
-              <Section title="주문자 정보">
+              <Section title="ご注文者情報">
                 <div style={{ marginBottom: 14 }}>
                   <label style={{ display: "block", fontSize: 13, fontWeight: 700, color: "#222", marginBottom: 8 }}>
                     お名前（漢字） <span style={{ color: "#e53935" }}>*</span>
@@ -663,18 +663,18 @@ export default function Checkout() {
                   <p style={{ fontSize: 11, color: "#aaa", margin: "6px 0 0" }}>※カタカナで入力してください</p>
                 </div>
 
-                <Field label="연락처 *" type="tel" value={form.phone} onChange={set("phone")} placeholder="090-0000-0000" required />
-                <Field label="이메일" type="email" value={form.email} onChange={set("email")} placeholder="email@example.com" />
+                <Field label="ご連絡先 *" type="tel" value={form.phone} onChange={set("phone")} placeholder="090-0000-0000" required />
+                <Field label="メールアドレス" type="email" value={form.email} onChange={set("email")} placeholder="email@example.com" />
               </Section>
 
               {/* 배송지 */}
               <Section title={
                 <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", width: "100%" }}>
-                  <span style={{ display: "flex", alignItems: "center", gap: 6 }}><MapPin size={15} />배송지</span>
+                  <span style={{ display: "flex", alignItems: "center", gap: 6 }}><MapPin size={15} />お届け先</span>
                   {!isGuest && (
                     <button type="button" onClick={() => setShowAddressModal(true)}
                       style={{ fontSize: 12, color: "#8B5E3C", background: "none", border: "none", cursor: "pointer", display: "flex", alignItems: "center", gap: 4, padding: 0, fontWeight: 600 }}>
-                      <Plus size={13} />배송지 관리
+                      <Plus size={13} />お届け先管理
                     </button>
                   )}
                 </div>
@@ -683,7 +683,7 @@ export default function Checkout() {
                   <div style={{ marginBottom: 14 }}>
                     <button type="button" onClick={() => setShowAddrPicker(!showAddrPicker)}
                       style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between", padding: "10px 14px", border: "1.5px solid #8B5E3C", borderRadius: 8, background: "#f0f9f4", cursor: "pointer", fontSize: 13, color: "#8B5E3C", fontWeight: 600 }}>
-                      <span style={{ display: "flex", alignItems: "center", gap: 6 }}><MapPin size={14} />저장된 배송지에서 선택</span>
+                      <span style={{ display: "flex", alignItems: "center", gap: 6 }}><MapPin size={14} />保存済みのお届け先から選択</span>
                       <ChevronDown size={16} style={{ transform: showAddrPicker ? "rotate(180deg)" : "none", transition: "0.2s" }} />
                     </button>
                     {showAddrPicker && (
@@ -693,7 +693,7 @@ export default function Checkout() {
                             style={{ width: "100%", padding: "12px 14px", background: "#fff", border: "none", borderBottom: i < savedAddresses.length - 1 ? "1px solid #f0f0f0" : "none", cursor: "pointer", textAlign: "left" }}>
                             <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 3 }}>
                               <span style={{ fontSize: 14, fontWeight: 700, color: "#222" }}>{addr.ma_name}</span>
-                              {addr.ma_default && <span style={{ fontSize: 11, fontWeight: 700, color: "#8B5E3C", background: "#e8f8f0", padding: "1px 6px", borderRadius: 4 }}>기본</span>}
+                              {addr.ma_default && <span style={{ fontSize: 11, fontWeight: 700, color: "#8B5E3C", background: "#e8f8f0", padding: "1px 6px", borderRadius: 4 }}>基本</span>}
                             </div>
                             {addr.ma_hp && <p style={{ margin: "0 0 2px", fontSize: 12, color: "#888" }}>{addr.ma_hp}</p>}
                             <p style={{ margin: 0, fontSize: 12, color: "#666" }}>{addr.ma_addr1} {addr.ma_addr2}</p>
@@ -736,14 +736,14 @@ export default function Checkout() {
 
               {/* ── 쿠폰 ── */}
               {!isGuest && (
-                <Section title={<><Tag size={15} /> 쿠폰 사용</>}>
+                <Section title={<><Tag size={15} /> クーポンを使う</>}>
                   {availableCoupons.length === 0 ? (
-                    <p style={{ fontSize: 13, color: "#aaa", margin: 0 }}>사용 가능한 쿠폰이 없습니다.</p>
+                    <p style={{ fontSize: 13, color: "#aaa", margin: 0 }}>ご利用可能なクーポンがありません。</p>
                   ) : selectedCoupon ? (
                     <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", background: "#f0f9f4", border: "1.5px solid #8B5E3C", borderRadius: 10, padding: "12px 14px" }}>
                       <div>
                         <p style={{ margin: 0, fontSize: 14, fontWeight: 700, color: "#8B5E3C" }}>{selectedCoupon.cp_name}</p>
-                        <p style={{ margin: "2px 0 0", fontSize: 13, color: "#555" }}>{formatPrice(selectedCoupon.cp_price)} 할인</p>
+                        <p style={{ margin: "2px 0 0", fontSize: 13, color: "#555" }}>{formatPrice(selectedCoupon.cp_price)}オフ</p>
                       </div>
                       <button type="button" onClick={() => setSelectedCoupon(null)}
                         style={{ background: "none", border: "none", cursor: "pointer", color: "#aaa", padding: 4 }}>
@@ -753,7 +753,7 @@ export default function Checkout() {
                   ) : (
                     <button type="button" onClick={() => setShowCouponPicker(true)}
                       style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between", padding: "12px 14px", border: "1.5px solid #e0e0e0", borderRadius: 10, background: "#fff", cursor: "pointer", fontSize: 14, color: "#333" }}>
-                      <span style={{ display: "flex", alignItems: "center", gap: 6 }}><Tag size={14} color="#888" />쿠폰 선택 ({availableCoupons.length}장 사용 가능)</span>
+                      <span style={{ display: "flex", alignItems: "center", gap: 6 }}><Tag size={14} color="#888" />クーポンを選択 ({availableCoupons.length}枚利用可能)</span>
                       <ChevronRight size={16} color="#aaa" />
                     </button>
                   )}
@@ -762,15 +762,15 @@ export default function Checkout() {
 
               {/* ── 포인트 ── */}
               {!isGuest && (
-                <Section title={<><Award size={15} /> 포인트 사용</>}>
+                <Section title={<><Award size={15} /> ポイントを使う</>}>
                   <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
-                    <span style={{ fontSize: 13, color: "#555" }}>보유 포인트:</span>
+                    <span style={{ fontSize: 13, color: "#555" }}>保有ポイント:</span>
                     <span style={{ fontSize: 14, fontWeight: 700, color: myPoints > 0 ? "#8B5E3C" : "#aaa" }}>{myPoints.toLocaleString()} D</span>
                   </div>
                   <div style={{ display: "flex", gap: 8 }}>
                     <input
                       type="number" value={pointInput} onChange={e => setPointInput(e.target.value)}
-                      placeholder="사용할 포인트 입력"
+                      placeholder="使用するポイントを入力"
                       min={0} max={myPoints}
                       disabled={myPoints === 0}
                       style={{ flex: 1, border: "1.5px solid #e0e0e0", borderRadius: 8, padding: "10px 12px", fontSize: 14, outline: "none", boxSizing: "border-box", background: myPoints === 0 ? "#fafafa" : "#fff" }}
@@ -779,16 +779,16 @@ export default function Checkout() {
                     />
                     <button type="button" onClick={applyPoint} disabled={myPoints === 0}
                       style={{ flexShrink: 0, padding: "0 14px", height: 42, background: "#8B5E3C", border: "none", borderRadius: 8, color: "#fff", fontSize: 13, fontWeight: 700, cursor: myPoints === 0 ? "not-allowed" : "pointer", opacity: myPoints === 0 ? 0.5 : 1 }}>
-                      적용
+                      適用
                     </button>
                     <button type="button" onClick={useAllPoints} disabled={myPoints === 0}
                       style={{ flexShrink: 0, padding: "0 12px", height: 42, background: "#fff", border: "1.5px solid #8B5E3C", borderRadius: 8, color: "#8B5E3C", fontSize: 13, fontWeight: 700, cursor: myPoints === 0 ? "not-allowed" : "pointer", opacity: myPoints === 0 ? 0.5 : 1, whiteSpace: "nowrap" }}>
-                      전액사용
+                      全額使用
                     </button>
                   </div>
                   {pointUse > 0 && (
                     <p style={{ fontSize: 13, color: "#8B5E3C", margin: "8px 0 0", fontWeight: 600 }}>
-                      {pointUse.toLocaleString()}D 사용 → {formatPrice(pointUse)} 할인
+                      {pointUse.toLocaleString()}pt 使用 → {formatPrice(pointUse)} 割引
                     </p>
                   )}
                 </Section>
@@ -800,9 +800,9 @@ export default function Checkout() {
               <div className="checkout-sticky-right">
 
                 {/* 결제 방법 */}
-                <Section title={<><Banknote size={15} /> 결제 방법</>}>
+                <Section title={<><Banknote size={15} /> お支払い方法</>}>
                   {availableMethods.length === 0 ? (
-                    <p style={{ fontSize: 13, color: "#888", textAlign: "center", padding: "12px 0" }}>사용 가능한 결제수단이 없습니다.</p>
+                    <p style={{ fontSize: 13, color: "#888", textAlign: "center", padding: "12px 0" }}>ご利用可能なお支払い方法がありません。</p>
                   ) : (
                     <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
                       {availableMethods.map(m => (
@@ -833,26 +833,26 @@ export default function Checkout() {
                 {payMethod === "bank" && (
                   <div style={{ background: "#f0f9f4", border: "1.5px solid #b8e6cc", borderRadius: 14, padding: "18px 20px" }}>
                     <p style={{ fontSize: 14, fontWeight: 700, color: "#8B5E3C", margin: "0 0 12px", display: "flex", alignItems: "center", gap: 6 }}>
-                      <Building2 size={15} /> 무통장입금 안내
+                      <Building2 size={15} /> 銀行振込のご案内
                     </p>
                     {bankInfo.bank_num ? (
                       <>
                         <div style={{ display: "flex", justifyContent: "space-between", fontSize: 13, marginBottom: 6 }}>
-                          <span style={{ color: "#888" }}>입금 은행</span>
+                          <span style={{ color: "#888" }}>振込先銀行</span>
                           <span style={{ color: "#333", fontWeight: 600 }}>{bankInfo.bank_name}</span>
                         </div>
                         <div style={{ display: "flex", justifyContent: "space-between", fontSize: 13, marginBottom: 6 }}>
-                          <span style={{ color: "#888" }}>계좌 번호</span>
+                          <span style={{ color: "#888" }}>口座番号</span>
                           <span style={{ color: "#8B5E3C", fontWeight: 700, fontFamily: "monospace", fontSize: 14 }}>{bankInfo.bank_num}</span>
                         </div>
                         <div style={{ display: "flex", justifyContent: "space-between", fontSize: 13, marginBottom: 10 }}>
-                          <span style={{ color: "#888" }}>예금주</span>
+                          <span style={{ color: "#888" }}>口座名義</span>
                           <span style={{ color: "#333", fontWeight: 600 }}>{bankInfo.bank_holder}</span>
                         </div>
                         <p style={{ fontSize: 12, color: "#888", margin: 0, background: "#fff", borderRadius: 8, padding: "10px 12px", lineHeight: 1.7 }}>
-                          주문 후 <strong style={{ color: "#8B5E3C" }}>위 계좌로 입금</strong>해 주세요.<br />
-                          입금자명을 <strong style={{ color: "#8B5E3C" }}>{form.name || "주문자명"}</strong>으로 입력해 주세요.<br />
-                          입금 확인 후 배송이 진행됩니다.
+                          ご注文後、<strong style={{ color: "#8B5E3C" }}>上記口座へお振り込み</strong>ください。<br />
+                          お振込名義は <strong style={{ color: "#8B5E3C" }}>{form.name || "ご注文者名"}</strong> でお願いします。<br />
+                          入金確認後に発送いたします。
                         </p>
                         {bankInfo.bank_memo && (
                           <p style={{ fontSize: 12, color: "#555", margin: "8px 0 0", background: "#fff", borderRadius: 8, padding: "10px 12px", lineHeight: 1.8, whiteSpace: "pre-line", borderLeft: "3px solid #8B5E3C" }}>
@@ -861,7 +861,7 @@ export default function Checkout() {
                         )}
                       </>
                     ) : (
-                      <p style={{ fontSize: 13, color: "#888", margin: 0 }}>계좌 정보가 등록되지 않았습니다. 관리자에게 문의해주세요.</p>
+                      <p style={{ fontSize: 13, color: "#888", margin: 0 }}>口座情報が登録されていません。管理者にお問い合わせください。</p>
                     )}
                   </div>
                 )}
@@ -870,7 +870,7 @@ export default function Checkout() {
                 {payMethod === "card" && (
                   <div style={{ background: "#fff", borderRadius: 14, padding: "16px", border: "1px solid #eee" }}>
                     <p style={{ fontSize: 13, color: "#555", margin: 0, lineHeight: 1.7 }}>
-                      주문하기 버튼을 누르면 NHN KCP 해외카드 결제창이 열립니다.{kcpConfig?.mode === "test" ? " (테스트 모드)" : ""}
+                      注文ボタンを押すと、NHN KCP海外カード決済画面が開きます。{kcpConfig?.mode === "test" ? " (テストモード)" : ""}
                     </p>
                   </div>
                 )}
@@ -879,16 +879,16 @@ export default function Checkout() {
                 {payMethod === "stripe" && (
                   <div style={{ background: "#fff", borderRadius: 14, padding: "16px", border: "1px solid #eee" }}>
                     <p style={{ fontSize: 13, color: "#555", margin: 0, lineHeight: 1.7 }}>
-                      주문하기 버튼을 누르면 Stripe 결제 페이지로 이동합니다.
+                      注文ボタンを押すと、Stripe決済ページに移動します。
                     </p>
                   </div>
                 )}
 
                 {/* 주문 금액 요약 */}
-                <Section title="결제 금액">
+                <Section title="お支払い金額">
                   <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-                    <SummaryRow label="상품금액" value={formatPrice(subtotal)} />
-                    <SummaryRow label="배송비" value={
+                    <SummaryRow label="商品金額" value={formatPrice(subtotal)} />
+                    <SummaryRow label="送料" value={
                       <span style={{ display: "flex", alignItems: "center", gap: 6 }}>
                         {regionLabel && (
                           <span style={{ fontSize: 10, fontWeight: 700, color: regionColor, background: regionColor + "18", borderRadius: 4, padding: "1px 6px" }}>
@@ -896,34 +896,34 @@ export default function Checkout() {
                           </span>
                         )}
                         <span style={{ color: shipping === 0 ? "#8B5E3C" : "#333", fontWeight: 600 }}>
-                          {shipping === 0 ? "무료" : formatPrice(shipping)}
+                          {shipping === 0 ? "無料" : formatPrice(shipping)}
                         </span>
                       </span>
                     } />
                     {subtotal > 0 && subtotal < freeThreshold && shippingRegion !== "jeju" && shippingRegion !== "island" && (
                       <p style={{ fontSize: 11, color: "#aaa", margin: "-4px 0 0", lineHeight: 1.5 }}>
-                        {formatPrice(freeThreshold - subtotal)} 더 담으면 기본 배송비 무료
+                        {formatPrice(freeThreshold - subtotal)} 追加で基本送料が無料
                       </p>
                     )}
                     {shippingRegion === "jeju" && (
                       <p style={{ fontSize: 11, color: "#1565c0", margin: "-4px 0 0", lineHeight: 1.5 }}>
-                        제주도 추가 배송비 3,000원 포함
+                        済州島の追加送料3,000円を含む
                       </p>
                     )}
                     {shippingRegion === "island" && (
                       <p style={{ fontSize: 11, color: "#e65100", margin: "-4px 0 0", lineHeight: 1.5 }}>
-                        도서산간 추가 배송비 5,000원 포함
+                        離島・山間部の追加送料5,000円を含む
                       </p>
                     )}
                     {couponDiscount > 0 && (
-                      <SummaryRow label="쿠폰 할인" value={<span style={{ color: "#e91e63", fontWeight: 600 }}>- {formatPrice(couponDiscount)}</span>} />
+                      <SummaryRow label="クーポン割引" value={<span style={{ color: "#e91e63", fontWeight: 600 }}>- {formatPrice(couponDiscount)}</span>} />
                     )}
                     {pointUse > 0 && (
-                      <SummaryRow label="포인트 사용" value={<span style={{ color: "#ff9800", fontWeight: 600 }}>- {formatPrice(pointUse)}</span>} />
+                      <SummaryRow label="ポイント利用" value={<span style={{ color: "#ff9800", fontWeight: 600 }}>- {formatPrice(pointUse)}</span>} />
                     )}
                     <div style={{ borderTop: "2px solid #8B5E3C", paddingTop: 12, marginTop: 4 }}>
                       <SummaryRow
-                        label="총 결제금액"
+                        label="お支払い合計"
                         value={<span style={{ fontSize: 22, fontWeight: 900, color: "#8B5E3C" }}>{formatPrice(total)}</span>}
                         bold
                       />
@@ -939,11 +939,11 @@ export default function Checkout() {
 
                 <button type="submit" disabled={loading || availableMethods.length === 0 || !payMethod}
                   style={{ width: "100%", height: 54, background: (loading || availableMethods.length === 0 || !payMethod) ? "#aaa" : "#8B5E3C", border: "none", borderRadius: 12, color: "#fff", fontSize: 17, fontWeight: 700, cursor: (loading || availableMethods.length === 0 || !payMethod) ? "not-allowed" : "pointer" }}>
-                  {loading ? "처리 중..." : !payMethod ? "결제수단을 선택해주세요" : payMethod === "card" ? `${formatPrice(total)} 카드 결제하기` : payMethod === "stripe" ? `${formatPrice(total)} Stripe로 결제하기` : `${formatPrice(total)} 무통장 주문하기`}
+                  {loading ? "処理中..." : !payMethod ? "お支払い方法を選択してください" : payMethod === "card" ? `${formatPrice(total)} カードで決済する` : payMethod === "stripe" ? `${formatPrice(total)} Stripeで決済する` : `${formatPrice(total)} 銀行振込で注文する`}
                 </button>
 
                 <p style={{ fontSize: 11, color: "#bbb", textAlign: "center", margin: "8px 0 0", lineHeight: 1.6 }}>
-                  주문 내용을 확인하였으며, 구매 진행에 동의합니다.
+                  注文内容を確認し、購入手続きに同意します。
                 </p>
               </div>
             </div>
@@ -957,7 +957,7 @@ export default function Checkout() {
           <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.45)" }} onClick={() => setShowCouponPicker(false)} />
           <div style={{ position: "relative", zIndex: 1, background: "#fff", borderRadius: "20px 20px 0 0", width: "100%", maxWidth: 560, maxHeight: "80vh", display: "flex", flexDirection: "column", boxShadow: "0 -4px 32px rgba(0,0,0,0.18)" }}>
             <div style={{ padding: "16px 20px 12px", borderBottom: "1px solid #f0f0f0", display: "flex", alignItems: "center", justifyContent: "space-between", flexShrink: 0 }}>
-              <h3 style={{ margin: 0, fontSize: 16, fontWeight: 800 }}>쿠폰 선택</h3>
+              <h3 style={{ margin: 0, fontSize: 16, fontWeight: 800 }}>クーポンを選択</h3>
               <button onClick={() => setShowCouponPicker(false)} style={{ background: "none", border: "none", cursor: "pointer", fontSize: 22, color: "#aaa", lineHeight: 1, padding: 4 }}>×</button>
             </div>
             <div style={{ overflowY: "auto", flex: 1, padding: "16px 20px" }}>
@@ -968,8 +968,8 @@ export default function Checkout() {
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                       <div>
                         <p style={{ margin: "0 0 4px", fontSize: 15, fontWeight: 700, color: "#222" }}>{c.cp_name}</p>
-                        <p style={{ margin: 0, fontSize: 13, color: "#8B5E3C", fontWeight: 700 }}>{formatPrice(c.cp_price)} 할인</p>
-                        {c.cp_minimum > 0 && <p style={{ margin: "2px 0 0", fontSize: 12, color: "#aaa" }}>{formatPrice(c.cp_minimum)} 이상 주문 시</p>}
+                        <p style={{ margin: 0, fontSize: 13, color: "#8B5E3C", fontWeight: 700 }}>{formatPrice(c.cp_price)}オフ</p>
+                        {c.cp_minimum > 0 && <p style={{ margin: "2px 0 0", fontSize: 12, color: "#aaa" }}>{formatPrice(c.cp_minimum)}以上のご注文時</p>}
                       </div>
                       <Tag size={24} color="#8B5E3C" />
                     </div>
@@ -1117,7 +1117,7 @@ function ShippingAddressModal({ addresses, onSelect, onClose, onRefresh }: {
 
   const save = async () => {
     if (!editing) return;
-    if (!editing.ma_name || !editing.ma_addr1) { alert("수령인과 주소를 입력해주세요"); return; }
+    if (!editing.ma_name || !editing.ma_addr1) { alert("お受け取り人とご住所を入力してください"); return; }
     setSaving(true);
     const isNew = !editing.ma_id;
     const url = isNew ? "/api/shop/addresses" : `/api/shop/addresses/${editing.ma_id}`;
@@ -1130,7 +1130,7 @@ function ShippingAddressModal({ addresses, onSelect, onClose, onRefresh }: {
   };
 
   const del = async (id: number) => {
-    if (!confirm("이 배송지를 삭제하시겠습니까?")) return;
+    if (!confirm("このお届け先を削除してもよろしいですか?")) return;
     await authFetch(`/api/shop/addresses/${id}`, { method: "DELETE" });
     reload();
   };
@@ -1147,7 +1147,7 @@ function ShippingAddressModal({ addresses, onSelect, onClose, onRefresh }: {
       <div style={{ position: "relative", zIndex: 1, background: "#fff", borderRadius: 20, width: "100%", maxWidth: 560, maxHeight: "85vh", display: "flex", flexDirection: "column", boxShadow: "0 8px 40px rgba(0,0,0,0.22)" }}>
         {/* 헤더 */}
         <div style={{ padding: "16px 20px 12px", borderBottom: "1px solid #f0f0f0", display: "flex", alignItems: "center", justifyContent: "space-between", flexShrink: 0 }}>
-          <h3 style={{ margin: 0, fontSize: 16, fontWeight: 800, color: "#111" }}>배송지 관리</h3>
+          <h3 style={{ margin: 0, fontSize: 16, fontWeight: 800, color: "#111" }}>お届け先管理</h3>
           <button onClick={onClose} style={{ background: "none", border: "none", cursor: "pointer", fontSize: 22, color: "#aaa", lineHeight: 1, padding: 4 }}>×</button>
         </div>
 
@@ -1157,10 +1157,10 @@ function ShippingAddressModal({ addresses, onSelect, onClose, onRefresh }: {
           {showForm && editing ? (
             <div style={{ background: "#f8f9fa", borderRadius: 12, padding: 16, marginBottom: 16 }}>
               <h4 style={{ margin: "0 0 14px", fontSize: 14, fontWeight: 700, color: "#8B5E3C" }}>
-                {editing.ma_id ? "배송지 수정" : "새 배송지 추가"}
+                {editing.ma_id ? "お届け先を編集" : "お届け先を追加"}
               </h4>
-              <MiniField label="수령인 *" value={editing.ma_name} onChange={ef("ma_name")} placeholder="이름" />
-              <MiniField label="연락처" value={editing.ma_hp} onChange={ef("ma_hp")} placeholder="090-0000-0000" />
+              <MiniField label="お受け取り人 *" value={editing.ma_name} onChange={ef("ma_name")} placeholder="お名前" />
+              <MiniField label="ご連絡先" value={editing.ma_hp} onChange={ef("ma_hp")} placeholder="090-0000-0000" />
               <div style={{ marginBottom: 10 }}>
                 <label style={{ fontSize: 12, color: "#888", fontWeight: 600, display: "block", marginBottom: 5 }}>郵便番号 *</label>
                 <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
@@ -1177,21 +1177,21 @@ function ShippingAddressModal({ addresses, onSelect, onClose, onRefresh }: {
               </div>
               <label style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 13, color: "#444", cursor: "pointer", marginBottom: 14 }}>
                 <input type="checkbox" checked={editing.ma_default} onChange={ef("ma_default")} />
-                기본 배송지로 설정
+                基本のお届け先に設定
               </label>
               <div style={{ display: "flex", gap: 8 }}>
                 <button onClick={() => { setShowForm(false); setEditing(null); }}
-                  style={{ flex: 1, height: 40, background: "#fff", border: "1.5px solid #ddd", borderRadius: 8, fontSize: 13, cursor: "pointer", color: "#555" }}>취소</button>
+                  style={{ flex: 1, height: 40, background: "#fff", border: "1.5px solid #ddd", borderRadius: 8, fontSize: 13, cursor: "pointer", color: "#555" }}>キャンセル</button>
                 <button onClick={save} disabled={saving}
                   style={{ flex: 2, height: 40, background: "#8B5E3C", border: "none", borderRadius: 8, color: "#fff", fontSize: 13, fontWeight: 700, cursor: "pointer" }}>
-                  {saving ? "저장 중..." : "저장"}
+                  {saving ? "保存中..." : "保存"}
                 </button>
               </div>
             </div>
           ) : (
             <button type="button" onClick={() => { setEditing(emptyAddrForm()); setShowForm(true); }}
               style={{ width: "100%", height: 44, marginBottom: 16, background: "#f0f9f4", border: "1.5px dashed #8B5E3C", borderRadius: 10, color: "#8B5E3C", fontSize: 14, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}>
-              <Plus size={15} />새 배송지 추가
+              <Plus size={15} />お届け先を追加
             </button>
           )}
 
@@ -1199,7 +1199,7 @@ function ShippingAddressModal({ addresses, onSelect, onClose, onRefresh }: {
           {list.length === 0 ? (
             <div style={{ textAlign: "center", padding: "32px 0", color: "#bbb", fontSize: 14 }}>
               <MapPin size={32} style={{ opacity: 0.3, marginBottom: 8, display: "block", margin: "0 auto 8px" }} />
-              저장된 배송지가 없습니다
+              保存されたお届け先がありません
             </div>
           ) : (
             <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
@@ -1208,24 +1208,24 @@ function ShippingAddressModal({ addresses, onSelect, onClose, onRefresh }: {
                   <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: 6 }}>
                     <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
                       <span style={{ fontWeight: 700, fontSize: 14, color: "#222" }}>{addr.ma_name}</span>
-                      {addr.ma_default && <span style={{ fontSize: 11, fontWeight: 700, color: "#8B5E3C", background: "#e8f8f0", padding: "1px 6px", borderRadius: 4 }}>기본</span>}
+                      {addr.ma_default && <span style={{ fontSize: 11, fontWeight: 700, color: "#8B5E3C", background: "#e8f8f0", padding: "1px 6px", borderRadius: 4 }}>基本</span>}
                     </div>
                     <div style={{ display: "flex", gap: 6 }}>
                       {!addr.ma_default && (
                         <button onClick={() => setDefault(addr)}
-                          style={{ fontSize: 11, color: "#888", background: "none", border: "1px solid #ddd", borderRadius: 5, padding: "3px 7px", cursor: "pointer" }}>기본설정</button>
+                          style={{ fontSize: 11, color: "#888", background: "none", border: "1px solid #ddd", borderRadius: 5, padding: "3px 7px", cursor: "pointer" }}>基本に設定</button>
                       )}
                       <button onClick={() => { setEditing({ ...addr, ma_addr2: [addr.ma_addr2, addr.ma_addr3].filter(Boolean).join(" ") }); setShowForm(true); }}
-                        style={{ fontSize: 11, color: "#555", background: "none", border: "1px solid #ddd", borderRadius: 5, padding: "3px 7px", cursor: "pointer" }}>수정</button>
+                        style={{ fontSize: 11, color: "#555", background: "none", border: "1px solid #ddd", borderRadius: 5, padding: "3px 7px", cursor: "pointer" }}>編集</button>
                       <button onClick={() => del(addr.ma_id)}
-                        style={{ fontSize: 11, color: "#e53935", background: "none", border: "1px solid #ffcdd2", borderRadius: 5, padding: "3px 7px", cursor: "pointer" }}>삭제</button>
+                        style={{ fontSize: 11, color: "#e53935", background: "none", border: "1px solid #ffcdd2", borderRadius: 5, padding: "3px 7px", cursor: "pointer" }}>削除</button>
                     </div>
                   </div>
                   {addr.ma_hp && <p style={{ margin: "0 0 3px", fontSize: 12, color: "#888" }}>{addr.ma_hp}</p>}
                   <p style={{ margin: "0 0 10px", fontSize: 13, color: "#555" }}>{addr.ma_addr1} {addr.ma_addr2} {addr.ma_zip1 && `(${addr.ma_zip1})`}</p>
                   <button onClick={() => onSelect(addr)}
                     style={{ width: "100%", height: 38, background: "#8B5E3C", border: "none", borderRadius: 8, color: "#fff", fontSize: 13, fontWeight: 700, cursor: "pointer" }}>
-                    이 주소로 배송
+                    このお届け先に配送
                   </button>
                 </div>
               ))}

@@ -9,22 +9,22 @@ import { ClipboardList, Search, RefreshCw, ChevronDown, ChevronUp } from "lucide
 import Paginator from "@/components/Paginator";
 
 const ACTION_LABELS: Record<string, string> = {
-  "order.updateStatus": "주문상태 변경",
-  "order.bulkUpdateStatus": "주문상태 일괄변경",
-  "order.partialCancel": "부분취소",
-  "order.markRefunded": "환불완료",
-  "order.markItemRefunded": "상품환불완료",
-  "order.markItemRefundPending": "환불대기",
-  "order.updateAdminNotes": "주문메모 수정",
-  "payment.confirm": "입금확인",
-  "user.update": "회원정보 수정",
-  "user.addPoints": "포인트 지급/차감",
+  "order.updateStatus": "注文ステータス変更",
+  "order.bulkUpdateStatus": "注文ステータス一括変更",
+  "order.partialCancel": "一部キャンセル",
+  "order.markRefunded": "返金完了",
+  "order.markItemRefunded": "商品返金完了",
+  "order.markItemRefundPending": "返金待ち",
+  "order.updateAdminNotes": "注文メモ編集",
+  "payment.confirm": "入金確認",
+  "user.update": "会員情報編集",
+  "user.addPoints": "ポイント付与/減算",
 };
 
 const ENTITY_LABELS: Record<string, string> = {
-  order: "주문",
-  orderItem: "주문상품",
-  user: "회원",
+  order: "注文",
+  orderItem: "注文商品",
+  user: "会員",
 };
 
 const ACTION_COLORS: Record<string, string> = {
@@ -76,14 +76,14 @@ export default function AdminActionLogs() {
         <div>
           <h2 className="text-2xl font-bold flex items-center gap-2">
             <ClipboardList className="w-6 h-6" />
-            관리자 처리 이력
+            管理者操作履歴
           </h2>
           <p className="text-sm text-muted-foreground mt-1">
-            관리자별 처리 이력 — 누가, 언제, 무엇을 처리했는지 확인합니다
+            管理者ごとの操作履歴 — 誰が、いつ、何を行ったかを確認します
           </p>
         </div>
         <Button variant="outline" size="sm" onClick={() => refetch()}>
-          <RefreshCw className="w-4 h-4 mr-1" /> 새로고침
+          <RefreshCw className="w-4 h-4 mr-1" /> 再読み込み
         </Button>
       </div>
 
@@ -93,10 +93,10 @@ export default function AdminActionLogs() {
           <div className="w-44">
             <Select value={adminIdFilter} onValueChange={v => { setAdminIdFilter(v); setPage(1); }}>
               <SelectTrigger className="h-8 text-xs">
-                <SelectValue placeholder="관리자 선택" />
+                <SelectValue placeholder="管理者を選択" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">전체 관리자</SelectItem>
+                <SelectItem value="all">すべての管理者</SelectItem>
                 {admins?.map(a => (
                   <SelectItem key={a.id} value={String(a.id)}>{a.name}</SelectItem>
                 ))}
@@ -106,10 +106,10 @@ export default function AdminActionLogs() {
           <div className="w-52">
             <Select value={actionFilter} onValueChange={v => { setActionFilter(v); setPage(1); }}>
               <SelectTrigger className="h-8 text-xs">
-                <SelectValue placeholder="처리 유형" />
+                <SelectValue placeholder="操作の種類" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">전체 처리</SelectItem>
+                <SelectItem value="all">すべての操作</SelectItem>
                 {Object.entries(ACTION_LABELS).map(([k, v]) => (
                   <SelectItem key={k} value={k}>{v}</SelectItem>
                 ))}
@@ -138,7 +138,7 @@ export default function AdminActionLogs() {
               className="h-8 text-xs"
               onClick={() => { setActionFilter("all"); setAdminIdFilter("all"); setDateFrom(""); setDateTo(""); setPage(1); }}
             >
-              필터 초기화
+              フィルターをリセット
             </Button>
           )}
         </div>
@@ -147,23 +147,23 @@ export default function AdminActionLogs() {
       {/* 로그 테이블 */}
       <Card className="overflow-hidden">
         {isLoading ? (
-          <div className="flex items-center justify-center h-32 text-sm text-muted-foreground">불러오는 중...</div>
+          <div className="flex items-center justify-center h-32 text-sm text-muted-foreground">読み込み中...</div>
         ) : !data?.rows?.length ? (
           <div className="flex flex-col items-center justify-center h-32 gap-2 text-muted-foreground">
             <ClipboardList className="w-8 h-8 opacity-30" />
-            <p className="text-sm">처리 이력이 없습니다</p>
+            <p className="text-sm">操作履歴がありません</p>
           </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b bg-muted/40 text-xs text-muted-foreground">
-                  <th className="px-4 py-2 text-left font-medium w-40">처리 시각</th>
-                  <th className="px-4 py-2 text-left font-medium w-28">관리자</th>
-                  <th className="px-4 py-2 text-left font-medium w-36">처리 유형</th>
-                  <th className="px-4 py-2 text-left font-medium w-20">대상</th>
-                  <th className="px-4 py-2 text-left font-medium">내용</th>
-                  <th className="px-4 py-2 text-center font-medium w-14">상세</th>
+                  <th className="px-4 py-2 text-left font-medium w-40">操作日時</th>
+                  <th className="px-4 py-2 text-left font-medium w-28">管理者</th>
+                  <th className="px-4 py-2 text-left font-medium w-36">操作の種類</th>
+                  <th className="px-4 py-2 text-left font-medium w-20">対象</th>
+                  <th className="px-4 py-2 text-left font-medium">内容</th>
+                  <th className="px-4 py-2 text-center font-medium w-14">詳細</th>
                 </tr>
               </thead>
               <tbody>

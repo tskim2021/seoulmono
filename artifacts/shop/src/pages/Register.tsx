@@ -105,32 +105,32 @@ export default function Register() {
 
   const handleCheckId = async () => {
     const id = form.userId.trim();
-    if (!id) { setIdStatus({ ok: false, msg: "아이디를 입력해 주세요." }); return; }
+    if (!id) { setIdStatus({ ok: false, msg: "IDを入力してください。" }); return; }
     try {
       const r = await fetch(`/api/auth/check-id?mb_id=${encodeURIComponent(id)}`);
       const d = await r.json();
       if (d.available) setIdStatus({ ok: true, msg: d.message });
       else setIdStatus({ ok: false, msg: d.message || d.error });
     } catch {
-      setIdStatus({ ok: false, msg: "확인 중 오류가 발생했습니다." });
+      setIdStatus({ ok: false, msg: "確認中にエラーが発生しました。" });
     }
   };
 
   const handleCheckNick = async () => {
     const nick = form.nickname.trim();
-    if (!nick) { setNickStatus({ ok: false, msg: "닉네임을 입력해 주세요." }); return; }
+    if (!nick) { setNickStatus({ ok: false, msg: "ニックネームを入力してください。" }); return; }
     try {
       const r = await fetch(`/api/auth/check-nick?mb_nick=${encodeURIComponent(nick)}`);
       const d = await r.json();
       if (d.available) setNickStatus({ ok: true, msg: d.message });
       else setNickStatus({ ok: false, msg: d.message || d.error });
     } catch {
-      setNickStatus({ ok: false, msg: "확인 중 오류가 발생했습니다." });
+      setNickStatus({ ok: false, msg: "確認中にエラーが発生しました。" });
     }
   };
 
   const handleSendCode = async () => {
-    if (!emailFull) { alert("이메일 주소를 입력해 주세요."); return; }
+    if (!emailFull) { alert("メールアドレスを入力してください。"); return; }
     setCodeSending(true);
     try {
       const r = await fetch("/api/auth/email-send-code", {
@@ -139,7 +139,7 @@ export default function Register() {
         body: JSON.stringify({ email: emailFull }),
       });
       const d = await r.json();
-      if (!r.ok) { alert(d.error || "인증번호 발송에 실패했습니다."); return; }
+      if (!r.ok) { alert(d.error || "認証コードの送信に失敗しました。"); return; }
       setCodeSent(true);
       setCodeVerified(false);
       setEmailCode("");
@@ -151,16 +151,16 @@ export default function Register() {
         setCodeTimer(sec);
         if (sec <= 0) clearInterval(iv);
       }, 1000);
-      alert("인증번호가 이메일로 발송되었습니다. (10분 이내 입력)");
+      alert("認証コードをメールで送信しました。(10分以内に入力してください)");
     } catch {
-      alert("인증번호 발송 중 오류가 발생했습니다.");
+      alert("認証コードの送信中にエラーが発生しました。");
     } finally {
       setCodeSending(false);
     }
   };
 
   const handleVerifyCode = async () => {
-    if (!emailCode.trim()) { alert("인증번호를 입력해 주세요."); return; }
+    if (!emailCode.trim()) { alert("認証コードを入力してください。"); return; }
     try {
       const r = await fetch("/api/auth/email-verify-code", {
         method: "POST",
@@ -168,26 +168,26 @@ export default function Register() {
         body: JSON.stringify({ email: emailFull, code: emailCode.trim() }),
       });
       const d = await r.json();
-      if (!r.ok) { alert(d.error || "인증에 실패했습니다."); return; }
+      if (!r.ok) { alert(d.error || "認証に失敗しました。"); return; }
       setCodeVerified(true);
-      alert("이메일 인증이 완료되었습니다.");
+      alert("メール認証が完了しました。");
     } catch {
-      alert("인증 확인 중 오류가 발생했습니다.");
+      alert("認証の確認中にエラーが発生しました。");
     }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!form.userId) { alert("아이디를 입력해 주세요."); return; }
-    if (idStatus?.ok === false) { alert("아이디 중복확인을 해 주세요."); return; }
-    if (!form.password) { alert("비밀번호를 입력해 주세요."); return; }
-    if (form.password.length < 8) { alert("비밀번호는 8자 이상이어야 합니다."); return; }
-    if (form.password !== form.passwordConfirm) { alert("비밀번호가 일치하지 않습니다."); return; }
-    if (!form.name) { alert("이름을 입력해 주세요."); return; }
-    if (!emailFull) { alert("이메일 주소를 입력해 주세요."); return; }
-    if (!codeVerified) { alert("이메일 인증을 완료해 주세요."); return; }
-    if (!agreeTerms) { alert("이용약관에 동의해 주세요."); return; }
-    if (!agreePrivacy) { alert("개인정보처리방침에 동의해 주세요."); return; }
+    if (!form.userId) { alert("IDを入力してください。"); return; }
+    if (idStatus?.ok === false) { alert("IDの重複確認を行ってください。"); return; }
+    if (!form.password) { alert("パスワードを入力してください。"); return; }
+    if (form.password.length < 8) { alert("パスワードは8文字以上で入力してください。"); return; }
+    if (form.password !== form.passwordConfirm) { alert("パスワードが一致しません。"); return; }
+    if (!form.name) { alert("お名前を入力してください。"); return; }
+    if (!emailFull) { alert("メールアドレスを入力してください。"); return; }
+    if (!codeVerified) { alert("メール認証を完了してください。"); return; }
+    if (!agreeTerms) { alert("利用規約に同意してください。"); return; }
+    if (!agreePrivacy) { alert("プライバシーポリシーに同意してください。"); return; }
 
     setSubmitting(true);
     try {
@@ -204,7 +204,7 @@ export default function Register() {
         }),
       });
       const d = await r.json();
-      if (!r.ok) { alert(d.error || "가입 중 오류가 발생했습니다."); return; }
+      if (!r.ok) { alert(d.error || "登録中にエラーが発生しました。"); return; }
 
       if (d.token && d.user) {
         localStorage.setItem("seoulmono_token", d.token);
@@ -213,7 +213,7 @@ export default function Register() {
       }
       navigate(`/register-success?name=${encodeURIComponent(form.name.trim())}`);
     } catch {
-      alert("가입 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.");
+      alert("登録中にエラーが発生しました。しばらくしてからもう一度お試しください。");
     } finally {
       setSubmitting(false);
     }
@@ -228,22 +228,22 @@ export default function Register() {
   return (
     <div style={{ paddingTop: 40, paddingBottom: 60 }}>
       <div style={{ maxWidth: 700, margin: "0 auto", padding: "0 16px" }}>
-        <h1 style={{ textAlign: "center", fontSize: 24, fontWeight: 700, color: "#111", marginBottom: 8 }}>회원가입</h1>
-        <p style={{ textAlign: "right", fontSize: 13, color: "#888", marginBottom: 24 }}>*필수 항목입니다.</p>
+        <h1 style={{ textAlign: "center", fontSize: 24, fontWeight: 700, color: "#111", marginBottom: 8 }}>会員登録</h1>
+        <p style={{ textAlign: "right", fontSize: 13, color: "#888", marginBottom: 24 }}>*は必須項目です。</p>
 
         <form onSubmit={handleSubmit}>
           <div style={{ borderTop: "2px solid #8B5E3C" }}>
             {/* 아이디 */}
-            <FieldRow label="아이디" required>
+            <FieldRow label="ID" required>
               <div style={{ display: "flex", gap: 8 }}>
                 <input
                   type="text"
                   value={form.userId}
                   onChange={set("userId")}
-                  placeholder="영문 소문자/숫자 4~16자"
+                  placeholder="半角英小文字・数字 4~16文字"
                   style={{ ...inputStyle, flex: 1 }}
                 />
-                <button type="button" onClick={handleCheckId} style={smallBtnStyle}>중복확인</button>
+                <button type="button" onClick={handleCheckId} style={smallBtnStyle}>重複確認</button>
               </div>
               {idStatus && (
                 <p style={{ fontSize: 12, color: idStatus.ok ? "#8B5E3C" : "#e53e3e", marginTop: 4 }}>
@@ -253,55 +253,55 @@ export default function Register() {
             </FieldRow>
 
             {/* 비밀번호 */}
-            <FieldRow label="비밀번호" required>
+            <FieldRow label="パスワード" required>
               <input
                 type="password"
                 value={form.password}
                 onChange={set("password")}
-                placeholder="영문/숫자/특수문자 조합 8~20자"
+                placeholder="半角英数字・記号の組み合わせ 8~20文字"
                 style={inputStyle}
               />
             </FieldRow>
 
             {/* 비밀번호 재입력 */}
-            <FieldRow label="비밀번호 재입력" required>
+            <FieldRow label="パスワード(確認)" required>
               <input
                 type="password"
                 value={form.passwordConfirm}
                 onChange={set("passwordConfirm")}
-                placeholder="비밀번호를 한번 더 입력해 주세요"
+                placeholder="もう一度パスワードを入力してください"
                 style={{
                   ...inputStyle,
                   borderColor: form.passwordConfirm && form.password !== form.passwordConfirm ? "#e53e3e" : "#ddd",
                 }}
               />
               {form.passwordConfirm && form.password !== form.passwordConfirm && (
-                <p style={{ fontSize: 12, color: "#e53e3e", marginTop: 4 }}>비밀번호가 일치하지 않습니다.</p>
+                <p style={{ fontSize: 12, color: "#e53e3e", marginTop: 4 }}>パスワードが一致しません。</p>
               )}
             </FieldRow>
 
             {/* 이름 */}
-            <FieldRow label="이름" required>
+            <FieldRow label="お名前" required>
               <input
                 type="text"
                 value={form.name}
                 onChange={set("name")}
-                placeholder="이름"
+                placeholder="お名前"
                 style={inputStyle}
               />
             </FieldRow>
 
             {/* 닉네임 */}
-            <FieldRow label="닉네임" required>
+            <FieldRow label="ニックネーム" required>
               <div style={{ display: "flex", gap: 8 }}>
                 <input
                   type="text"
                   value={form.nickname}
                   onChange={set("nickname")}
-                  placeholder="닉네임"
+                  placeholder="ニックネーム"
                   style={{ ...inputStyle, flex: 1 }}
                 />
-                <button type="button" onClick={handleCheckNick} style={smallBtnStyle}>중복확인</button>
+                <button type="button" onClick={handleCheckNick} style={smallBtnStyle}>重複確認</button>
               </div>
               {nickStatus && (
                 <p style={{ fontSize: 12, color: nickStatus.ok ? "#8B5E3C" : "#e53e3e", marginTop: 4 }}>
@@ -311,7 +311,7 @@ export default function Register() {
             </FieldRow>
 
             {/* 이메일 (인증) */}
-            <FieldRow label="이메일" required>
+            <FieldRow label="メールアドレス" required>
               <div className="reg-email-row" style={{ marginBottom: 8 }}>
                 <input
                   type="text"
@@ -327,7 +327,7 @@ export default function Register() {
                     type="text"
                     value={form.emailDomain}
                     onChange={set("emailDomain")}
-                    placeholder="직접 입력"
+                    placeholder="直接入力"
                     disabled={codeVerified}
                     style={{ ...inputStyle, flex: 1, minWidth: 0 }}
                   />
@@ -345,7 +345,7 @@ export default function Register() {
                     }}
                     style={{ ...inputStyle, flex: 1, minWidth: 0 }}
                   >
-                    {emailDomains.map(d => <option key={d} value={d}>{d}</option>)}
+                    {emailDomains.map(d => <option key={d} value={d}>{d === "직접입력" ? "直接入力" : d}</option>)}
                   </select>
                 )}
                 <button
@@ -354,7 +354,7 @@ export default function Register() {
                   disabled={codeSending || codeVerified}
                   style={{ ...greenBtnStyle, opacity: (codeSending || codeVerified) ? 0.6 : 1 }}
                 >
-                  {codeSending ? "발송중..." : codeSent ? "재발송" : "인증번호"}
+                  {codeSending ? "送信中..." : codeSent ? "再送信" : "認証コード"}
                 </button>
               </div>
               <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
@@ -363,7 +363,7 @@ export default function Register() {
                     type="text"
                     value={emailCode}
                     onChange={e => setEmailCode(e.target.value)}
-                    placeholder="인증번호 6자리"
+                    placeholder="認証コード6桁"
                     disabled={!codeSent || codeVerified}
                     maxLength={6}
                     style={{
@@ -393,14 +393,14 @@ export default function Register() {
                     flexShrink: 0,
                   }}
                 >
-                  {codeVerified ? "인증완료" : "확인"}
+                  {codeVerified ? "認証完了" : "確認"}
                 </button>
               </div>
               {codeVerified && (
-                <p style={{ fontSize: 12, color: "#8B5E3C", marginTop: 4, fontWeight: 600 }}>✓ 인증이 완료되었습니다.</p>
+                <p style={{ fontSize: 12, color: "#8B5E3C", marginTop: 4, fontWeight: 600 }}>✓ 認証が完了しました。</p>
               )}
               {codeSent && !codeVerified && codeTimer === 0 && (
-                <p style={{ fontSize: 12, color: "#e53e3e", marginTop: 4 }}>인증번호가 만료되었습니다. 재발송해 주세요.</p>
+                <p style={{ fontSize: 12, color: "#e53e3e", marginTop: 4 }}>認証コードの有効期限が切れました。再送信してください。</p>
               )}
             </FieldRow>
           </div>
@@ -415,14 +415,14 @@ export default function Register() {
                   onChange={e => handleAgreeAll(e.target.checked)}
                   style={{ accentColor: "#8B5E3C", width: 17, height: 17 }}
                 />
-                <span style={{ fontSize: 15, fontWeight: 700, color: "#111" }}>전체 동의</span>
+                <span style={{ fontSize: 15, fontWeight: 700, color: "#111" }}>すべて同意する</span>
               </label>
             </div>
             <div style={{ padding: "8px 0" }}>
               {[
-                { key: "terms", label: "이용약관 동의", state: agreeTerms, setState: setAgreeTerms, required: true, path: "/terms" },
-                { key: "privacy", label: "개인정보처리방침 동의", state: agreePrivacy, setState: setAgreePrivacy, required: true, path: "/privacy" },
-                { key: "marketing", label: "마케팅 정보 수신 동의 (선택)", state: agreeMarketing, setState: setAgreeMarketing, required: false, path: null },
+                { key: "terms", label: "利用規約に同意", state: agreeTerms, setState: setAgreeTerms, required: true, path: "/terms" },
+                { key: "privacy", label: "プライバシーポリシーに同意", state: agreePrivacy, setState: setAgreePrivacy, required: true, path: "/privacy" },
+                { key: "marketing", label: "マーケティング情報の受信に同意 (任意)", state: agreeMarketing, setState: setAgreeMarketing, required: false, path: null },
               ].map(item => (
                 <div key={item.key} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "11px 20px", borderBottom: "1px solid #f5f5f5" }}>
                   <label style={{ display: "flex", alignItems: "center", gap: 10, cursor: "pointer", flex: 1 }}>
@@ -437,8 +437,8 @@ export default function Register() {
                       style={{ accentColor: "#8B5E3C", width: 15, height: 15 }}
                     />
                     <span style={{ fontSize: 14, color: "#333" }}>
-                      {item.required && <span style={{ color: "#e53e3e" }}>[필수] </span>}
-                      {!item.required && <span style={{ color: "#888" }}>[선택] </span>}
+                      {item.required && <span style={{ color: "#e53e3e" }}>[必須] </span>}
+                      {!item.required && <span style={{ color: "#888" }}>[任意] </span>}
                       {item.label}
                     </span>
                   </label>
@@ -449,7 +449,7 @@ export default function Register() {
                       rel="noopener noreferrer"
                       style={{ background: "none", border: "none", fontSize: 12, color: "#aaa", cursor: "pointer", flexShrink: 0, textDecoration: "underline" }}
                     >
-                      보기
+                      表示
                     </a>
                   )}
                 </div>
@@ -468,7 +468,7 @@ export default function Register() {
                 borderRadius: 6, fontSize: 15, fontWeight: 600, cursor: "pointer",
               }}
             >
-              취소
+              キャンセル
             </button>
             <button
               type="submit"
@@ -480,7 +480,7 @@ export default function Register() {
                 transition: "background 0.15s",
               }}
             >
-              {submitting ? "가입 처리 중..." : "가입하기"}
+              {submitting ? "登録処理中..." : "登録する"}
             </button>
           </div>
         </form>

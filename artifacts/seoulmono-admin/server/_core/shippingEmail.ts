@@ -23,22 +23,24 @@ function getEmailContent(data: ShippingEmailData): { subject: string; body: stri
   switch (data.status) {
     case "picked_up":
       return {
-        subject: `[탈모학교] 주문하신 상품이 픽업되었습니다 (주문번호: ${orderNumber})`,
+        subject: `[ソウルモノ] ご注文商品が集荷されました (ご注文番号: ${orderNumber})`,
         body: `
-안녕하세요 ${customerName}님,
+${customerName}様
 
-주문하신 상품이 택배사에 픽업되어 배송이 시작되었습니다.
+いつもご利用ありがとうございます。
 
-📦 주문 정보
-- 주문번호: ${orderNumber}
-- 운송장번호: ${trackingNumber}
-- 배송 상태: ${statusText}
-${estimatedDeliveryDate ? `- 예상 배송일: ${estimatedDeliveryDate.toLocaleDateString('ja-JP')}` : ''}
+ご注文の商品が配送業者に集荷され、配送が始まりました。
 
-마이페이지에서 실시간 배송 추적이 가능합니다.
+📦 ご注文情報
+- ご注文番号: ${orderNumber}
+- 追跡番号: ${trackingNumber}
+- 配送状況: ${statusText}
+${estimatedDeliveryDate ? `- 配送予定日: ${estimatedDeliveryDate.toLocaleDateString('ja-JP')}` : ''}
 
-감사합니다.
-탈모학교 드림
+マイページでリアルタイムの配送追跡をご確認いただけます。
+
+ご利用ありがとうございました。
+ソウルモノ
         `.trim(),
       };
     
@@ -46,84 +48,92 @@ ${estimatedDeliveryDate ? `- 예상 배송일: ${estimatedDeliveryDate.toLocaleD
     case "in_transit_intl":
     case "in_transit_domestic":
       return {
-        subject: `[탈모학교] 주문하신 상품이 배송 중입니다 (주문번호: ${orderNumber})`,
+        subject: `[ソウルモノ] ご注文商品を配送中です (ご注文番号: ${orderNumber})`,
         body: `
-안녕하세요 ${customerName}님,
+${customerName}様
 
-주문하신 상품이 현재 배송 중입니다.
+いつもご利用ありがとうございます。
 
-📦 주문 정보
-- 주문번호: ${orderNumber}
-- 운송장번호: ${trackingNumber}
-- 배송 상태: ${statusText}
-${estimatedDeliveryDate ? `- 예상 배송일: ${estimatedDeliveryDate.toLocaleDateString('ja-JP')}` : ''}
+ご注文の商品は現在配送中です。
 
-마이페이지에서 실시간 배송 추적이 가능합니다.
+📦 ご注文情報
+- ご注文番号: ${orderNumber}
+- 追跡番号: ${trackingNumber}
+- 配送状況: ${statusText}
+${estimatedDeliveryDate ? `- 配送予定日: ${estimatedDeliveryDate.toLocaleDateString('ja-JP')}` : ''}
 
-감사합니다.
-탈모학교 드림
+マイページでリアルタイムの配送追跡をご確認いただけます。
+
+ご利用ありがとうございました。
+ソウルモノ
         `.trim(),
       };
     
     case "out_for_delivery":
       return {
-        subject: `[탈모학교] 주문하신 상품이 배송 중입니다 - 곧 도착합니다! (주문번호: ${orderNumber})`,
+        subject: `[ソウルモノ] ご注文商品を配達中です - まもなく到着します！ (ご注文番号: ${orderNumber})`,
         body: `
-안녕하세요 ${customerName}님,
+${customerName}様
 
-주문하신 상품이 고객님께 배송되고 있습니다.
-오늘 중 도착 예정입니다!
+いつもご利用ありがとうございます。
 
-📦 주문 정보
-- 주문번호: ${orderNumber}
-- 운송장번호: ${trackingNumber}
-- 배송 상태: ${statusText}
+ご注文の商品をお客様のもとへ配達しています。
+本日中にお届け予定です！
 
-마이페이지에서 실시간 배송 추적이 가능합니다.
+📦 ご注文情報
+- ご注文番号: ${orderNumber}
+- 追跡番号: ${trackingNumber}
+- 配送状況: ${statusText}
 
-감사합니다.
-탈모학교 드림
+マイページでリアルタイムの配送追跡をご確認いただけます。
+
+ご利用ありがとうございました。
+ソウルモノ
         `.trim(),
       };
     
     case "delivered":
       return {
-        subject: `[탈모학교] 주문하신 상품이 배송 완료되었습니다 (주문번호: ${orderNumber})`,
+        subject: `[ソウルモノ] ご注文商品の配送が完了しました (ご注文番号: ${orderNumber})`,
         body: `
-안녕하세요 ${customerName}님,
+${customerName}様
 
-주문하신 상품이 성공적으로 배송 완료되었습니다.
+いつもご利用ありがとうございます。
 
-📦 주문 정보
-- 주문번호: ${orderNumber}
-- 운송장번호: ${trackingNumber}
-- 배송 상태: ${statusText}
+ご注文の商品が無事に配送完了いたしました。
 
-상품은 만족하셨나요?
-마이페이지에서 리뷰를 작성하시면 포인트를 적립해드립니다!
+📦 ご注文情報
+- ご注文番号: ${orderNumber}
+- 追跡番号: ${trackingNumber}
+- 配送状況: ${statusText}
 
-감사합니다.
-탈모학교 드림
+商品はいかがでしたか？
+マイページからレビューを投稿いただくと、ポイントを付与いたします！
+
+ご利用ありがとうございました。
+ソウルモノ
         `.trim(),
       };
     
     default:
       return {
-        subject: `[탈모학교] 배송 상태가 업데이트되었습니다 (주문번호: ${orderNumber})`,
+        subject: `[ソウルモノ] 配送状況が更新されました (ご注文番号: ${orderNumber})`,
         body: `
-안녕하세요 ${customerName}님,
+${customerName}様
 
-주문하신 상품의 배송 상태가 업데이트되었습니다.
+いつもご利用ありがとうございます。
 
-📦 주문 정보
-- 주문번호: ${orderNumber}
-- 운송장번호: ${trackingNumber}
-- 배송 상태: ${statusText}
+ご注文商品の配送状況が更新されました。
 
-마이페이지에서 실시간 배송 추적이 가능합니다.
+📦 ご注文情報
+- ご注文番号: ${orderNumber}
+- 追跡番号: ${trackingNumber}
+- 配送状況: ${statusText}
 
-감사합니다.
-탈모학교 드림
+マイページでリアルタイムの配送追跡をご確認いただけます。
+
+ご利用ありがとうございました。
+ソウルモノ
         `.trim(),
       };
   }
@@ -144,8 +154,8 @@ export async function sendShippingStatusEmail(data: ShippingEmailData): Promise<
     // 실제 이메일 서비스 연동 시 여기서 발송
     // 현재는 관리자에게 알림으로 전달
     await notifyOwner({
-      title: `배송 알림 발송: ${data.orderNumber}`,
-      content: `${data.customerName}(${data.customerEmail})님께 ${data.statusText} 알림 이메일 발송됨`,
+      title: `配送通知を送信: ${data.orderNumber}`,
+      content: `${data.customerName}(${data.customerEmail})様へ ${data.statusText} の通知メールを送信しました`,
     });
     
     return true;

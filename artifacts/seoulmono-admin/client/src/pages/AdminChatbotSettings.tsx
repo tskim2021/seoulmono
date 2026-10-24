@@ -45,9 +45,9 @@ export default function AdminChatbotSettings() {
         ...formData,
         systemPromptOverride: formData.systemPromptOverride || null,
       });
-      toast.success("챗봇 설정이 저장되었습니다.");
+      toast.success("チャットボット設定を保存しました。");
     } catch (error) {
-      toast.error("설정 저장에 실패했습니다.");
+      toast.error("設定の保存に失敗しました。");
     }
   };
 
@@ -64,27 +64,27 @@ export default function AdminChatbotSettings() {
       <div>
         <h1 className="text-2xl font-bold flex items-center gap-2">
           <Bot className="w-6 h-6" />
-          AI 챗봇 기본 설정
+          AIチャットボット基本設定
         </h1>
         <p className="text-sm text-muted-foreground mt-1">
-          AI 상담사의 전반적인 동작을 설정합니다.
+          AIアシスタントの全体的な動作を設定します。
         </p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">
         <Card>
           <CardHeader>
-            <CardTitle>챗봇 활성화</CardTitle>
+            <CardTitle>チャットボットの有効化</CardTitle>
             <CardDescription>
-              챗봇 위젯의 표시 여부를 설정합니다.
+              チャットボットウィジェットの表示有無を設定します。
             </CardDescription>
           </CardHeader>
           <CardContent>
             <div className="flex items-center justify-between">
               <div>
-                <Label htmlFor="isEnabled" className="font-medium">챗봇 활성화</Label>
+                <Label htmlFor="isEnabled" className="font-medium">チャットボットを有効化</Label>
                 <p className="text-sm text-muted-foreground">
-                  활성화 시 쇼핑몰에 챗봇 위젯이 표시됩니다.
+                  有効にすると、ショップにチャットボットウィジェットが表示されます。
                 </p>
               </div>
               <Switch
@@ -98,19 +98,19 @@ export default function AdminChatbotSettings() {
 
         <Card>
           <CardHeader>
-            <CardTitle>인사말 설정</CardTitle>
+            <CardTitle>あいさつ文設定</CardTitle>
             <CardDescription>
-              챗봇을 열었을 때 표시되는 환영 메시지입니다.
+              チャットボットを開いたときに表示されるウェルカムメッセージです。
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="greetingMessage">인사말 메시지</Label>
+              <Label htmlFor="greetingMessage">あいさつメッセージ</Label>
               <Textarea
                 id="greetingMessage"
                 value={formData.greetingMessage}
                 onChange={(e) => setFormData({ ...formData, greetingMessage: e.target.value })}
-                placeholder="안녕하세요! 탈모학교 AI 상담사입니다. 무엇을 도와드릴까요?"
+                placeholder="こんにちは！ソウルモノのAIアシスタントです。どのようなご用件でしょうか？"
                 rows={3}
               />
             </div>
@@ -119,24 +119,24 @@ export default function AdminChatbotSettings() {
 
         <Card>
           <CardHeader>
-            <CardTitle>시스템 프롬프트</CardTitle>
+            <CardTitle>システムプロンプト</CardTitle>
             <CardDescription>
-              AI에게 전달되는 역할 및 정책 지시문입니다. 비워두면 기본 프롬프트가 사용됩니다.
+              AIに渡される役割・ポリシーの指示文です。空欄の場合はデフォルトのプロンプトが使用されます。
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="systemPromptOverride">시스템 프롬프트 (선택사항)</Label>
+              <Label htmlFor="systemPromptOverride">システムプロンプト (任意)</Label>
               <Textarea
                 id="systemPromptOverride"
                 value={formData.systemPromptOverride}
                 onChange={(e) => setFormData({ ...formData, systemPromptOverride: e.target.value })}
-                placeholder="기본 프롬프트를 사용하려면 비워두세요"
+                placeholder="デフォルトのプロンプトを使用する場合は空欄のままにしてください"
                 rows={8}
                 className="font-mono text-xs"
               />
               <p className="text-xs text-muted-foreground">
-                고급 사용자 전용: AI의 역할, 답변 스타일, 정책 등을 커스터마이징할 수 있습니다.
+                上級者向け: AIの役割、回答スタイル、ポリシーなどをカスタマイズできます。
               </p>
             </div>
           </CardContent>
@@ -144,14 +144,14 @@ export default function AdminChatbotSettings() {
 
         <Card>
           <CardHeader>
-            <CardTitle>대화 설정</CardTitle>
+            <CardTitle>会話設定</CardTitle>
             <CardDescription>
-              대화 턴수 및 응답 불가 시 안내 메시지를 설정합니다.
+              会話のターン数と、回答不可時の案内メッセージを設定します。
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="maxTurns">최대 대화 턴수</Label>
+              <Label htmlFor="maxTurns">最大会話ターン数</Label>
               <Input
                 id="maxTurns"
                 type="number"
@@ -161,23 +161,23 @@ export default function AdminChatbotSettings() {
                 onChange={(e) => setFormData({ ...formData, maxTurns: parseInt(e.target.value) || 20 })}
               />
               <p className="text-xs text-muted-foreground">
-                한 세션당 최대 문답 횟수 (기본 20회)
+                1セッションあたりの最大やり取り回数 (デフォルト20回)
               </p>
             </div>
 
             <Separator />
 
             <div className="space-y-2">
-              <Label htmlFor="responseUnavailableMessage">응답 불가 안내 메시지</Label>
+              <Label htmlFor="responseUnavailableMessage">回答不可時の案内メッセージ</Label>
               <Textarea
                 id="responseUnavailableMessage"
                 value={formData.responseUnavailableMessage}
                 onChange={(e) => setFormData({ ...formData, responseUnavailableMessage: e.target.value })}
-                placeholder="죄송합니다. 해당 질문에 대한 답변을 찾을 수 없습니다."
+                placeholder="申し訳ございません。該当のご質問に対する回答が見つかりませんでした。"
                 rows={3}
               />
               <p className="text-xs text-muted-foreground">
-                AI가 답변할 수 없을 때 표시할 안내 메시지
+                AIが回答できない場合に表示する案内メッセージ
               </p>
             </div>
           </CardContent>
@@ -185,15 +185,15 @@ export default function AdminChatbotSettings() {
 
         <Card>
           <CardHeader>
-            <CardTitle>운영 시간</CardTitle>
+            <CardTitle>運営時間</CardTitle>
             <CardDescription>
-              챗봇의 운영 시간을 설정합니다. 운영 시간 외에는 안내 메시지가 표시됩니다.
+              チャットボットの運営時間を設定します。運営時間外は案内メッセージが表示されます。
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="operatingHoursStart">시작 시간</Label>
+                <Label htmlFor="operatingHoursStart">開始時間</Label>
                 <Input
                   id="operatingHoursStart"
                   type="time"
@@ -202,7 +202,7 @@ export default function AdminChatbotSettings() {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="operatingHoursEnd">종료 시간</Label>
+                <Label htmlFor="operatingHoursEnd">終了時間</Label>
                 <Input
                   id="operatingHoursEnd"
                   type="time"
@@ -212,7 +212,7 @@ export default function AdminChatbotSettings() {
               </div>
             </div>
             <p className="text-xs text-muted-foreground">
-              24시간 운영: 00:00 ~ 23:59
+              24時間運営: 00:00 ~ 23:59
             </p>
           </CardContent>
         </Card>
@@ -222,12 +222,12 @@ export default function AdminChatbotSettings() {
             {updateMutation.isPending ? (
               <>
                 <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                저장 중...
+                保存中...
               </>
             ) : (
               <>
                 <Save className="w-4 h-4 mr-2" />
-                설정 저장
+                設定を保存
               </>
             )}
           </Button>

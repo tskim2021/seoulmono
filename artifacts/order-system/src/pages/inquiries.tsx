@@ -106,12 +106,12 @@ export default function Inquiries() {
       const res = await fetch("/api/boards/qna", { method: "POST", body: formData, headers });
       if (!res.ok) {
         const err = await res.json().catch(() => ({}));
-        throw new Error(err.error || "등록 실패");
+        throw new Error(err.error || "登録に失敗しました");
       }
       return res.json();
     },
     onSuccess: () => {
-      toast({ title: "문의가 등록되었습니다" });
+      toast({ title: "お問い合わせを登録しました" });
       queryClient.invalidateQueries({ queryKey: getGetQnaListQueryKey() });
       setShowCreate(false);
       setSubject("");
@@ -136,12 +136,12 @@ export default function Inquiries() {
       const res = await fetch(`/api/boards/qna/${params.id}`, { method: "PUT", body: formData, headers });
       if (!res.ok) {
         const err = await res.json().catch(() => ({}));
-        throw new Error(err.error || "수정 실패");
+        throw new Error(err.error || "更新に失敗しました");
       }
       return res.json();
     },
     onSuccess: () => {
-      toast({ title: "문의글이 수정되었습니다" });
+      toast({ title: "お問い合わせを更新しました" });
       queryClient.invalidateQueries({ queryKey: getGetQnaListQueryKey() });
       queryClient.invalidateQueries({ queryKey: ["qna-detail", selectedId] });
       setShowEditQna(false);
@@ -164,7 +164,7 @@ export default function Inquiries() {
       });
     },
     onSuccess: () => {
-      toast({ title: "답변이 등록되었습니다" });
+      toast({ title: "回答を登録しました" });
       if (selectedId) {
         queryClient.invalidateQueries({ queryKey: ["qna-detail", selectedId] });
         queryClient.invalidateQueries({ queryKey: getGetQnaListQueryKey() });
@@ -182,7 +182,7 @@ export default function Inquiries() {
       });
     },
     onSuccess: () => {
-      toast({ title: "답변이 수정되었습니다" });
+      toast({ title: "回答を更新しました" });
       if (selectedId) queryClient.invalidateQueries({ queryKey: ["qna-detail", selectedId] });
       setEditingCommentId(null);
       setEditCommentContent("");
@@ -197,7 +197,7 @@ export default function Inquiries() {
       return customFetch<any>(`/api/boards/qna/${params.id}/comment/${params.commentId}`, { method: "DELETE" });
     },
     onSuccess: () => {
-      toast({ title: "답변이 삭제되었습니다" });
+      toast({ title: "回答を削除しました" });
       if (selectedId) {
         queryClient.invalidateQueries({ queryKey: ["qna-detail", selectedId] });
         queryClient.invalidateQueries({ queryKey: getGetQnaListQueryKey() });
@@ -211,7 +211,7 @@ export default function Inquiries() {
   const { mutate: removeQna, isPending: isQnaDeleting } = useDeleteQna({
     mutation: {
       onSuccess: () => {
-        toast({ title: "문의글이 삭제되었습니다" });
+        toast({ title: "お問い合わせを削除しました" });
         queryClient.invalidateQueries({ queryKey: getGetQnaListQueryKey() });
         setSelectedId(null);
       },
@@ -246,9 +246,9 @@ export default function Inquiries() {
       return (
         <div className="py-24 text-center">
           <button onClick={() => setSelectedId(null)} className="text-slate-500 hover:text-slate-900 font-medium">
-            <ArrowLeft className="w-4 h-4 mr-1 inline" /> 목록으로
+            <ArrowLeft className="w-4 h-4 mr-1 inline" /> 一覧へ
           </button>
-          <p className="mt-4 text-slate-500">문의를 찾을 수 없습니다.</p>
+          <p className="mt-4 text-slate-500">お問い合わせが見つかりません。</p>
         </div>
       );
     }
@@ -259,7 +259,7 @@ export default function Inquiries() {
     return (
       <div className="animate-in fade-in duration-300 max-w-3xl mx-auto">
         <button onClick={() => setSelectedId(null)} className="inline-flex items-center text-slate-500 hover:text-slate-900 mb-6 font-medium transition-colors">
-          <ArrowLeft className="w-4 h-4 mr-1" /> 목록으로
+          <ArrowLeft className="w-4 h-4 mr-1" /> 一覧へ
         </button>
 
         <Card className="p-8 mb-6">
@@ -267,17 +267,17 @@ export default function Inquiries() {
             <h2 className="text-2xl font-black text-slate-900">{detail.wr_subject}</h2>
             <div className="flex items-center gap-2 shrink-0">
               <Badge className={detail.comments && detail.comments.length > 0 ? "bg-emerald-100 text-emerald-700" : "bg-amber-100 text-amber-700"}>
-                {detail.comments && detail.comments.length > 0 ? "답변완료" : "답변대기"}
+                {detail.comments && detail.comments.length > 0 ? "回答済み" : "回答待ち"}
               </Badge>
               {user?.is_admin && (
                 <>
                   <Button variant="ghost" size="sm" className="text-blue-600 hover:text-blue-800 hover:bg-blue-50" onClick={openEditQna}>
-                    <Pencil className="w-4 h-4 mr-1" /> 수정
+                    <Pencil className="w-4 h-4 mr-1" /> 編集
                   </Button>
                   <Button variant="ghost" size="sm" className="text-red-500 hover:text-red-700 hover:bg-red-50" disabled={isQnaDeleting}
-                    onClick={() => { if (window.confirm("이 문의글을 삭제하시겠습니까? 관련 답변도 함께 삭제됩니다.")) removeQna({ id: selectedId! }); }}>
+                    onClick={() => { if (window.confirm("このお問い合わせを削除してもよろしいですか？関連する回答も一緒に削除されます。")) removeQna({ id: selectedId! }); }}>
                     <Trash2 className="w-4 h-4 mr-1" />
-                    {isQnaDeleting ? "삭제 중..." : "삭제"}
+                    {isQnaDeleting ? "削除中..." : "削除"}
                   </Button>
                 </>
               )}
@@ -293,7 +293,7 @@ export default function Inquiries() {
             <div className="mt-6 pt-6 border-t border-slate-100">
               {imageFiles.length > 0 && (
                 <div className="mb-4">
-                  <h3 className="text-sm font-bold text-slate-600 mb-3 flex items-center gap-1.5"><ImageIcon className="w-4 h-4" /> 이미지 ({imageFiles.length})</h3>
+                  <h3 className="text-sm font-bold text-slate-600 mb-3 flex items-center gap-1.5"><ImageIcon className="w-4 h-4" /> 画像 ({imageFiles.length})</h3>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     {imageFiles.map((file: any, idx: number) => (
                       <div key={idx} className="relative group rounded-xl overflow-hidden border border-slate-200 bg-slate-50 cursor-pointer" onClick={() => setLightboxImage({ src: getAuthFileUrl(file.url), alt: file.originalname })}>
@@ -311,7 +311,7 @@ export default function Inquiries() {
               )}
               {otherFiles.length > 0 && (
                 <div>
-                  <h3 className="text-sm font-bold text-slate-600 mb-3 flex items-center gap-1.5"><Paperclip className="w-4 h-4" /> 첨부파일 ({otherFiles.length})</h3>
+                  <h3 className="text-sm font-bold text-slate-600 mb-3 flex items-center gap-1.5"><Paperclip className="w-4 h-4" /> 添付ファイル ({otherFiles.length})</h3>
                   <div className="space-y-2">
                     {otherFiles.map((file: any, idx: number) => (
                       <a key={idx} href={getAuthFileUrl(file.url)} download={file.originalname} target="_blank" rel="noopener noreferrer"
@@ -334,7 +334,7 @@ export default function Inquiries() {
         {detail.comments && detail.comments.length > 0 && (
           <div className="space-y-4 mb-6">
             <h3 className="font-bold text-slate-800 flex items-center gap-2">
-              <MessageSquare className="w-4 h-4 text-primary" /> 관리자 답변
+              <MessageSquare className="w-4 h-4 text-primary" /> 管理者の回答
             </h3>
             {detail.comments.map((c: any) => (
               <Card key={c.wr_id} className="p-6 bg-blue-50/50 border-blue-100">
@@ -350,21 +350,21 @@ export default function Inquiries() {
                           <Button size="sm" variant="ghost" className="text-blue-600 hover:text-blue-800 hover:bg-blue-100 h-7 px-2"
                             disabled={updateCommentMutation.isPending}
                             onClick={() => updateCommentMutation.mutate({ id: selectedId!, commentId: c.wr_id, content: editCommentContent })}>
-                            <Check className="w-3.5 h-3.5 mr-1" /> 저장
+                            <Check className="w-3.5 h-3.5 mr-1" /> 保存
                           </Button>
                           <Button size="sm" variant="ghost" className="text-slate-500 hover:text-slate-700 h-7 px-2"
                             onClick={() => { setEditingCommentId(null); setEditCommentContent(""); }}>
-                            취소
+                            キャンセル
                           </Button>
                         </>
                       ) : (
                         <>
                           <button onClick={() => { setEditingCommentId(c.wr_id); setEditCommentContent(c.wr_content); }}
-                            className="p-1.5 rounded-lg text-slate-400 hover:text-blue-600 hover:bg-blue-100 transition-colors" title="수정">
+                            className="p-1.5 rounded-lg text-slate-400 hover:text-blue-600 hover:bg-blue-100 transition-colors" title="編集">
                             <Pencil className="w-3.5 h-3.5" />
                           </button>
-                          <button onClick={() => { if (window.confirm("이 답변을 삭제하시겠습니까?")) deleteCommentMutation.mutate({ id: selectedId!, commentId: c.wr_id }); }}
-                            className="p-1.5 rounded-lg text-slate-400 hover:text-red-600 hover:bg-red-50 transition-colors" title="삭제"
+                          <button onClick={() => { if (window.confirm("この回答を削除してもよろしいですか？")) deleteCommentMutation.mutate({ id: selectedId!, commentId: c.wr_id }); }}
+                            className="p-1.5 rounded-lg text-slate-400 hover:text-red-600 hover:bg-red-50 transition-colors" title="削除"
                             disabled={deleteCommentMutation.isPending}>
                             <Trash2 className="w-3.5 h-3.5" />
                           </button>
@@ -390,33 +390,33 @@ export default function Inquiries() {
 
         {user?.is_admin && (
           <Card className="p-6">
-            <h3 className="font-bold text-slate-800 mb-4">답변 작성</h3>
+            <h3 className="font-bold text-slate-800 mb-4">回答を作成</h3>
             <textarea
               className="w-full p-3 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all resize-none min-h-[120px]"
-              placeholder="답변을 입력하세요..."
+              placeholder="回答を入力してください..."
               value={replyContent}
               onChange={(e) => setReplyContent(e.target.value)}
             />
             <div className="mt-3 flex justify-end">
               <Button onClick={() => addComment({ id: selectedId, content: replyContent })} disabled={isReplying || !replyContent.trim()}>
                 <Send className="w-4 h-4 mr-1" />
-                {isReplying ? "등록 중..." : "답변 등록"}
+                {isReplying ? "登録中..." : "回答を登録"}
               </Button>
             </div>
           </Card>
         )}
 
-        <Modal isOpen={showEditQna} onClose={() => setShowEditQna(false)} title="문의글 수정">
+        <Modal isOpen={showEditQna} onClose={() => setShowEditQna(false)} title="お問い合わせの編集">
           <div className="space-y-4">
             <div>
-              <Label>제목</Label>
-              <Input placeholder="문의 제목" value={editQnaSubject} onChange={(e: any) => setEditQnaSubject(e.target.value)} />
+              <Label>件名</Label>
+              <Input placeholder="お問い合わせの件名" value={editQnaSubject} onChange={(e: any) => setEditQnaSubject(e.target.value)} />
             </div>
             <div>
-              <Label>내용</Label>
+              <Label>内容</Label>
               <textarea
                 className="w-full p-3 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all resize-none min-h-[160px]"
-                placeholder="문의 내용을 입력하세요"
+                placeholder="お問い合わせ内容を入力してください"
                 value={editQnaContent}
                 onChange={(e) => setEditQnaContent(e.target.value)}
               />
@@ -424,7 +424,7 @@ export default function Inquiries() {
 
             {editQnaExistingFiles.length > 0 && (
               <div>
-                <Label>기존 첨부파일</Label>
+                <Label>既存の添付ファイル</Label>
                 <div className="mt-1 space-y-1.5">
                   {editQnaExistingFiles.map((file: any) => {
                     const isImg = isImageFile(file);
@@ -442,7 +442,7 @@ export default function Inquiries() {
                           type="button"
                           onClick={() => toggleDeleteQnaFile(file.filename)}
                           className={`shrink-0 p-1 rounded transition-colors ${willDelete ? "text-slate-400 hover:text-slate-600" : "text-red-400 hover:text-red-600"}`}
-                          title={willDelete ? "삭제 취소" : "삭제"}
+                          title={willDelete ? "削除を取り消す" : "削除"}
                         >
                           {willDelete ? <Plus className="w-3.5 h-3.5" /> : <X className="w-3.5 h-3.5" />}
                         </button>
@@ -451,13 +451,13 @@ export default function Inquiries() {
                   })}
                 </div>
                 {editQnaDeleteFiles.length > 0 && (
-                  <p className="text-xs text-red-500 mt-1">{editQnaDeleteFiles.length}개 파일이 저장 시 삭제됩니다.</p>
+                  <p className="text-xs text-red-500 mt-1">{editQnaDeleteFiles.length}件のファイルは保存時に削除されます。</p>
                 )}
               </div>
             )}
 
             <div>
-              <Label>새 파일 추가 (최대 5개, 각 20MB)</Label>
+              <Label>新しいファイルを追加 (最大5件、各20MB)</Label>
               <input
                 ref={editQnaFileInputRef}
                 type="file"
@@ -471,7 +471,7 @@ export default function Inquiries() {
               />
               <button type="button" onClick={() => editQnaFileInputRef.current?.click()}
                 className="mt-1 w-full p-3 rounded-xl border-2 border-dashed border-slate-200 hover:border-blue-300 hover:bg-blue-50/50 transition-all text-sm text-slate-500 flex items-center justify-center gap-2">
-                <Paperclip className="w-4 h-4" /> 파일 선택
+                <Paperclip className="w-4 h-4" /> ファイルを選択
               </button>
               {editQnaNewFilePreviews.length > 0 && (
                 <div className="mt-2 space-y-1.5">
@@ -494,12 +494,12 @@ export default function Inquiries() {
             </div>
 
             <div className="flex justify-end gap-3 pt-4 border-t border-slate-100">
-              <Button variant="ghost" onClick={() => { setShowEditQna(false); setEditQnaNewFiles([]); setEditQnaDeleteFiles([]); }}>취소</Button>
+              <Button variant="ghost" onClick={() => { setShowEditQna(false); setEditQnaNewFiles([]); setEditQnaDeleteFiles([]); }}>キャンセル</Button>
               <Button
                 onClick={() => updateQnaMutation.mutate({ id: selectedId!, subject: editQnaSubject, content: editQnaContent, deleteFiles: editQnaDeleteFiles, newFiles: editQnaNewFiles })}
                 disabled={updateQnaMutation.isPending || !editQnaSubject || !editQnaContent}
               >
-                {updateQnaMutation.isPending ? "수정 중..." : "저장하기"}
+                {updateQnaMutation.isPending ? "更新中..." : "保存する"}
               </Button>
             </div>
           </div>
@@ -516,14 +516,14 @@ export default function Inquiries() {
     <div className="animate-in fade-in duration-300">
       <div className="flex items-end justify-between mb-8">
         <div>
-          <h1 className="text-3xl font-black text-slate-900 tracking-tight">문의하기</h1>
+          <h1 className="text-3xl font-black text-slate-900 tracking-tight">お問い合わせ</h1>
           <p className="text-slate-500 mt-2 font-medium">
-            {user?.is_admin ? "파트너사의 문의 내역을 확인하고 답변하세요." : "궁금하신 사항을 문의해주세요."}
+            {user?.is_admin ? "取引先からのお問い合わせを確認して回答してください。" : "ご不明な点はお問い合わせください。"}
           </p>
         </div>
         {!user?.is_admin && (
           <Button onClick={() => setShowCreate(true)}>
-            <Plus className="w-4 h-4 mr-1" /> 문의 작성
+            <Plus className="w-4 h-4 mr-1" /> お問い合わせを作成
           </Button>
         )}
       </div>
@@ -532,7 +532,7 @@ export default function Inquiries() {
         {!data?.posts?.length ? (
           <div className="py-16 text-center">
             <MessageSquare className="w-12 h-12 text-slate-200 mx-auto mb-4" />
-            <p className="text-slate-500 font-bold">등록된 문의가 없습니다.</p>
+            <p className="text-slate-500 font-bold">登録されたお問い合わせはありません。</p>
           </div>
         ) : (
           <div className="divide-y divide-slate-100">
@@ -561,11 +561,11 @@ export default function Inquiries() {
                 </button>
                 <div className="flex items-center gap-3 shrink-0 pt-1">
                   <Badge className={post.wr_comment > 0 ? "bg-emerald-100 text-emerald-700" : "bg-amber-100 text-amber-700"}>
-                    {post.wr_comment > 0 ? "답변완료" : "답변대기"}
+                    {post.wr_comment > 0 ? "回答済み" : "回答待ち"}
                   </Badge>
                   {user?.is_admin && (
                     <button
-                      onClick={(e) => { e.stopPropagation(); if (window.confirm("이 문의글을 삭제하시겠습니까? 관련 답변도 함께 삭제됩니다.")) removeQna({ id: post.wr_id }); }}
+                      onClick={(e) => { e.stopPropagation(); if (window.confirm("このお問い合わせを削除してもよろしいですか？関連する回答も一緒に削除されます。")) removeQna({ id: post.wr_id }); }}
                       className="p-1.5 rounded-lg text-slate-400 hover:text-red-600 hover:bg-red-50 transition-colors">
                       <Trash2 className="w-4 h-4" />
                     </button>
@@ -577,28 +577,28 @@ export default function Inquiries() {
         )}
       </Card>
 
-      <Modal isOpen={showCreate} onClose={() => setShowCreate(false)} title="문의 작성">
+      <Modal isOpen={showCreate} onClose={() => setShowCreate(false)} title="お問い合わせの作成">
         <div className="space-y-4">
           <div>
-            <Label>제목</Label>
-            <Input placeholder="문의 제목" value={subject} onChange={(e: any) => setSubject(e.target.value)} />
+            <Label>件名</Label>
+            <Input placeholder="お問い合わせの件名" value={subject} onChange={(e: any) => setSubject(e.target.value)} />
           </div>
           <div>
-            <Label>내용</Label>
+            <Label>内容</Label>
             <textarea
               className="w-full p-3 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all resize-none min-h-[200px]"
-              placeholder="문의 내용을 입력하세요"
+              placeholder="お問い合わせ内容を入力してください"
               value={content}
               onChange={(e) => setContent(e.target.value)}
             />
           </div>
           <div>
-            <Label>첨부파일 (최대 5개, 각 20MB)</Label>
+            <Label>添付ファイル (最大5件、各20MB)</Label>
             <input ref={fileInputRef} type="file" multiple className="hidden"
               onChange={(e) => { const selected = Array.from(e.target.files || []); setFiles((prev) => [...prev, ...selected].slice(0, 5)); e.target.value = ""; }} />
             <button type="button" onClick={() => fileInputRef.current?.click()}
               className="mt-1 w-full p-3 rounded-xl border-2 border-dashed border-slate-200 hover:border-blue-300 hover:bg-blue-50/50 transition-all text-sm text-slate-500 flex items-center justify-center gap-2">
-              <Paperclip className="w-4 h-4" /> 파일 선택
+              <Paperclip className="w-4 h-4" /> ファイルを選択
             </button>
             {filePreviews.length > 0 && (
               <div className="mt-2 space-y-1.5">
@@ -614,9 +614,9 @@ export default function Inquiries() {
             )}
           </div>
           <div className="flex justify-end gap-3 pt-4 border-t border-slate-100">
-            <Button variant="ghost" onClick={() => { setShowCreate(false); setFiles([]); }}>취소</Button>
+            <Button variant="ghost" onClick={() => { setShowCreate(false); setFiles([]); }}>キャンセル</Button>
             <Button onClick={() => createQnaMutation.mutate({ subject, content, files })} disabled={isPending || !subject || !content}>
-              {isPending ? "등록 중..." : "문의 등록"}
+              {isPending ? "登録中..." : "お問い合わせを登録"}
             </Button>
           </div>
         </div>

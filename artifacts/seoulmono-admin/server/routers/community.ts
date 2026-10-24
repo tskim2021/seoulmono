@@ -65,19 +65,19 @@ export const communityRouter = router({
 
           // 1) 토픽 감지
           const TOPIC_MAP: Array<{ keys: string[]; topic: string; intro: string }> = [
-            { keys: ["배송조회", "배송 조회", "배송정보", "운송장", "배송확인", "배송추적", "어디", "위치"], topic: "배송조회", intro: "배송 현황 확인 방법에 대해 안내드리겠습니다." },
-            { keys: ["배송기간", "배송 기간", "얼마나", "며칠", "소요", "기간"], topic: "배송기간", intro: "배송 소요 기간에 대해 안내드리겠습니다." },
-            { keys: ["파손", "훼손", "불량", "하자", "깨진", "부서진"], topic: "파손", intro: "상품 파손 및 불량 문제에 대해 안내드리겠습니다." },
-            { keys: ["반품", "교환", "환불", "취소", "돌려"], topic: "반품교환", intro: "반품·교환·환불 관련하여 안내드리겠습니다." },
-            { keys: ["취소", "주문취소", "주문 취소"], topic: "취소", intro: "주문 취소 관련하여 안내드리겠습니다." },
-            { keys: ["결제", "카드", "무통장", "입금", "결제수단", "결제방법"], topic: "결제", intro: "결제 관련하여 안내드리겠습니다." },
-            { keys: ["주소", "배송지", "변경"], topic: "배송지변경", intro: "배송지 변경 관련하여 안내드리겠습니다." },
-            { keys: ["통관", "관세", "세관", "관부가세"], topic: "통관", intro: "통관 및 관부가세 관련하여 안내드리겠습니다." },
-            { keys: ["정품", "가품", "진품"], topic: "정품", intro: "상품 정품 여부에 대해 안내드리겠습니다." },
-            { keys: ["성분", "원료", "재료", "함량"], topic: "성분", intro: "상품 성분 관련하여 안내드리겠습니다." },
-            { keys: ["유통기한", "만료", "기한"], topic: "유통기한", intro: "유통기한 관련하여 안내드리겠습니다." },
-            { keys: ["사용법", "복용법", "어떻게", "사용방법", "먹는"], topic: "사용법", intro: "상품 사용 방법에 대해 안내드리겠습니다." },
-            { keys: ["회원", "포인트", "등급", "적립"], topic: "회원포인트", intro: "회원 등급 및 포인트 관련하여 안내드리겠습니다." },
+            { keys: ["배송조회", "배송 조회", "배송정보", "운송장", "배송확인", "배송추적", "어디", "위치", "配送状況", "追跡", "追跡番号", "届く場所", "どこ"], topic: "배송조회", intro: "配送状況の確認方法についてご案内いたします。" },
+            { keys: ["배송기간", "배송 기간", "얼마나", "며칠", "소요", "기간", "何日", "どのくらい", "日数", "期間"], topic: "배송기간", intro: "配送にかかる期間についてご案内いたします。" },
+            { keys: ["파손", "훼손", "불량", "하자", "깨진", "부서진", "破損", "不良", "壊れ", "傷"], topic: "파손", intro: "商品の破損・不良についてご案内いたします。" },
+            { keys: ["반품", "교환", "환불", "취소", "돌려", "返品", "交換", "返金"], topic: "반품교환", intro: "返品・交換・返金についてご案内いたします。" },
+            { keys: ["취소", "주문취소", "주문 취소", "キャンセル", "注文取消"], topic: "취소", intro: "ご注文のキャンセルについてご案内いたします。" },
+            { keys: ["결제", "카드", "무통장", "입금", "결제수단", "결제방법", "支払い", "決済", "クレジット", "銀行振込", "振込"], topic: "결제", intro: "お支払いについてご案内いたします。" },
+            { keys: ["주소", "배송지", "변경", "住所", "お届け先", "変更"], topic: "배송지변경", intro: "お届け先の変更についてご案内いたします。" },
+            { keys: ["통관", "관세", "세관", "관부가세", "通関", "関税", "税関"], topic: "통관", intro: "通関および関税・消費税についてご案内いたします。" },
+            { keys: ["정품", "가품", "진품", "正規品", "偽物", "本物"], topic: "정품", intro: "商品の正規品かどうかについてご案内いたします。" },
+            { keys: ["성분", "원료", "재료", "함량", "成分", "原料", "含有"], topic: "성분", intro: "商品の成分についてご案内いたします。" },
+            { keys: ["유통기한", "만료", "기한", "使用期限", "賞味期限", "期限"], topic: "유통기한", intro: "使用期限についてご案内いたします。" },
+            { keys: ["사용법", "복용법", "어떻게", "사용방법", "먹는", "使い方", "飲み方", "使用方法", "服用"], topic: "사용법", intro: "商品の使用方法についてご案内いたします。" },
+            { keys: ["회원", "포인트", "등급", "적립", "会員", "ポイント", "ランク"], topic: "회원포인트", intro: "会員ランクおよびポイントについてご案内いたします。" },
           ];
 
           const detectedTopic = TOPIC_MAP.find(t => t.keys.some(k => fullText.includes(k)));
@@ -112,17 +112,17 @@ export const communityRouter = router({
             .map(s => s.faq);
 
           // 3) 자연어 문장 합성
-          const CONNECTORS = ["아울러 ", "참고로 ", "또한 "];
+          const CONNECTORS = ["なお、", "ちなみに、", "また、"];
           const CLOSINGS = [
-            "위 내용이 도움이 되셨으면 합니다.",
-            "더 궁금하신 점이 있으시면 언제든지 문의해 주세요.",
-            "고객님의 불편함이 빠르게 해결되기를 바랍니다.",
+            "上記がお役に立てば幸いです。",
+            "ほかにご不明な点がございましたら、いつでもお問い合わせください。",
+            "お客様のお困りごとが早く解決することを願っております。",
           ];
 
           let answer: string;
 
           if (matched.length > 0) {
-            const intro = detectedTopic?.intro ?? "문의하신 내용에 대해 안내드리겠습니다.";
+            const intro = detectedTopic?.intro ?? "お問い合わせの内容についてご案内いたします。";
 
             // 각 FAQ 답변을 자연스러운 문장으로 변환
             const paragraphs = matched.map((faq, i) => {
@@ -137,7 +137,7 @@ export const communityRouter = router({
             const closing = CLOSINGS[Math.floor(Math.random() * CLOSINGS.length)];
 
             answer = [
-              `안녕하세요, 탈모학교 고객지원팀입니다.`,
+              `こんにちは、ソウルモノ カスタマーサポートです。`,
               ``,
               `${intro}`,
               ``,
@@ -145,29 +145,29 @@ export const communityRouter = router({
               ``,
               closing,
               ``,
-              `자동응답이 만족스럽지 않으시면 하단의 [상담사 답변 요청하기] 버튼을 눌러주세요. 영업일 기준 1일 이내(평일 09:00–18:00)에 담당 상담사가 직접 답변드립니다.`,
+              `自動応答にご満足いただけない場合は、下の［担当者の回答をリクエスト］ボタンを押してください。営業日1日以内（平日 09:00–18:00）に担当者が直接ご回答いたします。`,
             ].join("\n");
           } else {
             // 매칭 없음 → 접수 확인 메시지
             const noMatchIntros = [
-              "문의해 주신 내용을 잘 접수하였습니다.",
-              "소중한 문의 감사드립니다.",
-              "문의 주셔서 감사합니다.",
+              "お問い合わせを確かに承りました。",
+              "貴重なお問い合わせをありがとうございます。",
+              "お問い合わせありがとうございます。",
             ];
             const noMatchBodies = [
-              "고객님의 문의 내용을 확인하였으며, 담당 상담사가 검토 후 최대한 빠르게 답변드리겠습니다.",
-              "문의하신 내용을 상담사가 검토 중에 있으며, 영업일 기준 1~2일 내로 상세한 답변을 드리겠습니다.",
+              "お問い合わせ内容を確認いたしました。担当者が確認のうえ、できるだけ早くご回答いたします。",
+              "お問い合わせ内容を担当者が確認しております。営業日1〜2日以内に詳しくご回答いたします。",
             ];
             const ni = Math.floor(Math.random() * noMatchIntros.length);
             const bi = Math.floor(Math.random() * noMatchBodies.length);
             answer = [
-              `안녕하세요, 탈모학교 고객지원팀입니다.`,
+              `こんにちは、ソウルモノ カスタマーサポートです。`,
               ``,
               `${noMatchIntros[ni]}`,
               ``,
               `${noMatchBodies[bi]}`,
               ``,
-              `자동응답이 만족스럽지 않으시면 하단의 [상담사 답변 요청하기] 버튼을 눌러주세요. 영업일 기준 1일 이내(평일 09:00–18:00)에 담당 상담사가 직접 답변드립니다.`,
+              `自動応答にご満足いただけない場合は、下の［担当者の回答をリクエスト］ボタンを押してください。営業日1日以内（平日 09:00–18:00）に担当者が直接ご回答いたします。`,
             ].join("\n");
           }
           if (!answer) return;
@@ -220,7 +220,7 @@ export const communityRouter = router({
     });
     const post = await db.getPostById(input.postId);
     if (post && post.userId !== ctx.user.id) {
-      await db.createNotification(post.userId, "comment", "새 댓글이 달렸습니다", `"${post.title}"에 새 댓글이 달렸습니다.`, `/community/post/${input.postId}`);
+      await db.createNotification(post.userId, "comment", "新しいコメントが付きました", `「${post.title}」に新しいコメントが付きました。`, `/community/post/${input.postId}`);
     }
     return { success: true };
   }),
@@ -275,16 +275,16 @@ export const communityRouter = router({
     // 배송 완료 검증
     const order = await db.getOrderById(input.orderId);
     if (!order || order.userId !== ctx.user.id) {
-      throw new TRPCError({ code: "NOT_FOUND", message: "주문을 찾을 수 없습니다." });
+      throw new TRPCError({ code: "NOT_FOUND", message: "注文が見つかりません。" });
     }
     if (order.status !== "delivered") {
-      throw new TRPCError({ code: "BAD_REQUEST", message: "배송 완료된 주문만 리뷰를 작성할 수 있습니다." });
+      throw new TRPCError({ code: "BAD_REQUEST", message: "配送完了した注文のみレビューを投稿できます。" });
     }
     
     // review 게시판 찾기
     const boards = await db.getAllBoards();
     const reviewBoard = boards.find(b => b.boardType === "review");
-    if (!reviewBoard) throw new TRPCError({ code: "NOT_FOUND", message: "리뷰 게시판이 없습니다." });
+    if (!reviewBoard) throw new TRPCError({ code: "NOT_FOUND", message: "レビュー掲示板がありません。" });
 
     const result = await db.createReviewWithPoints({
       boardId: reviewBoard.id,
@@ -318,7 +318,7 @@ export const communityRouter = router({
     try {
       const post = await db.getPostById(input.postId);
       if (post && post.userId !== ctx.user.id) {
-        await db.createNotification(post.userId, "review", "\uB9AC\uBDF0\uC5D0 \uB2F5\uBCC0\uC774 \uB2EC\uB838\uC2B5\uB2C8\uB2E4", `"${post.title}"\uC5D0 \uAD00\uB9AC\uC790 \uB2F5\uBCC0\uC774 \uB4F1\uB85D\uB418\uC5C8\uC2B5\uB2C8\uB2E4.`, `/community/post/${input.postId}`);
+        await db.createNotification(post.userId, "review", "レビューに返信が付きました", `「${post.title}」に管理者の返信が登録されました。`, `/community/post/${input.postId}`);
       }
     } catch (e) { console.error("[reviewReply] notify failed:", e); }
     return { success: true, replyId };
@@ -402,7 +402,7 @@ export const communityRouter = router({
     await db.adminUpdatePost(input.postId, { isAnswered: 1 });
     const post = await db.getPostById(input.postId);
     if (post && post.userId !== ctx.user.id) {
-      await db.createNotification(post.userId, "comment", "Q&A에 답변이 등록되었습니다", `"${post.title}"에 관리자 답변이 등록되었습니다.`, `/shop/item.php?t_id=${post.productId}`);
+      await db.createNotification(post.userId, "comment", "Q&Aに回答が登録されました", `「${post.title}」に管理者の回答が登録されました。`, `/shop/item.php?t_id=${post.productId}`);
     }
     return { success: true };
   }),
@@ -464,25 +464,25 @@ export const communityRouter = router({
     const allFaqs = await db.getFaqs(undefined, true);
 
     const categoryLabels: Record<string, string> = {
-      order: "주문/결제", shipping: "배송", return: "반품/교환",
-      product: "상품", member: "회원", etc: "기타",
+      order: "ご注文・お支払い", shipping: "配送", return: "返品・交換",
+      product: "商品", member: "会員", etc: "その他",
     };
-    const categoryLabel = input.category ? (categoryLabels[input.category] ?? "기타") : "기타";
+    const categoryLabel = input.category ? (categoryLabels[input.category] ?? "その他") : "その他";
 
     const faqContext = allFaqs.length > 0
-      ? "\n\n=== FAQ 지식베이스 ===\n" +
+      ? "\n\n=== FAQナレッジベース ===\n" +
         allFaqs.map(f => `Q: ${f.question}\nA: ${f.answer}`).join("\n\n")
       : "";
 
-    const systemPrompt = `당신은 탈모학교 쇼핑몰의 AI 고객 상담사입니다.
-탈모학교는 탈모 관련 건강기능식품 및 케어 제품을 전문으로 판매하는 온라인 쇼핑몰입니다.
+    const systemPrompt = `あなたはソウルモノのショッピングモールのAIカスタマーサポート担当です。
+ソウルモノは、薄毛ケア関連の健康食品およびケア製品を専門に販売するオンラインショップです。
 
-[답변 원칙]
-- 아래 FAQ 지식베이스를 우선적으로 참고하세요
-- FAQ에 없는 내용은 일반적인 쇼핑몰 정책에 근거해 답변하세요
-- 확실하지 않은 내용은 "담당자에게 문의 버튼을 눌러주세요"라고 안내하세요
-- 답변은 명확하고 간결하게, 필요시 번호 목록을 활용하세요
-- 친절하고 공감하는 톤을 유지하세요${faqContext}`;
+[回答の原則]
+- 下記のFAQナレッジベースを優先的に参照してください
+- FAQにない内容は、一般的なショップのポリシーに基づいて回答してください
+- 確実でない内容は「担当者へのお問い合わせボタンを押してください」と案内してください
+- 回答は明確かつ簡潔に、必要に応じて番号付きリストを活用してください
+- 親切で共感的なトーンを保ってください${faqContext}`;
 
     const priorMessages = (input.history ?? []).map(h => ({
       role: h.role as "user" | "assistant",
@@ -490,7 +490,7 @@ export const communityRouter = router({
     }));
 
     const userMessage = priorMessages.length === 0
-      ? `[문의 유형: ${categoryLabel}]\n제목: ${input.title}\n\n${input.content}`
+      ? `[お問い合わせ種別: ${categoryLabel}]\nタイトル: ${input.title}\n\n${input.content}`
       : input.content;
 
     try {
@@ -503,9 +503,9 @@ export const communityRouter = router({
       });
       const raw = response.choices[0]?.message?.content;
       const answer = typeof raw === "string" ? raw.trim() : "";
-      return { answer: answer || "죄송합니다. 답변 생성에 실패했습니다. 담당자에게 문의해주세요." };
+      return { answer: answer || "申し訳ございません。回答の生成に失敗しました。担当者へお問い合わせください。" };
     } catch {
-      return { answer: "죄송합니다. AI 서비스에 일시적인 문제가 발생했습니다. 담당자에게 직접 문의해주세요." };
+      return { answer: "申し訳ございません。AIサービスに一時的な問題が発生しました。担当者へ直接お問い合わせください。" };
     }
   }),
 });

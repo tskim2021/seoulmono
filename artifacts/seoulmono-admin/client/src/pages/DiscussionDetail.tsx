@@ -75,7 +75,7 @@ export default function DiscussionDetail() {
       setReplyTo(null);
       utils.discussion.getComments.invalidate({ discussionId });
       utils.discussion.getById.invalidate({ id: discussionId });
-      toast.success("댓글이 등록되었습니다");
+      toast.success("コメントを投稿しました");
     },
   });
 
@@ -83,7 +83,7 @@ export default function DiscussionDetail() {
     onSuccess: () => {
       setEditingComment(null);
       utils.discussion.getComments.invalidate({ discussionId });
-      toast.success("댓글이 수정되었습니다");
+      toast.success("コメントを更新しました");
     },
   });
 
@@ -91,14 +91,14 @@ export default function DiscussionDetail() {
     onSuccess: () => {
       utils.discussion.getComments.invalidate({ discussionId });
       utils.discussion.getById.invalidate({ id: discussionId });
-      toast.success("댓글이 삭제되었습니다");
+      toast.success("コメントを削除しました");
     },
   });
 
   const deleteDiscussion = trpc.discussion.delete.useMutation({
     onSuccess: () => {
       navigate("/discussions");
-      toast.success("토론이 삭제되었습니다");
+      toast.success("ディスカッションを削除しました");
     },
   });
 
@@ -128,10 +128,10 @@ export default function DiscussionDetail() {
     const minutes = Math.floor(diff / 60000);
     const hours = Math.floor(diff / 3600000);
     const days = Math.floor(diff / 86400000);
-    if (minutes < 1) return "방금 전";
-    if (minutes < 60) return `${minutes}분 전`;
-    if (hours < 24) return `${hours}시간 전`;
-    if (days < 7) return `${days}일 전`;
+    if (minutes < 1) return "たった今";
+    if (minutes < 60) return `${minutes}分前`;
+    if (hours < 24) return `${hours}時間前`;
+    if (days < 7) return `${days}日前`;
     return d.toLocaleDateString("ko-KR");
   };
 
@@ -166,9 +166,9 @@ export default function DiscussionDetail() {
     return (
       <Layout>
       <div className="container py-16 text-center">
-        <h2 className="text-xl font-semibold mb-2">토론을 찾을 수 없습니다</h2>
+        <h2 className="text-xl font-semibold mb-2">ディスカッションが見つかりません</h2>
         <Button variant="outline" onClick={() => navigate("/discussions")}>
-          <ArrowLeft className="h-4 w-4 mr-2" /> 목록으로 돌아가기
+          <ArrowLeft className="h-4 w-4 mr-2" /> 一覧に戻る
         </Button>
       </div>
       </Layout>
@@ -194,9 +194,9 @@ export default function DiscussionDetail() {
             </div>
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2 mb-1">
-                <span className="font-medium text-sm">{comment.userName ?? "익명"}</span>
+                <span className="font-medium text-sm">{comment.userName ?? "匿名"}</span>
                 {comment.userId === discussion.userId && (
-                  <Badge variant="secondary" className="text-xs py-0">작성자</Badge>
+                  <Badge variant="secondary" className="text-xs py-0">投稿者</Badge>
                 )}
                 <span className="text-xs text-muted-foreground">{formatRelative(comment.createdAt)}</span>
               </div>
@@ -211,10 +211,10 @@ export default function DiscussionDetail() {
                   />
                   <div className="flex gap-2">
                     <Button size="sm" onClick={handleEditComment} disabled={updateComment.isPending}>
-                      저장
+                      保存
                     </Button>
                     <Button size="sm" variant="outline" onClick={() => setEditingComment(null)}>
-                      취소
+                      キャンセル
                     </Button>
                   </div>
                 </div>
@@ -235,10 +235,10 @@ export default function DiscussionDetail() {
                   </button>
                   {user && discussion.isClosed !== 1 && (
                     <button
-                      onClick={() => setReplyTo({ id: comment.id, userName: comment.userName ?? "익명" })}
+                      onClick={() => setReplyTo({ id: comment.id, userName: comment.userName ?? "匿名" })}
                       className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors"
                     >
-                      <CornerDownRight className="h-3.5 w-3.5" /> 답글
+                      <CornerDownRight className="h-3.5 w-3.5" /> 返信
                     </button>
                   )}
                   {(isCommentAuthor || isAdmin) && (
@@ -251,14 +251,14 @@ export default function DiscussionDetail() {
                       <DropdownMenuContent align="start">
                         {isCommentAuthor && (
                           <DropdownMenuItem onClick={() => setEditingComment({ id: comment.id, content: comment.content })}>
-                            <Edit className="h-3.5 w-3.5 mr-2" /> 수정
+                            <Edit className="h-3.5 w-3.5 mr-2" /> 編集
                           </DropdownMenuItem>
                         )}
                         <DropdownMenuItem
                           className="text-destructive"
                           onClick={() => deleteComment.mutate({ id: comment.id })}
                         >
-                          <Trash2 className="h-3.5 w-3.5 mr-2" /> 삭제
+                          <Trash2 className="h-3.5 w-3.5 mr-2" /> 削除
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
@@ -279,7 +279,7 @@ export default function DiscussionDetail() {
     <div className="container py-8 max-w-4xl">
       {/* 뒤로가기 */}
       <Button variant="ghost" size="sm" className="mb-4 gap-1" onClick={() => navigate("/discussions")}>
-        <ArrowLeft className="h-4 w-4" /> 토론 목록
+        <ArrowLeft className="h-4 w-4" /> ディスカッション一覧
       </Button>
 
       {/* 토론 본문 */}
@@ -287,22 +287,22 @@ export default function DiscussionDetail() {
         <CardHeader className="pb-3">
           <div className="flex items-center gap-2 mb-2 flex-wrap">
             {discussion.isPinned === 1 && (
-              <Badge variant="secondary" className="gap-1"><Pin className="h-3 w-3" /> 고정</Badge>
+              <Badge variant="secondary" className="gap-1"><Pin className="h-3 w-3" /> 固定</Badge>
             )}
             {discussion.isClosed === 1 && (
-              <Badge variant="outline" className="gap-1"><Lock className="h-3 w-3" /> 마감</Badge>
+              <Badge variant="outline" className="gap-1"><Lock className="h-3 w-3" /> 終了</Badge>
             )}
           </div>
           <h1 className="text-2xl font-bold">{discussion.title}</h1>
           <div className="flex items-center gap-4 text-sm text-muted-foreground mt-2 flex-wrap">
             <span className="flex items-center gap-1">
-              <User className="h-4 w-4" /> {discussion.userName ?? "익명"}
+              <User className="h-4 w-4" /> {discussion.userName ?? "匿名"}
             </span>
             <span className="flex items-center gap-1">
               <Clock className="h-4 w-4" /> {formatDate(discussion.createdAt)}
             </span>
             <span className="flex items-center gap-1">
-              <Eye className="h-4 w-4" /> 조회 {discussion.viewCount}
+              <Eye className="h-4 w-4" /> 閲覧 {discussion.viewCount}
             </span>
           </div>
           {(discussion.tags as string[] | null)?.length ? (
@@ -333,7 +333,7 @@ export default function DiscussionDetail() {
                 <span className="font-medium">{discussion.likeCount}</span>
               </button>
               <span className="flex items-center gap-1 text-sm text-muted-foreground">
-                <MessageSquare className="h-4 w-4" /> 댓글 {discussion.commentCount}
+                <MessageSquare className="h-4 w-4" /> コメント {discussion.commentCount}
               </span>
             </div>
 
@@ -341,29 +341,29 @@ export default function DiscussionDetail() {
               <div className="flex gap-2">
                 {isAuthor && (
                   <Button variant="outline" size="sm" onClick={() => navigate(`/discussions/${discussion.id}/edit`)}>
-                    <Edit className="h-4 w-4 mr-1" /> 수정
+                    <Edit className="h-4 w-4 mr-1" /> 編集
                   </Button>
                 )}
                 <AlertDialog>
                   <AlertDialogTrigger asChild>
                     <Button variant="outline" size="sm" className="text-destructive">
-                      <Trash2 className="h-4 w-4 mr-1" /> 삭제
+                      <Trash2 className="h-4 w-4 mr-1" /> 削除
                     </Button>
                   </AlertDialogTrigger>
                   <AlertDialogContent>
                     <AlertDialogHeader>
-                      <AlertDialogTitle>토론 삭제</AlertDialogTitle>
+                      <AlertDialogTitle>ディスカッションの削除</AlertDialogTitle>
                       <AlertDialogDescription>
-                        이 토론과 모든 댓글이 삭제됩니다. 이 작업은 되돌릴 수 없습니다.
+                        このディスカッションとすべてのコメントが削除されます。この操作は元に戻せません。
                       </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
-                      <AlertDialogCancel>취소</AlertDialogCancel>
+                      <AlertDialogCancel>キャンセル</AlertDialogCancel>
                       <AlertDialogAction
                         onClick={() => deleteDiscussion.mutate({ id: discussion.id })}
                         className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
                       >
-                        삭제
+                        削除
                       </AlertDialogAction>
                     </AlertDialogFooter>
                   </AlertDialogContent>
@@ -378,7 +378,7 @@ export default function DiscussionDetail() {
       <div className="space-y-0">
         <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
           <MessageSquare className="h-5 w-5" />
-          댓글 {comments.length > 0 && `(${comments.length})`}
+          コメント {comments.length > 0 && `(${comments.length})`}
         </h3>
 
         {/* 댓글 입력 */}
@@ -389,14 +389,14 @@ export default function DiscussionDetail() {
                 {replyTo && (
                   <div className="flex items-center gap-2 mb-2 text-sm text-muted-foreground bg-muted rounded px-3 py-1.5">
                     <CornerDownRight className="h-3.5 w-3.5" />
-                    <span><strong>{replyTo.userName}</strong>님에게 답글</span>
-                    <button onClick={() => setReplyTo(null)} className="ml-auto text-xs hover:text-foreground">취소</button>
+                    <span><strong>{replyTo.userName}</strong>さんへの返信</span>
+                    <button onClick={() => setReplyTo(null)} className="ml-auto text-xs hover:text-foreground">キャンセル</button>
                   </div>
                 )}
                 <Textarea
                   value={commentText}
                   onChange={(e) => setCommentText(e.target.value)}
-                  placeholder={replyTo ? `${replyTo.userName}님에게 답글 작성...` : "댓글을 작성해주세요..."}
+                  placeholder={replyTo ? `${replyTo.userName}さんへの返信を入力...` : "コメントを入力してください..."}
                   rows={3}
                   className="mb-3"
                 />
@@ -407,7 +407,7 @@ export default function DiscussionDetail() {
                     className="gap-2"
                   >
                     <Send className="h-4 w-4" />
-                    {createComment.isPending ? "등록 중..." : "댓글 등록"}
+                    {createComment.isPending ? "投稿中..." : "コメントを投稿"}
                   </Button>
                 </div>
               </CardContent>
@@ -416,16 +416,16 @@ export default function DiscussionDetail() {
             <Card className="mb-6">
               <CardContent className="py-4 text-center text-muted-foreground">
                 <Lock className="h-5 w-5 mx-auto mb-2" />
-                이 토론은 마감되어 새 댓글을 작성할 수 없습니다.
+                このディスカッションは終了しているため、新しいコメントを投稿できません。
               </CardContent>
             </Card>
           )
         ) : (
           <Card className="mb-6">
             <CardContent className="py-4 text-center">
-              <p className="text-muted-foreground mb-2">댓글을 작성하려면 로그인이 필요합니다.</p>
+              <p className="text-muted-foreground mb-2">コメントを投稿するにはログインが必要です。</p>
               <Button asChild size="sm">
-                <a href={getLoginUrl()}>로그인</a>
+                <a href={getLoginUrl()}>ログイン</a>
               </Button>
             </CardContent>
           </Card>
@@ -435,7 +435,7 @@ export default function DiscussionDetail() {
         {comments.length === 0 ? (
           <div className="text-center py-8 text-muted-foreground">
             <MessageSquare className="h-8 w-8 mx-auto mb-2 opacity-50" />
-            <p>아직 댓글이 없습니다. 첫 번째 댓글을 남겨보세요!</p>
+            <p>まだコメントがありません。最初のコメントを投稿してみましょう！</p>
           </div>
         ) : (
           <div className="divide-y">

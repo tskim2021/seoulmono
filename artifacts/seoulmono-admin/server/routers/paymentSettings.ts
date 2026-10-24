@@ -13,7 +13,7 @@ export const paymentSettingsRouter = router({
   // 관리자 API - 전체 결제 수단 조회
   adminGetAllMethods: protectedProcedure.query(async ({ ctx }) => {
     if (ctx.user.role !== "admin") {
-      throw new TRPCError({ code: "FORBIDDEN", message: "관리자 권한이 필요합니다." });
+      throw new TRPCError({ code: "FORBIDDEN", message: "管理者権限が必要です。" });
     }
     
     const methods = await db.getAllPaymentMethods();
@@ -28,7 +28,7 @@ export const paymentSettingsRouter = router({
     }))
     .mutation(async ({ ctx, input }) => {
       if (ctx.user.role !== "admin") {
-        throw new TRPCError({ code: "FORBIDDEN", message: "관리자 권한이 필요합니다." });
+        throw new TRPCError({ code: "FORBIDDEN", message: "管理者権限が必要です。" });
       }
       
       const updated = await db.updatePaymentMethod(input.id, {
@@ -36,7 +36,7 @@ export const paymentSettingsRouter = router({
       });
       
       if (!updated) {
-        throw new TRPCError({ code: "NOT_FOUND", message: "결제 수단을 찾을 수 없습니다." });
+        throw new TRPCError({ code: "NOT_FOUND", message: "お支払い方法が見つかりません。" });
       }
       
       return updated;
@@ -51,7 +51,7 @@ export const paymentSettingsRouter = router({
     }))
     .mutation(async ({ ctx, input }) => {
       if (ctx.user.role !== "admin") {
-        throw new TRPCError({ code: "FORBIDDEN", message: "관리자 권한이 필요합니다." });
+        throw new TRPCError({ code: "FORBIDDEN", message: "管理者権限が必要です。" });
       }
       
       const updated = await db.updatePaymentMethod(input.id, {
@@ -60,7 +60,7 @@ export const paymentSettingsRouter = router({
       });
       
       if (!updated) {
-        throw new TRPCError({ code: "NOT_FOUND", message: "결제 수단을 찾을 수 없습니다." });
+        throw new TRPCError({ code: "NOT_FOUND", message: "お支払い方法が見つかりません。" });
       }
       
       return updated;
@@ -74,7 +74,7 @@ export const paymentSettingsRouter = router({
     }))
     .mutation(async ({ ctx, input }) => {
       if (ctx.user.role !== "admin") {
-        throw new TRPCError({ code: "FORBIDDEN", message: "관리자 권한이 필요합니다." });
+        throw new TRPCError({ code: "FORBIDDEN", message: "管理者権限が必要です。" });
       }
       
       const updated = await db.updatePaymentMethod(input.id, {
@@ -82,7 +82,7 @@ export const paymentSettingsRouter = router({
       });
       
       if (!updated) {
-        throw new TRPCError({ code: "NOT_FOUND", message: "결제 수단을 찾을 수 없습니다." });
+        throw new TRPCError({ code: "NOT_FOUND", message: "お支払い方法が見つかりません。" });
       }
       
       return updated;

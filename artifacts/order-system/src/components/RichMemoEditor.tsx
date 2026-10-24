@@ -7,13 +7,13 @@ import { useEffect, useRef, useState } from "react";
 import { Bold, Italic, Underline as UnderlineIcon, Palette, RotateCcw } from "lucide-react";
 
 const PRESET_COLORS = [
-  { label: "기본", value: "" },
-  { label: "빨강", value: "#e53e3e" },
-  { label: "주황", value: "#dd6b20" },
-  { label: "파랑", value: "#2b6cb0" },
-  { label: "초록", value: "#276749" },
-  { label: "보라", value: "#6b46c1" },
-  { label: "회색", value: "#718096" },
+  { label: "標準", value: "" },
+  { label: "赤", value: "#e53e3e" },
+  { label: "オレンジ", value: "#dd6b20" },
+  { label: "青", value: "#2b6cb0" },
+  { label: "緑", value: "#276749" },
+  { label: "紫", value: "#6b46c1" },
+  { label: "グレー", value: "#718096" },
 ];
 
 interface Props {
@@ -83,9 +83,9 @@ export default function RichMemoEditor({ value, onChange }: Props) {
     <div className="border-2 rounded-xl overflow-visible transition-all focus-within:border-primary focus-within:ring-4 focus-within:ring-primary/10">
       {/* 툴바 */}
       <div className="flex items-center gap-0.5 px-3 py-1.5 border-b border-slate-100 bg-slate-50/80 rounded-t-xl">
-        {toolBtn(editor.isActive("bold"), () => editor.chain().focus().toggleBold().run(), <Bold size={14} />, "굵게")}
-        {toolBtn(editor.isActive("italic"), () => editor.chain().focus().toggleItalic().run(), <Italic size={14} />, "기울임")}
-        {toolBtn(editor.isActive("underline"), () => editor.chain().focus().toggleUnderline().run(), <UnderlineIcon size={14} />, "밑줄")}
+        {toolBtn(editor.isActive("bold"), () => editor.chain().focus().toggleBold().run(), <Bold size={14} />, "太字")}
+        {toolBtn(editor.isActive("italic"), () => editor.chain().focus().toggleItalic().run(), <Italic size={14} />, "斜体")}
+        {toolBtn(editor.isActive("underline"), () => editor.chain().focus().toggleUnderline().run(), <UnderlineIcon size={14} />, "下線")}
 
         <div className="w-px h-4 bg-slate-200 mx-1" />
 
@@ -93,7 +93,7 @@ export default function RichMemoEditor({ value, onChange }: Props) {
         <div className="relative" ref={colorRef}>
           <button
             type="button"
-            title="글자색"
+            title="文字色"
             onMouseDown={e => { e.preventDefault(); setColorOpen(o => !o); }}
             className="flex items-center gap-1 p-1.5 rounded-md text-slate-500 hover:bg-slate-100 hover:text-slate-700 transition-colors"
           >
@@ -129,7 +129,7 @@ export default function RichMemoEditor({ value, onChange }: Props) {
                 </button>
               ))}
               {/* 직접 색상 입력 */}
-              <label className="flex flex-col items-center gap-0.5 p-1 rounded-lg hover:bg-slate-50 transition-colors cursor-pointer" title="직접 선택">
+              <label className="flex flex-col items-center gap-0.5 p-1 rounded-lg hover:bg-slate-50 transition-colors cursor-pointer" title="自分で選択">
                 <input
                   type="color"
                   className="w-5 h-5 rounded-full border border-slate-200 cursor-pointer"
@@ -138,7 +138,7 @@ export default function RichMemoEditor({ value, onChange }: Props) {
                     editor.chain().focus().setColor((e.target as HTMLInputElement).value).run();
                   }}
                 />
-                <span className="text-[9px] text-slate-500">직접</span>
+                <span className="text-[9px] text-slate-500">指定</span>
               </label>
             </div>
           )}
@@ -146,7 +146,7 @@ export default function RichMemoEditor({ value, onChange }: Props) {
 
         <div className="w-px h-4 bg-slate-200 mx-1" />
 
-        {toolBtn(false, () => editor.chain().focus().clearNodes().unsetAllMarks().run(), <RotateCcw size={13} />, "서식 초기화")}
+        {toolBtn(false, () => editor.chain().focus().clearNodes().unsetAllMarks().run(), <RotateCcw size={13} />, "書式をクリア")}
       </div>
 
       {/* 에디터 본문 */}

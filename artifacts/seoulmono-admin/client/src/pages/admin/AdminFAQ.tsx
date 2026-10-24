@@ -12,6 +12,7 @@ import { Plus, Pencil, Trash2, Eye } from "lucide-react";
 import { toast } from "sonner";
 
 const FAQ_CATEGORIES = ["상품", "주문/배송", "결제", "반품/교환", "회원/포인트", "기타"];
+const FAQ_CATEGORY_LABELS: Record<string, string> = { "상품": "商品", "주문/배송": "注文/配送", "결제": "お支払い", "반품/교환": "返品/交換", "회원/포인트": "会員/ポイント", "기타": "その他" };
 
 export default function AdminFAQ() {
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -58,27 +59,27 @@ export default function AdminFAQ() {
     try {
       if (selectedFaq) {
         await updateFaq.mutateAsync({ id: selectedFaq.id, ...formData });
-        toast.success("FAQ가 수정되었습니다.");
+        toast.success("FAQを更新しました。");
       } else {
         await createFaq.mutateAsync(formData);
-        toast.success("FAQ가 추가되었습니다.");
+        toast.success("FAQを追加しました。");
       }
       setDialogOpen(false);
       refetch();
     } catch (error) {
-      toast.error("오류가 발생했습니다.");
+      toast.error("エラーが発生しました。");
     }
   };
   
   const handleDelete = async (id: number) => {
-    if (!confirm("정말 삭제하시겠습니까?")) return;
+    if (!confirm("本当に削除しますか？")) return;
     
     try {
       await deleteFaq.mutateAsync({ id });
-      toast.success("FAQ가 삭제되었습니다.");
+      toast.success("FAQを削除しました。");
       refetch();
     } catch (error) {
-      toast.error("오류가 발생했습니다.");
+      toast.error("エラーが発生しました。");
     }
   };
   
@@ -88,54 +89,54 @@ export default function AdminFAQ() {
         <CardHeader>
           <div className="flex items-center justify-between">
             <div>
-              <CardTitle>FAQ 관리</CardTitle>
-              <CardDescription>자주 묻는 질문을 관리합니다</CardDescription>
+              <CardTitle>FAQ管理</CardTitle>
+              <CardDescription>よくあるご質問を管理します</CardDescription>
             </div>
             <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
               <DialogTrigger asChild>
                 <Button onClick={() => handleOpenDialog()}>
                   <Plus className="w-4 h-4 mr-2" />
-                  FAQ 추가
+                  FAQを追加
                 </Button>
               </DialogTrigger>
               <DialogContent className="max-w-2xl">
                 <DialogHeader>
-                  <DialogTitle>{selectedFaq ? "FAQ 수정" : "FAQ 추가"}</DialogTitle>
+                  <DialogTitle>{selectedFaq ? "FAQの編集" : "FAQの追加"}</DialogTitle>
                 </DialogHeader>
                 <div className="space-y-4">
                   <div>
-                    <label className="text-sm font-medium">카테고리</label>
+                    <label className="text-sm font-medium">カテゴリー</label>
                     <Select value={formData.category} onValueChange={(value) => setFormData({ ...formData, category: value })}>
                       <SelectTrigger>
-                        <SelectValue placeholder="카테고리 선택" />
+                        <SelectValue placeholder="カテゴリーを選択" />
                       </SelectTrigger>
                       <SelectContent>
                         {FAQ_CATEGORIES.map((cat) => (
-                          <SelectItem key={cat} value={cat}>{cat}</SelectItem>
+                          <SelectItem key={cat} value={cat}>{FAQ_CATEGORY_LABELS[cat] ?? cat}</SelectItem>
                         ))}
                       </SelectContent>
                     </Select>
                   </div>
                   <div>
-                    <label className="text-sm font-medium">질문</label>
+                    <label className="text-sm font-medium">質問</label>
                     <Input
                       value={formData.question}
                       onChange={(e) => setFormData({ ...formData, question: e.target.value })}
-                      placeholder="질문을 입력하세요"
+                      placeholder="質問を入力してください"
                     />
                   </div>
                   <div>
-                    <label className="text-sm font-medium">답변</label>
+                    <label className="text-sm font-medium">回答</label>
                     <Textarea
                       value={formData.answer}
                       onChange={(e) => setFormData({ ...formData, answer: e.target.value })}
-                      placeholder="답변을 입력하세요"
+                      placeholder="回答を入力してください"
                       rows={6}
                     />
                   </div>
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <label className="text-sm font-medium">정렬 순서</label>
+                      <label className="text-sm font-medium">表示順</label>
                       <Input
                         type="number"
                         value={formData.sortOrder}
@@ -143,21 +144,21 @@ export default function AdminFAQ() {
                       />
                     </div>
                     <div>
-                      <label className="text-sm font-medium">활성화</label>
+                      <label className="text-sm font-medium">有効化</label>
                       <Select value={formData.isActive.toString()} onValueChange={(value) => setFormData({ ...formData, isActive: parseInt(value) })}>
                         <SelectTrigger>
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="1">활성</SelectItem>
-                          <SelectItem value="0">비활성</SelectItem>
+                          <SelectItem value="1">有効</SelectItem>
+                          <SelectItem value="0">無効</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
                   </div>
                   <div className="flex justify-end gap-2">
-                    <Button variant="outline" onClick={() => setDialogOpen(false)}>취소</Button>
-                    <Button onClick={handleSubmit}>저장</Button>
+                    <Button variant="outline" onClick={() => setDialogOpen(false)}>キャンセル</Button>
+                    <Button onClick={handleSubmit}>保存</Button>
                   </div>
                 </div>
               </DialogContent>
@@ -168,12 +169,12 @@ export default function AdminFAQ() {
           <div className="mb-4">
             <Select value={filterCategory || "all"} onValueChange={(value) => setFilterCategory(value === "all" ? undefined : value)}>
               <SelectTrigger className="w-48">
-                <SelectValue placeholder="전체 카테고리" />
+                <SelectValue placeholder="すべてのカテゴリー" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">전체 카테고리</SelectItem>
+                <SelectItem value="all">すべてのカテゴリー</SelectItem>
                 {FAQ_CATEGORIES.map((cat) => (
-                  <SelectItem key={cat} value={cat}>{cat}</SelectItem>
+                  <SelectItem key={cat} value={cat}>{FAQ_CATEGORY_LABELS[cat] ?? cat}</SelectItem>
                 ))}
               </SelectContent>
             </Select>
@@ -182,26 +183,26 @@ export default function AdminFAQ() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>카테고리</TableHead>
-                <TableHead>질문</TableHead>
-                <TableHead className="text-center">조회수</TableHead>
-                <TableHead className="text-center">정렬</TableHead>
-                <TableHead className="text-center">상태</TableHead>
-                <TableHead className="text-right">작업</TableHead>
+                <TableHead>カテゴリー</TableHead>
+                <TableHead>質問</TableHead>
+                <TableHead className="text-center">閲覧数</TableHead>
+                <TableHead className="text-center">表示順</TableHead>
+                <TableHead className="text-center">ステータス</TableHead>
+                <TableHead className="text-right">操作</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {faqs.length === 0 ? (
                 <TableRow>
                   <TableCell colSpan={6} className="text-center text-muted-foreground">
-                    등록된 FAQ가 없습니다
+                    登録されたFAQはありません
                   </TableCell>
                 </TableRow>
               ) : (
                 faqs.map((faq: any) => (
                   <TableRow key={faq.id}>
                     <TableCell>
-                      <Badge variant="outline">{faq.category}</Badge>
+                      <Badge variant="outline">{FAQ_CATEGORY_LABELS[faq.category] ?? faq.category}</Badge>
                     </TableCell>
                     <TableCell className="max-w-md truncate">{faq.question}</TableCell>
                     <TableCell className="text-center">
@@ -213,7 +214,7 @@ export default function AdminFAQ() {
                     <TableCell className="text-center">{faq.sortOrder}</TableCell>
                     <TableCell className="text-center">
                       <Badge variant={faq.isActive ? "default" : "secondary"}>
-                        {faq.isActive ? "활성" : "비활성"}
+                        {faq.isActive ? "有効" : "無効"}
                       </Badge>
                     </TableCell>
                     <TableCell className="text-right">

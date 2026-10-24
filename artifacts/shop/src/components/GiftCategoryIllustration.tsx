@@ -9,17 +9,17 @@ export const CAT_META: Record<string, {
   "10": {
     grad: "linear-gradient(135deg,#f6a623 0%,#f05a28 100%)",
     accent: "#c05621", accent2: "#f6ad55",
-    label: "과자류 선물세트", sub: "달콤한 과자 선물", tag: "SNACK",
+    label: "お菓子ギフトセット", sub: "甘いお菓子のギフト", tag: "SNACK",
   },
   "20": {
     grad: "linear-gradient(135deg,#2d9e6b 0%,#1a6b3c 100%)",
     accent: "#047857", accent2: "#34d399",
-    label: "유지류 선물세트", sub: "건강한 기름 선물", tag: "OIL",
+    label: "油脂ギフトセット", sub: "健康的なオイルのギフト", tag: "OIL",
   },
   "30": {
     grad: "linear-gradient(135deg,#1e4db7 0%,#2176ae 100%)",
     accent: "#1e40af", accent2: "#60a5fa",
-    label: "캔통조림 선물세트", sub: "든든한 캔 선물", tag: "CAN",
+    label: "缶詰ギフトセット", sub: "頼れる缶詰のギフト", tag: "CAN",
   },
 };
 
@@ -49,10 +49,10 @@ function SnackBanner() {
       <rect x="18" y="30" width="108" height="52" rx="12" fill="#FFD166" />
       <rect x="18" y="68" width="108" height="14" fill="#FFD166" />
       <rect x="26" y="38" width="92" height="36" rx="6" fill="rgba(255,255,255,0.35)" />
-      <text x="72" y="62" textAnchor="middle" fontSize="13" fontWeight="900" fill="#c05621" fontFamily="sans-serif">꼬북칩</text>
+      <text x="72" y="62" textAnchor="middle" fontSize="13" fontWeight="900" fill="#c05621" fontFamily="sans-serif">コブクチップ</text>
       <rect x="26" y="96" width="92" height="62" rx="8" fill="#fff8f0" />
-      <text x="72" y="117" textAnchor="middle" fontSize="9" fontWeight="700" fill="#888" fontFamily="sans-serif">오리지널</text>
-      <text x="72" y="131" textAnchor="middle" fontSize="10" fontWeight="800" fill="#c05621" fontFamily="sans-serif">65g × 3봉</text>
+      <text x="72" y="117" textAnchor="middle" fontSize="9" fontWeight="700" fill="#888" fontFamily="sans-serif">オリジナル</text>
+      <text x="72" y="131" textAnchor="middle" fontSize="10" fontWeight="800" fill="#c05621" fontFamily="sans-serif">65g × 3袋</text>
       <text x="72" y="148" textAnchor="middle" fontSize="8" fontWeight="600" fill="#bbb" fontFamily="sans-serif">ORION</text>
       <ellipse cx="72" cy="172" rx="44" ry="6" fill="rgba(0,0,0,0.10)" />
 
@@ -61,10 +61,10 @@ function SnackBanner() {
       <rect x="120" y="18" width="120" height="58" rx="14" fill="#EF8C00" />
       <rect x="120" y="62" width="120" height="14" fill="#EF8C00" />
       <rect x="130" y="26" width="100" height="42" rx="8" fill="rgba(255,255,255,0.30)" />
-      <text x="180" y="55" textAnchor="middle" fontSize="15" fontWeight="900" fill="#fff" fontFamily="sans-serif">먹뚜뚜</text>
+      <text x="180" y="55" textAnchor="middle" fontSize="15" fontWeight="900" fill="#fff" fontFamily="sans-serif">モクトゥトゥ</text>
       <rect x="130" y="90" width="100" height="70" rx="8" fill="#fff8f0" />
-      <text x="180" y="112" textAnchor="middle" fontSize="9" fontWeight="700" fill="#888" fontFamily="sans-serif">찰떡 과자</text>
-      <text x="180" y="127" textAnchor="middle" fontSize="11" fontWeight="900" fill="#EF8C00" fontFamily="sans-serif">80g × 3봉</text>
+      <text x="180" y="112" textAnchor="middle" fontSize="9" fontWeight="700" fill="#888" fontFamily="sans-serif">もちもち菓子</text>
+      <text x="180" y="127" textAnchor="middle" fontSize="11" fontWeight="900" fill="#EF8C00" fontFamily="sans-serif">80g × 3袋</text>
       <text x="180" y="143" textAnchor="middle" fontSize="8" fontWeight="600" fill="#bbb" fontFamily="sans-serif">LOTTE</text>
       <ellipse cx="180" cy="180" rx="50" ry="7" fill="rgba(0,0,0,0.12)" />
 
@@ -73,10 +73,10 @@ function SnackBanner() {
       <rect x="234" y="30" width="108" height="52" rx="12" fill="#FF7B2C" />
       <rect x="234" y="68" width="108" height="14" fill="#FF7B2C" />
       <rect x="242" y="38" width="92" height="36" rx="6" fill="rgba(255,255,255,0.30)" />
-      <text x="288" y="62" textAnchor="middle" fontSize="13" fontWeight="900" fill="#fff" fontFamily="sans-serif">나바티</text>
+      <text x="288" y="62" textAnchor="middle" fontSize="13" fontWeight="900" fill="#fff" fontFamily="sans-serif">ナバティ</text>
       <rect x="242" y="96" width="92" height="62" rx="8" fill="#fff8f0" />
-      <text x="288" y="117" textAnchor="middle" fontSize="9" fontWeight="700" fill="#888" fontFamily="sans-serif">치즈크림</text>
-      <text x="288" y="131" textAnchor="middle" fontSize="10" fontWeight="800" fill="#FF7B2C" fontFamily="sans-serif">55g × 3봉</text>
+      <text x="288" y="117" textAnchor="middle" fontSize="9" fontWeight="700" fill="#888" fontFamily="sans-serif">チーズクリーム</text>
+      <text x="288" y="131" textAnchor="middle" fontSize="10" fontWeight="800" fill="#FF7B2C" fontFamily="sans-serif">55g × 3袋</text>
       <text x="288" y="148" textAnchor="middle" fontSize="8" fontWeight="600" fill="#bbb" fontFamily="sans-serif">HAITAI</text>
       <ellipse cx="288" cy="172" rx="44" ry="6" fill="rgba(0,0,0,0.10)" />
 
@@ -126,8 +126,8 @@ function OilBanner() {
       <rect x="36" y="70" width="60" height="88" rx="8" fill="#FDF6EE" />
       <rect x="36" y="70" width="60" height="28" rx="8" fill="#8B5E3C" />
       <rect x="36" y="86" width="60" height="12" fill="#8B5E3C" />
-      <text x="66" y="88" textAnchor="middle" fontSize="9" fontWeight="800" fill="#fff" fontFamily="sans-serif">해표</text>
-      <text x="66" y="108" textAnchor="middle" fontSize="8.5" fontWeight="700" fill="#155e2f" fontFamily="sans-serif">카놀라유</text>
+      <text x="66" y="88" textAnchor="middle" fontSize="9" fontWeight="800" fill="#fff" fontFamily="sans-serif">ヘピョ</text>
+      <text x="66" y="108" textAnchor="middle" fontSize="8.5" fontWeight="700" fill="#155e2f" fontFamily="sans-serif">キャノーラ油</text>
       <text x="66" y="121" textAnchor="middle" fontSize="8" fontWeight="600" fill="#8B5E3C" fontFamily="sans-serif">900ml</text>
       <text x="66" y="135" textAnchor="middle" fontSize="7" fontWeight="600" fill="#aaa" fontFamily="sans-serif">HAEPYO</text>
       {/* 기름 색상 표시 */}
@@ -146,12 +146,12 @@ function OilBanner() {
       <rect x="138" y="56" width="84" height="36" rx="10" fill="#1a8a50" />
       <rect x="138" y="80" width="84" height="12" fill="#1a8a50" />
       <text x="180" y="77" textAnchor="middle" fontSize="11" fontWeight="900" fill="#fff" fontFamily="sans-serif">seoulmono</text>
-      <text x="180" y="103" textAnchor="middle" fontSize="10" fontWeight="800" fill="#0d5c2e" fontFamily="sans-serif">참기름</text>
-      <text x="180" y="117" textAnchor="middle" fontSize="9" fontWeight="700" fill="#8B5E3C" fontFamily="sans-serif">330ml × 3개</text>
+      <text x="180" y="103" textAnchor="middle" fontSize="10" fontWeight="800" fill="#0d5c2e" fontFamily="sans-serif">ごま油</text>
+      <text x="180" y="117" textAnchor="middle" fontSize="9" fontWeight="700" fill="#8B5E3C" fontFamily="sans-serif">330ml × 3本</text>
       <text x="180" y="130" textAnchor="middle" fontSize="8" fontWeight="600" fill="#999" fontFamily="sans-serif">PREMIUM</text>
       {/* 골드 스티커 */}
       <circle cx="180" cy="148" r="16" fill="rgba(255,200,0,0.18)" />
-      <text x="180" y="153" textAnchor="middle" fontSize="8" fontWeight="800" fill="#b8860b" fontFamily="sans-serif">선물용</text>
+      <text x="180" y="153" textAnchor="middle" fontSize="8" fontWeight="800" fill="#b8860b" fontFamily="sans-serif">ギフト用</text>
       <ellipse cx="180" cy="185" rx="40" ry="6" fill="rgba(0,0,0,0.11)" />
 
       {/* 병 3 - 들기름 */}
@@ -162,8 +162,8 @@ function OilBanner() {
       <rect x="264" y="70" width="60" height="88" rx="8" fill="#f5fff8" />
       <rect x="264" y="70" width="60" height="28" rx="8" fill="#6c3483" />
       <rect x="264" y="86" width="60" height="12" fill="#6c3483" />
-      <text x="294" y="88" textAnchor="middle" fontSize="9" fontWeight="800" fill="#fff" fontFamily="sans-serif">오뚜기</text>
-      <text x="294" y="108" textAnchor="middle" fontSize="8.5" fontWeight="700" fill="#4a235a" fontFamily="sans-serif">들기름</text>
+      <text x="294" y="88" textAnchor="middle" fontSize="9" fontWeight="800" fill="#fff" fontFamily="sans-serif">オットギ</text>
+      <text x="294" y="108" textAnchor="middle" fontSize="8.5" fontWeight="700" fill="#4a235a" fontFamily="sans-serif">えごま油</text>
       <text x="294" y="121" textAnchor="middle" fontSize="8" fontWeight="600" fill="#7d3c98" fontFamily="sans-serif">900ml</text>
       <text x="294" y="135" textAnchor="middle" fontSize="7" fontWeight="600" fill="#aaa" fontFamily="sans-serif">OTTOGI</text>
       <ellipse cx="294" cy="148" rx="22" ry="7" fill="rgba(180,120,255,0.3)" />
@@ -213,11 +213,11 @@ function CanBanner() {
       {/* 라벨 */}
       <rect x="26" y="70" width="80" height="88" rx="4" fill="#1a4fa0" />
       <rect x="26" y="70" width="80" height="32" rx="4" fill="#0d3278" />
-      <text x="66" y="90" textAnchor="middle" fontSize="10.5" fontWeight="900" fill="#fff" fontFamily="sans-serif">동원</text>
+      <text x="66" y="90" textAnchor="middle" fontSize="10.5" fontWeight="900" fill="#fff" fontFamily="sans-serif">トンウォン</text>
       <text x="66" y="103" textAnchor="middle" fontSize="8" fontWeight="600" fill="#a0c4ff" fontFamily="sans-serif">DONGWON</text>
       <rect x="30" y="108" width="72" height="1.5" fill="rgba(255,255,255,0.25)" />
-      <text x="66" y="125" textAnchor="middle" fontSize="9.5" fontWeight="800" fill="#fff" fontFamily="sans-serif">살코기참치</text>
-      <text x="66" y="140" textAnchor="middle" fontSize="8.5" fontWeight="700" fill="#a0c4ff" fontFamily="sans-serif">85g × 18입</text>
+      <text x="66" y="125" textAnchor="middle" fontSize="9.5" fontWeight="800" fill="#fff" fontFamily="sans-serif">ツナ(赤身)</text>
+      <text x="66" y="140" textAnchor="middle" fontSize="8.5" fontWeight="700" fill="#a0c4ff" fontFamily="sans-serif">85g × 18缶</text>
       <text x="66" y="153" textAnchor="middle" fontSize="8" fontWeight="600" fill="rgba(255,255,255,0.55)" fontFamily="sans-serif">TUNA</text>
       {/* 캔 고리 */}
       <ellipse cx="66" cy="44" rx="14" ry="4" fill="rgba(180,200,230,0.90)" />
@@ -232,11 +232,11 @@ function CanBanner() {
       {/* 라벨 */}
       <rect x="132" y="56" width="96" height="104" rx="5" fill="#f59e0b" />
       <rect x="132" y="56" width="96" height="38" rx="5" fill="#d97706" />
-      <text x="180" y="79" textAnchor="middle" fontSize="12" fontWeight="900" fill="#fff" fontFamily="sans-serif">오뚜기</text>
+      <text x="180" y="79" textAnchor="middle" fontSize="12" fontWeight="900" fill="#fff" fontFamily="sans-serif">オットギ</text>
       <text x="180" y="93" textAnchor="middle" fontSize="8" fontWeight="600" fill="rgba(255,255,255,0.75)" fontFamily="sans-serif">OTTOGI</text>
       <rect x="136" y="100" width="88" height="1.5" fill="rgba(255,255,255,0.30)" />
-      <text x="180" y="118" textAnchor="middle" fontSize="11" fontWeight="900" fill="#fff" fontFamily="sans-serif">단호박죽</text>
-      <text x="180" y="133" textAnchor="middle" fontSize="9" fontWeight="700" fill="rgba(255,255,255,0.85)" fontFamily="sans-serif">285g × 6입</text>
+      <text x="180" y="118" textAnchor="middle" fontSize="11" fontWeight="900" fill="#fff" fontFamily="sans-serif">かぼちゃ粥</text>
+      <text x="180" y="133" textAnchor="middle" fontSize="9" fontWeight="700" fill="rgba(255,255,255,0.85)" fontFamily="sans-serif">285g × 6個</text>
       <text x="180" y="148" textAnchor="middle" fontSize="8" fontWeight="600" fill="rgba(255,255,255,0.60)" fontFamily="sans-serif">PORRIDGE</text>
       {/* 고리 */}
       <ellipse cx="180" cy="27" rx="16" ry="4.5" fill="rgba(240,200,130,0.90)" />
@@ -252,10 +252,10 @@ function CanBanner() {
       <rect x="254" y="70" width="80" height="88" rx="4" fill="#c0392b" />
       <rect x="254" y="70" width="80" height="32" rx="4" fill="#922b21" />
       <text x="294" y="90" textAnchor="middle" fontSize="11" fontWeight="900" fill="#fff" fontFamily="sans-serif">SPAM</text>
-      <text x="294" y="103" textAnchor="middle" fontSize="8" fontWeight="600" fill="rgba(255,200,200,0.85)" fontFamily="sans-serif">클래식</text>
+      <text x="294" y="103" textAnchor="middle" fontSize="8" fontWeight="600" fill="rgba(255,200,200,0.85)" fontFamily="sans-serif">クラシック</text>
       <rect x="258" y="108" width="72" height="1.5" fill="rgba(255,255,255,0.25)" />
-      <text x="294" y="126" textAnchor="middle" fontSize="9.5" fontWeight="800" fill="#fff" fontFamily="sans-serif">런천미트</text>
-      <text x="294" y="141" textAnchor="middle" fontSize="8.5" fontWeight="700" fill="rgba(255,200,200,0.90)" fontFamily="sans-serif">340g × 12입</text>
+      <text x="294" y="126" textAnchor="middle" fontSize="9.5" fontWeight="800" fill="#fff" fontFamily="sans-serif">ランチョンミート</text>
+      <text x="294" y="141" textAnchor="middle" fontSize="8.5" fontWeight="700" fill="rgba(255,200,200,0.90)" fontFamily="sans-serif">340g × 12缶</text>
       <text x="294" y="154" textAnchor="middle" fontSize="8" fontWeight="600" fill="rgba(255,255,255,0.55)" fontFamily="sans-serif">LUNCHEON</text>
       <ellipse cx="294" cy="40" rx="14" ry="4" fill="rgba(210,170,170,0.90)" />
       <rect x="288" y="30" width="12" height="12" rx="3" fill="rgba(195,155,155,0.88)" />
@@ -298,7 +298,7 @@ export default function GiftCategoryIllustration({
   const meta = CAT_META[caId] ?? {
     grad: "linear-gradient(135deg,#a1c4fd,#c2e9fb)",
     accent: "#8B5E3C", accent2: "#34d399",
-    label: "선물세트", sub: "마음을 담은 선물", tag: "GIFT",
+    label: "ギフトセット", sub: "心を込めたギフト", tag: "GIFT",
   };
 
   const Banner =

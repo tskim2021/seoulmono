@@ -9,9 +9,9 @@ import {
 } from "lucide-react";
 
 const MAIN_CATS = [
-  { ca_id: "10", label: "과자류", emoji: "🍪", desc: "과자/스낵/파이 선물세트" },
-  { ca_id: "20", label: "유지류", emoji: "🫙", desc: "식용유/참기름/들기름 선물세트" },
-  { ca_id: "30", label: "통조림/캔", emoji: "🥫", desc: "참치/햄/캔 선물세트" },
+  { ca_id: "10", label: "お菓子類", emoji: "🍪", desc: "お菓子・スナック・パイのギフトセット" },
+  { ca_id: "20", label: "食用油類", emoji: "🫙", desc: "食用油・ごま油・えごま油のギフトセット" },
+  { ca_id: "30", label: "缶詰・缶類", emoji: "🥫", desc: "ツナ・ハム・缶詰のギフトセット" },
 ];
 
 function useGiftCategories() {
@@ -42,11 +42,11 @@ function AddModal({
         body: JSON.stringify({ parent_ca_id: parentCaId, ca_name: name.trim() }),
       }),
     onSuccess: () => {
-      toast({ title: "카테고리 추가 완료" });
+      toast({ title: "カテゴリを追加しました" });
       queryClient.invalidateQueries({ queryKey: ["admin-gift-categories"] });
       onSaved();
     },
-    onError: (e: any) => toast({ title: "추가 실패: " + (e.message ?? ""), variant: "destructive" }),
+    onError: (e: any) => toast({ title: "追加に失敗しました: " + (e.message ?? ""), variant: "destructive" }),
   });
 
   return (
@@ -57,28 +57,28 @@ function AddModal({
             <Plus className="w-5 h-5 text-primary" />
           </div>
           <div>
-            <p className="font-black text-slate-900">서브카테고리 추가</p>
-            <p className="text-xs text-slate-500">{parentLabel} 하위에 추가됩니다</p>
+            <p className="font-black text-slate-900">サブカテゴリの追加</p>
+            <p className="text-xs text-slate-500">{parentLabel} の下に追加されます</p>
           </div>
           <button onClick={onClose} className="ml-auto p-1.5 rounded-lg hover:bg-slate-100 text-slate-400">
             <X className="w-5 h-5" />
           </button>
         </div>
         <div>
-          <label className="text-xs font-bold text-slate-600 mb-1.5 block">카테고리명 *</label>
+          <label className="text-xs font-bold text-slate-600 mb-1.5 block">カテゴリ名 *</label>
           <input
             autoFocus
             value={name}
             onChange={e => setName(e.target.value)}
             onKeyDown={e => e.key === "Enter" && name.trim() && addMutation.mutate()}
-            placeholder="예: 스낵류 12개입, 파이류 6개입"
+            placeholder="例: 스낵류 12개입, 파이류 6개입 (「○○ N개입」形式)"
             className="w-full h-9 px-3 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-primary"
           />
-          <p className="text-xs text-slate-400 mt-1">형식: [종류] [수량]개입 (예: 스낵류 6개입)</p>
+          <p className="text-xs text-slate-400 mt-1">形式: [種類] [数量]개입 (例: 스낵류 6개입) ※「개입」(〜個入り)の表記は固定です</p>
         </div>
         <div className="flex gap-2">
           <button onClick={onClose} className="flex-1 h-9 rounded-lg border border-slate-200 text-sm font-bold text-slate-600 hover:bg-slate-50">
-            취소
+            キャンセル
           </button>
           <button
             onClick={() => addMutation.mutate()}
@@ -86,7 +86,7 @@ function AddModal({
             className="flex-1 h-9 rounded-lg bg-primary text-white text-sm font-bold hover:bg-primary/90 flex items-center justify-center gap-1.5 disabled:opacity-50"
           >
             {addMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
-            추가
+            追加
           </button>
         </div>
       </div>
@@ -113,11 +113,11 @@ function EditModal({
         body: JSON.stringify({ ca_name: name.trim() }),
       }),
     onSuccess: () => {
-      toast({ title: "카테고리 수정 완료" });
+      toast({ title: "カテゴリを更新しました" });
       queryClient.invalidateQueries({ queryKey: ["admin-gift-categories"] });
       onSaved();
     },
-    onError: (e: any) => toast({ title: "수정 실패: " + (e.message ?? ""), variant: "destructive" }),
+    onError: (e: any) => toast({ title: "更新に失敗しました: " + (e.message ?? ""), variant: "destructive" }),
   });
 
   return (
@@ -128,7 +128,7 @@ function EditModal({
             <Pencil className="w-5 h-5 text-blue-500" />
           </div>
           <div>
-            <p className="font-black text-slate-900">카테고리 수정</p>
+            <p className="font-black text-slate-900">カテゴリの編集</p>
             <p className="text-xs text-slate-500">ca_id: {sub.ca_id}</p>
           </div>
           <button onClick={onClose} className="ml-auto p-1.5 rounded-lg hover:bg-slate-100 text-slate-400">
@@ -136,7 +136,7 @@ function EditModal({
           </button>
         </div>
         <div>
-          <label className="text-xs font-bold text-slate-600 mb-1.5 block">카테고리명 *</label>
+          <label className="text-xs font-bold text-slate-600 mb-1.5 block">カテゴリ名 *</label>
           <input
             autoFocus
             value={name}
@@ -147,7 +147,7 @@ function EditModal({
         </div>
         <div className="flex gap-2">
           <button onClick={onClose} className="flex-1 h-9 rounded-lg border border-slate-200 text-sm font-bold text-slate-600 hover:bg-slate-50">
-            취소
+            キャンセル
           </button>
           <button
             onClick={() => editMutation.mutate()}
@@ -155,7 +155,7 @@ function EditModal({
             className="flex-1 h-9 rounded-lg bg-primary text-white text-sm font-bold hover:bg-primary/90 flex items-center justify-center gap-1.5 disabled:opacity-50"
           >
             {editMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
-            저장
+            保存
           </button>
         </div>
       </div>
@@ -177,11 +177,11 @@ function DeleteModal({
     mutationFn: () =>
       customFetch(`/api/shop-admin/gift/categories/${sub.ca_id}`, { method: "DELETE" }),
     onSuccess: () => {
-      toast({ title: "카테고리 삭제 완료" });
+      toast({ title: "カテゴリを削除しました" });
       queryClient.invalidateQueries({ queryKey: ["admin-gift-categories"] });
       onDeleted();
     },
-    onError: (e: any) => toast({ title: "삭제 실패: " + (e.message ?? ""), variant: "destructive" }),
+    onError: (e: any) => toast({ title: "削除に失敗しました: " + (e.message ?? ""), variant: "destructive" }),
   });
 
   return (
@@ -192,8 +192,8 @@ function DeleteModal({
             <AlertTriangle className="w-5 h-5 text-red-500" />
           </div>
           <div>
-            <p className="font-black text-slate-900">카테고리 삭제</p>
-            <p className="text-xs text-slate-500">연결된 세트 상품도 함께 삭제됩니다</p>
+            <p className="font-black text-slate-900">カテゴリの削除</p>
+            <p className="text-xs text-slate-500">関連するセット商品も一緒に削除されます</p>
           </div>
         </div>
         <p className="text-sm text-slate-600 bg-slate-50 rounded-xl px-4 py-3">
@@ -202,7 +202,7 @@ function DeleteModal({
         </p>
         <div className="flex gap-2">
           <button onClick={onClose} className="flex-1 h-9 rounded-lg border border-slate-200 text-sm font-bold text-slate-600 hover:bg-slate-50">
-            취소
+            キャンセル
           </button>
           <button
             onClick={() => deleteMutation.mutate()}
@@ -210,7 +210,7 @@ function DeleteModal({
             className="flex-1 h-9 rounded-lg bg-red-500 text-white text-sm font-bold hover:bg-red-600 flex items-center justify-center gap-1.5"
           >
             {deleteMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 className="w-4 h-4" />}
-            삭제
+            削除
           </button>
         </div>
       </div>
@@ -234,8 +234,8 @@ export default function AdminGiftCategories() {
     <div className="animate-in fade-in duration-300 space-y-5">
       <div className="flex items-start justify-between flex-wrap gap-3">
         <div>
-          <h1 className="text-3xl font-black text-slate-900 tracking-tight">선물하기 카테고리</h1>
-          <p className="text-slate-500 mt-1 font-medium">선물세트의 대분류·소분류 카테고리를 관리합니다.</p>
+          <h1 className="text-3xl font-black text-slate-900 tracking-tight">ギフトカテゴリ</h1>
+          <p className="text-slate-500 mt-1 font-medium">ギフトセットの大分類・小分類カテゴリを管理します。</p>
         </div>
       </div>
 
@@ -260,7 +260,7 @@ export default function AdminGiftCategories() {
             <p className="text-xs text-slate-500 mt-2 font-medium">
               ca_id: {m.ca_id} <span className="text-slate-300 mx-1">|</span>
               <span className="text-primary font-bold">
-                {catList.find(c => c.ca_id === m.ca_id)?.sub_categories?.length ?? 0}개 소분류
+                {catList.find(c => c.ca_id === m.ca_id)?.sub_categories?.length ?? 0}件の小分類
               </span>
             </p>
           </button>
@@ -276,10 +276,10 @@ export default function AdminGiftCategories() {
             </div>
             <div>
               <p className="font-black text-slate-900">
-                {mainInfo.emoji} {mainInfo.label} 소분류
+                {mainInfo.emoji} {mainInfo.label} の小分類
               </p>
               <p className="text-xs text-slate-400">
-                대분류 ca_id: {activeMain} → 소분류 ca_id: {activeMain}10, {activeMain}20, ...
+                大分類 ca_id: {activeMain} → 小分類 ca_id: {activeMain}10, {activeMain}20, ...
               </p>
             </div>
           </div>
@@ -287,7 +287,7 @@ export default function AdminGiftCategories() {
             onClick={() => setAddOpen(true)}
             className="flex items-center gap-1.5 h-9 px-4 bg-primary text-white rounded-xl text-sm font-bold hover:bg-primary/90"
           >
-            <Plus className="w-4 h-4" /> 소분류 추가
+            <Plus className="w-4 h-4" /> 小分類を追加
           </button>
         </div>
 
@@ -298,12 +298,12 @@ export default function AdminGiftCategories() {
         ) : subList.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-16 border-2 border-dashed border-slate-200 rounded-2xl">
             <Tag className="w-10 h-10 text-slate-200 mb-3" />
-            <p className="text-slate-400 font-medium">등록된 소분류가 없습니다</p>
+            <p className="text-slate-400 font-medium">登録された小分類がありません</p>
             <button
               onClick={() => setAddOpen(true)}
               className="mt-3 text-sm text-primary font-bold hover:underline"
             >
-              소분류 추가하기 →
+              小分類を追加する →
             </button>
           </div>
         ) : (
@@ -320,12 +320,12 @@ export default function AdminGiftCategories() {
                   <p className="font-bold text-slate-900">{sub.ca_name}</p>
                   <div className="flex items-center gap-3 mt-0.5">
                     <span className="text-xs text-slate-400">ca_id: <strong className="text-slate-600">{sub.ca_id}</strong></span>
-                    <span className="text-xs text-slate-400">구성 수: <strong className="text-primary">{sub.slot_count}개</strong></span>
+                    <span className="text-xs text-slate-400">構成数: <strong className="text-primary">{sub.slot_count}件</strong></span>
                     <span className={cn(
                       "text-xs font-bold px-2 py-0.5 rounded-full",
                       sub.is_active ? "bg-emerald-100 text-emerald-700" : "bg-slate-200 text-slate-500"
                     )}>
-                      {sub.is_active ? "활성" : "비활성"}
+                      {sub.is_active ? "有効" : "無効"}
                     </span>
                   </div>
                 </div>
@@ -351,11 +351,11 @@ export default function AdminGiftCategories() {
 
       {/* 안내 박스 */}
       <div className="p-4 bg-amber-50 border border-amber-200 rounded-xl text-sm text-amber-800 space-y-1">
-        <p className="font-bold">📌 카테고리 구조 안내</p>
-        <p>• 대분류(과자류/유지류/통조림캔류)는 고정이며 삭제·추가 불가합니다.</p>
-        <p>• 소분류 추가 시 ca_id가 자동 생성됩니다 (예: 과자류 → 1010, 1020, 1030...)</p>
-        <p>• 소분류 삭제 시 해당 세트 구성 정보도 함께 삭제됩니다.</p>
-        <p>• 소분류의 구성 수 · 가격 등은 <strong>선물하기 관리 → 세트 구성</strong> 탭에서 설정합니다.</p>
+        <p className="font-bold">📌 カテゴリ構成のご案内</p>
+        <p>• 大分類(お菓子類/食用油類/缶詰類)は固定で、削除・追加はできません。</p>
+        <p>• 小分類を追加すると ca_id が自動生成されます (例: お菓子類 → 1010, 1020, 1030...)</p>
+        <p>• 小分類を削除すると、該当するセット構成情報も一緒に削除されます。</p>
+        <p>• 小分類の構成数・価格などは <strong>ギフト管理 → セット構成</strong> タブで設定します。</p>
       </div>
 
       {addOpen && (

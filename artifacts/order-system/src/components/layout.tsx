@@ -19,79 +19,79 @@ export function Layout({ children, user }: { children: React.ReactNode, user: Us
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [expandedMenus, setExpandedMenus] = useState<Set<string>>(() => {
     const path = typeof window !== "undefined" ? window.location.pathname : "";
-    const initial = new Set<string>(["주문배송관리"]);
-    if (path.includes("/admin/main-shop")) initial.add("메인샵 관리");
-    if (path.includes("/admin/banners") || path.includes("/admin/coupons") || path.includes("/admin/points")) initial.add("기본설정");
-    if (path.includes("/admin/products") || path.includes("/admin/categories")) initial.add("상품관리");
-    if (path.includes("/admin/gifts") || path.includes("/admin/gift-categories")) initial.add("선물하기 관리");
+    const initial = new Set<string>(["注文・配送管理"]);
+    if (path.includes("/admin/main-shop")) initial.add("メインショップ管理");
+    if (path.includes("/admin/banners") || path.includes("/admin/coupons") || path.includes("/admin/points")) initial.add("基本設定");
+    if (path.includes("/admin/products") || path.includes("/admin/categories")) initial.add("商品管理");
+    if (path.includes("/admin/gifts") || path.includes("/admin/gift-categories")) initial.add("ギフト管理");
     return initial;
   });
   const cartItems = useCart(s => s.items);
   const { mutate: logout, isPending: isLoggingOut } = useLogout();
   
   const partnerLinks: NavLink[] = [
-    { href: "/", label: "상품목록", icon: Package },
-    { href: "/cart", label: "장바구니", icon: ShoppingCart, badge: cartItems.length },
-    { href: "/orders", label: "주문내역", icon: Clock },
-    { href: "/addresses", label: "배송지 관리", icon: MapPin },
-    { href: "/notices", label: "공지사항", icon: Bell },
-    { href: "/inquiries", label: "문의하기", icon: MessageSquare },
+    { href: "/", label: "商品一覧", icon: Package },
+    { href: "/cart", label: "カート", icon: ShoppingCart, badge: cartItems.length },
+    { href: "/orders", label: "注文履歴", icon: Clock },
+    { href: "/addresses", label: "配送先管理", icon: MapPin },
+    { href: "/notices", label: "お知らせ", icon: Bell },
+    { href: "/inquiries", label: "お問い合わせ", icon: MessageSquare },
   ];
   
   const adminLinks: NavLink[] = [
     {
-      href: "/admin/settings", label: "기본설정", icon: Settings,
+      href: "/admin/settings", label: "基本設定", icon: Settings,
       children: [
-        { href: "/admin/banners", label: "배너관리", icon: ImageIcon },
-        { href: "/admin/coupons", label: "쿠폰관리", icon: Ticket },
-        { href: "/admin/points", label: "포인트관리", icon: Coins },
-        { href: "/admin/menu-order", label: "메뉴 순서", icon: Settings },
+        { href: "/admin/banners", label: "バナー管理", icon: ImageIcon },
+        { href: "/admin/coupons", label: "クーポン管理", icon: Ticket },
+        { href: "/admin/points", label: "ポイント管理", icon: Coins },
+        { href: "/admin/menu-order", label: "メニュー順序", icon: Settings },
       ],
     },
-    { href: "/admin", label: "대시보드", icon: LayoutDashboard },
+    { href: "/admin", label: "ダッシュボード", icon: LayoutDashboard },
     {
-      href: "/admin/main-shop", label: "메인샵 관리", icon: LayoutGrid,
+      href: "/admin/main-shop", label: "メインショップ管理", icon: LayoutGrid,
       children: [
-        { href: "/admin/main-shop/new",            label: "신상품",           icon: Sparkles },
-        { href: "/admin/main-shop/brand",         label: "ソウルモノ 브랜드",     icon: Tag },
-        { href: "/admin/main-shop/first_purchase", label: "첫구매 100원",     icon: Coins },
-        { href: "/admin/main-shop/expire",        label: "유통기한 임박특가", icon: AlarmClock },
-        { href: "/admin/main-shop/time",          label: "타임특가",          icon: Timer },
-        { href: "/admin/main-shop/limited",       label: "한정특가",          icon: Flame },
-        { href: "/admin/main-shop/brand_special", label: "브랜드특가",        icon: Star },
-        { href: "/admin/main-shop/lowest",        label: "최저가 도전",       icon: TrendingDown },
+        { href: "/admin/main-shop/new",            label: "新商品",           icon: Sparkles },
+        { href: "/admin/main-shop/brand",         label: "ソウルモノ ブランド",     icon: Tag },
+        { href: "/admin/main-shop/first_purchase", label: "初回購入100円",     icon: Coins },
+        { href: "/admin/main-shop/expire",        label: "賞味期限間近特価", icon: AlarmClock },
+        { href: "/admin/main-shop/time",          label: "タイムセール",          icon: Timer },
+        { href: "/admin/main-shop/limited",       label: "限定特価",          icon: Flame },
+        { href: "/admin/main-shop/brand_special", label: "ブランド特価",        icon: Star },
+        { href: "/admin/main-shop/lowest",        label: "最安値チャレンジ",       icon: TrendingDown },
       ],
     },
-    { href: "/admin/members", label: "회원관리", icon: Users },
+    { href: "/admin/members", label: "会員管理", icon: Users },
     {
-      href: "/admin/products", label: "상품관리", icon: Boxes,
+      href: "/admin/products", label: "商品管理", icon: Boxes,
       children: [
-        { href: "/admin/products", label: "상품목록", icon: Package },
-        { href: "/admin/categories", label: "상품카테고리", icon: FolderTree },
-      ],
-    },
-    {
-      href: "/admin/gifts", label: "선물하기 관리", icon: Gift,
-      children: [
-        { href: "/admin/gifts", label: "선물 상품관리", icon: Boxes },
-        { href: "/admin/gift-categories", label: "선물 카테고리", icon: FolderTree },
+        { href: "/admin/products", label: "商品一覧", icon: Package },
+        { href: "/admin/categories", label: "商品カテゴリ", icon: FolderTree },
       ],
     },
     {
-      href: "/admin/orders", label: "주문배송관리", icon: Package,
+      href: "/admin/gifts", label: "ギフト管理", icon: Gift,
       children: [
-        { href: "/admin/orders", label: "전체", icon: ClipboardList },
-        { href: "/admin/orders?status=주문접수", label: "주문", icon: ShoppingCart },
-        { href: "/admin/orders?status=처리중", label: "입금", icon: CreditCard },
-        { href: "/admin/orders?status=배송준비", label: "배송전(준비)", icon: PackageCheck },
-        { href: "/admin/orders?status=배송중", label: "배송중(배송)", icon: Truck },
-        { href: "/admin/orders?status=배송완료", label: "배송완료(완료)", icon: CheckCircle2 },
+        { href: "/admin/gifts", label: "ギフト商品管理", icon: Boxes },
+        { href: "/admin/gift-categories", label: "ギフトカテゴリ", icon: FolderTree },
       ],
     },
-    { href: "/admin/settlement", label: "정산관리", icon: Receipt },
-    { href: "/admin/bank", label: "시스템 설정", icon: Settings },
-    { href: "/notices", label: "공지사항", icon: Bell },
-    { href: "/inquiries", label: "문의관리", icon: MessageSquare },
+    {
+      href: "/admin/orders", label: "注文・配送管理", icon: Package,
+      children: [
+        { href: "/admin/orders", label: "すべて", icon: ClipboardList },
+        { href: "/admin/orders?status=주문접수", label: "注文", icon: ShoppingCart },
+        { href: "/admin/orders?status=처리중", label: "入金", icon: CreditCard },
+        { href: "/admin/orders?status=배송준비", label: "配送前(準備)", icon: PackageCheck },
+        { href: "/admin/orders?status=배송중", label: "配送中", icon: Truck },
+        { href: "/admin/orders?status=배송완료", label: "配送完了", icon: CheckCircle2 },
+      ],
+    },
+    { href: "/admin/settlement", label: "精算管理", icon: Receipt },
+    { href: "/admin/bank", label: "システム設定", icon: Settings },
+    { href: "/notices", label: "お知らせ", icon: Bell },
+    { href: "/inquiries", label: "お問い合わせ管理", icon: MessageSquare },
   ];
 
   const links = user.is_admin ? adminLinks : partnerLinks;
@@ -228,14 +228,14 @@ export function Layout({ children, user }: { children: React.ReactNode, user: Us
           {user.is_admin ? (
             <div>
               <h1 className="text-2xl font-black tracking-tight text-slate-900">ソウルモノ</h1>
-              <p className="text-sm font-bold text-emerald-600 mt-0.5">관리자</p>
+              <p className="text-sm font-bold text-emerald-600 mt-0.5">管理者</p>
             </div>
           ) : (
             <div className="flex items-center gap-3">
               <img src={seoulmonoLogo} alt="ソウルモノ" className="w-10 h-10 object-contain" />
               <div>
                 <h1 className="text-xl font-black tracking-tight text-slate-900">ソウルモノ</h1>
-                <p className="text-xs font-medium text-slate-500 tracking-wider">B2B 발주시스템</p>
+                <p className="text-xs font-medium text-slate-500 tracking-wider">B2B発注システム</p>
               </div>
             </div>
           )}
@@ -243,7 +243,7 @@ export function Layout({ children, user }: { children: React.ReactNode, user: Us
         
         <div className="flex-1 overflow-y-auto py-6 px-4">
           <div className="mb-6 px-4">
-            <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">메뉴</p>
+            <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">メニュー</p>
             <NavLinks />
           </div>
         </div>
@@ -259,14 +259,14 @@ export function Layout({ children, user }: { children: React.ReactNode, user: Us
                   <p className="text-sm font-bold text-slate-900 truncate">{user.company_name || user.mb_name}</p>
                   <div className="flex items-center text-xs text-slate-500 mt-0.5">
                     <CheckCircle2 className="w-3 h-3 text-emerald-500 mr-1" />
-                    승인된 파트너
+                    承認済みの取引先
                   </div>
                 </div>
               </div>
               <Link href="/profile" onClick={() => setMobileMenuOpen(false)}>
                 <div className="flex items-center gap-2 px-4 py-2.5 mb-2 bg-white border border-slate-200 text-slate-600 rounded-xl hover:bg-slate-50 hover:text-primary transition-colors font-medium text-sm cursor-pointer">
                   <UserCircle className="w-4 h-4" />
-                  내 정보 보기
+                  マイ情報を見る
                 </div>
               </Link>
               <button 
@@ -275,7 +275,7 @@ export function Layout({ children, user }: { children: React.ReactNode, user: Us
                 className="flex items-center justify-center w-full gap-2 px-4 py-2.5 bg-white border border-slate-200 text-slate-600 rounded-xl hover:bg-slate-50 hover:text-red-600 transition-colors font-medium text-sm disabled:opacity-50"
               >
                 <LogOut className="w-4 h-4" />
-                {isLoggingOut ? '로그아웃 중...' : '로그아웃'}
+                {isLoggingOut ? 'ログアウト中...' : 'ログアウト'}
               </button>
             </div>
           </div>
@@ -292,10 +292,10 @@ export function Layout({ children, user }: { children: React.ReactNode, user: Us
               className="flex items-center gap-1.5 text-xs text-slate-500 hover:text-emerald-600 transition-colors"
             >
               <Store className="w-3.5 h-3.5" />
-              <span className="font-medium">사용자 페이지</span>
+              <span className="font-medium">ユーザーページ</span>
             </button>
             <span className="text-slate-200">|</span>
-            <span className="text-xs text-slate-400">관리자</span>
+            <span className="text-xs text-slate-400">管理者</span>
             <span className="text-sm font-semibold text-slate-700">{user.mb_name}</span>
             <span className="text-slate-200">|</span>
             <button
@@ -304,7 +304,7 @@ export function Layout({ children, user }: { children: React.ReactNode, user: Us
               className="flex items-center gap-1 text-xs text-slate-400 hover:text-red-500 transition-colors disabled:opacity-50"
             >
               <LogOut className="w-3 h-3" />
-              {isLoggingOut ? '로그아웃 중...' : '로그아웃'}
+              {isLoggingOut ? 'ログアウト中...' : 'ログアウト'}
             </button>
           </div>
         )}
@@ -335,7 +335,7 @@ export function Layout({ children, user }: { children: React.ReactNode, user: Us
                 className="flex items-center justify-center w-full gap-2 px-4 py-3 bg-slate-100 text-slate-700 rounded-xl font-bold"
               >
                 <LogOut className="w-5 h-5" />
-                로그아웃
+                ログアウト
               </button>
             </div>
           </div>

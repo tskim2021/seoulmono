@@ -861,7 +861,7 @@ export async function saveAddressFromOrder(userId: number, data: {
   const count = existing.length + 1;
   await db.insert(addresses).values({
     userId,
-    name: `배송지 ${count}`,
+    name: `お届け先 ${count}`,
     recipient: data.recipientName,
     phone: data.recipientPhone,
     zipCode: data.zipCode,
@@ -1189,7 +1189,7 @@ export async function uncancelOrderItem(orderId: number, itemId: number, newStat
 
   const allItems = await getOrderItems(orderId);
   const item = allItems.find(i => i.id === itemId);
-  if (!item || !item.cancelledAt) throw new Error("해당 상품이 취소 상태가 아닙니다.");
+  if (!item || !item.cancelledAt) throw new Error("この商品はキャンセル状態ではありません。");
 
   // 아이템 복원: cancelledAt 제거 + 해당 아이템의 itemStatus만 변경
   await db.update(orderItems)
@@ -1697,9 +1697,9 @@ export async function createNotification(userId: number, type: "order" | "commen
       title,
       content: message,
       actionUrl,
-      actionText: actionUrl ? "확인하기" : undefined,
+      actionText: actionUrl ? "確認する" : undefined,
     });
-    await sendEmail({ to: user.email, subject: `[탈모학교] ${title}`, html, userId: user.id }).catch((e: any) => {
+    await sendEmail({ to: user.email, subject: `[ソウルモノ] ${title}`, html, userId: user.id }).catch((e: any) => {
       console.warn("[createNotification] Email send failed (non-critical):", e?.message ?? e);
     });
   }
@@ -1982,7 +1982,7 @@ function getPostHash(postId: number): string {
 }
 
 export function formatDisplayName(name: string | null, openId: string | null, postId?: number): string {
-  if (!name && !openId) return "\uc775\uba85";
+  if (!name && !openId) return "匿名";
   if (postId !== undefined) {
     const prefix = String.fromCharCode(97 + (postId % 26));
     return (prefix + getPostHash(postId)).slice(0, 4) + "***";
@@ -2116,7 +2116,7 @@ export async function createReviewWithPoints(data: {
   const existing = await db.select({ id: posts.id }).from(posts)
     .where(and(eq(posts.userId, data.userId), eq(posts.orderItemId, data.orderItemId)))
     .limit(1);
-  if (existing.length > 0) throw new Error("이미 해당 주문 항목에 대한 리뷰를 작성했습니다.");
+  if (existing.length > 0) throw new Error("この注文商品にはすでにレビューを投稿済みです。");
 
   // 리뷰 포인트 설정 조회
   const settingsResult = await db.select().from(reviewPointSettings).where(eq(reviewPointSettings.isActive, 1)).limit(1);
@@ -2185,7 +2185,7 @@ export async function createReviewWithPoints(data: {
       userId: data.userId,
       amount: pointsEarned,
       type: "earn",
-      description: hasPhotos ? `포토 리뷰 작성 포인트 (${textPoints}P + ${photoPoints}P)` : `리뷰 작성 포인트 (${textPoints}P)`,
+      description: hasPhotos ? `フォトレビュー投稿ポイント (${textPoints}P + ${photoPoints}P)` : `レビュー投稿ポイント (${textPoints}P)`,
       orderId: data.orderId,
     });
 
@@ -2193,8 +2193,8 @@ export async function createReviewWithPoints(data: {
     await db.insert(notifications).values({
       userId: data.userId,
       type: "point",
-      title: "리뷰 포인트 적립",
-      message: `리뷰 작성으로 ${pointsEarned.toLocaleString()}P가 적립되었습니다.`,
+      title: "レビューポイント付与",
+      message: `レビュー投稿により${pointsEarned.toLocaleString()}ポイントが付与されました。`,
       link: `/community/review`,
     });
   }
@@ -2403,14 +2403,14 @@ function cryptoRandomHex(): string {
 
 export async function issueCouponToUser(userId: number, couponId: number, isAdmin = false) {
   const member = await g5one<{ mb_id: string }>("SELECT mb_id FROM g5_member WHERE mb_no = ?", [userId]);
-  if (!member) throw new Error("회원을 찾을 수 없습니다.");
+  if (!member) throw new Error("会員が見つかりません。");
   const existing = await g5one<{ cp_no: number }>(
     "SELECT cp_no FROM g5_shop_coupon WHERE cz_id = ? AND mb_id = ?",
     [couponId, member.mb_id]
   );
-  if (existing) throw new Error("이미 발급받은 쿠폰입니다.");
+  if (existing) throw new Error("すでに発行済みのクーポンです。");
   const zone = await g5one<any>("SELECT * FROM g5_shop_coupon_zone WHERE cz_id = ?", [couponId]);
-  if (!zone) throw new Error("쿠폰을 찾을 수 없습니다.");
+  if (!zone) throw new Error("クーポンが見つかりません。");
   const cpId = cryptoRandomHex();
   const now = new Date();
   const nowStr = now.toISOString().slice(0, 19).replace("T", " ");
@@ -2608,7 +2608,7 @@ export async function getReviewReplies(postId: number) {
     id: r.wr_id,
     postId,
     content: r.wr_content,
-    userName: r.mb_id || "관리자",
+    userName: r.mb_id || "管理者",
     createdAt: r.wr_datetime,
   }));
 }
@@ -2655,7 +2655,7 @@ export async function getReviewsForAdmin(page = 1, limit = 20) {
       title: r.wr_subject || "",
       content: r.wr_content || "",
       rating: Number(r.wr_rating) || 0,
-      userName: r.mb_name || r.mb_id || "익명",
+      userName: r.mb_name || r.mb_id || "匿名",
       userEmail: r.mb_email || null,
       createdAt: r.wr_datetime,
       replyCount: Number(r.replyCount) || 0,
@@ -2805,7 +2805,7 @@ export async function createProductQnA(data: {
   const db = await getDb();
   if (!db) return;
   const qnaBoards = await db.select().from(boards).where(eq(boards.boardType, "qna")).limit(1);
-  if (qnaBoards.length === 0) throw new Error("Q&A 게시판이 없습니다.");
+  if (qnaBoards.length === 0) throw new Error("Q&A掲示板がありません。");
   const boardId = qnaBoards[0].id;
   
   const [{ id }] = await db.insert(posts).values({
@@ -3034,14 +3034,14 @@ export async function getActiveShipments() {
 
 function getShipmentStatusDescription(status: string): string {
   const map: Record<string, string> = {
-    ready: "배송 준비 중입니다.",
-    picked_up: "택배사에서 상품을 수거했습니다.",
-    in_transit: "배송 중입니다.",
-    out_for_delivery: "배달 출발했습니다.",
-    delivered: "배달이 완료되었습니다.",
-    failed: "배송에 실패했습니다.",
+    ready: "配送の準備中です。",
+    picked_up: "配送業者が商品を集荷しました。",
+    in_transit: "配送中です。",
+    out_for_delivery: "配達に出発しました。",
+    delivered: "配達が完了しました。",
+    failed: "配送に失敗しました。",
   };
-  return map[status] || "상태가 변경되었습니다.";
+  return map[status] || "ステータスが変更されました。";
 }
 
 export async function getShippingHistoryByShipmentId(shipmentId: number) {
@@ -3281,14 +3281,14 @@ export async function notifyPriceChanges(productId: number, productName: string,
     const lastPrice = alert.targetPrice;
     if (newPrice === lastPrice) continue;
     const direction = newPrice < lastPrice ? 'down' : 'up';
-    const dirLabel = direction === 'down' ? '인하' : '인상';
+    const dirLabel = direction === 'down' ? '値下げ' : '値上げ';
     let notified = false;
     try {
       await createNotification(
         alert.userId,
         "system",
-        `관심 상품 가격 ${dirLabel}`,
-        `"${productName}" 가격이 ${lastPrice.toLocaleString()}원 → ${newPrice.toLocaleString()}원으로 변경되었습니다.`,
+        `お気に入り商品の価格${dirLabel}`,
+        `「${productName}」の価格が${lastPrice.toLocaleString()}円 → ${newPrice.toLocaleString()}円に変更されました。`,
         `/products/${productSlug}`
       );
       notified = true;
@@ -3831,7 +3831,7 @@ export async function setPointExpirationMonths(months: number): Promise<void> {
   await db.insert(siteSettings).values({
     settingKey: "pointExpirationMonths",
     settingValue: String(months),
-    description: "포인트 만료 기간 (개월 단위)",
+    description: "ポイント有効期間（月単位）",
   }).onDuplicateKeyUpdate({ set: { settingValue: String(months) } });
 }
 
@@ -3899,7 +3899,7 @@ export async function expirePoints(): Promise<{ expiredCount: number; totalExpir
       userId,
       amount: -totalExpired,
       type: "use",
-      description: "포인트 만료",
+      description: "ポイント失効",
       expiresAt: null,
     });
   }
@@ -4137,8 +4137,8 @@ export async function createInquiryReply(data: InsertInquiryReply) {
     await createNotification(
       post.userId,
       "inquiry",
-      isAuto ? "1:1 문의 자동응답이 등록되었습니다" : "1:1 문의 상담사 답변이 등록되었습니다",
-      `문의하신 "${post.title}"에 대한 ${isAuto ? "자동응답" : "상담사 답변"}이 등록되었습니다.\n\n내용: ${contentPreview}`,
+      isAuto ? "個別お問い合わせの自動応答が登録されました" : "個別お問い合わせの担当者回答が登録されました",
+      `お問い合わせいただいた「${post.title}」への${isAuto ? "自動応答" : "担当者の回答"}が登録されました。\n\n内容: ${contentPreview}`,
       `/inquiry/${post.id}`
     );
     
@@ -4322,7 +4322,7 @@ export async function updateShippingSyncSchedulerConfig(config: { enabled?: bool
     await db.insert(siteSettings).values({
       settingKey: SCHEDULER_SETTINGS_KEYS.enabled,
       settingValue: String(config.enabled),
-      description: "배송 동기화 스케줄러 활성화 여부",
+      description: "配送同期スケジューラーの有効状態",
     }).onDuplicateKeyUpdate({ set: { settingValue: String(config.enabled) } });
   }
 
@@ -4330,7 +4330,7 @@ export async function updateShippingSyncSchedulerConfig(config: { enabled?: bool
     await db.insert(siteSettings).values({
       settingKey: SCHEDULER_SETTINGS_KEYS.intervalHours,
       settingValue: String(config.intervalHours),
-      description: "배송 동기화 주기 (시간 단위)",
+      description: "配送同期の間隔（時間単位）",
     }).onDuplicateKeyUpdate({ set: { settingValue: String(config.intervalHours) } });
   }
 }
@@ -4343,13 +4343,13 @@ export async function updateShippingSyncLastRun(result: { syncedCount: number; f
   await db.insert(siteSettings).values({
     settingKey: SCHEDULER_SETTINGS_KEYS.lastRunAt,
     settingValue: now,
-    description: "배송 동기화 마지막 실행 시간",
+    description: "配送同期の最終実行時間",
   }).onDuplicateKeyUpdate({ set: { settingValue: now } });
 
   await db.insert(siteSettings).values({
     settingKey: SCHEDULER_SETTINGS_KEYS.lastRunResult,
     settingValue: JSON.stringify(result),
-    description: "배송 동기화 마지막 실행 결과",
+    description: "配送同期の最終実行結果",
   }).onDuplicateKeyUpdate({ set: { settingValue: JSON.stringify(result) } });
 }
 
@@ -4497,7 +4497,7 @@ export async function cancelPaymentConfirmation(paymentId: number) {
   const now = new Date();
   return db.transaction(async (tx) => {
     const [payment] = await tx.select().from(payments).where(eq(payments.id, paymentId)).limit(1);
-    if (!payment) throw new Error("결제 정보를 찾을 수 없습니다.");
+    if (!payment) throw new Error("お支払い情報が見つかりません。");
     await tx.update(payments)
       .set({ status: "pending", confirmedAt: null, confirmedBy: null, updatedAt: now })
       .where(eq(payments.id, paymentId));

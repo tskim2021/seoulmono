@@ -20,7 +20,7 @@ function MemberDetailModal({ member, onClose }: { member: any; onClose: () => vo
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={onClose}>
       <div className="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl" onClick={e => e.stopPropagation()}>
         <div className="p-6 border-b border-slate-100 flex items-center justify-between">
-          <h2 className="text-xl font-bold text-slate-900">파트너사 상세 정보</h2>
+          <h2 className="text-xl font-bold text-slate-900">取引先の詳細情報</h2>
           <button onClick={onClose} className="p-2 hover:bg-slate-100 rounded-lg">
             <X className="w-5 h-5 text-slate-500" />
           </button>
@@ -28,29 +28,29 @@ function MemberDetailModal({ member, onClose }: { member: any; onClose: () => vo
         <div className="p-6 space-y-6">
           <div>
             <h3 className="text-sm font-bold text-slate-500 uppercase mb-3 flex items-center gap-2">
-              <Building2 className="w-4 h-4" /> 사업자 정보
+              <Building2 className="w-4 h-4" /> 事業者情報
             </h3>
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <p className="text-xs text-slate-400">상호명</p>
+                <p className="text-xs text-slate-400">会社名</p>
                 <p className="font-bold text-slate-900">{member.company_name || "-"}</p>
               </div>
               <div>
-                <p className="text-xs text-slate-400">사업자등록번호</p>
+                <p className="text-xs text-slate-400">事業者登録番号</p>
                 <p className="font-bold text-slate-900">{member.business_number || "-"}</p>
               </div>
               <div>
-                <p className="text-xs text-slate-400">대표자</p>
+                <p className="text-xs text-slate-400">代表者</p>
                 <p className="font-bold text-slate-900">{member.representative || "-"}</p>
               </div>
               <div>
-                <p className="text-xs text-slate-400">업태 / 종목</p>
+                <p className="text-xs text-slate-400">業態 / 業種</p>
                 <p className="font-bold text-slate-900">
                   {member.business_type || "-"} / {member.business_category || "-"}
                 </p>
               </div>
               <div className="col-span-2">
-                <p className="text-xs text-slate-400">사업장 주소</p>
+                <p className="text-xs text-slate-400">事業所の住所</p>
                 <p className="font-bold text-slate-900">{member.company_address || "-"}</p>
               </div>
             </div>
@@ -58,23 +58,23 @@ function MemberDetailModal({ member, onClose }: { member: any; onClose: () => vo
 
           <div className="border-t border-slate-100 pt-4">
             <h3 className="text-sm font-bold text-slate-500 uppercase mb-3 flex items-center gap-2">
-              <Phone className="w-4 h-4" /> 담당자 정보
+              <Phone className="w-4 h-4" /> 担当者情報
             </h3>
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <p className="text-xs text-slate-400">담당자명</p>
+                <p className="text-xs text-slate-400">担当者名</p>
                 <p className="font-bold text-slate-900">{member.mb_name || "-"}</p>
               </div>
               <div>
-                <p className="text-xs text-slate-400">아이디</p>
+                <p className="text-xs text-slate-400">ID</p>
                 <p className="font-bold text-slate-900">{member.mb_id}</p>
               </div>
               <div>
-                <p className="text-xs text-slate-400">연락처</p>
+                <p className="text-xs text-slate-400">連絡先</p>
                 <p className="font-bold text-slate-900">{member.mb_hp || "-"}</p>
               </div>
               <div>
-                <p className="text-xs text-slate-400">이메일</p>
+                <p className="text-xs text-slate-400">メールアドレス</p>
                 <p className="font-bold text-slate-900">{member.mb_email || "-"}</p>
               </div>
             </div>
@@ -83,13 +83,13 @@ function MemberDetailModal({ member, onClose }: { member: any; onClose: () => vo
           {licenseUrl && (
             <div className="border-t border-slate-100 pt-4">
               <h3 className="text-sm font-bold text-slate-500 uppercase mb-3 flex items-center gap-2">
-                <FileText className="w-4 h-4" /> 사업자등록증
+                <FileText className="w-4 h-4" /> 事業者登録証
               </h3>
               {isImage ? (
                 <div className="border rounded-xl overflow-hidden bg-slate-50">
                   <img
                     src={licenseUrl}
-                    alt="사업자등록증"
+                    alt="事業者登録証"
                     className="w-full max-h-[500px] object-contain"
                     crossOrigin="anonymous"
                     onError={(e) => {
@@ -97,7 +97,7 @@ function MemberDetailModal({ member, onClose }: { member: any; onClose: () => vo
                       target.style.display = "none";
                       const parent = target.parentElement;
                       if (parent) {
-                        parent.innerHTML = '<div class="p-8 text-center text-slate-500">이미지를 불러올 수 없습니다</div>';
+                        parent.innerHTML = '<div class="p-8 text-center text-slate-500">画像を読み込めません</div>';
                       }
                     }}
                   />
@@ -110,7 +110,7 @@ function MemberDetailModal({ member, onClose }: { member: any; onClose: () => vo
                   className="inline-flex items-center gap-2 px-4 py-3 bg-blue-50 text-blue-700 rounded-xl hover:bg-blue-100 transition-colors font-semibold"
                 >
                   <FileText className="w-5 h-5" />
-                  사업자등록증 파일 열기 (PDF)
+                  事業者登録証ファイルを開く (PDF)
                 </a>
               )}
             </div>
@@ -119,9 +119,9 @@ function MemberDetailModal({ member, onClose }: { member: any; onClose: () => vo
           {!licenseUrl && (
             <div className="border-t border-slate-100 pt-4">
               <h3 className="text-sm font-bold text-slate-500 uppercase mb-3 flex items-center gap-2">
-                <FileText className="w-4 h-4" /> 사업자등록증
+                <FileText className="w-4 h-4" /> 事業者登録証
               </h3>
-              <p className="text-sm text-slate-400">첨부된 사업자등록증이 없습니다.</p>
+              <p className="text-sm text-slate-400">添付された事業者登録証がありません。</p>
             </div>
           )}
         </div>
@@ -142,7 +142,7 @@ export default function AdminMembers() {
   const { mutate: approve, isPending: isApproving } = useApproveMember({
     mutation: {
       onSuccess: () => {
-        toast({ title: "승인 완료", description: "파트너사 가입이 승인되었습니다." });
+        toast({ title: "承認完了", description: "取引先の登録を承認しました。" });
         queryClient.invalidateQueries({ queryKey: getGetMembersQueryKey() });
         queryClient.invalidateQueries({ queryKey: getGetPendingMembersQueryKey() });
       }
@@ -152,7 +152,7 @@ export default function AdminMembers() {
   const { mutate: reject, isPending: isRejecting } = useRejectMember({
     mutation: {
       onSuccess: () => {
-        toast({ title: "거절 완료", description: "파트너사 가입이 거절되었습니다." });
+        toast({ title: "却下完了", description: "取引先の登録を却下しました。" });
         queryClient.invalidateQueries({ queryKey: getGetMembersQueryKey() });
         queryClient.invalidateQueries({ queryKey: getGetPendingMembersQueryKey() });
       }
@@ -163,12 +163,12 @@ export default function AdminMembers() {
     mutationFn: (memberId: string) =>
       customFetch(`/api/admin/members/${memberId}`, { method: "DELETE" }),
     onSuccess: () => {
-      toast({ title: "삭제 완료", description: "회원이 삭제되었습니다." });
+      toast({ title: "削除完了", description: "会員を削除しました。" });
       queryClient.invalidateQueries({ queryKey: getGetMembersQueryKey() });
       queryClient.invalidateQueries({ queryKey: getGetPendingMembersQueryKey() });
     },
     onError: (err: any) => {
-      toast({ title: "삭제 실패", description: err?.message || "오류가 발생했습니다.", variant: "destructive" });
+      toast({ title: "削除に失敗しました", description: err?.message || "エラーが発生しました。", variant: "destructive" });
     },
   });
 
@@ -180,13 +180,13 @@ export default function AdminMembers() {
         body: JSON.stringify({ member_ids: memberIds }),
       }),
     onSuccess: () => {
-      toast({ title: "일괄 삭제 완료", description: `${selectedIds.size}건의 회원이 삭제되었습니다.` });
+      toast({ title: "一括削除完了", description: `${selectedIds.size}件の会員を削除しました。` });
       setSelectedIds(new Set());
       queryClient.invalidateQueries({ queryKey: getGetMembersQueryKey() });
       queryClient.invalidateQueries({ queryKey: getGetPendingMembersQueryKey() });
     },
     onError: (err: any) => {
-      toast({ title: "삭제 실패", description: err?.message || "오류가 발생했습니다.", variant: "destructive" });
+      toast({ title: "削除に失敗しました", description: err?.message || "エラーが発生しました。", variant: "destructive" });
     },
   });
 
@@ -212,12 +212,12 @@ export default function AdminMembers() {
 
   const handleBatchDelete = () => {
     if (selectedIds.size === 0) return;
-    if (!confirm(`선택한 ${selectedIds.size}명의 회원을 삭제하시겠습니까?\n이 작업은 되돌릴 수 없습니다.`)) return;
+    if (!confirm(`選択した${selectedIds.size}名の会員を削除してもよろしいですか？\nこの操作は元に戻せません。`)) return;
     batchDelete.mutate(Array.from(selectedIds));
   };
 
   const handleSingleDelete = (member: any) => {
-    if (!confirm(`"${member.company_name || member.mb_name}" 회원을 삭제하시겠습니까?\n이 작업은 되돌릴 수 없습니다.`)) return;
+    if (!confirm(`"${member.company_name || member.mb_name}" 様を削除してもよろしいですか？\nこの操作は元に戻せません。`)) return;
     deleteMember.mutate(member.mb_id);
   };
 
@@ -227,8 +227,8 @@ export default function AdminMembers() {
     <div className="animate-in fade-in duration-300">
       <div className="mb-8 flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-black text-slate-900 tracking-tight">파트너 회원 관리</h1>
-          <p className="text-slate-500 mt-2 font-medium">가입 신청 내역을 확인하고, 사업자등록증을 검토 후 승인합니다.</p>
+          <h1 className="text-3xl font-black text-slate-900 tracking-tight">取引先会員管理</h1>
+          <p className="text-slate-500 mt-2 font-medium">登録申請を確認し、事業者登録証を審査のうえ承認します。</p>
         </div>
         <select
           className="h-10 px-3 rounded-xl bg-white border-2 border-border text-sm font-bold focus:outline-none focus:border-primary transition-all"
@@ -236,7 +236,7 @@ export default function AdminMembers() {
           onChange={(e) => setPageSize(Number(e.target.value))}
         >
           {pageSizeOptions.map((size) => (
-            <option key={size} value={size}>{size}개씩 보기</option>
+            <option key={size} value={size}>{size}件ずつ表示</option>
           ))}
         </select>
       </div>
@@ -245,7 +245,7 @@ export default function AdminMembers() {
         <div className="mb-10">
           <h2 className="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">
             <span className="w-2.5 h-2.5 rounded-full bg-amber-500 animate-pulse"></span>
-            승인 대기 ({pendingMembers.members.length})
+            承認待ち ({pendingMembers.members.length})
           </h2>
           <div className="grid gap-4">
             {pendingMembers.members.map((member: any) => (
@@ -254,22 +254,22 @@ export default function AdminMembers() {
                   <div className="flex-1">
                     <div className="flex items-center gap-3 mb-3">
                       <h3 className="text-xl font-bold text-slate-900">{member.company_name}</h3>
-                      <Badge className="bg-amber-100 text-amber-700 border-amber-200">대기중</Badge>
+                      <Badge className="bg-amber-100 text-amber-700 border-amber-200">待機中</Badge>
                     </div>
                     <div className="grid grid-cols-2 md:grid-cols-3 gap-x-8 gap-y-2 text-sm">
-                      <p><span className="text-slate-500 mr-1">사업자번호:</span> <span className="font-bold text-slate-700">{member.business_number}</span></p>
-                      <p><span className="text-slate-500 mr-1">대표자:</span> <span className="font-bold text-slate-700">{member.representative}</span></p>
-                      <p><span className="text-slate-500 mr-1">담당자:</span> <span className="font-bold text-slate-700">{member.mb_name}</span></p>
-                      <p><span className="text-slate-500 mr-1">연락처:</span> <span className="font-bold text-slate-700">{member.mb_hp}</span></p>
-                      <p><span className="text-slate-500 mr-1">이메일:</span> <span className="font-bold text-slate-700">{member.mb_email}</span></p>
+                      <p><span className="text-slate-500 mr-1">事業者番号:</span> <span className="font-bold text-slate-700">{member.business_number}</span></p>
+                      <p><span className="text-slate-500 mr-1">代表者:</span> <span className="font-bold text-slate-700">{member.representative}</span></p>
+                      <p><span className="text-slate-500 mr-1">担当者:</span> <span className="font-bold text-slate-700">{member.mb_name}</span></p>
+                      <p><span className="text-slate-500 mr-1">連絡先:</span> <span className="font-bold text-slate-700">{member.mb_hp}</span></p>
+                      <p><span className="text-slate-500 mr-1">メール:</span> <span className="font-bold text-slate-700">{member.mb_email}</span></p>
                       {member.company_address && (
-                        <p><span className="text-slate-500 mr-1">주소:</span> <span className="font-bold text-slate-700">{member.company_address}</span></p>
+                        <p><span className="text-slate-500 mr-1">住所:</span> <span className="font-bold text-slate-700">{member.company_address}</span></p>
                       )}
                     </div>
                     {member.business_license_file && (
                       <div className="mt-3 flex items-center gap-2">
                         <FileText className="w-4 h-4 text-blue-500" />
-                        <span className="text-sm text-blue-600 font-semibold">사업자등록증 첨부됨</span>
+                        <span className="text-sm text-blue-600 font-semibold">事業者登録証 添付済み</span>
                       </div>
                     )}
                   </div>
@@ -279,26 +279,26 @@ export default function AdminMembers() {
                       className="border-blue-200 text-blue-600 hover:bg-blue-50"
                       onClick={() => setSelectedMember(member)}
                     >
-                      <Eye className="w-4 h-4 mr-1" /> 상세보기
+                      <Eye className="w-4 h-4 mr-1" /> 詳細を見る
                     </Button>
                     <Button 
                       className="bg-emerald-600 hover:bg-emerald-700 text-white"
                       onClick={() => approve({ id: member.mb_id })}
                       disabled={isRejecting || isApproving}
                     >
-                      <Check className="w-4 h-4 mr-1" /> 승인
+                      <Check className="w-4 h-4 mr-1" /> 承認
                     </Button>
                     <Button 
                       variant="outline" 
                       className="border-red-200 text-red-600 hover:bg-red-50"
                       onClick={() => {
-                        if (confirm(`${member.company_name}의 가입을 거절하시겠습니까?`)) {
+                        if (confirm(`${member.company_name}の登録を却下してもよろしいですか？`)) {
                           reject({ id: member.mb_id });
                         }
                       }}
                       disabled={isRejecting || isApproving}
                     >
-                      <X className="w-4 h-4 mr-1" /> 거절
+                      <X className="w-4 h-4 mr-1" /> 却下
                     </Button>
                   </div>
                 </div>
@@ -312,11 +312,11 @@ export default function AdminMembers() {
         <div className="px-6 py-5 border-b border-slate-100 bg-slate-50/50 flex items-center justify-between">
           <h3 className="text-lg font-bold text-slate-900 flex items-center gap-2">
             <Users className="w-5 h-5 text-primary" />
-            전체 파트너사 ({allMembers?.total || 0})
+            全取引先 ({allMembers?.total || 0})
           </h3>
           {selectedIds.size > 0 && (
             <div className="flex items-center gap-3">
-              <Badge className="bg-red-100 text-red-700 text-sm font-bold">{selectedIds.size}건 선택됨</Badge>
+              <Badge className="bg-red-100 text-red-700 text-sm font-bold">{selectedIds.size}件選択中</Badge>
               <Button
                 variant="outline"
                 size="sm"
@@ -325,7 +325,7 @@ export default function AdminMembers() {
                 disabled={batchDelete.isPending}
               >
                 <Trash2 className="w-3.5 h-3.5 mr-1" />
-                {batchDelete.isPending ? "삭제 중..." : "선택 삭제"}
+                {batchDelete.isPending ? "削除中..." : "選択を削除"}
               </Button>
             </div>
           )}
@@ -341,13 +341,13 @@ export default function AdminMembers() {
                       : <Square className="w-5 h-5" />}
                   </button>
                 </th>
-                <th className="px-4 py-3 text-xs font-bold text-slate-500 uppercase">상호명 / 아이디</th>
-                <th className="px-4 py-3 text-xs font-bold text-slate-500 uppercase">대표자 / 사업자번호</th>
-                <th className="px-4 py-3 text-xs font-bold text-slate-500 uppercase">담당자 정보</th>
-                <th className="px-4 py-3 text-xs font-bold text-slate-500 uppercase">사업자등록증</th>
-                <th className="px-4 py-3 text-xs font-bold text-slate-500 uppercase">가입일</th>
-                <th className="px-4 py-3 text-xs font-bold text-slate-500 uppercase">상태</th>
-                <th className="px-4 py-3 text-xs font-bold text-slate-500 uppercase text-center">관리</th>
+                <th className="px-4 py-3 text-xs font-bold text-slate-500 uppercase">会社名 / ID</th>
+                <th className="px-4 py-3 text-xs font-bold text-slate-500 uppercase">代表者 / 事業者番号</th>
+                <th className="px-4 py-3 text-xs font-bold text-slate-500 uppercase">担当者情報</th>
+                <th className="px-4 py-3 text-xs font-bold text-slate-500 uppercase">事業者登録証</th>
+                <th className="px-4 py-3 text-xs font-bold text-slate-500 uppercase">登録日</th>
+                <th className="px-4 py-3 text-xs font-bold text-slate-500 uppercase">ステータス</th>
+                <th className="px-4 py-3 text-xs font-bold text-slate-500 uppercase text-center">管理</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
@@ -379,10 +379,10 @@ export default function AdminMembers() {
                     <td className="px-4 py-4">
                       {member.business_license_file ? (
                         <span className="inline-flex items-center gap-1 text-xs font-semibold text-blue-600">
-                          <FileText className="w-3.5 h-3.5" /> 첨부됨
+                          <FileText className="w-3.5 h-3.5" /> 添付済み
                         </span>
                       ) : (
-                        <span className="text-xs text-slate-400">없음</span>
+                        <span className="text-xs text-slate-400">なし</span>
                       )}
                     </td>
                     <td className="px-4 py-4 text-sm text-slate-600 font-medium whitespace-nowrap">
@@ -390,11 +390,11 @@ export default function AdminMembers() {
                     </td>
                     <td className="px-4 py-4">
                       {member.is_admin ? (
-                        <Badge className="bg-purple-100 text-purple-700 border-purple-200">관리자</Badge>
+                        <Badge className="bg-purple-100 text-purple-700 border-purple-200">管理者</Badge>
                       ) : member.is_approved ? (
-                        <Badge className="bg-emerald-100 text-emerald-700 border-emerald-200">정상</Badge>
+                        <Badge className="bg-emerald-100 text-emerald-700 border-emerald-200">正常</Badge>
                       ) : (
-                        <Badge className="bg-amber-100 text-amber-700 border-amber-200">대기</Badge>
+                        <Badge className="bg-amber-100 text-amber-700 border-amber-200">待機</Badge>
                       )}
                     </td>
                     <td className="px-4 py-4 text-center">
@@ -403,7 +403,7 @@ export default function AdminMembers() {
                           onClick={() => setSelectedMember(member)}
                           className="text-xs text-blue-600 hover:text-blue-800 font-semibold"
                         >
-                          상세
+                          詳細
                         </button>
                         {!member.is_admin && (
                           <button
@@ -411,7 +411,7 @@ export default function AdminMembers() {
                             disabled={deleteMember.isPending}
                             className="text-xs text-red-500 hover:text-red-700 font-semibold"
                           >
-                            삭제
+                            削除
                           </button>
                         )}
                       </div>

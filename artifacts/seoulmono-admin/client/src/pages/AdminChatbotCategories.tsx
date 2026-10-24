@@ -89,30 +89,30 @@ export default function AdminChatbotCategories() {
           icon: formData.icon || undefined,
           description: formData.description || undefined,
         });
-        toast.success("카테고리가 수정되었습니다.");
+        toast.success("カテゴリーを更新しました。");
       } else {
         await createMutation.mutateAsync({
           ...formData,
           icon: formData.icon || undefined,
           description: formData.description || undefined,
         });
-        toast.success("카테고리가 추가되었습니다.");
+        toast.success("カテゴリーを追加しました。");
       }
       setDialogOpen(false);
       refetch();
     } catch (error) {
-      toast.error("작업에 실패했습니다.");
+      toast.error("操作に失敗しました。");
     }
   };
 
   const handleDelete = async (id: number) => {
-    if (!confirm("이 카테고리를 삭제하시겠습니까?")) return;
+    if (!confirm("このカテゴリーを削除しますか？")) return;
     try {
       await deleteMutation.mutateAsync({ id });
-      toast.success("카테고리가 삭제되었습니다.");
+      toast.success("カテゴリーを削除しました。");
       refetch();
     } catch (error) {
-      toast.error("삭제에 실패했습니다.");
+      toast.error("削除に失敗しました。");
     }
   };
 
@@ -143,42 +143,42 @@ export default function AdminChatbotCategories() {
         <div>
           <h1 className="text-2xl font-bold flex items-center gap-2">
             <FolderTree className="w-6 h-6" />
-            카테고리 관리
+            カテゴリー管理
           </h1>
           <p className="text-sm text-muted-foreground mt-1">
-            챗봇 대화 흐름의 카테고리를 관리합니다. 최대 2단계 구조를 지원합니다.
+            チャットボットの会話フローのカテゴリーを管理します。最大2階層まで対応しています。
           </p>
         </div>
         <Button onClick={() => handleOpenDialog()}>
           <Plus className="w-4 h-4 mr-2" />
-          카테고리 추가
+          カテゴリーを追加
         </Button>
       </div>
 
       <Card>
         <CardHeader>
-          <CardTitle>카테고리 목록</CardTitle>
+          <CardTitle>カテゴリー一覧</CardTitle>
           <CardDescription>
-            상위 카테고리와 하위 카테고리를 관리할 수 있습니다.
+            親カテゴリーと子カテゴリーを管理できます。
           </CardDescription>
         </CardHeader>
         <CardContent>
           {organizedCategories.length === 0 ? (
             <div className="text-center py-12 text-muted-foreground">
               <FolderTree className="w-12 h-12 mx-auto mb-4 opacity-50" />
-              <p>등록된 카테고리가 없습니다.</p>
-              <p className="text-sm mt-1">카테고리를 추가하여 챗봇 대화 흐름을 구성하세요.</p>
+              <p>登録されたカテゴリーがありません。</p>
+              <p className="text-sm mt-1">カテゴリーを追加して、チャットボットの会話フローを構成してください。</p>
             </div>
           ) : (
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>카테고리명</TableHead>
-                  <TableHead>아이콘</TableHead>
-                  <TableHead>설명</TableHead>
-                  <TableHead className="text-center">정렬순서</TableHead>
-                  <TableHead className="text-center">상태</TableHead>
-                  <TableHead className="text-right">작업</TableHead>
+                  <TableHead>カテゴリー名</TableHead>
+                  <TableHead>アイコン</TableHead>
+                  <TableHead>説明</TableHead>
+                  <TableHead className="text-center">表示順</TableHead>
+                  <TableHead className="text-center">ステータス</TableHead>
+                  <TableHead className="text-right">操作</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -191,7 +191,7 @@ export default function AdminChatbotCategories() {
                       <TableCell className="text-center">{category.sortOrder}</TableCell>
                       <TableCell className="text-center">
                         <Badge variant={category.isActive ? "default" : "secondary"}>
-                          {category.isActive ? "활성" : "비활성"}
+                          {category.isActive ? "有効" : "無効"}
                         </Badge>
                       </TableCell>
                       <TableCell className="text-right">
@@ -226,7 +226,7 @@ export default function AdminChatbotCategories() {
                         <TableCell className="text-center">{child.sortOrder}</TableCell>
                         <TableCell className="text-center">
                           <Badge variant={child.isActive ? "default" : "secondary"}>
-                            {child.isActive ? "활성" : "비활성"}
+                            {child.isActive ? "有効" : "無効"}
                           </Badge>
                         </TableCell>
                         <TableCell className="text-right">
@@ -260,56 +260,56 @@ export default function AdminChatbotCategories() {
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent className="max-w-2xl">
           <DialogHeader>
-            <DialogTitle>{editingCategory ? "카테고리 수정" : "카테고리 추가"}</DialogTitle>
+            <DialogTitle>{editingCategory ? "カテゴリーの編集" : "カテゴリーの追加"}</DialogTitle>
             <DialogDescription>
-              챗봇 대화 흐름에 사용될 카테고리를 {editingCategory ? "수정" : "추가"}합니다.
+              チャットボットの会話フローで使用するカテゴリーを{editingCategory ? "編集" : "追加"}します。
             </DialogDescription>
           </DialogHeader>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="name">카테고리명 *</Label>
+              <Label htmlFor="name">カテゴリー名 *</Label>
               <Input
                 id="name"
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                placeholder="예: 상품 문의, 배송 문의"
+                placeholder="例: 商品のお問い合わせ、配送のお問い合わせ"
                 required
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="icon">아이콘 (선택)</Label>
+              <Label htmlFor="icon">アイコン (任意)</Label>
               <Input
                 id="icon"
                 value={formData.icon}
                 onChange={(e) => setFormData({ ...formData, icon: e.target.value })}
-                placeholder="예: 📦, 🚚, 💰"
+                placeholder="例: 📦, 🚚, 💰"
               />
               <p className="text-xs text-muted-foreground">
-                이모지 또는 아이콘 이름을 입력하세요.
+                絵文字またはアイコン名を入力してください。
               </p>
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="description">설명 (선택)</Label>
+              <Label htmlFor="description">説明 (任意)</Label>
               <Textarea
                 id="description"
                 value={formData.description}
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                placeholder="이 카테고리에 대한 간단한 설명"
+                placeholder="このカテゴリーの簡単な説明"
                 rows={3}
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="parentId">상위 카테고리 (선택)</Label>
+              <Label htmlFor="parentId">親カテゴリー (任意)</Label>
               <select
                 id="parentId"
                 value={formData.parentId || ""}
                 onChange={(e) => setFormData({ ...formData, parentId: e.target.value ? Number(e.target.value) : null })}
                 className="w-full px-3 py-2 border rounded-md"
               >
-                <option value="">없음 (최상위 카테고리)</option>
+                <option value="">なし (最上位カテゴリー)</option>
                 {categories
                   ?.filter((c) => !c.parentId && c.id !== editingCategory?.id)
                   .map((c) => (
@@ -319,13 +319,13 @@ export default function AdminChatbotCategories() {
                   ))}
               </select>
               <p className="text-xs text-muted-foreground">
-                하위 카테고리로 만들려면 상위 카테고리를 선택하세요.
+                子カテゴリーにする場合は、親カテゴリーを選択してください。
               </p>
             </div>
 
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="sortOrder">정렬 순서</Label>
+                <Label htmlFor="sortOrder">表示順</Label>
                 <Input
                   id="sortOrder"
                   type="number"
@@ -335,7 +335,7 @@ export default function AdminChatbotCategories() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="isActive">활성화</Label>
+                <Label htmlFor="isActive">有効化</Label>
                 <div className="flex items-center h-10">
                   <Switch
                     id="isActive"
@@ -343,7 +343,7 @@ export default function AdminChatbotCategories() {
                     onCheckedChange={(checked) => setFormData({ ...formData, isActive: checked ? 1 : 0 })}
                   />
                   <span className="ml-2 text-sm text-muted-foreground">
-                    {formData.isActive ? "활성" : "비활성"}
+                    {formData.isActive ? "有効" : "無効"}
                   </span>
                 </div>
               </div>
@@ -351,16 +351,16 @@ export default function AdminChatbotCategories() {
 
             <DialogFooter>
               <Button type="button" variant="outline" onClick={() => setDialogOpen(false)}>
-                취소
+                キャンセル
               </Button>
               <Button type="submit" disabled={createMutation.isPending || updateMutation.isPending}>
                 {createMutation.isPending || updateMutation.isPending ? (
                   <>
                     <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                    저장 중...
+                    保存中...
                   </>
                 ) : (
-                  editingCategory ? "수정" : "추가"
+                  editingCategory ? "更新" : "追加"
                 )}
               </Button>
             </DialogFooter>

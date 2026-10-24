@@ -35,7 +35,7 @@ export default function AdminReviewSettings() {
 
   const updateSettings = trpc.admin.updateReviewPointSettings.useMutation({
     onSuccess: () => {
-      toast.success("리뷰 포인트 설정이 저장되었습니다");
+      toast.success("レビューポイント設定を保存しました");
       utils.admin.getReviewPointSettings.invalidate();
     },
     onError: (err) => toast.error(err.message),
@@ -55,9 +55,9 @@ export default function AdminReviewSettings() {
     <DashboardLayout>
       <div className="container max-w-4xl py-8">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-2">리뷰 포인트 설정</h1>
+          <h1 className="text-3xl font-bold mb-2">レビューポイント設定</h1>
           <p className="text-muted-foreground">
-            리뷰 작성 및 좋아요 달성 시 지급되는 포인트를 설정합니다
+            レビュー投稿およびいいね達成時に付与されるポイントを設定します
           </p>
         </div>
 
@@ -73,15 +73,15 @@ export default function AdminReviewSettings() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Star className="w-5 h-5" />
-                  리뷰 작성 포인트
+                  レビュー投稿ポイント
                 </CardTitle>
                 <CardDescription>
-                  고객이 리뷰를 작성할 때 지급되는 포인트를 설정합니다
+                  お客様がレビューを投稿した際に付与されるポイントを設定します
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="grid gap-2">
-                  <Label htmlFor="pointsPerReview">기본 리뷰 작성 포인트</Label>
+                  <Label htmlFor="pointsPerReview">基本レビュー投稿ポイント</Label>
                   <div className="flex items-center gap-2">
                     <Input
                       id="pointsPerReview"
@@ -91,16 +91,16 @@ export default function AdminReviewSettings() {
                       onChange={(e) => setPointsPerReview(Number(e.target.value))}
                       className="max-w-xs"
                     />
-                    <span className="text-sm text-muted-foreground">포인트</span>
+                    <span className="text-sm text-muted-foreground">ポイント</span>
                   </div>
                   <p className="text-xs text-muted-foreground">
-                    리뷰 작성 시 기본으로 지급되는 포인트입니다
+                    レビュー投稿時に基本として付与されるポイントです
                   </p>
                 </div>
 
                 <div className="grid gap-2">
                   <Label htmlFor="minRatingForPoints" className="flex items-center gap-2">
-                    최소 별점 요구사항
+                    最低評価の要件
                   </Label>
                   <div className="flex items-center gap-2">
                     <Input
@@ -112,10 +112,10 @@ export default function AdminReviewSettings() {
                       onChange={(e) => setMinRatingForPoints(Number(e.target.value))}
                       className="max-w-xs"
                     />
-                    <span className="text-sm text-muted-foreground">점 이상</span>
+                    <span className="text-sm text-muted-foreground">点以上</span>
                   </div>
                   <p className="text-xs text-muted-foreground">
-                    포인트를 지급하기 위한 최소 별점입니다 (1~5점)
+                    ポイントを付与するための最低評価です (1〜5点)
                   </p>
                 </div>
               </CardContent>
@@ -126,15 +126,15 @@ export default function AdminReviewSettings() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Image className="w-5 h-5" />
-                  사진 리뷰 추가 포인트
+                  写真付きレビュー追加ポイント
                 </CardTitle>
                 <CardDescription>
-                  사진이 포함된 리뷰 작성 시 추가로 지급되는 포인트를 설정합니다
+                  写真付きレビューの投稿時に追加で付与されるポイントを設定します
                 </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="grid gap-2">
-                  <Label htmlFor="pointsPerPhotoReview">사진 리뷰 추가 포인트</Label>
+                  <Label htmlFor="pointsPerPhotoReview">写真付きレビュー追加ポイント</Label>
                   <div className="flex items-center gap-2">
                     <Input
                       id="pointsPerPhotoReview"
@@ -144,10 +144,10 @@ export default function AdminReviewSettings() {
                       onChange={(e) => setPointsPerPhotoReview(Number(e.target.value))}
                       className="max-w-xs"
                     />
-                    <span className="text-sm text-muted-foreground">포인트</span>
+                    <span className="text-sm text-muted-foreground">ポイント</span>
                   </div>
                   <p className="text-xs text-muted-foreground">
-                    사진이 포함된 리뷰 작성 시 기본 포인트에 추가로 지급됩니다
+                    写真付きレビューの投稿時に、基本ポイントに加えて付与されます
                   </p>
                 </div>
               </CardContent>
@@ -158,15 +158,15 @@ export default function AdminReviewSettings() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <ThumbsUp className="w-5 h-5" />
-                  좋아요 달성 보너스
+                  いいね達成ボーナス
                 </CardTitle>
                 <CardDescription>
-                  리뷰가 일정 좋아요 수를 달성할 때마다 작성자에게 지급되는 보너스 포인트를 설정합니다
+                  レビューが一定のいいね数を達成するごとに、投稿者へ付与されるボーナスポイントを設定します
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="grid gap-2">
-                  <Label htmlFor="likePointsThreshold">좋아요 임계값</Label>
+                  <Label htmlFor="likePointsThreshold">いいねのしきい値</Label>
                   <div className="flex items-center gap-2">
                     <Input
                       id="likePointsThreshold"
@@ -176,15 +176,15 @@ export default function AdminReviewSettings() {
                       onChange={(e) => setLikePointsThreshold(Number(e.target.value))}
                       className="max-w-xs"
                     />
-                    <span className="text-sm text-muted-foreground">개당</span>
+                    <span className="text-sm text-muted-foreground">件ごと</span>
                   </div>
                   <p className="text-xs text-muted-foreground">
-                    이 값의 배수마다 포인트가 지급됩니다 (예: 10개 설정 시 10개, 20개, 30개... 달성 시 지급)
+                    この値の倍数ごとにポイントが付与されます (例: 10件に設定した場合、10件、20件、30件...達成時に付与)
                   </p>
                 </div>
 
                 <div className="grid gap-2">
-                  <Label htmlFor="pointsPerLikeThreshold">임계값 달성 시 지급 포인트</Label>
+                  <Label htmlFor="pointsPerLikeThreshold">しきい値達成時の付与ポイント</Label>
                   <div className="flex items-center gap-2">
                     <Input
                       id="pointsPerLikeThreshold"
@@ -194,10 +194,10 @@ export default function AdminReviewSettings() {
                       onChange={(e) => setPointsPerLikeThreshold(Number(e.target.value))}
                       className="max-w-xs"
                     />
-                    <span className="text-sm text-muted-foreground">포인트</span>
+                    <span className="text-sm text-muted-foreground">ポイント</span>
                   </div>
                   <p className="text-xs text-muted-foreground">
-                    좋아요 임계값 달성 시마다 리뷰 작성자에게 지급되는 포인트입니다
+                    いいねのしきい値を達成するたびにレビュー投稿者へ付与されるポイントです
                   </p>
                 </div>
 
@@ -205,15 +205,15 @@ export default function AdminReviewSettings() {
                   <div className="flex items-start gap-2">
                     <Award className="w-5 h-5 text-primary mt-0.5" />
                     <div>
-                      <p className="text-sm font-medium mb-1">예시</p>
+                      <p className="text-sm font-medium mb-1">例</p>
                       <p className="text-xs text-muted-foreground">
-                        좋아요 임계값 {likePointsThreshold}개, 지급 포인트 {pointsPerLikeThreshold}포인트로 설정 시:
+                        いいねのしきい値 {likePointsThreshold}件、付与ポイント {pointsPerLikeThreshold}ポイントに設定した場合:
                         <br />
-                        리뷰가 {likePointsThreshold}개 좋아요 달성 → {pointsPerLikeThreshold}포인트 지급
+                        レビューが{likePointsThreshold}件のいいねを達成 → {pointsPerLikeThreshold}ポイント付与
                         <br />
-                        리뷰가 {likePointsThreshold * 2}개 좋아요 달성 → {pointsPerLikeThreshold}포인트 추가 지급
+                        レビューが{likePointsThreshold * 2}件のいいねを達成 → {pointsPerLikeThreshold}ポイント追加付与
                         <br />
-                        리뷰가 {likePointsThreshold * 3}개 좋아요 달성 → {pointsPerLikeThreshold}포인트 추가 지급
+                        レビューが{likePointsThreshold * 3}件のいいねを達成 → {pointsPerLikeThreshold}ポイント追加付与
                       </p>
                     </div>
                   </div>
@@ -224,7 +224,7 @@ export default function AdminReviewSettings() {
             {/* 저장 버튼 */}
             <div className="flex justify-end">
               <Button onClick={handleSave} disabled={updateSettings.isPending} size="lg">
-                {updateSettings.isPending ? "저장 중..." : "설정 저장"}
+                {updateSettings.isPending ? "保存中..." : "設定を保存"}
               </Button>
             </div>
           </div>

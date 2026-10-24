@@ -44,7 +44,7 @@ export function generateBankTransferNotificationEmail(params: BankTransferNotifi
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>입금 계좌 안내</title>
+  <title>お振込先のご案内</title>
 </head>
 <body style="margin: 0; padding: 0; font-family: 'Malgun Gothic', sans-serif; background-color: #f5f5f5;">
   <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: #f5f5f5; padding: 40px 20px;">
@@ -55,8 +55,8 @@ export function generateBankTransferNotificationEmail(params: BankTransferNotifi
           <!-- 헤더 -->
           <tr>
             <td style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 40px 30px; text-align: center;">
-              <h1 style="margin: 0; color: #ffffff; font-size: 28px; font-weight: 700;">입금 계좌 안내</h1>
-              <p style="margin: 10px 0 0 0; color: #e0e7ff; font-size: 14px;">주문번호: ${orderNumber}</p>
+              <h1 style="margin: 0; color: #ffffff; font-size: 28px; font-weight: 700;">お振込先のご案内</h1>
+              <p style="margin: 10px 0 0 0; color: #e0e7ff; font-size: 14px;">ご注文番号: ${orderNumber}</p>
             </td>
           </tr>
 
@@ -64,8 +64,8 @@ export function generateBankTransferNotificationEmail(params: BankTransferNotifi
           <tr>
             <td style="padding: 30px;">
               <p style="margin: 0 0 20px 0; font-size: 16px; line-height: 1.6; color: #333333;">
-                주문해 주셔서 감사합니다.<br>
-                아래 계좌로 <strong style="color: #667eea;">${autoCancelHours}시간 이내</strong>에 입금해 주시면 상품 준비를 시작합니다.
+                ご注文ありがとうございます。<br>
+                下記の口座に<strong style="color: #667eea;">${autoCancelHours}時間以内</strong>にお振込みいただくと、商品の準備を開始いたします。
               </p>
             </td>
           </tr>
@@ -79,31 +79,31 @@ export function generateBankTransferNotificationEmail(params: BankTransferNotifi
                     <table width="100%" cellpadding="0" cellspacing="0" border="0">
                       <tr>
                         <td style="padding-bottom: 16px;">
-                          <p style="margin: 0; font-size: 14px; color: #6b7280; font-weight: 600;">입금 은행</p>
+                          <p style="margin: 0; font-size: 14px; color: #6b7280; font-weight: 600;">お振込先銀行</p>
                           <p style="margin: 6px 0 0 0; font-size: 18px; color: #111827; font-weight: 700;">${bankAccount.bankName}</p>
                         </td>
                       </tr>
                       <tr>
                         <td style="padding-bottom: 16px;">
-                          <p style="margin: 0; font-size: 14px; color: #6b7280; font-weight: 600;">계좌번호</p>
+                          <p style="margin: 0; font-size: 14px; color: #6b7280; font-weight: 600;">口座番号</p>
                           <p style="margin: 6px 0 0 0; font-size: 20px; color: #111827; font-weight: 700; letter-spacing: 1px;">${bankAccount.accountNumber}</p>
                         </td>
                       </tr>
                       <tr>
                         <td style="padding-bottom: 16px;">
-                          <p style="margin: 0; font-size: 14px; color: #6b7280; font-weight: 600;">예금주</p>
+                          <p style="margin: 0; font-size: 14px; color: #6b7280; font-weight: 600;">口座名義</p>
                           <p style="margin: 6px 0 0 0; font-size: 18px; color: #111827; font-weight: 700;">${bankAccount.accountHolder}</p>
                         </td>
                       </tr>
                       <tr>
                         <td style="padding-bottom: 16px;">
-                          <p style="margin: 0; font-size: 14px; color: #6b7280; font-weight: 600;">입금 금액</p>
-                          <p style="margin: 6px 0 0 0; font-size: 24px; color: #dc2626; font-weight: 700;">${formattedAmount}원</p>
+                          <p style="margin: 0; font-size: 14px; color: #6b7280; font-weight: 600;">お振込金額</p>
+                          <p style="margin: 6px 0 0 0; font-size: 24px; color: #dc2626; font-weight: 700;">${formattedAmount}円</p>
                         </td>
                       </tr>
                       <tr>
                         <td>
-                          <p style="margin: 0; font-size: 14px; color: #6b7280; font-weight: 600;">입금자명</p>
+                          <p style="margin: 0; font-size: 14px; color: #6b7280; font-weight: 600;">お振込名義</p>
                           <p style="margin: 6px 0 0 0; font-size: 18px; color: #111827; font-weight: 700;">${depositorName}</p>
                         </td>
                       </tr>
@@ -121,8 +121,8 @@ export function generateBankTransferNotificationEmail(params: BankTransferNotifi
                 <tr>
                   <td style="padding: 16px 20px;">
                     <p style="margin: 0; font-size: 14px; color: #991b1b; line-height: 1.6;">
-                      <strong>⚠️ 입금 기한:</strong> ${formattedExpires}<br>
-                      기한 내 입금하지 않으시면 주문이 자동으로 취소됩니다.
+                      <strong>⚠️ お振込期限:</strong> ${formattedExpires}<br>
+                      期限内にご入金がない場合、ご注文は自動的にキャンセルされます。
                     </p>
                   </td>
                 </tr>
@@ -133,12 +133,12 @@ export function generateBankTransferNotificationEmail(params: BankTransferNotifi
           <!-- 안내 사항 -->
           <tr>
             <td style="padding: 0 30px 30px 30px;">
-              <h3 style="margin: 0 0 12px 0; font-size: 16px; color: #111827; font-weight: 700;">안내 사항</h3>
+              <h3 style="margin: 0 0 12px 0; font-size: 16px; color: #111827; font-weight: 700;">ご案内</h3>
               <ul style="margin: 0; padding-left: 20px; font-size: 14px; line-height: 1.8; color: #4b5563;">
-                <li>입금자명이 주문자명과 다를 경우 입금 확인이 지연될 수 있습니다.</li>
-                <li>입금 확인은 영업일 기준 1~2시간 소요될 수 있습니다.</li>
-                <li>입금 확인 후 상품 준비를 시작하며, 배송 시작 시 별도 안내드립니다.</li>
-                <li>주문 취소를 원하시면 고객센터로 문의해 주세요.</li>
+                <li>お振込名義がご注文者名と異なる場合、ご入金の確認が遅れることがあります。</li>
+                <li>ご入金の確認には営業日で1〜2時間ほどかかる場合があります。</li>
+                <li>ご入金確認後に商品の準備を開始し、発送時に別途ご案内いたします。</li>
+                <li>ご注文のキャンセルをご希望の場合は、カスタマーサポートまでお問い合わせください。</li>
               </ul>
             </td>
           </tr>
@@ -148,7 +148,7 @@ export function generateBankTransferNotificationEmail(params: BankTransferNotifi
             <td style="padding: 0 30px 40px 30px; text-align: center;">
               <a href="${process.env.VITE_FRONTEND_FORGE_API_URL || "https://example.com"}/orders" 
                  style="display: inline-block; padding: 14px 32px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #ffffff; text-decoration: none; border-radius: 6px; font-size: 16px; font-weight: 600; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);">
-                주문 내역 확인하기
+                ご注文履歴を確認する
               </a>
             </td>
           </tr>
@@ -157,8 +157,8 @@ export function generateBankTransferNotificationEmail(params: BankTransferNotifi
           <tr>
             <td style="padding: 20px 30px; background-color: #f8f9fa; text-align: center; border-top: 1px solid #e5e7eb;">
               <p style="margin: 0; font-size: 12px; color: #6b7280; line-height: 1.6;">
-                본 메일은 발신 전용입니다. 문의사항은 고객센터를 이용해 주세요.<br>
-                © 2026 탈모학교 Clone. All rights reserved.
+                このメールは送信専用です。お問い合わせはカスタマーサポートまでお願いいたします。<br>
+                © 2026 ソウルモノ. All rights reserved.
               </p>
             </td>
           </tr>
@@ -193,7 +193,7 @@ export function generateBankTransferConfirmationEmail(params: BankTransferConfir
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>입금 확인 완료</title>
+  <title>ご入金確認完了</title>
 </head>
 <body style="margin: 0; padding: 0; font-family: 'Malgun Gothic', sans-serif; background-color: #f5f5f5;">
   <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: #f5f5f5; padding: 40px 20px;">
@@ -205,8 +205,8 @@ export function generateBankTransferConfirmationEmail(params: BankTransferConfir
           <tr>
             <td style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); padding: 40px 30px; text-align: center;">
               <div style="font-size: 48px; margin-bottom: 12px;">✅</div>
-              <h1 style="margin: 0; color: #ffffff; font-size: 28px; font-weight: 700;">입금이 확인되었습니다</h1>
-              <p style="margin: 10px 0 0 0; color: #d1fae5; font-size: 14px;">주문번호: ${orderNumber}</p>
+              <h1 style="margin: 0; color: #ffffff; font-size: 28px; font-weight: 700;">ご入金を確認しました</h1>
+              <p style="margin: 10px 0 0 0; color: #d1fae5; font-size: 14px;">ご注文番号: ${orderNumber}</p>
             </td>
           </tr>
 
@@ -214,8 +214,8 @@ export function generateBankTransferConfirmationEmail(params: BankTransferConfir
           <tr>
             <td style="padding: 30px;">
               <p style="margin: 0 0 20px 0; font-size: 16px; line-height: 1.6; color: #333333;">
-                입금이 정상적으로 확인되었습니다.<br>
-                지금부터 상품 준비를 시작하며, 배송 시작 시 별도로 안내드리겠습니다.
+                ご入金を確認いたしました。<br>
+                これより商品の準備を開始し、発送時に別途ご案内いたします。
               </p>
             </td>
           </tr>
@@ -229,14 +229,14 @@ export function generateBankTransferConfirmationEmail(params: BankTransferConfir
                     <table width="100%" cellpadding="0" cellspacing="0" border="0">
                       <tr>
                         <td style="padding-bottom: 16px;">
-                          <p style="margin: 0; font-size: 14px; color: #6b7280; font-weight: 600;">입금 확인 시간</p>
+                          <p style="margin: 0; font-size: 14px; color: #6b7280; font-weight: 600;">ご入金確認日時</p>
                           <p style="margin: 6px 0 0 0; font-size: 18px; color: #111827; font-weight: 700;">${formattedConfirmed}</p>
                         </td>
                       </tr>
                       <tr>
                         <td>
-                          <p style="margin: 0; font-size: 14px; color: #6b7280; font-weight: 600;">입금 금액</p>
-                          <p style="margin: 6px 0 0 0; font-size: 24px; color: #10b981; font-weight: 700;">${formattedAmount}원</p>
+                          <p style="margin: 0; font-size: 14px; color: #6b7280; font-weight: 600;">お振込金額</p>
+                          <p style="margin: 6px 0 0 0; font-size: 24px; color: #10b981; font-weight: 700;">${formattedAmount}円</p>
                         </td>
                       </tr>
                     </table>
@@ -249,12 +249,12 @@ export function generateBankTransferConfirmationEmail(params: BankTransferConfir
           <!-- 다음 단계 안내 -->
           <tr>
             <td style="padding: 0 30px 30px 30px;">
-              <h3 style="margin: 0 0 12px 0; font-size: 16px; color: #111827; font-weight: 700;">다음 단계</h3>
+              <h3 style="margin: 0 0 12px 0; font-size: 16px; color: #111827; font-weight: 700;">今後の流れ</h3>
               <ul style="margin: 0; padding-left: 20px; font-size: 14px; line-height: 1.8; color: #4b5563;">
-                <li>상품 준비가 완료되면 배송을 시작합니다.</li>
-                <li>배송 시작 시 운송장 번호와 함께 알림을 보내드립니다.</li>
-                <li>배송 조회는 주문 내역 페이지에서 확인하실 수 있습니다.</li>
-                <li>예상 배송 기간은 영업일 기준 10~14일입니다.</li>
+                <li>商品の準備が整い次第、発送いたします。</li>
+                <li>発送時に追跡番号とあわせてお知らせいたします。</li>
+                <li>配送状況はご注文履歴ページでご確認いただけます。</li>
+                <li>お届け予定期間は営業日で10〜14日です。</li>
               </ul>
             </td>
           </tr>
@@ -264,7 +264,7 @@ export function generateBankTransferConfirmationEmail(params: BankTransferConfir
             <td style="padding: 0 30px 40px 30px; text-align: center;">
               <a href="${process.env.VITE_FRONTEND_FORGE_API_URL || "https://example.com"}/orders" 
                  style="display: inline-block; padding: 14px 32px; background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: #ffffff; text-decoration: none; border-radius: 6px; font-size: 16px; font-weight: 600; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);">
-                주문 내역 확인하기
+                ご注文履歴を確認する
               </a>
             </td>
           </tr>
@@ -273,8 +273,8 @@ export function generateBankTransferConfirmationEmail(params: BankTransferConfir
           <tr>
             <td style="padding: 20px 30px; background-color: #f8f9fa; text-align: center; border-top: 1px solid #e5e7eb;">
               <p style="margin: 0; font-size: 12px; color: #6b7280; line-height: 1.6;">
-                본 메일은 발신 전용입니다. 문의사항은 고객센터를 이용해 주세요.<br>
-                © 2026 탈모학교 Clone. All rights reserved.
+                このメールは送信専用です。お問い合わせはカスタマーサポートまでお願いいたします。<br>
+                © 2026 ソウルモノ. All rights reserved.
               </p>
             </td>
           </tr>

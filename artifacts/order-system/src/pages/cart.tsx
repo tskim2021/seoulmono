@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { ja } from "../lib/ja";
 import { useLocation, Link } from "wouter";
 import { useCart } from "../store/cart";
 import { useCreateOrder, useGetAddresses, useCreateAddress, useDeleteAddress, getGetAddressesQueryKey, useGetBankSettings, useGetMe, customFetch } from "@workspace/api-client-react";
@@ -61,48 +62,48 @@ function AddressForm({ initial, onSave, onCancel }: {
   return (
     <div className="space-y-4">
       <div>
-        <label className="block text-sm font-semibold text-slate-700 mb-1">배송지명</label>
-        <input className="w-full px-3 py-2 border rounded-lg text-sm" placeholder="예: 회사, 물류센터"
+        <label className="block text-sm font-semibold text-slate-700 mb-1">配送先名</label>
+        <input className="w-full px-3 py-2 border rounded-lg text-sm" placeholder="例: 本社、物流センター"
           value={form.ad_subject} onChange={e => setForm(f => ({ ...f, ad_subject: e.target.value }))} />
       </div>
       <div>
-        <label className="block text-sm font-semibold text-slate-700 mb-1">수령인 <span className="text-red-500">*</span></label>
-        <input className="w-full px-3 py-2 border rounded-lg text-sm" placeholder="수령인 이름"
+        <label className="block text-sm font-semibold text-slate-700 mb-1">受取人 <span className="text-red-500">*</span></label>
+        <input className="w-full px-3 py-2 border rounded-lg text-sm" placeholder="受取人名"
           value={form.ad_name} onChange={e => setForm(f => ({ ...f, ad_name: e.target.value }))} />
       </div>
       <div>
-        <label className="block text-sm font-semibold text-slate-700 mb-1">연락처</label>
+        <label className="block text-sm font-semibold text-slate-700 mb-1">連絡先</label>
         <input className="w-full px-3 py-2 border rounded-lg text-sm" placeholder="010-0000-0000"
           value={form.ad_hp} onChange={e => setForm(f => ({ ...f, ad_hp: e.target.value }))} />
       </div>
       <div>
-        <label className="block text-sm font-semibold text-slate-700 mb-1">주소 <span className="text-red-500">*</span></label>
+        <label className="block text-sm font-semibold text-slate-700 mb-1">住所 <span className="text-red-500">*</span></label>
         <div className="flex gap-2 mb-2">
-          <input className="flex-1 px-3 py-2 border rounded-lg text-sm bg-slate-50" placeholder="우편번호"
+          <input className="flex-1 px-3 py-2 border rounded-lg text-sm bg-slate-50" placeholder="郵便番号"
             value={form.ad_zip1 ? `${form.ad_zip1}${form.ad_zip2}` : ""} readOnly />
           <button type="button" onClick={searchAddress}
             className="px-4 py-2 bg-slate-700 text-white text-sm rounded-lg hover:bg-slate-800 whitespace-nowrap">
-            주소 검색
+            住所検索
           </button>
         </div>
-        <input className="w-full px-3 py-2 border rounded-lg text-sm bg-slate-50 mb-2" placeholder="기본주소"
+        <input className="w-full px-3 py-2 border rounded-lg text-sm bg-slate-50 mb-2" placeholder="基本住所"
           value={form.ad_addr1} readOnly />
-        <input className="w-full px-3 py-2 border rounded-lg text-sm" placeholder="상세주소 입력"
+        <input className="w-full px-3 py-2 border rounded-lg text-sm" placeholder="住所の詳細を入力"
           value={form.ad_addr2} onChange={e => setForm(f => ({ ...f, ad_addr2: e.target.value }))} />
       </div>
       <label className="flex items-center gap-2 cursor-pointer">
         <input type="checkbox" checked={form.ad_default}
           onChange={e => setForm(f => ({ ...f, ad_default: e.target.checked }))}
           className="w-4 h-4 rounded border-slate-300" />
-        <span className="text-sm text-slate-600">기본 배송지로 설정</span>
+        <span className="text-sm text-slate-600">既定の配送先に設定</span>
       </label>
       <div className="flex gap-2 pt-2">
         <Button className="flex-1" onClick={() => {
-          if (!form.ad_name.trim()) { toast({ title: "수령인을 입력해주세요", variant: "destructive" }); return; }
-          if (!form.ad_addr1.trim()) { toast({ title: "주소를 입력해주세요", variant: "destructive" }); return; }
+          if (!form.ad_name.trim()) { toast({ title: "受取人を入力してください", variant: "destructive" }); return; }
+          if (!form.ad_addr1.trim()) { toast({ title: "住所を入力してください", variant: "destructive" }); return; }
           onSave(form);
-        }}>저장</Button>
-        <Button variant="outline" onClick={onCancel}>취소</Button>
+        }}>保存</Button>
+        <Button variant="outline" onClick={onCancel}>キャンセル</Button>
       </div>
     </div>
   );
@@ -174,19 +175,19 @@ function OrderModal({ onClose, onSubmit, isPending, totalPrice }: {
       setShowAddForm(false);
       refetch();
     } catch {
-      toast({ title: "배송지 저장 실패", variant: "destructive" });
+      toast({ title: "配送先の保存に失敗しました", variant: "destructive" });
     }
   };
 
   const handleDeleteAddress = async (id: number) => {
-    if (!confirm("배송지를 삭제하시겠습니까?")) return;
+    if (!confirm("配送先を削除してもよろしいですか？")) return;
     try {
       await deleteAddr.mutateAsync({ id });
       queryClient.invalidateQueries({ queryKey: getGetAddressesQueryKey() });
       if (selectedAddrId === id) setSelectedAddrId(undefined);
       refetch();
     } catch {
-      toast({ title: "삭제 실패", variant: "destructive" });
+      toast({ title: "削除に失敗しました", variant: "destructive" });
     }
   };
 
@@ -194,7 +195,7 @@ function OrderModal({ onClose, onSubmit, isPending, totalPrice }: {
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" onClick={onClose}>
       <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
         <div className="sticky top-0 bg-white border-b p-5 flex items-center justify-between z-10">
-          <h2 className="text-xl font-bold text-slate-900">발주 정보 확인</h2>
+          <h2 className="text-xl font-bold text-slate-900">発注内容の確認</h2>
           <button onClick={onClose} className="p-1 hover:bg-slate-100 rounded-lg"><X className="w-5 h-5" /></button>
         </div>
 
@@ -202,17 +203,17 @@ function OrderModal({ onClose, onSubmit, isPending, totalPrice }: {
           <section>
             <div className="flex items-center justify-between mb-3">
               <h3 className="text-base font-bold text-slate-800 flex items-center gap-2">
-                <MapPin className="w-4 h-4 text-primary" /> 배송지
+                <MapPin className="w-4 h-4 text-primary" /> 配送先
               </h3>
               <button onClick={() => setShowAddForm(true)}
                 className="text-sm text-primary font-semibold hover:underline flex items-center gap-1">
-                <Plus className="w-3.5 h-3.5" /> 새 배송지
+                <Plus className="w-3.5 h-3.5" /> 新しい配送先
               </button>
             </div>
 
             {showAddForm && (
               <div className="mb-4 p-4 bg-slate-50 rounded-xl border">
-                <h4 className="font-semibold text-sm mb-3">새 배송지 추가</h4>
+                <h4 className="font-semibold text-sm mb-3">新しい配送先の追加</h4>
                 <AddressForm onSave={handleSaveAddress} onCancel={() => setShowAddForm(false)} />
               </div>
             )}
@@ -235,7 +236,7 @@ function OrderModal({ onClose, onSubmit, isPending, totalPrice }: {
                         <div className="flex items-center gap-2 mb-1">
                           <span className="font-semibold text-sm">{addr.ad_name}</span>
                           {addr.ad_subject && <span className="text-xs text-slate-500 bg-slate-100 px-2 py-0.5 rounded">{addr.ad_subject}</span>}
-                          {addr.ad_default === 1 && <span className="text-xs text-primary bg-primary/10 px-2 py-0.5 rounded font-medium">기본</span>}
+                          {addr.ad_default === 1 && <span className="text-xs text-primary bg-primary/10 px-2 py-0.5 rounded font-medium">既定</span>}
                         </div>
                         <p className="text-sm text-slate-600">{addr.ad_addr1} {addr.ad_addr2} {addr.ad_addr3}</p>
                         {addr.ad_hp && <p className="text-xs text-slate-500 mt-0.5">{addr.ad_hp}</p>}
@@ -250,14 +251,14 @@ function OrderModal({ onClose, onSubmit, isPending, totalPrice }: {
               ))}
               {addresses.length === 0 && !showAddForm && (
                 <div className="text-center py-6 text-slate-400 text-sm">
-                  등록된 배송지가 없습니다. 새 배송지를 추가해주세요.
+                  登録された配送先がありません。新しい配送先を追加してください。
                 </div>
               )}
             </div>
           </section>
 
           <section>
-            <h3 className="text-base font-bold text-slate-800 mb-3">배송비</h3>
+            <h3 className="text-base font-bold text-slate-800 mb-3">送料</h3>
             <div className="flex gap-2">
               {(["착불", "선불", "직접입력"] as const).map(type => (
                 <button key={type}
@@ -265,16 +266,16 @@ function OrderModal({ onClose, onSubmit, isPending, totalPrice }: {
                   className={`px-4 py-2 text-sm rounded-lg border-2 font-medium transition-all ${
                     sendCostType === type ? "border-primary bg-primary/5 text-primary" : "border-slate-200 text-slate-600 hover:border-slate-300"
                   }`}>
-                  {type}
+                  {ja(type)}
                 </button>
               ))}
             </div>
             {sendCostType === "착불" && (
-              <p className="text-sm text-slate-500 mt-2">배송비를 수령 시 지불합니다.</p>
+              <p className="text-sm text-slate-500 mt-2">送料は受取時にお支払いいただきます。</p>
             )}
             {sendCostType === "선불" && (
               <div className="mt-2">
-                <p className="text-sm text-slate-500">배송비가 주문금액에 포함됩니다.</p>
+                <p className="text-sm text-slate-500">送料は注文金額に含まれます。</p>
                 <div className="flex gap-2 mt-2 flex-wrap">
                   {[3000, 5000, 10000].map(cost => (
                     <button key={cost}
@@ -291,7 +292,7 @@ function OrderModal({ onClose, onSubmit, isPending, totalPrice }: {
             {sendCostType === "직접입력" && (
               <div className="mt-2">
                 <input type="number" className="w-full px-3 py-2 border rounded-lg text-sm"
-                  placeholder="배송비 금액 입력" value={customCost}
+                  placeholder="送料の金額を入力" value={customCost}
                   onChange={e => setCustomCost(e.target.value)} />
               </div>
             )}
@@ -300,43 +301,43 @@ function OrderModal({ onClose, onSubmit, isPending, totalPrice }: {
           {(availableCoupons.length > 0 || myPoint > 0) && (
             <section>
               <h3 className="text-base font-bold text-slate-800 mb-3 flex items-center gap-2">
-                <Ticket className="w-4 h-4 text-emerald-600" /> 쿠폰 / 포인트 사용
+                <Ticket className="w-4 h-4 text-emerald-600" /> クーポン / ポイント使用
               </h3>
               <div className="space-y-3">
                 {availableCoupons.length > 0 && (
                   <div>
-                    <label className="block text-sm font-medium text-slate-600 mb-1">쿠폰 선택</label>
+                    <label className="block text-sm font-medium text-slate-600 mb-1">クーポン選択</label>
                     <select
                       className="w-full px-3 py-2 border rounded-lg text-sm"
                       value={selectedCouponNo ?? ""}
                       onChange={e => setSelectedCouponNo(e.target.value ? Number(e.target.value) : undefined)}
                     >
-                      <option value="">사용 안 함</option>
+                      <option value="">使用しない</option>
                       {availableCoupons.map((c: any) => {
                         const minOk = c.cp_minimum <= 0 || totalPrice >= c.cp_minimum;
-                        const discLabel = c.cp_type === 1 ? `${c.cp_price}% 할인` : `${c.cp_price.toLocaleString()}원 할인`;
+                        const discLabel = c.cp_type === 1 ? `${c.cp_price}%割引` : `${c.cp_price.toLocaleString()}円割引`;
                         return (
                           <option key={c.cp_no} value={c.cp_no} disabled={!minOk}>
-                            {c.cp_subject} ({discLabel}){!minOk ? ` — 최소 ${c.cp_minimum.toLocaleString()}원` : ""}
+                            {c.cp_subject} ({discLabel}){!minOk ? ` — 最低 ${c.cp_minimum.toLocaleString()}円` : ""}
                           </option>
                         );
                       })}
                     </select>
                     {selectedCoupon && couponDiscount > 0 && (
-                      <p className="text-xs text-emerald-600 font-medium mt-1">쿠폰 할인: -{formatCurrency(couponDiscount)}</p>
+                      <p className="text-xs text-emerald-600 font-medium mt-1">クーポン割引: -{formatCurrency(couponDiscount)}</p>
                     )}
                   </div>
                 )}
                 {myPoint > 0 && (
                   <div>
                     <label className="block text-sm font-medium text-slate-600 mb-1">
-                      포인트 사용 <span className="text-slate-400 font-normal">(보유: {myPoint.toLocaleString()}P)</span>
+                      ポイント使用 <span className="text-slate-400 font-normal">(保有: {myPoint.toLocaleString()}P)</span>
                     </label>
                     <div className="flex gap-2">
                       <input
                         type="number"
                         className="flex-1 px-3 py-2 border rounded-lg text-sm"
-                        placeholder="사용할 포인트"
+                        placeholder="使用するポイント"
                         min="0"
                         max={myPoint}
                         value={usePointStr}
@@ -346,11 +347,11 @@ function OrderModal({ onClose, onSubmit, isPending, totalPrice }: {
                         className="px-3 py-2 text-sm rounded-lg border border-slate-200 hover:bg-slate-50 font-medium"
                         onClick={() => setUsePointStr(String(Math.min(myPoint, afterCoupon > 0 ? afterCoupon : myPoint)))}
                       >
-                        전액 사용
+                        全額使用
                       </button>
                     </div>
                     {usePoint > 0 && (
-                      <p className="text-xs text-blue-600 font-medium mt-1">포인트 차감: -{formatCurrency(usePoint)}</p>
+                      <p className="text-xs text-blue-600 font-medium mt-1">ポイント差引: -{formatCurrency(usePoint)}</p>
                     )}
                   </div>
                 )}
@@ -360,21 +361,21 @@ function OrderModal({ onClose, onSubmit, isPending, totalPrice }: {
 
           <section>
             <h3 className="text-base font-bold text-slate-800 mb-3 flex items-center gap-2">
-              <Mail className="w-4 h-4 text-primary" /> 세금계산서 정보
+              <Mail className="w-4 h-4 text-primary" /> 請求書(税金計算書)情報
             </h3>
             <div className="space-y-3">
               <div>
-                <label className="block text-sm font-medium text-slate-600 mb-1">담당자명</label>
-                <input className="w-full px-3 py-2 border rounded-lg text-sm" placeholder="세금계산서 담당자"
+                <label className="block text-sm font-medium text-slate-600 mb-1">担当者名</label>
+                <input className="w-full px-3 py-2 border rounded-lg text-sm" placeholder="請求書の担当者"
                   value={billName} onChange={e => setBillName(e.target.value)} />
               </div>
               <div>
-                <label className="block text-sm font-medium text-slate-600 mb-1">연락처</label>
+                <label className="block text-sm font-medium text-slate-600 mb-1">連絡先</label>
                 <input className="w-full px-3 py-2 border rounded-lg text-sm" placeholder="010-0000-0000"
                   value={billHp} onChange={e => setBillHp(e.target.value)} />
               </div>
               <div>
-                <label className="block text-sm font-medium text-slate-600 mb-1">이메일</label>
+                <label className="block text-sm font-medium text-slate-600 mb-1">メールアドレス</label>
                 <input type="email" className="w-full px-3 py-2 border rounded-lg text-sm" placeholder="example@company.com"
                   value={billEmail} onChange={e => setBillEmail(e.target.value)} />
               </div>
@@ -386,12 +387,12 @@ function OrderModal({ onClose, onSubmit, isPending, totalPrice }: {
               <div className="bg-blue-50 border border-blue-200 rounded-xl p-5">
                 <div className="flex items-center gap-2 mb-3">
                   <Building2 className="w-5 h-5 text-blue-600" />
-                  <h4 className="font-bold text-blue-900">무통장입금 계좌 안내</h4>
+                  <h4 className="font-bold text-blue-900">銀行振込口座のご案内</h4>
                 </div>
                 <div className="space-y-1.5 text-sm">
-                  {bankSettings.bank_name && <p className="text-blue-800"><span className="font-semibold">은행:</span> {bankSettings.bank_name}</p>}
-                  {bankSettings.account_number && <p className="text-blue-800"><span className="font-semibold">계좌번호:</span> {bankSettings.account_number}</p>}
-                  {bankSettings.account_holder && <p className="text-blue-800"><span className="font-semibold">예금주:</span> {bankSettings.account_holder}</p>}
+                  {bankSettings.bank_name && <p className="text-blue-800"><span className="font-semibold">銀行:</span> {bankSettings.bank_name}</p>}
+                  {bankSettings.account_number && <p className="text-blue-800"><span className="font-semibold">口座番号:</span> {bankSettings.account_number}</p>}
+                  {bankSettings.account_holder && <p className="text-blue-800"><span className="font-semibold">口座名義:</span> {bankSettings.account_holder}</p>}
                   {bankSettings.memo && (
                     <div className="mt-3 pt-3 border-t border-blue-200">
                       <div className="text-blue-700 text-sm leading-relaxed [&_p]:mb-1 [&_strong]:font-bold [&_em]:italic [&_u]:underline" dangerouslySetInnerHTML={{ __html: bankSettings.memo }} />
@@ -403,9 +404,9 @@ function OrderModal({ onClose, onSubmit, isPending, totalPrice }: {
           )}
 
           <section>
-            <h3 className="text-base font-bold text-slate-800 mb-3">요청사항</h3>
+            <h3 className="text-base font-bold text-slate-800 mb-3">ご要望</h3>
             <textarea className="w-full p-3 rounded-xl border text-sm resize-none" rows={3}
-              placeholder="배송 관련 요청사항을 입력해주세요."
+              placeholder="配送に関するご要望を入力してください。"
               value={memo} onChange={e => setMemo(e.target.value)} />
           </section>
         </div>
@@ -413,18 +414,18 @@ function OrderModal({ onClose, onSubmit, isPending, totalPrice }: {
         <div className="sticky bottom-0 bg-white border-t p-5 space-y-3">
           <div className="text-sm space-y-1 text-slate-600">
             <div className="flex justify-between">
-              <span>상품금액</span><span>{formatCurrency(totalPrice)}</span>
+              <span>商品金額</span><span>{formatCurrency(totalPrice)}</span>
             </div>
-            {sendCost > 0 && <div className="flex justify-between"><span>배송비</span><span>{formatCurrency(sendCost)}</span></div>}
-            {couponDiscount > 0 && <div className="flex justify-between text-emerald-600"><span>쿠폰 할인</span><span>-{formatCurrency(couponDiscount)}</span></div>}
-            {usePoint > 0 && <div className="flex justify-between text-blue-600"><span>포인트 사용</span><span>-{formatCurrency(usePoint)}</span></div>}
+            {sendCost > 0 && <div className="flex justify-between"><span>送料</span><span>{formatCurrency(sendCost)}</span></div>}
+            {couponDiscount > 0 && <div className="flex justify-between text-emerald-600"><span>クーポン割引</span><span>-{formatCurrency(couponDiscount)}</span></div>}
+            {usePoint > 0 && <div className="flex justify-between text-blue-600"><span>ポイント使用</span><span>-{formatCurrency(usePoint)}</span></div>}
             <div className="flex justify-between font-bold text-slate-900 pt-2 border-t border-slate-200 text-base">
-              <span>최종 결제금액</span><span className="text-primary text-lg">{formatCurrency(finalTotal)}</span>
+              <span>お支払い合計</span><span className="text-primary text-lg">{formatCurrency(finalTotal)}</span>
             </div>
           </div>
           <Button size="lg" className="w-full h-14 text-lg" disabled={isPending}
             onClick={() => onSubmit({ ad_id: selectedAddrId, send_cost: sendCost, bill_name: billName, bill_hp: billHp, bill_email: billEmail, memo, coupon_no: selectedCouponNo, use_point: usePoint || undefined })}>
-            {isPending ? "주문 처리 중..." : "발주 신청하기"}
+            {isPending ? "注文処理中..." : "発注する"}
           </Button>
         </div>
       </div>
@@ -455,13 +456,13 @@ export default function Cart() {
       }
     }, {
       onSuccess: () => {
-        toast({ title: "주문이 완료되었습니다", variant: "default" });
+        toast({ title: "注文が完了しました", variant: "default" });
         clearCart();
         setShowOrderModal(false);
         setLocation("/orders");
       },
       onError: (err: any) => {
-        toast({ title: "주문 실패", description: err?.data?.error || err?.message || "오류가 발생했습니다", variant: "destructive" });
+        toast({ title: "注文に失敗しました", description: err?.data?.error || err?.message || "エラーが発生しました", variant: "destructive" });
       }
     });
   };
@@ -472,10 +473,10 @@ export default function Cart() {
         <div className="w-24 h-24 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-6">
           <ShoppingBag className="w-12 h-12 text-slate-300" />
         </div>
-        <h2 className="text-2xl font-bold text-slate-900 mb-3">장바구니가 비어있습니다</h2>
-        <p className="text-slate-500 mb-8">상품목록에서 필요하신 상품을 담아주세요.</p>
+        <h2 className="text-2xl font-bold text-slate-900 mb-3">カートは空です</h2>
+        <p className="text-slate-500 mb-8">商品一覧から必要な商品をカートに追加してください。</p>
         <Link href="/">
-          <Button size="lg">상품 담으러 가기</Button>
+          <Button size="lg">商品を追加しに行く</Button>
         </Link>
       </div>
     );
@@ -484,18 +485,18 @@ export default function Cart() {
   return (
     <div className="animate-in fade-in duration-300">
       <div className="mb-8">
-        <h1 className="text-3xl font-black text-slate-900 tracking-tight">장바구니</h1>
-        <p className="text-slate-500 mt-2 font-medium">선택하신 상품 내역을 확인하고 발주를 진행해주세요.</p>
+        <h1 className="text-3xl font-black text-slate-900 tracking-tight">カート</h1>
+        <p className="text-slate-500 mt-2 font-medium">選択した商品をご確認のうえ、発注を進めてください。</p>
       </div>
 
       <div className="flex flex-col lg:flex-row gap-8">
         <div className="flex-1 space-y-4">
           <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden premium-shadow">
             <div className="hidden sm:grid grid-cols-12 gap-4 p-4 bg-slate-50 border-b border-slate-200 text-sm font-bold text-slate-500">
-              <div className="col-span-6">상품정보</div>
-              <div className="col-span-3 text-center">수량</div>
-              <div className="col-span-2 text-right">주문금액</div>
-              <div className="col-span-1 text-center">삭제</div>
+              <div className="col-span-6">商品情報</div>
+              <div className="col-span-3 text-center">数量</div>
+              <div className="col-span-2 text-right">注文金額</div>
+              <div className="col-span-1 text-center">削除</div>
             </div>
             
             <div className="divide-y divide-slate-100">
@@ -516,7 +517,7 @@ export default function Cart() {
                   </div>
                   
                   <div className="col-span-1 sm:col-span-3 flex items-center justify-between sm:justify-center">
-                    <span className="sm:hidden text-sm font-bold text-slate-500">수량: </span>
+                    <span className="sm:hidden text-sm font-bold text-slate-500">数量: </span>
                     <div className="flex items-center bg-slate-50 border border-slate-200 rounded-lg overflow-hidden">
                       <button 
                         onClick={() => updateQty(item.it_id, item.cart_qty - 1)}
@@ -525,7 +526,7 @@ export default function Cart() {
                         <Minus className="w-4 h-4" />
                       </button>
                       <div className="flex items-center gap-0.5 px-1">
-                        <span className="text-xs text-blue-600 font-bold">박스</span>
+                        <span className="text-xs text-blue-600 font-bold">ケース</span>
                         <input 
                           type="number" 
                           className="w-10 text-center font-bold bg-transparent border-none focus:ring-0 p-0"
@@ -544,7 +545,7 @@ export default function Cart() {
                   </div>
 
                   <div className="col-span-1 sm:col-span-2 flex justify-between sm:justify-end items-center">
-                    <span className="sm:hidden text-sm font-bold text-slate-500">금액: </span>
+                    <span className="sm:hidden text-sm font-bold text-slate-500">金額: </span>
                     <span className="font-black text-slate-900 text-lg">{formatCurrency(item.it_price * item.cart_qty)}</span>
                   </div>
 
@@ -564,25 +565,25 @@ export default function Cart() {
 
         <div className="w-full lg:w-96 shrink-0">
           <Card className="p-6 sticky top-6">
-            <h3 className="text-xl font-bold text-slate-900 mb-6 border-b border-slate-100 pb-4">주문 결제 정보</h3>
+            <h3 className="text-xl font-bold text-slate-900 mb-6 border-b border-slate-100 pb-4">注文・お支払い情報</h3>
             
             <div className="space-y-4 mb-6">
               <div className="flex justify-between items-center text-slate-600 font-medium">
-                <span>총 상품금액 ({items.length}종 / {items.reduce((s, i) => s + i.cart_qty, 0)}박스)</span>
+                <span>商品金額合計 ({items.length}種類 / {items.reduce((s, i) => s + i.cart_qty, 0)}ケース)</span>
                 <span>{formatCurrency(getTotal())}</span>
               </div>
               <div className="flex justify-between items-center text-slate-600 font-medium pb-4 border-b border-slate-100">
-                <span>배송비</span>
-                <span className="text-sm text-slate-400">주문 시 선택</span>
+                <span>送料</span>
+                <span className="text-sm text-slate-400">注文時に選択</span>
               </div>
               <div className="flex justify-between items-end pt-2">
-                <span className="font-bold text-slate-900">상품 합계</span>
+                <span className="font-bold text-slate-900">商品合計</span>
                 <span className="text-3xl font-black text-primary">{formatCurrency(getTotal())}</span>
               </div>
             </div>
 
             <Button size="lg" className="w-full h-14 text-lg" onClick={() => setShowOrderModal(true)}>
-              발주 신청하기 <ArrowRight className="w-5 h-5 ml-2" />
+              発注する <ArrowRight className="w-5 h-5 ml-2" />
             </Button>
           </Card>
         </div>

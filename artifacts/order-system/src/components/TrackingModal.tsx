@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { ja } from "../lib/ja";
 import { Truck, X, Loader2, ExternalLink, MapPin, Clock, CheckCircle2, Package, AlertCircle } from "lucide-react";
 import { customFetch } from "@workspace/api-client-react";
 
@@ -58,7 +59,7 @@ export default function TrackingModal({ invoiceNo, carrier, onClose }: TrackingM
         carrier: carrier || "CJ대한통운",
         events: [],
         fallback_url: `https://www.cjlogistics.com/ko/tool/parcel/tracking?gnbInvcNo=${invoiceNo}`,
-        error: "배송 정보를 불러오지 못했습니다.",
+        error: "配送情報を取得できませんでした。",
       });
     } finally {
       setLoading(false);
@@ -85,8 +86,8 @@ export default function TrackingModal({ invoiceNo, carrier, onClose }: TrackingM
               <Truck className="w-5 h-5 text-blue-600" />
             </div>
             <div>
-              <h2 className="font-black text-slate-900 text-lg">배송 조회</h2>
-              <p className="text-xs text-slate-500 font-medium">{result?.carrier || carrier || "CJ대한통운"} · 송장번호 {invoiceNo}</p>
+              <h2 className="font-black text-slate-900 text-lg">配送状況の照会</h2>
+              <p className="text-xs text-slate-500 font-medium">{ja(result?.carrier || carrier || "CJ대한통운")} · 送り状番号 {invoiceNo}</p>
             </div>
           </div>
           <button
@@ -101,7 +102,7 @@ export default function TrackingModal({ invoiceNo, carrier, onClose }: TrackingM
           {loading && (
             <div className="flex flex-col items-center justify-center py-16 gap-4">
               <Loader2 className="w-10 h-10 animate-spin text-blue-500" />
-              <p className="text-slate-500 font-medium">배송 정보를 불러오는 중...</p>
+              <p className="text-slate-500 font-medium">配送情報を読み込み中...</p>
             </div>
           )}
 
@@ -112,10 +113,10 @@ export default function TrackingModal({ invoiceNo, carrier, onClose }: TrackingM
                   <div className="flex items-start gap-3">
                     <AlertCircle className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
                     <div>
-                      <p className="font-bold text-amber-800 text-sm">배송조회 API 미설정</p>
+                      <p className="font-bold text-amber-800 text-sm">配送照会APIが未設定です</p>
                       <p className="text-amber-700 text-xs mt-1 leading-relaxed">
-                        sweettracker API 키가 설정되지 않아 인앱 조회가 불가합니다.<br />
-                        아래 버튼을 눌러 택배사 홈페이지에서 확인하세요.
+                        sweettracker のAPIキーが設定されていないため、アプリ内での照会はできません。<br />
+                        下のボタンから配送業者のサイトでご確認ください。
                       </p>
                     </div>
                   </div>
@@ -148,7 +149,7 @@ export default function TrackingModal({ invoiceNo, carrier, onClose }: TrackingM
                 className="flex items-center justify-center gap-2 w-full px-4 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors font-bold text-sm"
               >
                 <Truck className="w-4 h-4" />
-                {result.carrier || "CJ대한통운"} 홈페이지에서 조회
+                {ja(result.carrier || "CJ대한통운")} のサイトで照会
                 <ExternalLink className="w-3.5 h-3.5" />
               </a>
             </div>
@@ -210,7 +211,7 @@ export default function TrackingModal({ invoiceNo, carrier, onClose }: TrackingM
                   rel="noopener noreferrer"
                   className="flex items-center justify-center gap-2 w-full px-4 py-2.5 text-slate-600 border border-slate-200 rounded-xl hover:bg-slate-50 transition-colors text-sm font-medium"
                 >
-                  {result?.carrier || "CJ대한통운"} 홈페이지에서 보기
+                  {ja(result?.carrier || "CJ대한통운")} のサイトで見る
                   <ExternalLink className="w-3.5 h-3.5" />
                 </a>
               </div>

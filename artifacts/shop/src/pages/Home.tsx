@@ -35,15 +35,15 @@ function HeroSection() {
       <div className="container py-14 md:py-20">
         <div className="max-w-2xl">
           <span className="inline-block mb-4 text-xs font-semibold px-3 py-1 rounded-full" style={{ background: "rgba(139,94,60,0.12)", color: "#5C3317" }}>
-            seoulmono 공식 스토어
+            seoulmono公式ストア
           </span>
           <h1 className="text-3xl md:text-5xl font-bold tracking-tight mb-4 leading-tight" style={{ color: "#3A1A00" }}>
-            좋은 가격, 좋은 상품<br />
-            <span style={{ color: "#8B5E3C" }}>seoulmono</span>에서 꽉꽉 담아가세요
+            良い価格、良い商品<br />
+            <span style={{ color: "#8B5E3C" }}>seoulmono</span>でたっぷりお買い物
           </h1>
           <p className="text-base md:text-lg mb-8 leading-relaxed max-w-lg" style={{ color: "#7A5C3C" }}>
-            seoulmono만의 특별한 상품들을 만나보세요.<br />
-            좋은 제품만 골라 담았습니다.
+            seoulmonoならではの特別な商品をご覧ください。<br />
+            良い製品だけを厳選しました。
           </p>
           <div className="flex flex-wrap gap-3">
             <button
@@ -51,14 +51,14 @@ function HeroSection() {
               className="inline-flex items-center gap-2 px-6 py-3 rounded-full font-semibold text-sm transition-colors"
               style={{ background: "#5C3317", color: "#fff" }}
             >
-              쇼핑 시작하기 <ArrowRight className="w-4 h-4" />
+              ショッピングを始める <ArrowRight className="w-4 h-4" />
             </button>
             <button
               onClick={() => navigate("/notice")}
               className="inline-flex items-center gap-2 px-6 py-3 rounded-full font-semibold text-sm transition-colors"
               style={{ border: "1.5px solid #8B5E3C", color: "#5C3317", background: "transparent" }}
             >
-              공지사항
+              お知らせ
             </button>
           </div>
         </div>
@@ -74,10 +74,10 @@ function HeroSection() {
 ───────────────────────────────────────────────────────── */
 function FeaturesBar() {
   const features = [
-    { icon: Truck,   label: "빠른 배송",   desc: "당일·익일 발송" },
-    { icon: Shield,  label: "카드결제",     desc: "신용/체크카드 가능" },
-    { icon: Star,    label: "적립금 혜택",  desc: "구매금액 적립" },
-    { icon: Clock,   label: "신선 상품",    desc: "매일 업데이트" },
+    { icon: Truck,   label: "スピード配送",   desc: "当日・翌日発送" },
+    { icon: Shield,  label: "カード決済",     desc: "クレジット・デビットカード対応" },
+    { icon: Star,    label: "ポイント特典",  desc: "購入金額に応じて還元" },
+    { icon: Clock,   label: "新着商品",    desc: "毎日更新" },
   ];
   return (
     <section className="border-b border-border/60 bg-card/50">
@@ -116,7 +116,7 @@ function ProductSection({ title, subtitle, items, viewAllHref, isLoading, onCart
           <p className="text-sm text-muted-foreground mt-1">{subtitle}</p>
         </div>
         <button onClick={() => navigate(viewAllHref)} className="text-sm font-medium text-primary hover:underline flex items-center gap-1">
-          전체보기 <ArrowRight className="w-3.5 h-3.5" />
+          すべて見る <ArrowRight className="w-3.5 h-3.5" />
         </button>
       </div>
       {isLoading ? (
@@ -126,7 +126,7 @@ function ProductSection({ title, subtitle, items, viewAllHref, isLoading, onCart
       ) : !items || items.length === 0 ? (
         <div className="text-center py-16 text-muted-foreground">
           <ShoppingBag className="w-12 h-12 mx-auto mb-3 opacity-30" />
-          <p className="text-sm">등록된 상품이 없습니다</p>
+          <p className="text-sm">登録された商品はありません</p>
         </div>
       ) : (
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -155,13 +155,13 @@ function PromoBannerSection() {
         style={{ background: "#FEE500" }}
       >
         <div className="shrink-0 flex flex-col items-center justify-center w-20 h-16 rounded-lg border-2 border-dashed border-yellow-600/40 bg-white/40 text-center px-1">
-          <span className="text-xs font-bold text-yellow-900 leading-tight">1000원</span>
-          <span className="text-[9px] text-yellow-800 leading-tight">쇼핑포인트 적립</span>
+          <span className="text-xs font-bold text-yellow-900 leading-tight">1000円</span>
+          <span className="text-[9px] text-yellow-800 leading-tight">ショッピングポイント進呈</span>
           <span className="text-[8px] text-yellow-700 mt-0.5 leading-tight">seoulmono</span>
         </div>
         <div className="flex-1 min-w-0">
-          <p className="text-xs text-yellow-800 font-medium mb-0.5">seoulmono 쇼핑 혜택</p>
-          <p className="text-base font-extrabold text-yellow-900 leading-tight">카카오톡 채널<br />친구추가</p>
+          <p className="text-xs text-yellow-800 font-medium mb-0.5">seoulmonoのお買い物特典</p>
+          <p className="text-base font-extrabold text-yellow-900 leading-tight">KakaoTalkチャンネル<br />友だち追加</p>
         </div>
         <div className="shrink-0 w-12 h-12 rounded-full flex items-center justify-center" style={{ background: "#FEE500", border: "2px solid #3A2020" }}>
           <span className="text-[10px] font-extrabold text-[#3A1A00]">TALK</span>
@@ -175,8 +175,8 @@ function PromoBannerSection() {
         style={{ background: "#B2EBE0" }}
       >
         <div className="flex-1 min-w-0">
-          <p className="text-xs text-teal-800 font-medium mb-0.5">회원가입만 하면, 첫 구매가 단 100원!</p>
-          <p className="text-base font-extrabold text-teal-900 leading-tight">회원가입하고<br />100원 상품 구매하기</p>
+          <p className="text-xs text-teal-800 font-medium mb-0.5">会員登録するだけで、初回購入がたったの100円!</p>
+          <p className="text-base font-extrabold text-teal-900 leading-tight">会員登録して<br />100円商品を購入する</p>
         </div>
         <div className="shrink-0 text-3xl select-none">🎁</div>
       </a>
@@ -200,7 +200,7 @@ function PopularSearches({ items }: { items: ShopItem[] }) {
     <div className="bg-card rounded-xl p-4 elegant-shadow">
       <div className="flex items-center gap-2 mb-3 pb-2 border-b border-border/60">
         <Flame className="w-4 h-4 text-primary" />
-        <h3 className="text-sm font-bold">실시간 인기 검색어</h3>
+        <h3 className="text-sm font-bold">リアルタイム人気キーワード</h3>
       </div>
       <ol className="space-y-1">
         {searches.map((term, i) => (
@@ -220,7 +220,7 @@ function PopularSearches({ items }: { items: ShopItem[] }) {
           </li>
         ))}
         {searches.length === 0 && (
-          <li className="text-xs text-muted-foreground py-3 text-center">검색 데이터 없음</li>
+          <li className="text-xs text-muted-foreground py-3 text-center">検索データなし</li>
         )}
       </ol>
     </div>
@@ -242,12 +242,12 @@ function RecentlyViewed() {
     <div className="bg-card rounded-xl p-4 elegant-shadow">
       <div className="flex items-center gap-2 mb-3 pb-2 border-b border-border/60">
         <Clock className="w-4 h-4 text-muted-foreground" />
-        <h3 className="text-sm font-bold">최근 본 상품</h3>
+        <h3 className="text-sm font-bold">最近見た商品</h3>
       </div>
       {recent.length === 0 ? (
         <div className="py-6 text-center text-xs text-muted-foreground">
           <Clock className="w-8 h-8 mx-auto mb-2 opacity-20" />
-          최근 본 상품이 없습니다
+          最近見た商品はありません
         </div>
       ) : (
         <ul className="space-y-2">
@@ -257,7 +257,7 @@ function RecentlyViewed() {
                 <img src={r.img} alt={r.name} className="w-10 h-10 rounded object-cover bg-muted shrink-0" onError={e => { (e.target as HTMLImageElement).style.display = "none"; }} />
                 <div className="flex-1 min-w-0 text-left">
                   <p className="text-xs font-medium line-clamp-1 group-hover:text-primary transition-colors">{r.name}</p>
-                  <p className="text-xs text-muted-foreground">{r.price.toLocaleString()}원</p>
+                  <p className="text-xs text-muted-foreground">{r.price.toLocaleString()}円</p>
                 </div>
               </button>
             </li>
@@ -273,7 +273,7 @@ function RecentlyViewed() {
 ───────────────────────────────────────────────────────── */
 function formatBoardDate(dateStr: string) {
   const d = new Date(dateStr);
-  return d.toLocaleDateString("ko-KR", { year: "numeric", month: "2-digit", day: "2-digit" })
+  return d.toLocaleDateString("ja-JP", { year: "numeric", month: "2-digit", day: "2-digit" })
     .replace(/\. /g, "-").replace(/\.$/, "");
 }
 
@@ -302,7 +302,7 @@ function BoardColumn({ title, href, rows }: {
           </li>
         ))}
         {rows.length === 0 && (
-          <li className="text-xs text-muted-foreground py-4 text-center">게시글이 없습니다</li>
+          <li className="text-xs text-muted-foreground py-4 text-center">投稿はありません</li>
         )}
       </ul>
     </div>
@@ -317,7 +317,7 @@ function BoardSection({ reviews, notices, events }: {
       <div className="container">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
           <BoardColumn
-            title="상품후기"
+            title="商品レビュー"
             href="/cs"
             rows={reviews.slice(0, 5).map(r => ({
               key: r.is_id,
@@ -326,7 +326,7 @@ function BoardSection({ reviews, notices, events }: {
             }))}
           />
           <BoardColumn
-            title="이벤트"
+            title="イベント"
             href="/events"
             rows={events.slice(0, 5).map(e => ({
               key: e.id,
@@ -335,7 +335,7 @@ function BoardSection({ reviews, notices, events }: {
             }))}
           />
           <BoardColumn
-            title="공지사항"
+            title="お知らせ"
             href="/notice"
             rows={notices.slice(0, 5).map(n => ({
               key: n.wr_id,
@@ -387,8 +387,8 @@ export default function Home() {
           {/* Main content */}
           <div className="flex-1 min-w-0">
             <ProductSection
-              title="베스트"
-              subtitle="회원들이 가장 많이 찾는 베스트 상품"
+              title="ベスト"
+              subtitle="会員の皆様に一番人気のベスト商品"
               items={homeData?.best}
               isLoading={loading}
               viewAllHref="/products?sort=popular"
@@ -396,8 +396,8 @@ export default function Home() {
             />
             <div className="border-t border-border/40" />
             <ProductSection
-              title="신규 상품"
-              subtitle="새로 입고된 상품을 확인하세요"
+              title="新商品"
+              subtitle="新しく入荷した商品をチェック"
               items={homeData?.newItems}
               isLoading={loading}
               viewAllHref="/products?sort=new"
@@ -405,8 +405,8 @@ export default function Home() {
             />
             <div className="border-t border-border/40" />
             <ProductSection
-              title="seoulmono 브랜드"
-              subtitle="seoulmono에서만 만날 수 있는 특별한 상품"
+              title="seoulmonoブランド"
+              subtitle="seoulmonoでしか出会えない特別な商品"
               items={homeData?.brand}
               isLoading={loading}
               viewAllHref="/products?type=brand"
@@ -415,8 +415,8 @@ export default function Home() {
             <div className="border-t border-border/40" />
             <PromoBannerSection />
             <ProductSection
-              title="오늘의 특가"
-              subtitle="오늘만 이 가격! 놓치면 후회하는 특가 상품"
+              title="本日の特価"
+              subtitle="今日だけのこの価格!お見逃しなく、特価商品"
               items={homeData?.food}
               isLoading={loading}
               viewAllHref="/todaydeal"

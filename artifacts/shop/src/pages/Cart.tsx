@@ -82,8 +82,8 @@ export default function Cart() {
   const TabHeader = () => (
     <div style={{ display: "flex", border: "2px solid #f0f0f0", borderRadius: 14, padding: 4, marginBottom: 24, background: "#f8f8f8" }}>
       {[
-        { id: "regular" as Tab, icon: <ShoppingCart size={16} />, label: "일반 장바구니", count: regularCount },
-        { id: "gift" as Tab, icon: <Gift size={16} />, label: "선물 장바구니", count: giftCount },
+        { id: "regular" as Tab, icon: <ShoppingCart size={16} />, label: "通常カート", count: regularCount },
+        { id: "gift" as Tab, icon: <Gift size={16} />, label: "ギフトカート", count: giftCount },
       ].map(t => (
         <button
           key={t.id}
@@ -113,14 +113,14 @@ export default function Cart() {
     if (cart.length === 0) {
       return (
         <div className="page-wrap" style={{ paddingTop: 30, paddingBottom: 80 }}>
-          <h1 style={{ fontSize: 24, fontWeight: 700, marginBottom: 20 }}>장바구니</h1>
+          <h1 style={{ fontSize: 24, fontWeight: 700, marginBottom: 20 }}>カート</h1>
           <TabHeader />
           <div style={{ textAlign: "center", paddingTop: 40 }}>
             <ShoppingCart size={56} color="#ddd" style={{ marginBottom: 16 }} />
-            <h2 style={{ fontSize: 20, color: "#333", marginBottom: 8, fontWeight: 700 }}>일반 장바구니가 비어있어요</h2>
-            <p style={{ color: "#aaa", marginBottom: 28, fontSize: 14 }}>마음에 드는 상품을 담아보세요</p>
+            <h2 style={{ fontSize: 20, color: "#333", marginBottom: 8, fontWeight: 700 }}>通常カートは空です</h2>
+            <p style={{ color: "#aaa", marginBottom: 28, fontSize: 14 }}>お気に入りの商品を入れてみましょう</p>
             <button onClick={() => navigate("/")} style={{ background: "#8B5E3C", border: "none", color: "#fff", padding: "13px 36px", borderRadius: 10, fontSize: 15, fontWeight: 700, cursor: "pointer" }}>
-              쇼핑 계속하기
+              ショッピングを続ける
             </button>
           </div>
         </div>
@@ -129,13 +129,13 @@ export default function Cart() {
 
     return (
       <div className="page-wrap" style={{ paddingTop: 20, paddingBottom: 60 }}>
-        <h1 style={{ fontSize: 24, fontWeight: 700, marginBottom: 20 }}>장바구니</h1>
+        <h1 style={{ fontSize: 24, fontWeight: 700, marginBottom: 20 }}>カート</h1>
         <TabHeader />
         <div className="cart-layout" style={{ display: "flex", gap: 20, alignItems: "flex-start" }}>
           <div style={{ flex: "1 1 auto", minWidth: 0 }}>
             <div style={{ display: "flex", alignItems: "center", padding: "10px 14px", borderBottom: "2px solid #222", borderTop: "1px solid #eee" }}>
               <input type="checkbox" checked={selectedIds.size === cart.length && cart.length > 0} onChange={toggleAll} style={{ width: 16, height: 16, cursor: "pointer", marginRight: 10 }} />
-              <span style={{ fontSize: 13, color: "#444" }}>전체 선택 ({selectedIds.size}/{cart.length})</span>
+              <span style={{ fontSize: 13, color: "#444" }}>すべて選択 ({selectedIds.size}/{cart.length})</span>
             </div>
             {cart.map(item => {
               const k = key(item);
@@ -149,7 +149,7 @@ export default function Cart() {
                   </div>
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <p onClick={() => navigate(`/item/${item.it_id}`)} style={{ fontSize: 14, color: "#222", margin: "0 0 4px", cursor: "pointer", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{item.it_name}</p>
-                    {item.option && <p style={{ fontSize: 12, color: "#999", margin: "0 0 8px" }}>옵션: {item.option}</p>}
+                    {item.option && <p style={{ fontSize: 12, color: "#999", margin: "0 0 8px" }}>オプション: {item.option}</p>}
                     <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 8 }}>
                       <div style={{ display: "flex", alignItems: "center", border: "1px solid #ddd", borderRadius: 6, overflow: "hidden" }}>
                         <button onClick={() => handleQty(item, item.quantity - 1)} style={{ width: 30, height: 30, display: "flex", alignItems: "center", justifyContent: "center", background: "#f5f5f5", border: "none", cursor: "pointer" }}><Minus size={12} /></button>
@@ -166,33 +166,33 @@ export default function Cart() {
           </div>
           <div className="cart-summary" style={{ width: 300, flexShrink: 0, position: "sticky", top: 90 }}>
             <div style={{ border: "1px solid #eee", borderRadius: 12, padding: "20px" }}>
-              <h3 style={{ fontSize: 16, fontWeight: 700, margin: "0 0 18px" }}>주문 요약</h3>
+              <h3 style={{ fontSize: 16, fontWeight: 700, margin: "0 0 18px" }}>ご注文内容</h3>
               <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 10, fontSize: 14 }}>
-                <span style={{ color: "#777" }}>상품금액</span><span style={{ fontWeight: 600 }}>{formatPrice(subtotal)}</span>
+                <span style={{ color: "#777" }}>商品金額</span><span style={{ fontWeight: 600 }}>{formatPrice(subtotal)}</span>
               </div>
               <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 10, fontSize: 14 }}>
-                <span style={{ color: "#777" }}>배송비</span>
+                <span style={{ color: "#777" }}>送料</span>
                 <span style={{ fontWeight: 600, color: shipping === 0 && subtotal > 0 ? "#8B5E3C" : "#333" }}>
-                  {subtotal === 0 ? "-" : shipping === 0 ? "무료" : formatPrice(shipping)}
+                  {subtotal === 0 ? "-" : shipping === 0 ? "無料" : formatPrice(shipping)}
                 </span>
               </div>
               {subtotal > 0 && subtotal < 40000 && (
                 <div style={{ background: "#F2E4D0", borderRadius: 8, padding: "9px 12px", marginBottom: 12, fontSize: 12, color: "#8B5E3C" }}>
-                  {formatPrice(40000 - subtotal)} 더 담으면 무료배송!
+                  {formatPrice(40000 - subtotal)} 追加で送料無料!
                 </div>
               )}
               {subtotal > 0 && (
                 <div style={{ background: "#f5f5f5", borderRadius: 8, padding: "8px 12px", marginBottom: 4, fontSize: 11, color: "#888", lineHeight: 1.6 }}>
-                  제주도 +3,000원 · 도서산간 +5,000원 추가
+                  済州島 +3,000円 · 離島・山間部 +5,000円 追加
                 </div>
               )}
               <div style={{ borderTop: "1px solid #eee", paddingTop: 14, marginTop: 8, display: "flex", justifyContent: "space-between", fontSize: 17, fontWeight: 700 }}>
-                <span>총 결제금액</span><span style={{ color: "#8B5E3C" }}>{formatPrice(total)}</span>
+                <span>お支払い合計</span><span style={{ color: "#8B5E3C" }}>{formatPrice(total)}</span>
               </div>
               <button onClick={handleOrder} disabled={selectedIds.size === 0} style={{ width: "100%", height: 50, background: "#8B5E3C", border: "none", borderRadius: 10, color: "#fff", fontSize: 16, fontWeight: 700, cursor: selectedIds.size === 0 ? "not-allowed" : "pointer", marginTop: 18, opacity: selectedIds.size === 0 ? 0.5 : 1 }}>
-                주문하기
+                注文する
               </button>
-              <button onClick={() => navigate("/")} style={{ width: "100%", height: 44, background: "none", border: "1px solid #ddd", borderRadius: 10, color: "#555", fontSize: 13, cursor: "pointer", marginTop: 10 }}>쇼핑 계속하기</button>
+              <button onClick={() => navigate("/")} style={{ width: "100%", height: 44, background: "none", border: "1px solid #ddd", borderRadius: 10, color: "#555", fontSize: 13, cursor: "pointer", marginTop: 10 }}>ショッピングを続ける</button>
             </div>
           </div>
         </div>
@@ -203,19 +203,19 @@ export default function Cart() {
   // ── 선물 장바구니 탭 ────────────────────────────────────────────────────────
   return (
     <div className="page-wrap" style={{ paddingTop: 20, paddingBottom: 60 }}>
-      <h1 style={{ fontSize: 24, fontWeight: 700, marginBottom: 20 }}>장바구니</h1>
+      <h1 style={{ fontSize: 24, fontWeight: 700, marginBottom: 20 }}>カート</h1>
       <TabHeader />
 
       {giftCart.length === 0 ? (
         <div style={{ textAlign: "center", paddingTop: 40 }}>
           <Gift size={56} color="#ddd" style={{ marginBottom: 16 }} />
-          <h2 style={{ fontSize: 20, color: "#333", marginBottom: 8, fontWeight: 700 }}>선물 장바구니가 비어있어요</h2>
-          <p style={{ color: "#aaa", marginBottom: 28, fontSize: 14 }}>선물할 상품을 직접 골라보세요</p>
+          <h2 style={{ fontSize: 20, color: "#333", marginBottom: 8, fontWeight: 700 }}>ギフトカートは空です</h2>
+          <p style={{ color: "#aaa", marginBottom: 28, fontSize: 14 }}>ギフトにする商品をお選びください</p>
           <button onClick={() => navigate("/gift/custom")} style={{ background: "#8B5E3C", border: "none", color: "#fff", padding: "13px 36px", borderRadius: 10, fontSize: 15, fontWeight: 700, cursor: "pointer", marginRight: 10 }}>
-            상품 직접 고르기
+            商品を選ぶ
           </button>
           <button onClick={() => navigate("/gift")} style={{ background: "none", border: "1.5px solid #8B5E3C", color: "#8B5E3C", padding: "13px 36px", borderRadius: 10, fontSize: 15, fontWeight: 700, cursor: "pointer" }}>
-            선물 패키지 보기
+            ギフトパッケージを見る
           </button>
         </div>
       ) : (
@@ -223,7 +223,7 @@ export default function Cart() {
           <div style={{ flex: "1 1 auto", minWidth: 0 }}>
             <div style={{ padding: "10px 14px", borderBottom: "2px solid #8B5E3C", borderTop: "1px solid #eee", display: "flex", alignItems: "center", gap: 8 }}>
               <Gift size={15} color="#8B5E3C" />
-              <span style={{ fontSize: 13, color: "#8B5E3C", fontWeight: 700 }}>선물 구성 상품 ({giftCart.length}개)</span>
+              <span style={{ fontSize: 13, color: "#8B5E3C", fontWeight: 700 }}>ギフト構成商品 ({giftCart.length}点)</span>
             </div>
             {giftCart.map(item => (
               <div key={item.it_id} style={{ display: "flex", gap: 12, padding: "14px", borderBottom: "1px solid #eee", alignItems: "center" }}>
@@ -243,26 +243,26 @@ export default function Cart() {
               </div>
             ))}
             <button onClick={() => navigate("/gift/custom")} style={{ margin: "16px", background: "none", border: "1.5px dashed #d0d0d0", borderRadius: 10, padding: "12px", width: "calc(100% - 32px)", fontSize: 13, color: "#999", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}>
-              <Plus size={14} /> 상품 더 추가하기
+              <Plus size={14} /> 商品を追加する
             </button>
           </div>
           <div className="cart-summary" style={{ width: 300, flexShrink: 0, position: "sticky", top: 90 }}>
             <div style={{ border: "1px solid #eee", borderRadius: 12, padding: "20px" }}>
-              <h3 style={{ fontSize: 16, fontWeight: 700, margin: "0 0 18px", display: "flex", alignItems: "center", gap: 8 }}><Gift size={16} color="#8B5E3C" /> 선물 요약</h3>
+              <h3 style={{ fontSize: 16, fontWeight: 700, margin: "0 0 18px", display: "flex", alignItems: "center", gap: 8 }}><Gift size={16} color="#8B5E3C" /> ギフト内容</h3>
               <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 10, fontSize: 14 }}>
-                <span style={{ color: "#777" }}>구성 상품 ({giftCart.length}개)</span>
+                <span style={{ color: "#777" }}>構成商品 ({giftCart.length}点)</span>
                 <span style={{ fontWeight: 600 }}>{formatPrice(giftTotal)}</span>
               </div>
               <div style={{ background: "#f0f9f4", borderRadius: 8, padding: "9px 12px", marginBottom: 16, fontSize: 12, color: "#8B5E3C", lineHeight: 1.6 }}>
-                📦 배송비는 받는 분 주소 입력 후 확정됩니다
+                📦 送料は受取人様の住所入力後に確定します
               </div>
               <div style={{ borderTop: "1px solid #eee", paddingTop: 14, marginTop: 0, display: "flex", justifyContent: "space-between", fontSize: 17, fontWeight: 700 }}>
-                <span>상품금액</span><span style={{ color: "#8B5E3C" }}>{formatPrice(giftTotal)}</span>
+                <span>商品金額</span><span style={{ color: "#8B5E3C" }}>{formatPrice(giftTotal)}</span>
               </div>
               <button onClick={() => navigate("/gift/cart")} style={{ width: "100%", height: 50, background: "linear-gradient(135deg,#8B5E3C,#25a870)", border: "none", borderRadius: 10, color: "#fff", fontSize: 15, fontWeight: 700, cursor: "pointer", marginTop: 18, display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
-                <Gift size={16} /> 선물 링크 만들기
+                <Gift size={16} /> ギフトリンクを作る
               </button>
-              <button onClick={() => navigate("/gift/custom")} style={{ width: "100%", height: 44, background: "none", border: "1px solid #ddd", borderRadius: 10, color: "#555", fontSize: 13, cursor: "pointer", marginTop: 10 }}>상품 더 고르기</button>
+              <button onClick={() => navigate("/gift/custom")} style={{ width: "100%", height: 44, background: "none", border: "1px solid #ddd", borderRadius: 10, color: "#555", fontSize: 13, cursor: "pointer", marginTop: 10 }}>商品をもっと選ぶ</button>
             </div>
           </div>
         </div>

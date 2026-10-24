@@ -30,8 +30,8 @@ export default function ProductDetail({ params }: { params: { id: string } }) {
     return (
       <div className="py-24 text-center">
         <Package className="w-16 h-16 text-slate-200 mx-auto mb-4" />
-        <h3 className="text-xl font-bold text-slate-700">상품을 찾을 수 없습니다</h3>
-        <Link href="/" className="text-primary font-medium mt-4 inline-block">상품목록으로 돌아가기</Link>
+        <h3 className="text-xl font-bold text-slate-700">商品が見つかりません</h3>
+        <Link href="/" className="text-primary font-medium mt-4 inline-block">商品一覧に戻る</Link>
       </div>
     );
   }
@@ -41,7 +41,7 @@ export default function ProductDetail({ params }: { params: { id: string } }) {
   const boxPrice = boxOpt?.box_price ? Number(boxOpt.box_price) : Number(product.it_price) || 0;
   const unitPrice = boxOpt?.unit_price ? Number(boxOpt.unit_price) : (boxQty ? Math.round(boxPrice / boxQty) : null);
   const displayPrice = boxPrice;
-  const unitLabel = boxQty ? `1박스(${boxQty}입)` : "1개";
+  const unitLabel = boxQty ? `1ケース(${boxQty}個入)` : "1個";
   const isSoldOut = product.it_stock_qty !== undefined && product.it_stock_qty <= 0;
   const isSuspended = (product as any).it_use !== "1";
   const isDisabled = isSoldOut || isSuspended;
@@ -49,10 +49,10 @@ export default function ProductDetail({ params }: { params: { id: string } }) {
   const handleAddToCart = () => {
     if (isDisabled) return;
     const effectivePrice = boxPrice;
-    const optionLabel = boxOpt ? unitLabel : "1개";
+    const optionLabel = boxOpt ? unitLabel : "1個";
     addItem({ ...product, it_price: effectivePrice, it_name: `${product.it_name} (${optionLabel})` }, qty);
     toast({
-      title: "장바구니에 담겼습니다",
+      title: "カートに追加しました",
       description: `${product.it_name} ${optionLabel} × ${qty}`,
     });
     setAdded(true);
@@ -63,7 +63,7 @@ export default function ProductDetail({ params }: { params: { id: string } }) {
     <div className="animate-in fade-in duration-300 max-w-5xl mx-auto">
       <Link href="/" className="inline-flex items-center text-slate-500 hover:text-slate-900 mb-6 font-medium transition-colors">
         <ArrowLeft className="w-4 h-4 mr-1" />
-        상품목록으로
+        商品一覧へ
       </Link>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -83,12 +83,12 @@ export default function ProductDetail({ params }: { params: { id: string } }) {
             <ImageIcon className={cn("w-20 h-20 text-slate-300 fallback-icon", product.it_img1 ? "hidden" : "")} />
             {isSuspended && (
               <div className="absolute inset-0 bg-white/60 backdrop-blur-sm flex items-center justify-center">
-                <span className="px-6 py-3 bg-amber-500 text-white font-bold rounded-xl shadow-xl text-lg">입금예정</span>
+                <span className="px-6 py-3 bg-amber-500 text-white font-bold rounded-xl shadow-xl text-lg">入金予定</span>
               </div>
             )}
             {!isSuspended && isSoldOut && (
               <div className="absolute inset-0 bg-white/60 backdrop-blur-sm flex items-center justify-center">
-                <span className="px-6 py-3 bg-slate-900 text-white font-bold rounded-xl shadow-xl text-lg">품절</span>
+                <span className="px-6 py-3 bg-slate-900 text-white font-bold rounded-xl shadow-xl text-lg">品切れ</span>
               </div>
             )}
           </div>
@@ -118,11 +118,11 @@ export default function ProductDetail({ params }: { params: { id: string } }) {
             <p className="text-4xl font-black text-slate-900">{formatCurrency(displayPrice)}</p>
             {boxOpt ? (
               <div className="text-sm text-slate-500 mt-1 space-y-0.5">
-                <p>박스입수 1박스 {boxQty || "?"}입</p>
-                <p>낱개가격 <span className="font-bold text-slate-700">{formatCurrency(unitPrice || 0)}</span></p>
+                <p>ケース入数 1ケース {boxQty || "?"}個入</p>
+                <p>単品価格 <span className="font-bold text-slate-700">{formatCurrency(unitPrice || 0)}</span></p>
               </div>
             ) : (
-              <p className="text-sm text-slate-500 mt-1">낱개 단가</p>
+              <p className="text-sm text-slate-500 mt-1">単品単価</p>
             )}
           </div>
 
@@ -130,16 +130,16 @@ export default function ProductDetail({ params }: { params: { id: string } }) {
             {boxOpt && (
               <>
                 <div className="flex">
-                  <span className="text-slate-500 font-bold w-24">박스단위</span>
+                  <span className="text-slate-500 font-bold w-24">ケース単位</span>
                   <span className="text-slate-900 font-bold">{unitLabel}</span>
                 </div>
                 <div className="flex">
-                  <span className="text-slate-500 font-bold w-24">박스금액</span>
+                  <span className="text-slate-500 font-bold w-24">ケース金額</span>
                   <span className="text-primary font-black">{formatCurrency(boxOpt.box_price)}</span>
                 </div>
                 {boxQty && (
                   <div className="flex">
-                    <span className="text-slate-500 font-bold w-24">낱개금액</span>
+                    <span className="text-slate-500 font-bold w-24">単品金額</span>
                     <span className="text-slate-900">{formatCurrency(unitPrice || 0)}</span>
                   </div>
                 )}
@@ -147,27 +147,27 @@ export default function ProductDetail({ params }: { params: { id: string } }) {
             )}
             {!boxOpt && (
               <div className="flex">
-                <span className="text-slate-500 font-bold w-24">판매단위</span>
-                <span className="text-slate-900 font-bold">낱개</span>
+                <span className="text-slate-500 font-bold w-24">販売単位</span>
+                <span className="text-slate-900 font-bold">単品</span>
               </div>
             )}
             {product.it_origin && (
               <div className="flex">
-                <span className="text-slate-500 font-bold w-24">원산지</span>
+                <span className="text-slate-500 font-bold w-24">原産地</span>
                 <span className="text-slate-900">{product.it_origin}</span>
               </div>
             )}
             {product.it_shelf_life && (
               <div className="flex">
-                <span className="text-slate-500 font-bold w-24">유통기한</span>
+                <span className="text-slate-500 font-bold w-24">賞味期限</span>
                 <span className="text-orange-600 font-bold">{product.it_shelf_life}</span>
               </div>
             )}
             {product.it_stock_qty !== undefined && (
               <div className="flex">
-                <span className="text-slate-500 font-bold w-24">재고</span>
+                <span className="text-slate-500 font-bold w-24">在庫</span>
                 <span className={cn("font-bold", product.it_stock_qty > 0 ? "text-emerald-600" : "text-red-500")}>
-                  {product.it_stock_qty > 0 ? `${product.it_stock_qty}개` : "품절"}
+                  {product.it_stock_qty > 0 ? `${product.it_stock_qty}個` : "品切れ"}
                 </span>
               </div>
             )}
@@ -178,19 +178,19 @@ export default function ProductDetail({ params }: { params: { id: string } }) {
               <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 space-y-2">
                 <div className="flex items-center gap-2">
                   <AlertTriangle className="w-5 h-5 text-amber-500 flex-shrink-0" />
-                  <span className="font-bold text-amber-700">입금예정 상품</span>
+                  <span className="font-bold text-amber-700">入金予定の商品</span>
                 </div>
-                <p className="text-sm text-amber-600">현재 입금예정 상태로 구매가 불가합니다.</p>
-                <p className="text-sm text-amber-600">구매를 원하시면 고객센터로 연락해 주세요.</p>
+                <p className="text-sm text-amber-600">現在、入金予定の状態のため購入できません。</p>
+                <p className="text-sm text-amber-600">ご購入をご希望の場合はカスタマーセンターまでご連絡ください。</p>
                 <div className="flex items-center gap-2 mt-2 pt-2 border-t border-amber-200">
                   <Phone className="w-4 h-4 text-amber-600" />
-                  <span className="text-sm font-bold text-amber-700">고객센터 문의</span>
+                  <span className="text-sm font-bold text-amber-700">カスタマーセンターへお問い合わせ</span>
                 </div>
               </div>
             )}
 
             <div className="flex items-center gap-4">
-              <span className="text-sm font-bold text-slate-500">수량</span>
+              <span className="text-sm font-bold text-slate-500">数量</span>
               <div className={cn("flex items-center bg-slate-50 border border-slate-200 rounded-xl overflow-hidden", isDisabled && "opacity-50")}>
                 <button
                   onClick={() => setQty(Math.max(1, qty - 1))}
@@ -200,7 +200,7 @@ export default function ProductDetail({ params }: { params: { id: string } }) {
                   <Minus className="w-5 h-5" />
                 </button>
                 <div className="flex items-center gap-1 px-3">
-                  <span className="text-sm text-blue-600 font-bold">박스</span>
+                  <span className="text-sm text-blue-600 font-bold">ケース</span>
                   <input
                     type="number"
                     className="w-12 text-center font-bold bg-transparent border-none focus:ring-0 p-0 text-lg"
@@ -219,7 +219,7 @@ export default function ProductDetail({ params }: { params: { id: string } }) {
                 </button>
               </div>
               <div className="ml-auto text-right">
-                <p className="text-sm text-slate-500">합계</p>
+                <p className="text-sm text-slate-500">合計</p>
                 <p className="text-2xl font-black text-primary">{formatCurrency(displayPrice * qty)}</p>
               </div>
             </div>
@@ -235,11 +235,11 @@ export default function ProductDetail({ params }: { params: { id: string } }) {
                 disabled={isDisabled}
               >
                 {isSuspended ? (
-                  <><AlertTriangle className="w-5 h-5 mr-2" /> 입금예정 (구매불가)</>
+                  <><AlertTriangle className="w-5 h-5 mr-2" /> 入金予定 (購入不可)</>
                 ) : added ? (
-                  <><Check className="w-5 h-5 mr-2" /> 담겼습니다</>
+                  <><Check className="w-5 h-5 mr-2" /> 追加しました</>
                 ) : (
-                  <><ShoppingCart className="w-5 h-5 mr-2" /> 장바구니 담기</>
+                  <><ShoppingCart className="w-5 h-5 mr-2" /> カートに追加</>
                 )}
               </Button>
             </div>
@@ -249,7 +249,7 @@ export default function ProductDetail({ params }: { params: { id: string } }) {
 
       {product.it_explan && (
         <Card className="mt-8 p-8">
-          <h2 className="text-xl font-black text-slate-900 mb-6 pb-4 border-b border-slate-100">상품 상세 정보</h2>
+          <h2 className="text-xl font-black text-slate-900 mb-6 pb-4 border-b border-slate-100">商品詳細情報</h2>
           <div
             className="prose prose-slate max-w-none text-slate-700 leading-relaxed [&_img]:max-w-full [&_img]:h-auto [&_img]:rounded-lg [&_img]:mx-auto [&_img]:block"
             dangerouslySetInnerHTML={{ __html: sanitizeHtml(product.it_explan) }}

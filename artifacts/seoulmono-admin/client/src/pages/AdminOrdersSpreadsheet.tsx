@@ -16,53 +16,53 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 
 // ─── 상태 매핑 ───
 const STATUS_MAP: Record<string, { label: string; color: string }> = {
-  pending:      { label: "입금전",     color: "bg-yellow-100 text-yellow-800 border-yellow-300" },
-  paid:         { label: "결제완료",   color: "bg-green-100 text-green-800 border-green-300" },
-  preparing:    { label: "상품준비중", color: "bg-blue-100 text-blue-800 border-blue-300" },
-  shipping:     { label: "배송중",     color: "bg-indigo-100 text-indigo-800 border-indigo-300" },
-  delivered:    { label: "배송완료",   color: "bg-gray-100 text-gray-700 border-gray-300" },
-  customs_hold: { label: "통관검사",   color: "bg-rose-100 text-rose-800 border-rose-300" },
-  cancelled:    { label: "취소",       color: "bg-red-100 text-red-700 border-red-300" },
-  out_of_stock: { label: "품절",       color: "bg-orange-100 text-orange-700 border-orange-300" },
+  pending:      { label: "入金前",     color: "bg-yellow-100 text-yellow-800 border-yellow-300" },
+  paid:         { label: "支払い済み",   color: "bg-green-100 text-green-800 border-green-300" },
+  preparing:    { label: "商品準備中", color: "bg-blue-100 text-blue-800 border-blue-300" },
+  shipping:     { label: "配送中",     color: "bg-indigo-100 text-indigo-800 border-indigo-300" },
+  delivered:    { label: "配送完了",   color: "bg-gray-100 text-gray-700 border-gray-300" },
+  customs_hold: { label: "通関検査",   color: "bg-rose-100 text-rose-800 border-rose-300" },
+  cancelled:    { label: "キャンセル",       color: "bg-red-100 text-red-700 border-red-300" },
+  out_of_stock: { label: "在庫切れ",       color: "bg-orange-100 text-orange-700 border-orange-300" },
 };
 
 // ─── 탭 정의 ───
 const TABS = [
-  { id: "all",          label: "전체",       statuses: "pending,paid,preparing,shipping,delivered,customs_hold,cancelled" },
-  { id: "pending",      label: "입금전",     statuses: "pending" },
-  { id: "paid",         label: "결제완료",   statuses: "paid" },
-  { id: "preparing",    label: "상품준비중", statuses: "preparing" },
-  { id: "shipping",     label: "배송중",     statuses: "shipping" },
-  { id: "delivered",    label: "배송완료",   statuses: "delivered" },
-  { id: "customs_hold", label: "통관검사",   statuses: "customs_hold" },
-  { id: "cancelled",       label: "취소",     statuses: "cancelled" },
-  { id: "partial_cancel",  label: "부분취소", statuses: "partial_cancel" },
+  { id: "all",          label: "すべて",       statuses: "pending,paid,preparing,shipping,delivered,customs_hold,cancelled" },
+  { id: "pending",      label: "入金前",     statuses: "pending" },
+  { id: "paid",         label: "支払い済み",   statuses: "paid" },
+  { id: "preparing",    label: "商品準備中", statuses: "preparing" },
+  { id: "shipping",     label: "配送中",     statuses: "shipping" },
+  { id: "delivered",    label: "配送完了",   statuses: "delivered" },
+  { id: "customs_hold", label: "通関検査",   statuses: "customs_hold" },
+  { id: "cancelled",       label: "キャンセル",     statuses: "cancelled" },
+  { id: "partial_cancel",  label: "一部キャンセル", statuses: "partial_cancel" },
 ];
 
 // ─── 컬럼 정의 ───
 const COLUMNS = [
-  { key: "status",       label: "배송상태",     defaultWidth: 90,  sticky: true },
-  { key: "orderNumber",  label: "주문번호",     defaultWidth: 150, sticky: true },
-  { key: "itemId",       label: "아이템ID",     defaultWidth: 70,  sticky: false },
-  { key: "carrier",      label: "택배사",       defaultWidth: 90,  sticky: false },
-  { key: "tracking",     label: "송장번호",     defaultWidth: 130, sticky: false },
-  { key: "productName",  label: "상품명",       defaultWidth: 220, sticky: false },
-  { key: "options",      label: "옵션",         defaultWidth: 120, sticky: false },
-  { key: "subtotal",     label: "상품금액",     defaultWidth: 85,  sticky: false },
-  { key: "qty",          label: "수량",         defaultWidth: 50,  sticky: false },
-  { key: "couponDiscount", label: "쿠폰할인",   defaultWidth: 80,  sticky: false },
-  { key: "pointDiscount",  label: "포인트할인", defaultWidth: 80,  sticky: false },
-  { key: "totalAmount",  label: "결제금액",     defaultWidth: 90,  sticky: false },
-  { key: "customer",     label: "수취인",       defaultWidth: 90,  sticky: false },
-  { key: "phone",        label: "연락처",       defaultWidth: 120, sticky: false },
-  { key: "zipCode",      label: "우편번호",     defaultWidth: 70,  sticky: false },
-  { key: "address",      label: "배송주소",     defaultWidth: 230, sticky: false },
-  { key: "userEmail",    label: "주문자이메일", defaultWidth: 165, sticky: false },
-  { key: "memo",         label: "배송메모",     defaultWidth: 150, sticky: false },
-  { key: "adminNotes",   label: "관리자메모",   defaultWidth: 170, sticky: false },
-  { key: "orderDate",    label: "주문일시",     defaultWidth: 130, sticky: false },
-  { key: "nameEn",       label: "영문이름",     defaultWidth: 130, sticky: false },
-  { key: "addressEn",    label: "영문주소",     defaultWidth: 480, sticky: false },
+  { key: "status",       label: "配送状況",     defaultWidth: 90,  sticky: true },
+  { key: "orderNumber",  label: "注文番号",     defaultWidth: 150, sticky: true },
+  { key: "itemId",       label: "アイテムID",     defaultWidth: 70,  sticky: false },
+  { key: "carrier",      label: "配送業者",       defaultWidth: 90,  sticky: false },
+  { key: "tracking",     label: "追跡番号",     defaultWidth: 130, sticky: false },
+  { key: "productName",  label: "商品名",       defaultWidth: 220, sticky: false },
+  { key: "options",      label: "オプション",         defaultWidth: 120, sticky: false },
+  { key: "subtotal",     label: "商品金額",     defaultWidth: 85,  sticky: false },
+  { key: "qty",          label: "数量",         defaultWidth: 50,  sticky: false },
+  { key: "couponDiscount", label: "クーポン割引",   defaultWidth: 80,  sticky: false },
+  { key: "pointDiscount",  label: "ポイント割引", defaultWidth: 80,  sticky: false },
+  { key: "totalAmount",  label: "決済金額",     defaultWidth: 90,  sticky: false },
+  { key: "customer",     label: "受取人",       defaultWidth: 90,  sticky: false },
+  { key: "phone",        label: "連絡先",       defaultWidth: 120, sticky: false },
+  { key: "zipCode",      label: "郵便番号",     defaultWidth: 70,  sticky: false },
+  { key: "address",      label: "配送先住所",     defaultWidth: 230, sticky: false },
+  { key: "userEmail",    label: "注文者メール", defaultWidth: 165, sticky: false },
+  { key: "memo",         label: "配送メモ",     defaultWidth: 150, sticky: false },
+  { key: "adminNotes",   label: "管理者メモ",   defaultWidth: 170, sticky: false },
+  { key: "orderDate",    label: "注文日時",     defaultWidth: 130, sticky: false },
+  { key: "nameEn",       label: "英語氏名",     defaultWidth: 130, sticky: false },
+  { key: "addressEn",    label: "英語住所",     defaultWidth: 480, sticky: false },
 ];
 
 // ─── 전화번호 국제 형식 변환 ───
@@ -108,10 +108,10 @@ const STATUS_STEP: Record<string, number> = {
   preparing: 1, shipping: 2, customs_hold: 3, delivered: 4,
 };
 const TIMELINE_STEPS = [
-  { key: "preparing",    label: "발송준비" },
-  { key: "shipping",     label: "배송중" },
-  { key: "customs_hold", label: "통관" },
-  { key: "delivered",    label: "배송완료" },
+  { key: "preparing",    label: "発送準備" },
+  { key: "shipping",     label: "配送中" },
+  { key: "customs_hold", label: "通関" },
+  { key: "delivered",    label: "配送完了" },
 ];
 
 function TrackingTimelinePopover({ shipmentId, orderId, trackingNumber }: { shipmentId: number; orderId: number; trackingNumber?: string }) {
@@ -131,14 +131,14 @@ function TrackingTimelinePopover({ shipmentId, orderId, trackingNumber }: { ship
         <button
           className="flex-shrink-0 p-0.5 rounded hover:bg-blue-50 text-blue-400 hover:text-blue-600 transition-colors"
           onClick={e => { e.stopPropagation(); setOpen(true); }}
-          title="배송 타임라인 보기"
+          title="配送タイムラインを見る"
         >
           <Truck className="w-3.5 h-3.5" />
         </button>
       </PopoverTrigger>
       <PopoverContent className="w-[360px] p-4" side="left" align="start" onClick={e => e.stopPropagation()}>
         <div className="flex items-center justify-between mb-3">
-          <span className="text-[13px] font-semibold text-gray-700">배송 타임라인</span>
+          <span className="text-[13px] font-semibold text-gray-700">配送タイムライン</span>
           <div className="flex items-center gap-2">
             <button
               className="text-[11px] text-blue-500 hover:text-blue-700 flex items-center gap-1"
@@ -146,12 +146,12 @@ function TrackingTimelinePopover({ shipmentId, orderId, trackingNumber }: { ship
               disabled={refreshMutation.isPending}
             >
               <RefreshCw className={`w-3.5 h-3.5 ${refreshMutation.isPending ? "animate-spin" : ""}`} />
-              새로고침
+              再読み込み
             </button>
             <button
               className="text-gray-400 hover:text-gray-600 transition-colors"
               onClick={() => setOpen(false)}
-              title="닫기"
+              title="閉じる"
             >
               <X className="w-4 h-4" />
             </button>
@@ -163,9 +163,9 @@ function TrackingTimelinePopover({ shipmentId, orderId, trackingNumber }: { ship
           </div>
         )}
         {isLoading ? (
-          <div className="text-[12px] text-gray-400 py-4 text-center">조회 중...</div>
+          <div className="text-[12px] text-gray-400 py-4 text-center">照会中...</div>
         ) : history.length === 0 ? (
-          <div className="text-[12px] text-gray-400 py-4 text-center">배송 이력이 없습니다</div>
+          <div className="text-[12px] text-gray-400 py-4 text-center">配送履歴がありません</div>
         ) : (
           <div className="max-h-80 overflow-y-auto">
             {history.slice().map((h: any, i: number) => (
@@ -269,11 +269,11 @@ export default function AdminOrdersSpreadsheet() {
   const [editingMemoValue, setEditingMemoValue] = useState("");
   const updateAdminNotesMutation = trpc.admin.updateAdminNotes.useMutation({
     onSuccess: () => {
-      toast.success("메모가 저장되었습니다.");
+      toast.success("メモを保存しました。");
       setEditingMemoId(null);
       utils.admin.orders.invalidate();
     },
-    onError: () => toast.error("메모 저장 실패"),
+    onError: () => toast.error("メモの保存に失敗しました"),
   });
 
   // ─── 택배사 목록 ───
@@ -282,12 +282,12 @@ export default function AdminOrdersSpreadsheet() {
 
   // ─── 운송장 등록/수정 ───
   const registerShipment = trpc.shipping.adminCreateShipment.useMutation({
-    onSuccess: () => { toast.success("운송장이 등록되었습니다."); utils.admin.orders.invalidate(); },
-    onError: (e) => toast.error(e.message || "운송장 등록 실패"),
+    onSuccess: () => { toast.success("追跡番号を登録しました。"); utils.admin.orders.invalidate(); },
+    onError: (e) => toast.error(e.message || "追跡番号の登録に失敗しました"),
   });
   const updateShipmentInfo = trpc.shipping.adminUpdateShipmentInfo.useMutation({
-    onSuccess: () => { toast.success("운송장이 수정되었습니다."); utils.admin.orders.invalidate(); },
-    onError: (e) => toast.error(e.message || "운송장 수정 실패"),
+    onSuccess: () => { toast.success("追跡番号を更新しました。"); utils.admin.orders.invalidate(); },
+    onError: (e) => toast.error(e.message || "追跡番号の更新に失敗しました"),
   });
 
   // ─── 일괄 상태 변경 ───
@@ -295,13 +295,13 @@ export default function AdminOrdersSpreadsheet() {
   const [bulkTargetStatus, setBulkTargetStatus] = useState("preparing");
   const bulkUpdateStatusMutation = trpc.admin.bulkUpdateStatus.useMutation({
     onSuccess: (result) => {
-      toast.success(`${result.count}개 주문 상태가 "${STATUS_MAP[bulkTargetStatus]?.label}"으로 변경되었습니다.`);
+      toast.success(`${result.count}件の注文ステータスを「${STATUS_MAP[bulkTargetStatus]?.label}」に変更しました。`);
       utils.admin.orders.invalidate();
       utils.admin.orderTabCounts.invalidate();
       setBulkStatusOpen(false);
       setSelectedRows(new Set());
     },
-    onError: () => toast.error("상태 변경 실패"),
+    onError: () => toast.error("ステータスの変更に失敗しました"),
   });
 
   // ─── 선택 처리 ───
@@ -325,7 +325,7 @@ export default function AdminOrdersSpreadsheet() {
       ? orders.filter((o: any) => selectedRows.has(o.id))
       : orders;
     const headers = [
-      "배송상태","주문번호","아이템ID","택배사","송장번호","상품명","옵션","상품금액","수량","수취인","연락처","우편번호","배송주소","결제금액","주문자이메일","관리자메모","배송메모","주문일시","영문이름","영문주소"
+      "配送状況","注文番号","アイテムID","配送業者","追跡番号","商品名","オプション","商品金額","数量","受取人","連絡先","郵便番号","配送先住所","決済金額","注文者メール","管理者メモ","配送メモ","注文日時","英語氏名","英語住所"
     ];
     const rows: string[][] = [];
     target.forEach((o: any) => {
@@ -379,7 +379,7 @@ export default function AdminOrdersSpreadsheet() {
         return items.map((item: any, idx: number) => getCellText(o, item, idx, key));
       });
       navigator.clipboard.writeText(values.filter(Boolean).join("\n")).catch(() => {});
-      toast.success(`"${COLUMNS.find(c=>c.key===key)?.label}" 열 클립보드 복사 완료`);
+      toast.success(`「${COLUMNS.find(c=>c.key===key)?.label}」列をクリップボードにコピーしました`);
     }
   };
 
@@ -483,7 +483,7 @@ export default function AdminOrdersSpreadsheet() {
                 className="text-[10px] font-mono tracking-wide flex-1 min-w-0 border border-gray-200 rounded px-1.5 py-0.5 bg-white focus:border-blue-400 focus:outline-none hover:border-gray-400 transition-colors"
                 defaultValue={trackingNum ?? ""}
                 key={`tracking-${order.id}-${trackingNum ?? ""}`}
-                placeholder="운송장 번호"
+                placeholder="追跡番号"
                 onClick={e => e.stopPropagation()}
                 onKeyDown={e => {
                   if (e.key === "Enter") { (e.target as HTMLInputElement).blur(); }
@@ -538,7 +538,7 @@ export default function AdminOrdersSpreadsheet() {
         const eligibleItems = (order.items || []).filter((i: any) => !i.product?.noDiscount && !i.cancelledAt);
         const firstEligible = eligibleItems[0];
         if (!firstEligible || item?.id !== firstEligible.id) return <span className="text-[11px] text-gray-300">-</span>;
-        return <span className="text-[11px] text-red-500 font-medium">-{order.couponDiscount.toLocaleString()}원</span>;
+        return <span className="text-[11px] text-red-500 font-medium">-{order.couponDiscount.toLocaleString()}円</span>;
       }
       case "pointDiscount":
         if (itemIdx > 0) return null;
@@ -548,7 +548,7 @@ export default function AdminOrdersSpreadsheet() {
       case "totalAmount": {
         if (itemIdx > 0) return null;
         const finalAmount = order.totalAmount - (order.couponDiscount ?? 0) - (order.pointsUsed ?? 0);
-        return <span className="text-[11px] font-bold text-blue-700">{finalAmount.toLocaleString()}원</span>;
+        return <span className="text-[11px] font-bold text-blue-700">{finalAmount.toLocaleString()}円</span>;
       }
       case "userEmail":
         return (
@@ -572,11 +572,11 @@ export default function AdminOrdersSpreadsheet() {
                     updateAdminNotesMutation.mutate({ orderId: order.id, notes: editingMemoValue });
                   }
                 }}
-                placeholder="메모 입력... (Ctrl+Enter 저장)"
+                placeholder="メモを入力... (Ctrl+Enterで保存)"
               />
               <div className="flex gap-1">
-                <button className="text-[10px] bg-amber-500 text-white rounded px-1.5 py-0.5 hover:bg-amber-600" onClick={() => updateAdminNotesMutation.mutate({ orderId: order.id, notes: editingMemoValue })}>저장</button>
-                <button className="text-[10px] bg-gray-200 text-gray-600 rounded px-1.5 py-0.5" onClick={() => setEditingMemoId(null)}>취소</button>
+                <button className="text-[10px] bg-amber-500 text-white rounded px-1.5 py-0.5 hover:bg-amber-600" onClick={() => updateAdminNotesMutation.mutate({ orderId: order.id, notes: editingMemoValue })}>保存</button>
+                <button className="text-[10px] bg-gray-200 text-gray-600 rounded px-1.5 py-0.5" onClick={() => setEditingMemoId(null)}>キャンセル</button>
               </div>
             </div>
           );
@@ -596,7 +596,7 @@ export default function AdminOrdersSpreadsheet() {
                 <span className="truncate">{order.adminNotes}</span>
               </span>
             ) : (
-              <span className="text-gray-300 italic">메모 추가</span>
+              <span className="text-gray-300 italic">メモを追加</span>
             )}
           </span>
         );
@@ -637,21 +637,21 @@ export default function AdminOrdersSpreadsheet() {
     <div className="w-full h-full flex flex-col bg-gray-50">
       {/* ─── 페이지 제목 ─── */}
       <div className="px-4 pt-5 pb-3 bg-background border-b shrink-0">
-        <h1 className="text-2xl font-bold">주문 관리 (스프레드시트)</h1>
+        <h1 className="text-2xl font-bold">注文管理 (スプレッドシート)</h1>
       </div>
       {/* ─── 요약 카운트 바 ─── */}
       <div className="bg-yellow-50 border-b border-yellow-200 px-4 py-2 flex items-center gap-6 flex-shrink-0">
         {[
-          { label: "입금전",     count: tabCounts?.pending ?? 0,      color: "text-yellow-700", tab: "pending" },
-          { label: "결제완료",   count: tabCounts?.paid ?? 0,         color: "text-green-700",  tab: "paid" },
-          { label: "상품준비중", count: tabCounts?.preparing ?? 0,    color: "text-blue-600",   tab: "preparing" },
-          { label: "배송중",     count: tabCounts?.shipping ?? 0,     color: "text-indigo-600", tab: "shipping" },
-          { label: "배송완료",   count: tabCounts?.delivered ?? 0,    color: "text-gray-600",   tab: "delivered" },
-          { label: "통관검사",   count: tabCounts?.customs_hold ?? 0, color: "text-rose-600",   tab: "customs_hold" },
-          { label: "취소",     count: tabCounts?.cancelled ?? 0,        color: "text-red-600",    tab: "cancelled" },
-          { label: "부분취소", count: tabCounts?.partialCancelled ?? 0, color: "text-orange-600", tab: "partial_cancel" },
-          { label: "배송지연", count: undefined, color: "text-amber-600", tab: "noTracking", special: true },
-          { label: "환불",     count: tabCounts?.refunded ?? 0,          color: "text-purple-600", tab: "refund", special: true },
+          { label: "入金前",     count: tabCounts?.pending ?? 0,      color: "text-yellow-700", tab: "pending" },
+          { label: "支払い済み",   count: tabCounts?.paid ?? 0,         color: "text-green-700",  tab: "paid" },
+          { label: "商品準備中", count: tabCounts?.preparing ?? 0,    color: "text-blue-600",   tab: "preparing" },
+          { label: "配送中",     count: tabCounts?.shipping ?? 0,     color: "text-indigo-600", tab: "shipping" },
+          { label: "配送完了",   count: tabCounts?.delivered ?? 0,    color: "text-gray-600",   tab: "delivered" },
+          { label: "通関検査",   count: tabCounts?.customs_hold ?? 0, color: "text-rose-600",   tab: "customs_hold" },
+          { label: "キャンセル",     count: tabCounts?.cancelled ?? 0,        color: "text-red-600",    tab: "cancelled" },
+          { label: "一部キャンセル", count: tabCounts?.partialCancelled ?? 0, color: "text-orange-600", tab: "partial_cancel" },
+          { label: "配送遅延", count: undefined, color: "text-amber-600", tab: "noTracking", special: true },
+          { label: "返金",     count: tabCounts?.refunded ?? 0,          color: "text-purple-600", tab: "refund", special: true },
         ].map(item => (
           <div key={item.tab} className="flex items-center gap-1.5">
             <span className="text-[10px] text-gray-500 whitespace-nowrap">{item.label}</span>
@@ -674,7 +674,7 @@ export default function AdminOrdersSpreadsheet() {
         ))}
         <div className="ml-auto flex items-center gap-2">
           <Button variant="outline" size="sm" className="h-7 text-xs gap-1" onClick={() => refetch()}>
-            <RefreshCw className="w-3 h-3" /> 새로고침
+            <RefreshCw className="w-3 h-3" /> 再読み込み
           </Button>
         </div>
       </div>
@@ -682,27 +682,27 @@ export default function AdminOrdersSpreadsheet() {
       {/* ─── 검색 바 ─── */}
       <div className="bg-white border-b px-4 py-2 flex items-center gap-2 flex-shrink-0 flex-wrap">
         <div className="flex items-center gap-1.5">
-          <span className="text-[10px] text-gray-500 whitespace-nowrap">주문일</span>
+          <span className="text-[10px] text-gray-500 whitespace-nowrap">注文日</span>
           <Input type="date" value={dateFrom} onChange={e => setDateFrom(e.target.value)} className="h-7 !text-[11px] w-32" />
           <span className="text-[10px] text-gray-400">~</span>
           <Input type="date" value={dateTo} onChange={e => setDateTo(e.target.value)} className="h-7 !text-[11px] w-32" />
         </div>
         <div className="flex items-center gap-1.5 flex-1 min-w-[200px]">
           <Input
-            placeholder="주문번호, 수취인, 연락처 검색"
+            placeholder="注文番号、受取人、連絡先で検索"
             value={searchInput}
             onChange={e => setSearchInput(e.target.value)}
             onKeyDown={e => e.key === "Enter" && setSearch(searchInput)}
             className="h-7 !text-[11px] max-w-xs"
           />
           <Button size="sm" className="h-7 text-xs gap-1" onClick={() => { setSearch(searchInput); setCurrentPage(1); }}>
-            <Search className="w-3 h-3" /> 조회
+            <Search className="w-3 h-3" /> 検索
           </Button>
           {(search || dateFrom || dateTo) && (
             <Button variant="outline" size="sm" className="h-7 text-xs gap-1" onClick={() => {
               setSearch(""); setSearchInput(""); setDateFrom(""); setDateTo(""); setCurrentPage(1);
             }}>
-              <X className="w-3 h-3" /> 초기화
+              <X className="w-3 h-3" /> リセット
             </Button>
           )}
         </div>
@@ -712,33 +712,33 @@ export default function AdminOrdersSpreadsheet() {
             className={`h-7 px-2.5 rounded text-xs font-medium border flex items-center gap-1.5 transition-colors ${hideCancelled ? "bg-rose-500 text-white border-rose-500 hover:bg-rose-600" : "bg-white text-gray-600 border-gray-300 hover:border-gray-400"}`}
           >
             <X className="w-3 h-3" />
-            취소 숨기기 {hideCancelled ? "ON" : "OFF"}
+            キャンセルを非表示 {hideCancelled ? "ON" : "OFF"}
           </button>
           <Button variant="outline" size="sm" className="h-7 text-xs gap-1" onClick={() => downloadCSV(false)}>
-            <Download className="w-3 h-3" /> CSV 다운로드
+            <Download className="w-3 h-3" /> CSVダウンロード
           </Button>
           {selectedRows.size > 0 && (
             <Button variant="outline" size="sm" className="h-7 text-xs gap-1" onClick={() => downloadCSV(true)}>
-              <Download className="w-3 h-3" /> 선택 다운
+              <Download className="w-3 h-3" /> 選択分をダウンロード
             </Button>
           )}
           {selectedRows.size > 0 && (
             <Button size="sm" className="h-7 text-xs gap-1 bg-blue-600 hover:bg-blue-700 text-white" onClick={() => setBulkStatusOpen(true)}>
-              <CheckCircle className="w-3 h-3" /> 상태변경 ({selectedRows.size})
+              <CheckCircle className="w-3 h-3" /> ステータス変更 ({selectedRows.size})
             </Button>
           )}
           {/* 열 표시/숨기기 */}
           <Popover>
             <PopoverTrigger asChild>
               <Button variant="outline" size="sm" className="h-7 text-xs gap-1">
-                <Columns className="w-3 h-3" /> 열 설정
+                <Columns className="w-3 h-3" /> 列設定
                 {hiddenColumns.size > 0 && (
                   <span className="ml-0.5 bg-blue-500 text-white rounded-full text-[9px] w-4 h-4 flex items-center justify-center">{hiddenColumns.size}</span>
                 )}
               </Button>
             </PopoverTrigger>
             <PopoverContent align="end" className="w-48 p-2">
-              <div className="text-xs font-semibold text-gray-700 mb-2 pb-1 border-b">열 표시/숨기기</div>
+              <div className="text-xs font-semibold text-gray-700 mb-2 pb-1 border-b">列の表示/非表示</div>
               <div className="space-y-0.5 max-h-72 overflow-y-auto">
                 {COLUMNS.map(col => (
                   <label key={col.key} className={`flex items-center gap-2 px-1 py-0.5 rounded hover:bg-gray-50 cursor-pointer ${col.sticky ? "opacity-50" : ""}`}>
@@ -749,13 +749,13 @@ export default function AdminOrdersSpreadsheet() {
                       className="w-3.5 h-3.5"
                     />
                     <span className="text-xs">{col.label}</span>
-                    {col.sticky && <span className="text-[9px] text-gray-400 ml-auto">고정</span>}
+                    {col.sticky && <span className="text-[9px] text-gray-400 ml-auto">固定</span>}
                   </label>
                 ))}
               </div>
               {hiddenColumns.size > 0 && (
                 <button className="mt-2 w-full text-xs text-blue-600 hover:underline" onClick={() => { setHiddenColumns(new Set()); localStorage.removeItem("adminOrdersHiddenColumns_v2"); }}>
-                  모든 열 표시
+                  すべての列を表示
                 </button>
               )}
             </PopoverContent>
@@ -803,7 +803,7 @@ export default function AdminOrdersSpreadsheet() {
             className="w-4 h-4 accent-blue-600"
           />
           <span className={`text-[12px] ${specialFilter === "noTracking" ? "text-amber-600 font-medium" : "text-gray-500"}`}>
-            배송지연
+            配送遅延
           </span>
         </label>
         <label className="flex items-center gap-1.5 cursor-pointer">
@@ -815,7 +815,7 @@ export default function AdminOrdersSpreadsheet() {
             className="w-4 h-4 accent-blue-600"
           />
           <span className={`text-[12px] ${specialFilter === "refund" ? "text-purple-600 font-medium" : "text-gray-500"}`}>
-            환불
+            返金
             {tabCounts?.refunded !== undefined && (
               <span className="ml-1 text-[10px] text-gray-400">({tabCounts.refunded})</span>
             )}
@@ -823,7 +823,7 @@ export default function AdminOrdersSpreadsheet() {
         </label>
         <span className="ml-auto flex items-center gap-2">
           <span className="text-xs text-gray-400">
-            {isLoading ? "불러오는 중..." : `총 ${totalCount.toLocaleString()}건 | 페이지 ${currentPage}/${totalPages || 1}`}
+            {isLoading ? "読み込み中..." : `全 ${totalCount.toLocaleString()}件 | ページ ${currentPage}/${totalPages || 1}`}
           </span>
           <span className="flex items-center gap-0.5">
             {[50, 100, 200].map(n => (
@@ -831,7 +831,7 @@ export default function AdminOrdersSpreadsheet() {
                 key={n}
                 className={`px-1.5 py-0.5 rounded text-xs border transition-colors ${pageSize === n ? "bg-gray-700 text-white border-gray-700" : "bg-white text-gray-500 border-gray-200 hover:border-gray-400"}`}
                 onClick={() => { setPageSize(n); setCurrentPage(1); }}
-              >{n}건</button>
+              >{n}件</button>
             ))}
           </span>
         </span>
@@ -840,9 +840,9 @@ export default function AdminOrdersSpreadsheet() {
       {/* ─── 테이블 ─── */}
       <div className="flex-1 overflow-auto">
         {isLoading ? (
-          <div className="flex items-center justify-center h-40 text-gray-400 text-sm">불러오는 중...</div>
+          <div className="flex items-center justify-center h-40 text-gray-400 text-sm">読み込み中...</div>
         ) : orders.length === 0 ? (
-          <div className="flex items-center justify-center h-40 text-gray-400 text-sm">주문이 없습니다.</div>
+          <div className="flex items-center justify-center h-40 text-gray-400 text-sm">注文がありません。</div>
         ) : (
           <table className="border-collapse text-sm bg-white" style={{ minWidth: "max-content" }}>
             <thead className="sticky top-0 z-20">
@@ -961,10 +961,10 @@ export default function AdminOrdersSpreadsheet() {
       <Dialog open={bulkStatusOpen} onOpenChange={setBulkStatusOpen}>
         <DialogContent className="max-w-sm">
           <DialogHeader>
-            <DialogTitle>일괄 상태 변경</DialogTitle>
+            <DialogTitle>ステータス一括変更</DialogTitle>
           </DialogHeader>
           <div className="py-3 space-y-4">
-            <p className="text-sm text-gray-600">선택한 <strong>{selectedRows.size}개</strong> 주문의 상태를 변경합니다.</p>
+            <p className="text-sm text-gray-600">選択した<strong>{selectedRows.size}件</strong>の注文のステータスを変更します。</p>
             <Select value={bulkTargetStatus} onValueChange={setBulkTargetStatus}>
               <SelectTrigger>
                 <SelectValue />
@@ -977,7 +977,7 @@ export default function AdminOrdersSpreadsheet() {
             </Select>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setBulkStatusOpen(false)}>취소</Button>
+            <Button variant="outline" onClick={() => setBulkStatusOpen(false)}>キャンセル</Button>
             <Button
               disabled={bulkUpdateStatusMutation.isPending}
               onClick={() => {
@@ -987,7 +987,7 @@ export default function AdminOrdersSpreadsheet() {
                 });
               }}
             >
-              {bulkUpdateStatusMutation.isPending ? "처리중..." : "변경"}
+              {bulkUpdateStatusMutation.isPending ? "処理中..." : "変更"}
             </Button>
           </DialogFooter>
         </DialogContent>

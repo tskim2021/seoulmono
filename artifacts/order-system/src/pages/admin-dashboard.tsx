@@ -1,4 +1,5 @@
 import { useGetDashboard, customFetch } from "@workspace/api-client-react";
+import { ja } from "../lib/ja";
 import { Card, Badge } from "../components/ui";
 import { formatCurrency, getStatusColor, cn } from "../lib/utils";
 import { Users, Package, Clock, CheckCircle2, TrendingUp, Wallet, Building2, Bell, MessageSquare, UserCheck, Eye, MessageCircle, Trophy, ShoppingBag, Crown, BarChart2, TrendingDown, Search, CalendarRange, MapPin } from "lucide-react";
@@ -90,7 +91,7 @@ function SalesStatsCard() {
       <div className="px-6 py-5 border-b border-slate-100 bg-slate-50/50">
         <h3 className="text-lg font-bold text-slate-900 flex items-center gap-2 mb-4">
           <CalendarRange className="w-5 h-5 text-emerald-600" />
-          매출통계
+          売上統計
         </h3>
 
         {/* 프리셋 버튼 */}
@@ -105,7 +106,7 @@ function SalesStatsCard() {
                   ? "bg-emerald-600 text-white border-emerald-600 shadow-sm"
                   : "bg-white text-slate-600 border-slate-200 hover:border-emerald-400 hover:text-emerald-600"
               )}
-            >{p}</button>
+            >{ja(p)}</button>
           ))}
         </div>
 
@@ -128,26 +129,26 @@ function SalesStatsCard() {
             onClick={applyCustom}
             className="shrink-0 flex items-center gap-1 px-3 py-1.5 text-xs font-bold bg-slate-800 text-white rounded-lg hover:bg-slate-700 transition-colors"
           >
-            <Search className="w-3 h-3" />조회
+            <Search className="w-3 h-3" />照会
           </button>
         </div>
       </div>
 
       <div className="p-5 flex-1">
         {isLoading ? (
-          <div className="flex items-center justify-center h-40 text-slate-400 text-sm">불러오는 중...</div>
+          <div className="flex items-center justify-center h-40 text-slate-400 text-sm">読み込み中...</div>
         ) : !data ? null : (
           <>
             <div className="grid grid-cols-2 gap-2 mb-4">
-              <StatBox label="순 매출 (취소 제외)" value={formatCurrency(data.net_amount)} sub={`${data.net_count}건`} color="bg-emerald-50" />
-              <StatBox label="총 주문건수" value={`${data.order_count}건`} sub={`취소 ${data.cancelled_count}건`} color="bg-blue-50" />
-              <StatBox label="총 결제금액" value={formatCurrency(data.total_amount)} color="bg-slate-50" />
-              <StatBox label="구매 고객수" value={`${data.unique_customers}명`} color="bg-violet-50" />
+              <StatBox label="純売上 (キャンセル除く)" value={formatCurrency(data.net_amount)} sub={`${data.net_count}件`} color="bg-emerald-50" />
+              <StatBox label="総注文件数" value={`${data.order_count}件`} sub={`キャンセル ${data.cancelled_count}件`} color="bg-blue-50" />
+              <StatBox label="総決済金額" value={formatCurrency(data.total_amount)} color="bg-slate-50" />
+              <StatBox label="購入顧客数" value={`${data.unique_customers}名`} color="bg-violet-50" />
             </div>
 
             {chartData.length > 0 && (
               <div className="mt-2">
-                <p className="text-[11px] text-slate-400 font-bold mb-1 px-1">일별 매출 (만원)</p>
+                <p className="text-[11px] text-slate-400 font-bold mb-1 px-1">日別売上 (万円)</p>
                 <ResponsiveContainer width="100%" height={100}>
                   <BarChart data={chartData} margin={{ top: 2, right: 4, left: -20, bottom: 0 }} barSize={chartData.length > 15 ? 6 : 12}>
                     <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" vertical={false} />
@@ -159,8 +160,8 @@ function SalesStatsCard() {
                         active && payload?.length ? (
                           <div className="bg-white border border-slate-200 rounded-lg shadow px-3 py-2 text-xs">
                             <p className="font-bold text-slate-600 mb-0.5">{label}</p>
-                            <p className="text-emerald-600 font-bold">{payload[0]?.value?.toLocaleString()}만원</p>
-                            <p className="text-slate-400">{payload[0]?.payload?.건수}건</p>
+                            <p className="text-emerald-600 font-bold">{payload[0]?.value?.toLocaleString()}万円</p>
+                            <p className="text-slate-400">{payload[0]?.payload?.건수}件</p>
                           </div>
                         ) : null
                       }
@@ -195,15 +196,15 @@ export default function AdminDashboard() {
   const [buyerTab, setBuyerTab] = useState<"month" | "alltime">("month");
   const [, setLocation] = useLocation();
 
-  if (isLoading) return <div className="p-10 text-center text-slate-500">데이터를 불러오는 중...</div>;
+  if (isLoading) return <div className="p-10 text-center text-slate-500">データを読み込み中...</div>;
   if (!data) return null;
 
   const stats = [
-    { label: "신규 주문접수", value: data.pending_orders, icon: Package, color: "bg-blue-500", light: "bg-blue-50", unit: "건", link: "/admin/orders?status=주문접수" },
-    { label: "처리/배송준비", value: data.processing_orders, icon: Clock, color: "bg-amber-500", light: "bg-amber-50", unit: "건", link: "/admin/orders?status=처리중" },
-    { label: "배송완료", value: data.completed_orders, icon: CheckCircle2, color: "bg-emerald-500", light: "bg-emerald-50", unit: "건", link: "/admin/orders?status=배송완료" },
-    { label: "승인 대기", value: data.pending_members, icon: UserCheck, color: "bg-purple-500", light: "bg-purple-50", unit: "건", link: "/admin/members" },
-    { label: "미답변 문의", value: data.unanswered_qna || 0, icon: MessageSquare, color: "bg-red-500", light: "bg-red-50", unit: "건", link: "/admin/qna" },
+    { label: "新規注文受付", value: data.pending_orders, icon: Package, color: "bg-blue-500", light: "bg-blue-50", unit: "件", link: "/admin/orders?status=주문접수" },
+    { label: "処理中/配送準備", value: data.processing_orders, icon: Clock, color: "bg-amber-500", light: "bg-amber-50", unit: "件", link: "/admin/orders?status=처리중" },
+    { label: "配送完了", value: data.completed_orders, icon: CheckCircle2, color: "bg-emerald-500", light: "bg-emerald-50", unit: "件", link: "/admin/orders?status=배송완료" },
+    { label: "承認待ち", value: data.pending_members, icon: UserCheck, color: "bg-purple-500", light: "bg-purple-50", unit: "件", link: "/admin/members" },
+    { label: "未回答のお問い合わせ", value: data.unanswered_qna || 0, icon: MessageSquare, color: "bg-red-500", light: "bg-red-50", unit: "件", link: "/admin/qna" },
   ];
 
   const regionOrders: { city: string; count: number }[] = (data as any).region_orders || [];
@@ -218,8 +219,8 @@ export default function AdminDashboard() {
   return (
     <div className="animate-in fade-in duration-300">
       <div className="mb-8">
-        <h1 className="text-3xl font-black text-slate-900 tracking-tight">관리자 대시보드</h1>
-        <p className="text-slate-500 mt-2 font-medium">전체 발주 현황과 파트너사 현황을 한눈에 확인하세요.</p>
+        <h1 className="text-3xl font-black text-slate-900 tracking-tight">管理者ダッシュボード</h1>
+        <p className="text-slate-500 mt-2 font-medium">全体の発注状況と取引先の状況を一目で確認できます。</p>
       </div>
 
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 mb-6">
@@ -243,13 +244,13 @@ export default function AdminDashboard() {
         })}
       </div>
 
-      {/* ── 특별지역 주문현황 ── */}
+      {/* ── 特別地域の注文状況 ── */}
       {regionOrders.length > 0 && (
         <div className="mb-10">
           <div className="flex items-center gap-2 mb-3">
             <MapPin className="w-4 h-4 text-amber-600" />
-            <h2 className="text-sm font-bold text-slate-700">특별지역 주문현황</h2>
-            <span className="text-xs text-slate-400">(누적)</span>
+            <h2 className="text-sm font-bold text-slate-700">特別地域の注文状況</h2>
+            <span className="text-xs text-slate-400">(累計)</span>
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             {regionOrders.map(({ city, count }) => {
@@ -262,10 +263,10 @@ export default function AdminDashboard() {
                 >
                   <div className="flex items-center gap-2 mb-1">
                     <MapPin className={`w-3.5 h-3.5 ${c.text}`} />
-                    <span className={`text-xs font-bold ${c.text}`}>{city}</span>
+                    <span className={`text-xs font-bold ${c.text}`}>{ja(city)}</span>
                   </div>
                   <p className={`text-2xl font-black ${c.text}`}>
-                    {count.toLocaleString()}<span className="text-sm font-bold ml-1">건</span>
+                    {count.toLocaleString()}<span className="text-sm font-bold ml-1">件</span>
                   </p>
                 </Card>
               );
@@ -282,13 +283,13 @@ export default function AdminDashboard() {
           (data as any).monthly_members || [];
 
         const orderChartData = monthlyOrders.map(d => ({
-          label: d.month.slice(5) + "월",
+          label: d.month.slice(5) + "月",
           건수: d.order_count,
           금액: Math.round(d.total_amount / 10000),
         }));
 
         const memberChartData = monthlyMembers.map(d => ({
-          label: d.month.slice(5) + "월",
+          label: d.month.slice(5) + "月",
           가입: d.count,
         }));
 
@@ -303,7 +304,7 @@ export default function AdminDashboard() {
               <p className="font-bold text-slate-700 mb-1">{label}</p>
               {payload.map((p: any) => (
                 <p key={p.dataKey} style={{ color: p.color }} className="font-semibold">
-                  {p.dataKey === "금액" ? `${p.value.toLocaleString()}만원` : `${p.value}건`}
+                  {p.dataKey === "금액" ? `${p.value.toLocaleString()}万円` : `${p.value}件`}
                 </p>
               ))}
             </div>
@@ -315,7 +316,7 @@ export default function AdminDashboard() {
           return (
             <div className="bg-white border border-slate-200 rounded-xl shadow-lg px-4 py-3 text-xs">
               <p className="font-bold text-slate-700 mb-1">{label}</p>
-              <p className="font-semibold text-violet-600">신규 가입 {payload[0]?.value}명</p>
+              <p className="font-semibold text-violet-600">新規登録 {payload[0]?.value}名</p>
             </div>
           );
         };
@@ -328,34 +329,34 @@ export default function AdminDashboard() {
                 <div>
                   <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
                     <BarChart2 className="w-4 h-4 text-primary" />
-                    구매내역 (최근 12개월)
+                    購入履歴 (直近12か月)
                   </h3>
-                  <p className="text-xs text-slate-400 mt-0.5">취소·반품 제외</p>
+                  <p className="text-xs text-slate-400 mt-0.5">キャンセル・返品を除く</p>
                 </div>
                 <div className="text-right">
-                  <p className="text-xs text-slate-400">누적 주문</p>
-                  <p className="text-lg font-black text-slate-900">{totalOrderCount.toLocaleString()}<span className="text-xs text-slate-400 ml-1">건</span></p>
+                  <p className="text-xs text-slate-400">累計注文</p>
+                  <p className="text-lg font-black text-slate-900">{totalOrderCount.toLocaleString()}<span className="text-xs text-slate-400 ml-1">件</span></p>
                   <p className="text-sm font-bold text-primary">{formatCurrency(totalOrderAmount)}</p>
                 </div>
               </div>
               {orderChartData.length === 0 ? (
-                <div className="flex items-center justify-center h-52 text-slate-400 text-sm">데이터가 없습니다</div>
+                <div className="flex items-center justify-center h-52 text-slate-400 text-sm">データがありません</div>
               ) : (
                 <div className="px-2 pt-4 pb-2">
                   <ResponsiveContainer width="100%" height={210}>
                     <BarChart data={orderChartData} margin={{ top: 4, right: 12, left: -8, bottom: 0 }} barGap={2}>
                       <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" vertical={false} />
                       <XAxis dataKey="label" tick={{ fontSize: 10, fill: "#94a3b8" }} axisLine={false} tickLine={false} />
-                      <YAxis yAxisId="left" tick={{ fontSize: 10, fill: "#94a3b8" }} axisLine={false} tickLine={false} tickFormatter={v => `${v}건`} width={36} />
-                      <YAxis yAxisId="right" orientation="right" tick={{ fontSize: 10, fill: "#94a3b8" }} axisLine={false} tickLine={false} tickFormatter={v => `${v}만`} width={36} />
+                      <YAxis yAxisId="left" tick={{ fontSize: 10, fill: "#94a3b8" }} axisLine={false} tickLine={false} tickFormatter={v => `${v}件`} width={36} />
+                      <YAxis yAxisId="right" orientation="right" tick={{ fontSize: 10, fill: "#94a3b8" }} axisLine={false} tickLine={false} tickFormatter={v => `${v}万`} width={36} />
                       <Tooltip content={<CustomOrderTooltip />} />
                       <Bar yAxisId="left" dataKey="건수" fill="#1D8A5A" radius={[4, 4, 0, 0]} maxBarSize={22} />
                       <Bar yAxisId="right" dataKey="금액" fill="#a7f3d0" radius={[4, 4, 0, 0]} maxBarSize={22} />
                     </BarChart>
                   </ResponsiveContainer>
                   <div className="flex items-center justify-center gap-5 mt-1">
-                    <span className="flex items-center gap-1.5 text-[11px] text-slate-500"><span className="w-3 h-3 rounded-sm bg-[#1D8A5A] inline-block" />주문건수</span>
-                    <span className="flex items-center gap-1.5 text-[11px] text-slate-500"><span className="w-3 h-3 rounded-sm bg-[#a7f3d0] inline-block" />결제금액(만원)</span>
+                    <span className="flex items-center gap-1.5 text-[11px] text-slate-500"><span className="w-3 h-3 rounded-sm bg-[#1D8A5A] inline-block" />注文件数</span>
+                    <span className="flex items-center gap-1.5 text-[11px] text-slate-500"><span className="w-3 h-3 rounded-sm bg-[#a7f3d0] inline-block" />決済金額(万円)</span>
                   </div>
                 </div>
               )}
@@ -367,18 +368,18 @@ export default function AdminDashboard() {
                 <div>
                   <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
                     <Users className="w-4 h-4 text-violet-500" />
-                    회원가입 내역 (최근 12개월)
+                    会員登録履歴 (直近12か月)
                   </h3>
-                  <p className="text-xs text-slate-400 mt-0.5">월별 신규 가입자</p>
+                  <p className="text-xs text-slate-400 mt-0.5">月別の新規登録者</p>
                 </div>
                 <div className="text-right">
-                  <p className="text-xs text-slate-400">기간 내 가입</p>
-                  <p className="text-lg font-black text-slate-900">{totalMemberCount.toLocaleString()}<span className="text-xs text-slate-400 ml-1">명</span></p>
-                  <p className="text-sm font-bold text-violet-500">총 {(data as any).total_members || 0}명 활성</p>
+                  <p className="text-xs text-slate-400">期間内の登録</p>
+                  <p className="text-lg font-black text-slate-900">{totalMemberCount.toLocaleString()}<span className="text-xs text-slate-400 ml-1">名</span></p>
+                  <p className="text-sm font-bold text-violet-500">有効会員 計 {(data as any).total_members || 0}名</p>
                 </div>
               </div>
               {memberChartData.length === 0 ? (
-                <div className="flex items-center justify-center h-52 text-slate-400 text-sm">데이터가 없습니다</div>
+                <div className="flex items-center justify-center h-52 text-slate-400 text-sm">データがありません</div>
               ) : (
                 <div className="px-2 pt-4 pb-2">
                   <ResponsiveContainer width="100%" height={210}>
@@ -391,13 +392,13 @@ export default function AdminDashboard() {
                       </defs>
                       <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" vertical={false} />
                       <XAxis dataKey="label" tick={{ fontSize: 10, fill: "#94a3b8" }} axisLine={false} tickLine={false} />
-                      <YAxis tick={{ fontSize: 10, fill: "#94a3b8" }} axisLine={false} tickLine={false} tickFormatter={v => `${v}명`} width={36} allowDecimals={false} />
+                      <YAxis tick={{ fontSize: 10, fill: "#94a3b8" }} axisLine={false} tickLine={false} tickFormatter={v => `${v}名`} width={36} allowDecimals={false} />
                       <Tooltip content={<CustomMemberTooltip />} />
                       <Area type="monotone" dataKey="가입" stroke="#7c3aed" strokeWidth={2.5} fill="url(#memberGrad)" dot={{ r: 3.5, fill: "#7c3aed", strokeWidth: 0 }} activeDot={{ r: 5, fill: "#7c3aed" }} />
                     </AreaChart>
                   </ResponsiveContainer>
                   <div className="flex items-center justify-center mt-1">
-                    <span className="flex items-center gap-1.5 text-[11px] text-slate-500"><span className="w-3 h-3 rounded-sm bg-violet-500 inline-block" />월별 신규 가입</span>
+                    <span className="flex items-center gap-1.5 text-[11px] text-slate-500"><span className="w-3 h-3 rounded-sm bg-violet-500 inline-block" />月別の新規登録</span>
                   </div>
                 </div>
               )}
@@ -411,18 +412,18 @@ export default function AdminDashboard() {
           <div className="px-6 py-5 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
             <h3 className="text-lg font-bold text-slate-900 flex items-center gap-2">
               <TrendingUp className="w-5 h-5 text-primary" />
-              최근 주문 내역
+              最近の注文履歴
             </h3>
-            <Link href="/admin/orders" className="text-sm font-bold text-primary hover:underline">전체보기</Link>
+            <Link href="/admin/orders" className="text-sm font-bold text-primary hover:underline">すべて見る</Link>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
                 <tr className="bg-slate-50 border-b border-slate-100">
-                  <th className="px-6 py-3 text-xs font-bold text-slate-500 uppercase">주문번호</th>
-                  <th className="px-6 py-3 text-xs font-bold text-slate-500 uppercase">파트너사</th>
-                  <th className="px-6 py-3 text-xs font-bold text-slate-500 uppercase">상태</th>
-                  <th className="px-6 py-3 text-xs font-bold text-slate-500 uppercase text-right">결제금액</th>
+                  <th className="px-6 py-3 text-xs font-bold text-slate-500 uppercase">注文番号</th>
+                  <th className="px-6 py-3 text-xs font-bold text-slate-500 uppercase">取引先</th>
+                  <th className="px-6 py-3 text-xs font-bold text-slate-500 uppercase">ステータス</th>
+                  <th className="px-6 py-3 text-xs font-bold text-slate-500 uppercase text-right">決済金額</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
@@ -431,14 +432,14 @@ export default function AdminDashboard() {
                     <td className="px-6 py-4 text-sm font-bold text-slate-900">#{order.od_id}</td>
                     <td className="px-6 py-4 text-sm font-bold text-slate-700">{order.company_name}</td>
                     <td className="px-6 py-4">
-                      <Badge className={getStatusColor(order.od_status)}>{order.od_status}</Badge>
+                      <Badge className={getStatusColor(order.od_status)}>{ja(order.od_status)}</Badge>
                     </td>
                     <td className="px-6 py-4 text-sm font-black text-slate-900 text-right">{formatCurrency(order.od_receipt_price)}</td>
                   </tr>
                 ))}
                 {data.recent_orders.length === 0 && (
                   <tr>
-                    <td colSpan={4} className="px-6 py-10 text-center text-slate-500 font-medium">최근 주문이 없습니다.</td>
+                    <td colSpan={4} className="px-6 py-10 text-center text-slate-500 font-medium">最近の注文はありません。</td>
                   </tr>
                 )}
               </tbody>
@@ -449,15 +450,15 @@ export default function AdminDashboard() {
         <SalesStatsCard />
       </div>
 
-      {/* 사용자별 구매 순위 */}
+      {/* ユーザー別購入ランキング */}
       <div className="mb-8">
         <Card className="p-0 overflow-hidden">
           <div className="px-6 py-5 border-b border-slate-100 bg-slate-50/50 flex items-center justify-between">
             <h3 className="text-lg font-bold text-slate-900 flex items-center gap-2">
               <Trophy className="w-5 h-5 text-amber-500" />
-              사용자별 구매 순위
+              ユーザー別購入ランキング
               <Badge className="bg-amber-100 text-amber-700 text-xs font-bold">
-                {buyerTab === "month" ? (data as any).settlement_month : "전체 기간"}
+                {buyerTab === "month" ? (data as any).settlement_month : "全期間"}
               </Badge>
             </h3>
             <div className="flex gap-1 bg-slate-100 rounded-lg p-1">
@@ -465,13 +466,13 @@ export default function AdminDashboard() {
                 onClick={() => setBuyerTab("month")}
                 className={`px-3 py-1.5 text-xs font-bold rounded-md transition-all ${buyerTab === "month" ? "bg-white text-slate-900 shadow-sm" : "text-slate-500 hover:text-slate-700"}`}
               >
-                이번 달
+                今月
               </button>
               <button
                 onClick={() => setBuyerTab("alltime")}
                 className={`px-3 py-1.5 text-xs font-bold rounded-md transition-all ${buyerTab === "alltime" ? "bg-white text-slate-900 shadow-sm" : "text-slate-500 hover:text-slate-700"}`}
               >
-                전체 기간
+                全期間
               </button>
             </div>
           </div>
@@ -485,7 +486,7 @@ export default function AdminDashboard() {
               return (
                 <div className="px-6 py-12 text-center text-slate-400 font-medium">
                   <ShoppingBag className="w-10 h-10 mx-auto mb-3 text-slate-200" />
-                  {buyerTab === "month" ? "이번 달 주문 내역이 없습니다." : "주문 내역이 없습니다."}
+                  {buyerTab === "month" ? "今月の注文履歴はありません。" : "注文履歴はありません。"}
                 </div>
               );
             }
@@ -512,7 +513,7 @@ export default function AdminDashboard() {
                           <p className="text-sm font-bold text-slate-900 mt-1.5 truncate max-w-full">{b.mb_name || b.mb_id}</p>
                           {b.company_name && <p className="text-xs text-slate-400 truncate max-w-full">{b.company_name}</p>}
                           <p className={`text-base font-black mt-1 ${colors.text}`}>{formatCurrency(b.total_amount)}</p>
-                          <p className="text-xs text-slate-400">{b.order_count}건 주문</p>
+                          <p className="text-xs text-slate-400">注文 {b.order_count}件</p>
                         </div>
                       );
                     })}
@@ -525,10 +526,10 @@ export default function AdminDashboard() {
                     <table className="w-full text-left border-collapse">
                       <thead>
                         <tr className="bg-slate-50 border-b border-slate-100">
-                          <th className="px-4 py-2.5 text-xs font-bold text-slate-400 w-10 text-center">순위</th>
-                          <th className="px-4 py-2.5 text-xs font-bold text-slate-400">회원</th>
-                          <th className="px-4 py-2.5 text-xs font-bold text-slate-400 text-center hidden sm:table-cell">주문건수</th>
-                          <th className="px-4 py-2.5 text-xs font-bold text-slate-400 text-right">구매금액</th>
+                          <th className="px-4 py-2.5 text-xs font-bold text-slate-400 w-10 text-center">順位</th>
+                          <th className="px-4 py-2.5 text-xs font-bold text-slate-400">会員</th>
+                          <th className="px-4 py-2.5 text-xs font-bold text-slate-400 text-center hidden sm:table-cell">注文件数</th>
+                          <th className="px-4 py-2.5 text-xs font-bold text-slate-400 text-right">購入金額</th>
                           <th className="px-4 py-2.5 text-xs font-bold text-slate-400 hidden md:table-cell" style={{ width: 160 }}></th>
                         </tr>
                       </thead>
@@ -543,7 +544,7 @@ export default function AdminDashboard() {
                                 <p className="text-sm font-bold text-slate-900">{b.mb_name || b.mb_id}</p>
                                 {b.company_name && <p className="text-xs text-slate-400">{b.company_name}</p>}
                               </td>
-                              <td className="px-4 py-3 text-sm text-slate-500 text-center hidden sm:table-cell">{b.order_count}건</td>
+                              <td className="px-4 py-3 text-sm text-slate-500 text-center hidden sm:table-cell">{b.order_count}件</td>
                               <td className="px-4 py-3 text-sm font-black text-slate-900 text-right">{formatCurrency(b.total_amount)}</td>
                               <td className="px-4 py-3 hidden md:table-cell">
                                 <div className="w-full bg-slate-100 rounded-full h-1.5">
@@ -568,9 +569,9 @@ export default function AdminDashboard() {
           <div className="px-6 py-5 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
             <h3 className="text-lg font-bold text-slate-900 flex items-center gap-2">
               <Bell className="w-5 h-5 text-amber-500" />
-              공지사항
+              お知らせ
             </h3>
-            <Link href="/notices" className="text-sm font-bold text-primary hover:underline">전체보기</Link>
+            <Link href="/notices" className="text-sm font-bold text-primary hover:underline">すべて見る</Link>
           </div>
           <div className="divide-y divide-slate-100">
             {data.recent_notices?.map((n: any) => (
@@ -588,7 +589,7 @@ export default function AdminDashboard() {
               </Link>
             ))}
             {(!data.recent_notices || data.recent_notices.length === 0) && (
-              <div className="px-6 py-10 text-center text-slate-500 font-medium">등록된 공지사항이 없습니다.</div>
+              <div className="px-6 py-10 text-center text-slate-500 font-medium">登録されたお知らせはありません。</div>
             )}
           </div>
         </Card>
@@ -597,12 +598,12 @@ export default function AdminDashboard() {
           <div className="px-6 py-5 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
             <h3 className="text-lg font-bold text-slate-900 flex items-center gap-2">
               <MessageSquare className="w-5 h-5 text-red-500" />
-              최근 문의사항
+              最近のお問い合わせ
               {(data.unanswered_qna || 0) > 0 && (
-                <Badge className="bg-red-100 text-red-700 text-xs font-bold">미답변 {data.unanswered_qna}건</Badge>
+                <Badge className="bg-red-100 text-red-700 text-xs font-bold">未回答 {data.unanswered_qna}件</Badge>
               )}
             </h3>
-            <Link href="/admin/qna" className="text-sm font-bold text-primary hover:underline">전체보기</Link>
+            <Link href="/admin/qna" className="text-sm font-bold text-primary hover:underline">すべて見る</Link>
           </div>
           <div className="divide-y divide-slate-100">
             {data.recent_qna?.map((q: any) => (
@@ -611,8 +612,8 @@ export default function AdminDashboard() {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
                       <p className="text-sm font-bold text-slate-900 truncate">{q.wr_subject}</p>
-                      {q.wr_comment === 0 && <Badge className="bg-red-100 text-red-600 text-[10px] shrink-0">미답변</Badge>}
-                      {q.wr_comment > 0 && <Badge className="bg-emerald-100 text-emerald-600 text-[10px] shrink-0">답변완료</Badge>}
+                      {q.wr_comment === 0 && <Badge className="bg-red-100 text-red-600 text-[10px] shrink-0">未回答</Badge>}
+                      {q.wr_comment > 0 && <Badge className="bg-emerald-100 text-emerald-600 text-[10px] shrink-0">回答済み</Badge>}
                     </div>
                     <p className="text-xs text-slate-400 mt-1">
                       {q.company_name || q.wr_name}{q.company_name ? ` (${q.wr_name})` : ""} · {q.wr_datetime?.slice(0, 10)}
@@ -622,7 +623,7 @@ export default function AdminDashboard() {
               </Link>
             ))}
             {(!data.recent_qna || data.recent_qna.length === 0) && (
-              <div className="px-6 py-10 text-center text-slate-500 font-medium">등록된 문의사항이 없습니다.</div>
+              <div className="px-6 py-10 text-center text-slate-500 font-medium">登録されたお問い合わせはありません。</div>
             )}
           </div>
         </Card>

@@ -41,9 +41,9 @@ const DEVICE_ICONS: Record<string, React.ReactNode> = {
 };
 
 const DEVICE_LABELS: Record<string, string> = {
-  desktop: "데스킱",
-  mobile: "모바일",
-  tablet: "탭릿",
+  desktop: "デスクトップ",
+  mobile: "モバイル",
+  tablet: "タブレット",
 };
 
 export default function AdminVisitorStats() {
@@ -71,7 +71,7 @@ export default function AdminVisitorStats() {
       labels: daily.map((d: any) => d.date.slice(5)),
       datasets: [
         {
-          label: "총 방문 수",
+          label: "総訪問数",
           data: daily.map((d: any) => d.totalVisits),
           borderColor: "#6366f1",
           backgroundColor: "rgba(99, 102, 241, 0.1)",
@@ -80,7 +80,7 @@ export default function AdminVisitorStats() {
           pointRadius: 3,
         },
         {
-          label: "유니크 방문자",
+          label: "ユニーク訪問者",
           data: daily.map((d: any) => d.uniqueVisitors),
           borderColor: "#10b981",
           backgroundColor: "rgba(16, 185, 129, 0.1)",
@@ -98,7 +98,7 @@ export default function AdminVisitorStats() {
       labels: pages.map((p: any) => p.path.length > 20 ? p.path.slice(0, 20) + "..." : p.path),
       datasets: [
         {
-          label: "방문 수",
+          label: "訪問数",
           data: pages.map((p: any) => p.visits),
           backgroundColor: "#6366f1",
           borderRadius: 4,
@@ -125,7 +125,7 @@ export default function AdminVisitorStats() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-xl font-bold">접속자 통계</h1>
+        <h1 className="text-xl font-bold">アクセス統計</h1>
         <div className="flex gap-2">
           {[7, 30, 90].map((d) => (
             <Button
@@ -134,7 +134,7 @@ export default function AdminVisitorStats() {
               variant={periodDays === d ? "default" : "outline"}
               onClick={() => setPeriodDays(d as any)}
             >
-              {d}일
+              {d}日
             </Button>
           ))}
         </div>
@@ -145,28 +145,28 @@ export default function AdminVisitorStats() {
         <Card className="p-4">
           <div className="flex items-center gap-2 mb-2">
             <Eye className="w-4 h-4 text-indigo-500" />
-            <span className="text-sm text-muted-foreground">총 방문</span>
+            <span className="text-sm text-muted-foreground">総訪問数</span>
           </div>
           <p className="text-2xl font-bold">{summary.totalVisits.toLocaleString()}</p>
         </Card>
         <Card className="p-4">
           <div className="flex items-center gap-2 mb-2">
             <Users className="w-4 h-4 text-emerald-500" />
-            <span className="text-sm text-muted-foreground">유니크 방문자</span>
+            <span className="text-sm text-muted-foreground">ユニーク訪問者</span>
           </div>
           <p className="text-2xl font-bold">{summary.uniqueVisitors.toLocaleString()}</p>
         </Card>
         <Card className="p-4">
           <div className="flex items-center gap-2 mb-2">
             <UserPlus className="w-4 h-4 text-blue-500" />
-            <span className="text-sm text-muted-foreground">신규 방문자</span>
+            <span className="text-sm text-muted-foreground">新規訪問者</span>
           </div>
           <p className="text-2xl font-bold">{summary.newVisitors.toLocaleString()}</p>
         </Card>
         <Card className="p-4">
           <div className="flex items-center gap-2 mb-2">
             <Repeat className="w-4 h-4 text-amber-500" />
-            <span className="text-sm text-muted-foreground">재방문자</span>
+            <span className="text-sm text-muted-foreground">リピーター</span>
           </div>
           <p className="text-2xl font-bold">{summary.returningVisitors.toLocaleString()}</p>
         </Card>
@@ -175,7 +175,7 @@ export default function AdminVisitorStats() {
       {/* Charts */}
       <div className="grid lg:grid-cols-2 gap-6">
         <Card className="p-4">
-          <h3 className="font-semibold mb-4">일일 방문 트렌드</h3>
+          <h3 className="font-semibold mb-4">日別訪問トレンド</h3>
           <div className="h-64">
             <Line
               data={lineChartData}
@@ -189,7 +189,7 @@ export default function AdminVisitorStats() {
           </div>
         </Card>
         <Card className="p-4">
-          <h3 className="font-semibold mb-4">인기 페이지 TOP 10</h3>
+          <h3 className="font-semibold mb-4">人気ページ TOP 10</h3>
           <div className="h-64">
             <Bar
               data={pageChartData}
@@ -206,7 +206,7 @@ export default function AdminVisitorStats() {
 
       <div className="grid lg:grid-cols-3 gap-6">
         <Card className="p-4">
-          <h3 className="font-semibold mb-4">기기별 방문</h3>
+          <h3 className="font-semibold mb-4">デバイス別訪問</h3>
           <div className="h-48 flex items-center justify-center">
             <Pie
               data={deviceChartData}
@@ -232,16 +232,16 @@ export default function AdminVisitorStats() {
 
         {/* Daily Table */}
         <Card className="p-4 lg:col-span-2">
-          <h3 className="font-semibold mb-4">일자별 요약</h3>
+          <h3 className="font-semibold mb-4">日別サマリー</h3>
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b">
-                  <th className="text-left py-2 px-2">날짜</th>
-                  <th className="text-right py-2 px-2">총 방문</th>
-                  <th className="text-right py-2 px-2">유니크</th>
-                  <th className="text-right py-2 px-2">신규</th>
-                  <th className="text-right py-2 px-2">재방문</th>
+                  <th className="text-left py-2 px-2">日付</th>
+                  <th className="text-right py-2 px-2">総訪問</th>
+                  <th className="text-right py-2 px-2">ユニーク</th>
+                  <th className="text-right py-2 px-2">新規</th>
+                  <th className="text-right py-2 px-2">リピート</th>
                 </tr>
               </thead>
               <tbody>
@@ -263,7 +263,7 @@ export default function AdminVisitorStats() {
       {/* Detailed Log Table */}
       <Card className="p-4">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="font-semibold">상세 로그</h3>
+          <h3 className="font-semibold">詳細ログ</h3>
           <div className="flex items-center gap-2">
             <input
               type="date"
@@ -284,12 +284,12 @@ export default function AdminVisitorStats() {
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b">
-                <th className="text-left py-2 px-2">시간</th>
-                <th className="text-left py-2 px-2">세션</th>
-                <th className="text-left py-2 px-2">경로</th>
+                <th className="text-left py-2 px-2">時間</th>
+                <th className="text-left py-2 px-2">セッション</th>
+                <th className="text-left py-2 px-2">パス</th>
                 <th className="text-left py-2 px-2">IP</th>
-                <th className="text-left py-2 px-2">기기</th>
-                <th className="text-left py-2 px-2">신규</th>
+                <th className="text-left py-2 px-2">デバイス</th>
+                <th className="text-left py-2 px-2">新規</th>
               </tr>
             </thead>
             <tbody>
@@ -306,7 +306,7 @@ export default function AdminVisitorStats() {
                   </td>
                   <td className="py-2 px-2">
                     <Badge variant={log.isNew === "yes" ? "default" : "secondary"} className="text-xs">
-                      {log.isNew === "yes" ? "신규" : "재방"}
+                      {log.isNew === "yes" ? "新規" : "リピート"}
                     </Badge>
                   </td>
                 </tr>

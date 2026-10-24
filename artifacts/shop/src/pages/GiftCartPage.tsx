@@ -15,7 +15,7 @@ type PayStep = "cart" | "pay";
 
 const BASE = import.meta.env.BASE_URL.replace(/\/$/, "");
 const API_BASE = import.meta.env.VITE_API_URL ?? "";
-function fmtPrice(n: number) { return n > 0 ? n.toLocaleString() + "원" : "-"; }
+function fmtPrice(n: number) { return n > 0 ? n.toLocaleString() + "円" : "-"; }
 
 function imgUrl(p: string) {
   if (!p) return "";
@@ -78,8 +78,8 @@ export default function GiftCartPage() {
   const handleOrder = async () => {
     if (!user) { navigate("/login"); return; }
     if (cart.length === 0) return;
-    if (!senderName.trim() || !senderPhone.trim()) { setPayError("보내는 분 이름과 연락처를 입력해주세요."); return; }
-    if (!payMethod) { setPayError("결제수단을 선택해주세요."); return; }
+    if (!senderName.trim() || !senderPhone.trim()) { setPayError("送り主のお名前とご連絡先を入力してください。"); return; }
+    if (!payMethod) { setPayError("お支払い方法を選択してください。"); return; }
     setPayError("");
     setSubmitting(true);
     try {
@@ -90,7 +90,7 @@ export default function GiftCartPage() {
         body: JSON.stringify({
           items: cart.map(c => ({ it_id: c.it_id, it_name: c.it_name, it_img1: imgUrl(c.it_img1), quantity: c.quantity })),
           sender_message: message,
-          set_name: "직접 구성 선물세트",
+          set_name: "オリジナルギフトセット",
           sender_name: senderName,
           sender_phone: senderPhone,
           payment_method: payMethod,
@@ -102,10 +102,10 @@ export default function GiftCartPage() {
         setResult({ token: data.token, url: receiveUrl });
         clearGiftCart();
       } else {
-        setPayError(data.error || "주문에 실패했습니다");
+        setPayError(data.error || "注文に失敗しました");
       }
     } catch {
-      setPayError("오류가 발생했습니다. 다시 시도해주세요.");
+      setPayError("エラーが発生しました。もう一度お試しください。");
     }
     setSubmitting(false);
   };
@@ -120,7 +120,7 @@ export default function GiftCartPage() {
 
   const handleKakao = () => {
     if (!result) return;
-    const msg = encodeURIComponent(`seoulmono 선물이 도착했습니다!\n배송지를 입력해 주세요:\n${result.url}`);
+    const msg = encodeURIComponent(`seoulmonoからギフトが届きました!\nお届け先を入力してください:\n${result.url}`);
     window.open(`https://open.kakao.com/o/share?text=${msg}`, "_blank");
   };
 
@@ -136,16 +136,16 @@ export default function GiftCartPage() {
       const r = await fetch("/api/shop/gift/send-sms", {
         method: "POST",
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
-        body: JSON.stringify({ phone: smsPhone, giftLink: result.url, setName: "선물세트" }),
+        body: JSON.stringify({ phone: smsPhone, giftLink: result.url, setName: "ギフトセット" }),
       });
       const d = await r.json();
       if (d.ok) {
         setSmsSent(true);
         setTimeout(() => { setSmsSent(false); setShowSmsInput(false); setSmsPhone(""); }, 2500);
       } else {
-        alert(d.error || "발송 실패");
+        alert(d.error || "送信に失敗しました");
       }
-    } catch { alert("오류가 발생했습니다."); }
+    } catch { alert("エラーが発生しました。"); }
     setSmsSending(false);
   };
 
@@ -159,13 +159,13 @@ export default function GiftCartPage() {
             <div style={{ width: 80, height: 80, background: "linear-gradient(135deg,#8B5E3C,#25a870)", borderRadius: 24, display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 16px", boxShadow: "0 8px 28px rgba(29,138,90,0.35)" }}>
               <Gift size={40} color="#fff" />
             </div>
-            <h2 style={{ fontSize: 24, fontWeight: 900, color: "#111", margin: "0 0 8px" }}>선물 링크가 생성됐습니다!</h2>
-            <p style={{ fontSize: 14, color: "#666", margin: 0 }}>이 링크를 받는 분께 공유하면 배송지를 직접 입력하고 선물을 받으실 수 있어요</p>
+            <h2 style={{ fontSize: 24, fontWeight: 900, color: "#111", margin: "0 0 8px" }}>ギフトリンクが作成されました!</h2>
+            <p style={{ fontSize: 14, color: "#666", margin: 0 }}>このリンクを受取人様に共有すると、お届け先を直接入力してギフトをお受け取りいただけます</p>
           </div>
 
           {/* URL 박스 */}
           <div style={{ background: "#fff", border: "1.5px solid #d1fae5", borderRadius: 16, padding: "16px", marginBottom: 16, boxShadow: "0 4px 16px rgba(29,138,90,0.1)" }}>
-            <p style={{ fontSize: 11, color: "#6b7280", margin: "0 0 8px", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.05em" }}>배송지 입력 링크</p>
+            <p style={{ fontSize: 11, color: "#6b7280", margin: "0 0 8px", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.05em" }}>お届け先入力リンク</p>
             <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
               <p style={{ flex: 1, fontSize: 12.5, color: "#374151", wordBreak: "break-all", margin: 0, fontFamily: "monospace", background: "#f9fafb", borderRadius: 8, padding: "8px 10px" }}>
                 {result.url}
@@ -183,7 +183,7 @@ export default function GiftCartPage() {
               style={{ background: copied ? "#8B5E3C" : "#fff", border: `1.5px solid ${copied ? "#8B5E3C" : "#e0e0e0"}`, borderRadius: 14, height: 52, display: "flex", alignItems: "center", justifyContent: "center", gap: 8, fontSize: 14, fontWeight: 700, color: copied ? "#fff" : "#333", cursor: "pointer", transition: "all 0.2s" }}
             >
               {copied ? <Check size={18} /> : <Copy size={18} />}
-              {copied ? "복사됨!" : "링크 복사"}
+              {copied ? "コピーしました!" : "リンクをコピー"}
             </button>
             {!showSmsInput ? (
               <button
@@ -191,11 +191,11 @@ export default function GiftCartPage() {
                 style={{ background: "#3b82f6", border: "none", borderRadius: 14, height: 52, display: "flex", alignItems: "center", justifyContent: "center", gap: 8, fontSize: 14, fontWeight: 700, color: "#fff", cursor: "pointer" }}
               >
                 <MessageCircle size={18} />
-                문자로 보내기
+                SMSで送る
               </button>
             ) : (
               <div style={{ borderRadius: 14, border: "1.5px solid #3b82f6", background: "#eff6ff", padding: "12px 14px" }}>
-                <p style={{ margin: "0 0 8px", fontSize: 12, fontWeight: 800, color: "#1d4ed8" }}>받는 분 전화번호</p>
+                <p style={{ margin: "0 0 8px", fontSize: 12, fontWeight: 800, color: "#1d4ed8" }}>受取人様の電話番号</p>
                 <div style={{ display: "flex", gap: 8 }}>
                   <input
                     type="tel" value={smsPhone}
@@ -213,12 +213,12 @@ export default function GiftCartPage() {
                       opacity: (smsSending || smsPhone.length < 10) ? 0.6 : 1,
                     }}
                   >
-                    {smsSending ? "발송중..." : smsSent ? "✓ 완료" : "전송"}
+                    {smsSending ? "送信中..." : smsSent ? "✓ 完了" : "送信"}
                   </button>
                 </div>
                 <button onClick={() => { setShowSmsInput(false); setSmsPhone(""); }}
                   style={{ marginTop: 6, background: "none", border: "none", fontSize: 11, color: "#93c5fd", cursor: "pointer" }}>
-                  취소
+                  キャンセル
                 </button>
               </div>
             )}
@@ -229,17 +229,17 @@ export default function GiftCartPage() {
             style={{ width: "100%", height: 48, background: "#fff", border: "1.5px solid #e0e0e0", borderRadius: 14, display: "flex", alignItems: "center", justifyContent: "center", gap: 8, fontSize: 13, fontWeight: 700, color: "#555", cursor: "pointer", marginBottom: 20 }}
           >
             <ExternalLink size={16} />
-            수령인 화면 미리보기
+            受取人画面のプレビュー
           </button>
 
           <div style={{ background: "#fffbeb", border: "1px solid #fde68a", borderRadius: 12, padding: "12px 16px" }}>
             <p style={{ fontSize: 12, color: "#92400e", margin: 0, lineHeight: 1.6 }}>
-              💡 링크를 카카오톡, 문자 등으로 받는 분께 전달하세요. 받는 분이 배송지를 입력하면 관리자가 확인 후 발송합니다.
+              💡 リンクをKakaoTalkやSMSなどで受取人様にお送りください。受取人様がお届け先を入力すると、管理者が確認のうえ発送します。
             </p>
           </div>
 
           <button onClick={() => navigate("/gift")} style={{ width: "100%", marginTop: 20, height: 48, background: "#8B5E3C", border: "none", borderRadius: 14, color: "#fff", fontSize: 15, fontWeight: 700, cursor: "pointer" }}>
-            선물하기 홈으로
+            ギフトトップへ
           </button>
         </div>
       </div>
@@ -249,8 +249,8 @@ export default function GiftCartPage() {
   // ── 결제 단계 ────────────────────────────────────────────────────────────────
   if (payStep === "pay") {
     const payMethods = [
-      paySettings.bank_enabled && { key: "bank" as const, label: "무통장입금", desc: "주문 후 계좌이체로 입금", icon: <Building2 size={18} /> },
-      paySettings.card_enabled && { key: "card" as const, label: "신용카드", desc: "토스페이먼츠 카드 결제", icon: <CreditCard size={18} /> },
+      paySettings.bank_enabled && { key: "bank" as const, label: "銀行振込", desc: "ご注文後に口座へお振り込み", icon: <Building2 size={18} /> },
+      paySettings.card_enabled && { key: "card" as const, label: "クレジットカード", desc: "TossPaymentsカード決済", icon: <CreditCard size={18} /> },
     ].filter(Boolean) as { key: "bank" | "card"; label: string; desc: string; icon: React.ReactNode }[];
 
     return (
@@ -259,13 +259,13 @@ export default function GiftCartPage() {
           <button onClick={() => setPayStep("cart")} style={{ background: "none", border: "none", cursor: "pointer", padding: 4 }}>
             <ArrowLeft size={22} color="#333" />
           </button>
-          <h1 style={{ fontSize: 18, fontWeight: 900, color: "#111", margin: 0 }}>결제하기</h1>
+          <h1 style={{ fontSize: 18, fontWeight: 900, color: "#111", margin: 0 }}>お支払い</h1>
         </div>
 
         <div style={{ maxWidth: 600, margin: "0 auto", padding: "20px 16px" }}>
           {/* 주문 요약 */}
           <div style={{ background: "#fff", borderRadius: 16, border: "1.5px solid #f0f0f0", padding: "16px 18px", marginBottom: 16, boxShadow: "0 2px 8px rgba(0,0,0,0.04)" }}>
-            <p style={{ fontSize: 13, fontWeight: 800, color: "#111", margin: "0 0 10px" }}>주문 상품 ({cart.length}개)</p>
+            <p style={{ fontSize: 13, fontWeight: 800, color: "#111", margin: "0 0 10px" }}>ご注文商品 ({cart.length}点)</p>
             {cart.slice(0, 3).map(c => (
               <div key={c.it_id} style={{ display: "flex", gap: 10, alignItems: "center", marginBottom: 8 }}>
                 <div style={{ width: 44, height: 44, borderRadius: 8, overflow: "hidden", background: "#f5f5f5", flexShrink: 0 }}>
@@ -274,26 +274,26 @@ export default function GiftCartPage() {
                 <p style={{ flex: 1, margin: 0, fontSize: 12.5, color: "#333", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{c.it_name} ×{c.quantity}</p>
               </div>
             ))}
-            {cart.length > 3 && <p style={{ fontSize: 12, color: "#aaa", margin: "4px 0 0" }}>외 {cart.length - 3}개 상품</p>}
+            {cart.length > 3 && <p style={{ fontSize: 12, color: "#aaa", margin: "4px 0 0" }}>他 {cart.length - 3}点</p>}
             <div style={{ borderTop: "1px solid #f0f0f0", marginTop: 10, paddingTop: 10, display: "flex", justifyContent: "space-between" }}>
-              <span style={{ fontSize: 13, color: "#888" }}>총 결제금액</span>
+              <span style={{ fontSize: 13, color: "#888" }}>お支払い合計</span>
               <span style={{ fontSize: 16, fontWeight: 900, color: "#8B5E3C" }}>{fmtPrice(total)}</span>
             </div>
           </div>
 
           {/* 보내는 분 정보 */}
           <div style={{ background: "#fff", borderRadius: 16, border: "1.5px solid #f0f0f0", padding: "18px", marginBottom: 16, boxShadow: "0 2px 8px rgba(0,0,0,0.04)" }}>
-            <p style={{ fontSize: 14, fontWeight: 800, color: "#111", margin: "0 0 14px" }}>보내는 분 정보</p>
+            <p style={{ fontSize: 14, fontWeight: 800, color: "#111", margin: "0 0 14px" }}>送り主情報</p>
             <div style={{ marginBottom: 10 }}>
-              <label style={{ fontSize: 12.5, fontWeight: 700, color: "#555", display: "block", marginBottom: 5 }}>이름</label>
+              <label style={{ fontSize: 12.5, fontWeight: 700, color: "#555", display: "block", marginBottom: 5 }}>お名前</label>
               <div style={{ position: "relative" }}>
                 <User size={15} color="#bbb" style={{ position: "absolute", left: 12, top: "50%", transform: "translateY(-50%)" }} />
-                <input value={senderName} onChange={e => setSenderName(e.target.value)} placeholder="홍길동"
+                <input value={senderName} onChange={e => setSenderName(e.target.value)} placeholder="山田 太郎"
                   style={{ width: "100%", height: 44, paddingLeft: 36, paddingRight: 12, border: "1.5px solid #e5e7eb", borderRadius: 10, fontSize: 14, outline: "none", boxSizing: "border-box" }} />
               </div>
             </div>
             <div>
-              <label style={{ fontSize: 12.5, fontWeight: 700, color: "#555", display: "block", marginBottom: 5 }}>연락처</label>
+              <label style={{ fontSize: 12.5, fontWeight: 700, color: "#555", display: "block", marginBottom: 5 }}>ご連絡先</label>
               <div style={{ position: "relative" }}>
                 <Phone size={15} color="#bbb" style={{ position: "absolute", left: 12, top: "50%", transform: "translateY(-50%)" }} />
                 <input value={senderPhone} onChange={e => setSenderPhone(e.target.value)} placeholder="01012345678" type="tel"
@@ -304,7 +304,7 @@ export default function GiftCartPage() {
 
           {/* 결제수단 */}
           <div style={{ background: "#fff", borderRadius: 16, border: "1.5px solid #f0f0f0", padding: "18px", marginBottom: 16, boxShadow: "0 2px 8px rgba(0,0,0,0.04)" }}>
-            <p style={{ fontSize: 14, fontWeight: 800, color: "#111", margin: "0 0 14px" }}>결제수단</p>
+            <p style={{ fontSize: 14, fontWeight: 800, color: "#111", margin: "0 0 14px" }}>お支払い方法</p>
             <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
               {payMethods.map(m => (
                 <button key={m.key} onClick={() => setPayMethod(m.key)}
@@ -325,13 +325,13 @@ export default function GiftCartPage() {
           {/* 무통장 계좌 안내 */}
           {payMethod === "bank" && (bankInfo.bank_num || bankInfo.bank_name) && (
             <div style={{ background: "#f0fdf4", border: "1.5px solid #bbf7d0", borderRadius: 14, padding: "16px 18px", marginBottom: 16 }}>
-              <p style={{ fontSize: 13, fontWeight: 800, color: "#4A2C0A", margin: "0 0 10px" }}>입금 계좌 정보</p>
-              {bankInfo.bank_name && <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}><span style={{ fontSize: 12.5, color: "#555" }}>은행</span><span style={{ fontSize: 12.5, fontWeight: 700, color: "#111" }}>{bankInfo.bank_name}</span></div>}
-              {bankInfo.bank_num && <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}><span style={{ fontSize: 12.5, color: "#555" }}>계좌번호</span><span style={{ fontSize: 12.5, fontWeight: 700, color: "#111", fontFamily: "monospace" }}>{bankInfo.bank_num}</span></div>}
-              {bankInfo.bank_holder && <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}><span style={{ fontSize: 12.5, color: "#555" }}>예금주</span><span style={{ fontSize: 12.5, fontWeight: 700, color: "#111" }}>{bankInfo.bank_holder}</span></div>}
-              <div style={{ display: "flex", justifyContent: "space-between" }}><span style={{ fontSize: 12.5, color: "#555" }}>입금금액</span><span style={{ fontSize: 14, fontWeight: 900, color: "#8B5E3C" }}>{fmtPrice(total)}</span></div>
+              <p style={{ fontSize: 13, fontWeight: 800, color: "#4A2C0A", margin: "0 0 10px" }}>お振込先口座情報</p>
+              {bankInfo.bank_name && <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}><span style={{ fontSize: 12.5, color: "#555" }}>銀行名</span><span style={{ fontSize: 12.5, fontWeight: 700, color: "#111" }}>{bankInfo.bank_name}</span></div>}
+              {bankInfo.bank_num && <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}><span style={{ fontSize: 12.5, color: "#555" }}>口座番号</span><span style={{ fontSize: 12.5, fontWeight: 700, color: "#111", fontFamily: "monospace" }}>{bankInfo.bank_num}</span></div>}
+              {bankInfo.bank_holder && <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}><span style={{ fontSize: 12.5, color: "#555" }}>口座名義</span><span style={{ fontSize: 12.5, fontWeight: 700, color: "#111" }}>{bankInfo.bank_holder}</span></div>}
+              <div style={{ display: "flex", justifyContent: "space-between" }}><span style={{ fontSize: 12.5, color: "#555" }}>お振込金額</span><span style={{ fontSize: 14, fontWeight: 900, color: "#8B5E3C" }}>{fmtPrice(total)}</span></div>
               {bankInfo.bank_memo && <p style={{ margin: "10px 0 0", fontSize: 11.5, color: "#888", lineHeight: 1.6, background: "#fff", borderRadius: 8, padding: "8px 10px" }}>{bankInfo.bank_memo}</p>}
-              <p style={{ margin: "8px 0 0", fontSize: 11.5, color: "#16a34a" }}>입금 확인 후 선물이 발송됩니다.</p>
+              <p style={{ margin: "8px 0 0", fontSize: 11.5, color: "#16a34a" }}>入金確認後にギフトを発送します。</p>
             </div>
           )}
 
@@ -343,7 +343,7 @@ export default function GiftCartPage() {
             style={{ width: "100%", height: 56, background: submitting ? "#9ca3af" : "linear-gradient(135deg,#8B5E3C,#25a870)", border: "none", borderRadius: 16, color: "#fff", fontSize: 16, fontWeight: 900, cursor: submitting ? "not-allowed" : "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 10, boxShadow: "0 6px 20px rgba(29,138,90,0.35)" }}
           >
             {submitting ? <Loader2 size={20} className="animate-spin" /> : <Send size={20} />}
-            {submitting ? "처리 중..." : payMethod === "bank" ? `${fmtPrice(total)} 입금하고 선물 링크 받기` : "결제하고 선물 링크 받기"}
+            {submitting ? "処理中..." : payMethod === "bank" ? `${fmtPrice(total)} をお振り込みしてギフトリンクを受け取る` : "お支払いしてギフトリンクを受け取る"}
           </button>
         </div>
       </div>
@@ -355,10 +355,10 @@ export default function GiftCartPage() {
     return (
       <div style={{ minHeight: "100vh", background: "#fafafa", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: 20 }}>
         <Package size={60} color="#d1d5db" style={{ marginBottom: 16 }} />
-        <h2 style={{ fontSize: 20, fontWeight: 700, color: "#374151", marginBottom: 8 }}>선물 장바구니가 비어 있습니다</h2>
-        <p style={{ fontSize: 14, color: "#9ca3af", marginBottom: 28 }}>선물할 상품을 담아보세요</p>
+        <h2 style={{ fontSize: 20, fontWeight: 700, color: "#374151", marginBottom: 8 }}>ギフトカートは空です</h2>
+        <p style={{ fontSize: 14, color: "#9ca3af", marginBottom: 28 }}>ギフトにする商品を入れてみましょう</p>
         <button onClick={() => navigate("/gift/custom")} style={{ background: "#8B5E3C", border: "none", color: "#fff", borderRadius: 12, padding: "14px 32px", fontSize: 15, fontWeight: 700, cursor: "pointer" }}>
-          상품 고르러 가기
+          商品を選びに行く
         </button>
       </div>
     );
@@ -372,8 +372,8 @@ export default function GiftCartPage() {
         <button onClick={() => navigate("/gift/custom")} style={{ background: "none", border: "none", cursor: "pointer", padding: 4 }}>
           <ArrowLeft size={22} color="#333" />
         </button>
-        <h1 style={{ fontSize: 18, fontWeight: 900, color: "#111", margin: 0 }}>선물 장바구니</h1>
-        <span style={{ marginLeft: "auto", fontSize: 13, color: "#888" }}>{cart.length}개 상품</span>
+        <h1 style={{ fontSize: 18, fontWeight: 900, color: "#111", margin: 0 }}>ギフトカート</h1>
+        <span style={{ marginLeft: "auto", fontSize: 13, color: "#888" }}>{cart.length}点の商品</span>
       </div>
 
       <div style={{ maxWidth: 600, margin: "0 auto", padding: "20px 16px" }}>
@@ -381,7 +381,7 @@ export default function GiftCartPage() {
         <div style={{ background: "#fff", borderRadius: 16, border: "1.5px solid #f0f0f0", overflow: "hidden", marginBottom: 16, boxShadow: "0 2px 12px rgba(0,0,0,0.05)" }}>
           <div style={{ padding: "14px 18px", borderBottom: "1px solid #f5f5f5", display: "flex", alignItems: "center", gap: 8 }}>
             <Gift size={16} color="#8B5E3C" />
-            <span style={{ fontSize: 14, fontWeight: 800, color: "#111" }}>선택한 상품 ({cart.length})</span>
+            <span style={{ fontSize: 14, fontWeight: 800, color: "#111" }}>選択した商品 ({cart.length})</span>
           </div>
           {cart.map(item => (
             <div key={item.it_id} style={{ display: "flex", gap: 12, padding: "14px 18px", borderBottom: "1px solid #f5f5f5", alignItems: "center" }}>
@@ -407,7 +407,7 @@ export default function GiftCartPage() {
             </div>
           ))}
           <div style={{ padding: "12px 18px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-            <span style={{ fontSize: 13, color: "#888" }}>총 상품금액</span>
+            <span style={{ fontSize: 13, color: "#888" }}>商品金額合計</span>
             <span style={{ fontSize: 16, fontWeight: 900, color: "#8B5E3C" }}>{fmtPrice(total)}</span>
           </div>
         </div>
@@ -415,12 +415,12 @@ export default function GiftCartPage() {
         {/* 선물 메시지 */}
         <div style={{ background: "#fff", borderRadius: 16, border: "1.5px solid #f0f0f0", padding: "18px", marginBottom: 16, boxShadow: "0 2px 12px rgba(0,0,0,0.05)" }}>
           <label style={{ fontSize: 14, fontWeight: 800, color: "#111", display: "block", marginBottom: 10 }}>
-            💌 선물 메시지 <span style={{ fontWeight: 400, color: "#aaa", fontSize: 12 }}>(선택)</span>
+            💌 ギフトメッセージ <span style={{ fontWeight: 400, color: "#aaa", fontSize: 12 }}>(任意)</span>
           </label>
           <textarea
             value={message}
             onChange={e => setMessage(e.target.value)}
-            placeholder="받는 분께 전하고 싶은 메시지를 입력하세요..."
+            placeholder="受取人様へのメッセージを入力してください..."
             maxLength={200}
             style={{ width: "100%", height: 90, border: "1.5px solid #e5e7eb", borderRadius: 12, padding: "12px", fontSize: 14, outline: "none", resize: "none", boxSizing: "border-box", fontFamily: "inherit", color: "#374151" }}
           />
@@ -430,9 +430,9 @@ export default function GiftCartPage() {
         {/* 안내 박스 */}
         <div style={{ background: "#f0f9ff", border: "1px solid #bae6fd", borderRadius: 12, padding: "12px 16px", marginBottom: 20 }}>
           <p style={{ fontSize: 12.5, color: "#0369a1", margin: 0, lineHeight: 1.7 }}>
-            <strong>📦 선물 배송 안내</strong><br />
-            주문 후 생성된 링크를 받는 분께 전달하세요.<br />
-            받는 분이 배송지를 직접 입력하면 관리자 확인 후 발송됩니다.
+            <strong>📦 ギフト配送のご案内</strong><br />
+            ご注文後に作成されたリンクを受取人様にお送りください。<br />
+            受取人様がお届け先を直接入力すると、管理者の確認後に発送されます。
           </p>
         </div>
 
@@ -440,7 +440,7 @@ export default function GiftCartPage() {
         {!user && (
           <div style={{ background: "#fff7ed", border: "1px solid #fed7aa", borderRadius: 12, padding: "12px 16px", marginBottom: 16 }}>
             <p style={{ fontSize: 13, color: "#9a3412", margin: 0 }}>
-              ⚠️ 선물 주문은 로그인 후 이용하실 수 있습니다.
+              ⚠️ ギフトのご注文はログイン後にご利用いただけます。
             </p>
           </div>
         )}
@@ -452,7 +452,7 @@ export default function GiftCartPage() {
           style={{ width: "100%", height: 56, background: "linear-gradient(135deg,#8B5E3C,#25a870)", border: "none", borderRadius: 16, color: "#fff", fontSize: 16, fontWeight: 900, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 10, boxShadow: "0 6px 20px rgba(29,138,90,0.35)", transition: "all 0.2s" }}
         >
           <CreditCard size={20} />
-          {!user ? "로그인하고 결제하기" : "결제하기"}
+          {!user ? "ログインしてお支払い" : "お支払いへ進む"}
           <ChevronRight size={18} />
         </button>
       </div>

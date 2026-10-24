@@ -32,20 +32,20 @@ export default function PendingApproval() {
           </span>
         </div>
         
-        <h2 className="text-3xl font-black text-slate-900 mb-4 tracking-tight">승인 대기중</h2>
+        <h2 className="text-3xl font-black text-slate-900 mb-4 tracking-tight">承認待ち</h2>
         
         <div className="bg-slate-100 rounded-xl p-6 mb-8 text-left">
           <p className="text-slate-600 leading-relaxed font-medium">
-            현재 <strong>{user?.company_name || user?.mb_name}</strong>님의 계정이 관리자 승인 대기 상태입니다.
+            現在、<strong>{user?.company_name || user?.mb_name}</strong>様のアカウントは管理者の承認待ちです。
           </p>
           <p className="text-slate-500 mt-2 text-sm">
-            사업자 정보 확인 후 승인이 완료되면 발주 시스템을 정상적으로 이용하실 수 있습니다. 가입 승인까지 영업일 기준 1~2일이 소요될 수 있습니다.
+            事業者情報の確認後、承認が完了すると発注システムをご利用いただけます。登録の承認まで、営業日で1〜2日ほどかかる場合があります。
           </p>
         </div>
 
         <Button variant="outline" size="lg" onClick={handleLogout} className="w-full group">
           <LogOut className="w-4 h-4 mr-2 text-slate-400 group-hover:text-slate-600" />
-          로그아웃
+          ログアウト
         </Button>
       </Card>
     </div>

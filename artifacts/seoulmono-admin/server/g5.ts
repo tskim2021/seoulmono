@@ -17,7 +17,7 @@ let _pool: mysql.Pool | null = null;
 export function getG5Pool(): mysql.Pool {
   if (!_pool) {
     const url = process.env.SHOP_DATABASE_URL || process.env.DATABASE_URL;
-    if (!url) throw new Error("SHOP_DATABASE_URL(또는 DATABASE_URL)이 설정되지 않았습니다.");
+    if (!url) throw new Error("SHOP_DATABASE_URL（またはDATABASE_URL）が設定されていません。");
     _pool = mysql.createPool({
       uri: url,
       connectionLimit: 5,

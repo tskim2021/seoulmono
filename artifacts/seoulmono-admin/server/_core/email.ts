@@ -15,7 +15,7 @@ async function getSmtpTransporter() {
       auth: { user: settings.smtpUser, pass: settings.smtpPass },
       tls: { rejectUnauthorized: false },
     }),
-    from: `"${settings.smtpFromName ?? "탈모학교"}" <${settings.smtpFrom ?? settings.smtpUser}>`,
+    from: `"${settings.smtpFromName ?? "ソウルモノ"}" <${settings.smtpFrom ?? settings.smtpUser}>`,
     bcc: settings.smtpBcc ?? undefined,
   };
 }
@@ -27,7 +27,7 @@ export async function sendEmailViaSMTP(params: {
   bcc?: string;
 }): Promise<{ success: boolean; error?: string }> {
   const smtp = await getSmtpTransporter();
-  if (!smtp) return { success: false, error: "SMTP 설정이 되어있지 않습니다." };
+  if (!smtp) return { success: false, error: "SMTPが設定されていません。" };
   try {
     await smtp.transporter.sendMail({
       from: smtp.from,
@@ -71,8 +71,8 @@ export async function sendEmail(params: {
 
   if (!success) {
     try {
-      const content = `📧 이메일 발송 알림\n수신자: ${params.to}\n제목: ${params.subject}`;
-      success = await notifyOwner({ title: `[이메일] ${params.subject}`, content });
+      const content = `📧 メール送信通知\n宛先: ${params.to}\n件名: ${params.subject}`;
+      success = await notifyOwner({ title: `[メール] ${params.subject}`, content });
     } catch {
       // 알림 서비스 미설정 시 조용히 실패 (주문/결제 흐름에 영향 없음)
       success = false;
@@ -126,7 +126,7 @@ export async function generateEmailTemplate(params: {
 
   const logoUrl = template?.logoUrl || "https://talmoschool.com/shop/logo.png";
   const primaryColor = template?.primaryColor || "#3a2a2a";
-  const footerText = template?.footerText || "탈모학교 - 해외직구 전문 쇼핑몰";
+  const footerText = template?.footerText || "ソウルモノ - 海外個人輸入専門ショップ";
   const footerLinks = template?.footerLinks ? JSON.parse(template.footerLinks) : [];
 
   return `
@@ -275,7 +275,7 @@ export async function generateEmailTemplate(params: {
     <div class="card">
       <div class="header">
         <div class="logo">
-          <img src="${logoUrl}" alt="\ud0c8\ubaa8\ud559\uad50" />
+          <img src="${logoUrl}" alt="ソウルモノ" />
         </div>
       </div>
       <div class="body">
@@ -290,13 +290,13 @@ export async function generateEmailTemplate(params: {
       <div class="divider"></div>
       <div class="footer">
         <div class="notice-box">
-          <strong>⚠️ 본 메일은 발신 전용 메일입니다</strong><br>
-          회신하셔도 답변을 받으실 수 없습니다.<br>
-          문의사항은 탈모학교 [1:1문의]로 연락 부탁드립니다.
+          <strong>⚠️ このメールは送信専用です</strong><br>
+          ご返信いただいてもお答えできません。<br>
+          お問い合わせはソウルモノの［個別お問い合わせ］までお願いいたします。
         </div>
         <div class="contact-links">
-          <a href="https://talmoschool.com/mypage/inquiry">1:1문의</a>
-          <a href="https://talmoschool.com/">탈모학교 쇼핑몰 바로가기</a>
+          <a href="https://talmoschool.com/mypage/inquiry">個別お問い合わせ</a>
+          <a href="https://talmoschool.com/">ソウルモノのショップへ</a>
         </div>
         <p>${footerText}</p>
         ${footerLinks.length > 0 ? `<div class="footer-links">${footerLinks.map((link: any) => `<a href="${link.url}">${link.text}</a>`).join(" \u00b7 ")}</div>` : ""}
@@ -325,7 +325,7 @@ export function generateReviewRequestEmail(params: {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>배송 완료 - 리뷰 요청</title>
+  <title>配送完了 - レビューのお願い</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: -apple-system, BlinkMacSystemFont, 'Pretendard', 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: #1a1a1a; background: #f8f7f5; -webkit-text-size-adjust: 100%; }
@@ -359,37 +359,37 @@ export function generateReviewRequestEmail(params: {
   <div class="wrapper">
     <div class="card">
       <div class="header">
-        <img src="${LOGO_URL}" alt="탈모학교" />
+        <img src="${LOGO_URL}" alt="ソウルモノ" />
       </div>
       <div class="body">
-        <div class="title">배송이 완료되었습니다!</div>
+        <div class="title">配送が完了しました！</div>
         <div class="content">
-          <p>안녕하세요, <strong>${params.customerName}</strong>님!</p>
-          <p>주문하신 <strong>${params.productName}</strong>이(가) 무사히 배송 완료되었습니다.</p>
+          <p>いつもご利用ありがとうございます。<strong>${params.customerName}</strong>様</p>
+          <p>ご注文の<strong>${params.productName}</strong>が無事に配送完了いたしました。</p>
           <div class="info">
-            <div class="info-row"><span class="info-label">주문번호</span><span class="info-value">${params.orderNumber}</span></div>
-            <div class="info-row"><span class="info-label">상품명</span><span class="info-value">${params.productName}</span></div>
+            <div class="info-row"><span class="info-label">ご注文番号</span><span class="info-value">${params.orderNumber}</span></div>
+            <div class="info-row"><span class="info-label">商品名</span><span class="info-value">${params.productName}</span></div>
           </div>
-          <p>상품은 만족스러우셨나요? 리뷰를 남겨주시면 다른 고객분들께 큰 도움이 됩니다.</p>
+          <p>商品はいかがでしたか？レビューをお寄せいただけますと、他のお客様の大きな参考になります。</p>
         </div>
         <div class="action">
-          <a href="${params.reviewUrl}" class="btn">리뷰 작성하기</a>
+          <a href="${params.reviewUrl}" class="btn">レビューを書く</a>
         </div>
-        <p class="tip">리뷰 작성 시 포인트 적립 혜택 있음</p>
+        <p class="tip">レビュー投稿でポイントがもらえます</p>
       </div>
       <div class="divider"></div>
       <div class="footer">
         <div class="notice-box">
-          <strong>⚠️ 본 메일은 발신 전용 메일입니다</strong><br>
-          회신하셔도 답변을 받으실 수 없습니다.<br>
-          문의사항은 탈모학교 [1:1문의]로 연락 부탁드립니다.
+          <strong>⚠️ このメールは送信専用です</strong><br>
+          ご返信いただいてもお答えできません。<br>
+          お問い合わせはソウルモノの［個別お問い合わせ］までお願いいたします。
         </div>
         <div class="contact-links">
-          <a href="https://talmoschool.com/mypage/inquiry">1:1문의</a>
-          <a href="https://talmoschool.com/">탈모학교 쇼핑몰 바로가기</a>
+          <a href="https://talmoschool.com/mypage/inquiry">個別お問い合わせ</a>
+          <a href="https://talmoschool.com/">ソウルモノのショップへ</a>
         </div>
-        <p>본 메일은 발신 전용입니다.</p>
-        <p>&copy; 2026 탈모학교</p>
+        <p>このメールは送信専用です。</p>
+        <p>&copy; 2026 ソウルモノ</p>
       </div>
     </div>
   </div>

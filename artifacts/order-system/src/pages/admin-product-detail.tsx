@@ -31,7 +31,7 @@ async function uploadEditorImage(file: File): Promise<string | null> {
     const res = await fetch("/api/editor-upload", { method: "POST", body: formData, headers });
     if (!res.ok) {
       const errData = await res.json().catch(() => ({}));
-      const msg = errData.error || "이미지 업로드에 실패했습니다";
+      const msg = errData.error || "画像のアップロードに失敗しました";
       alert(msg);
       return null;
     }
@@ -39,7 +39,7 @@ async function uploadEditorImage(file: File): Promise<string | null> {
     return data.url;
   } catch (err) {
     console.error("Image upload error:", err);
-    alert("이미지 업로드 중 오류가 발생했습니다. 다시 시도해주세요.");
+    alert("画像のアップロード中にエラーが発生しました。もう一度お試しください。");
     return null;
   }
 }
@@ -189,19 +189,19 @@ function ProductImageUpload({ currentImage, productId, onUploaded, uploadedImage
       <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={onFileChange} />
       {displayImage && !imgError ? (
         <div className="relative w-full h-full">
-          <img src={displayImage} alt={`이미지 ${slotNumber}`} className="w-full h-full object-cover rounded-lg" onError={() => setImgError(true)} />
+          <img src={displayImage} alt={`画像 ${slotNumber}`} className="w-full h-full object-cover rounded-lg" onError={() => setImgError(true)} />
           <div className="absolute inset-0 bg-black/0 hover:bg-black/40 transition-colors flex items-center justify-center opacity-0 hover:opacity-100">
-            <span className="text-white font-bold text-xs bg-black/60 px-2 py-1 rounded">변경</span>
+            <span className="text-white font-bold text-xs bg-black/60 px-2 py-1 rounded">変更</span>
           </div>
           <span className="absolute top-1.5 left-1.5 text-[10px] bg-black/50 text-white px-1.5 py-0.5 rounded font-bold">{slotNumber}</span>
           {onRemove && (
-            <button onClick={handleRemove} className="absolute top-1 right-1 w-5 h-5 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center text-xs font-bold opacity-0 hover:opacity-100 transition-opacity" title="이미지 삭제">×</button>
+            <button onClick={handleRemove} className="absolute top-1 right-1 w-5 h-5 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center text-xs font-bold opacity-0 hover:opacity-100 transition-opacity" title="画像を削除">×</button>
           )}
         </div>
       ) : (
         <div className="w-full h-full flex flex-col items-center justify-center gap-1 text-slate-300">
           <Upload className="w-5 h-5" />
-          <span className="text-[10px] font-bold">이미지 {slotNumber}</span>
+          <span className="text-[10px] font-bold">画像 {slotNumber}</span>
         </div>
       )}
       {uploading && (
@@ -265,7 +265,7 @@ function EditorToolbar({ editor }: { editor: any }) {
 
 
   const addLink = () => {
-    const url = prompt("링크 URL을 입력하세요:");
+    const url = prompt("リンクURLを入力してください:");
     if (url) editor.chain().focus().setLink({ href: url }).run();
   };
 
@@ -285,34 +285,34 @@ function EditorToolbar({ editor }: { editor: any }) {
 
   return (
     <div className="flex flex-wrap items-center gap-0.5 px-3 py-2 border-b border-slate-200 bg-slate-50/50">
-      {btn(editor.isActive("bold"), () => editor.chain().focus().toggleBold().run(), <Bold className="w-4 h-4" />, "굵게")}
-      {btn(editor.isActive("italic"), () => editor.chain().focus().toggleItalic().run(), <Italic className="w-4 h-4" />, "기울임")}
-      {btn(editor.isActive("underline"), () => editor.chain().focus().toggleUnderline().run(), <UnderlineIcon className="w-4 h-4" />, "밑줄")}
+      {btn(editor.isActive("bold"), () => editor.chain().focus().toggleBold().run(), <Bold className="w-4 h-4" />, "太字")}
+      {btn(editor.isActive("italic"), () => editor.chain().focus().toggleItalic().run(), <Italic className="w-4 h-4" />, "斜体")}
+      {btn(editor.isActive("underline"), () => editor.chain().focus().toggleUnderline().run(), <UnderlineIcon className="w-4 h-4" />, "下線")}
       <div className="w-px h-5 bg-slate-200 mx-1" />
-      {btn(editor.isActive("heading", { level: 1 }), () => editor.chain().focus().toggleHeading({ level: 1 }).run(), <Heading1 className="w-4 h-4" />, "제목1")}
-      {btn(editor.isActive("heading", { level: 2 }), () => editor.chain().focus().toggleHeading({ level: 2 }).run(), <Heading2 className="w-4 h-4" />, "제목2")}
-      {btn(editor.isActive("heading", { level: 3 }), () => editor.chain().focus().toggleHeading({ level: 3 }).run(), <Heading3 className="w-4 h-4" />, "제목3")}
+      {btn(editor.isActive("heading", { level: 1 }), () => editor.chain().focus().toggleHeading({ level: 1 }).run(), <Heading1 className="w-4 h-4" />, "見出し1")}
+      {btn(editor.isActive("heading", { level: 2 }), () => editor.chain().focus().toggleHeading({ level: 2 }).run(), <Heading2 className="w-4 h-4" />, "見出し2")}
+      {btn(editor.isActive("heading", { level: 3 }), () => editor.chain().focus().toggleHeading({ level: 3 }).run(), <Heading3 className="w-4 h-4" />, "見出し3")}
       <div className="w-px h-5 bg-slate-200 mx-1" />
-      {btn(editor.isActive({ textAlign: "left" }), () => editor.chain().focus().setTextAlign("left").run(), <AlignLeft className="w-4 h-4" />, "왼쪽")}
-      {btn(editor.isActive({ textAlign: "center" }), () => editor.chain().focus().setTextAlign("center").run(), <AlignCenter className="w-4 h-4" />, "가운데")}
-      {btn(editor.isActive({ textAlign: "right" }), () => editor.chain().focus().setTextAlign("right").run(), <AlignRight className="w-4 h-4" />, "오른쪽")}
+      {btn(editor.isActive({ textAlign: "left" }), () => editor.chain().focus().setTextAlign("left").run(), <AlignLeft className="w-4 h-4" />, "左揃え")}
+      {btn(editor.isActive({ textAlign: "center" }), () => editor.chain().focus().setTextAlign("center").run(), <AlignCenter className="w-4 h-4" />, "中央揃え")}
+      {btn(editor.isActive({ textAlign: "right" }), () => editor.chain().focus().setTextAlign("right").run(), <AlignRight className="w-4 h-4" />, "右揃え")}
       <div className="w-px h-5 bg-slate-200 mx-1" />
-      {btn(editor.isActive("bulletList"), () => editor.chain().focus().toggleBulletList().run(), <List className="w-4 h-4" />, "목록")}
-      {btn(editor.isActive("orderedList"), () => editor.chain().focus().toggleOrderedList().run(), <ListOrdered className="w-4 h-4" />, "번호목록")}
+      {btn(editor.isActive("bulletList"), () => editor.chain().focus().toggleBulletList().run(), <List className="w-4 h-4" />, "リスト")}
+      {btn(editor.isActive("orderedList"), () => editor.chain().focus().toggleOrderedList().run(), <ListOrdered className="w-4 h-4" />, "番号付きリスト")}
       <div className="w-px h-5 bg-slate-200 mx-1" />
       <input ref={fileInputRef} type="file" accept="image/*" multiple className="hidden" onChange={handleFileSelect} />
-      {btn(false, addImage, <Upload className="w-4 h-4" />, "이미지 업로드 (드래그도 가능)")}
-      {btn(editor.isActive("link"), addLink, <LinkIcon className="w-4 h-4" />, "링크")}
-      {btn(editor.isActive("codeBlock"), () => editor.chain().focus().toggleCodeBlock().run(), <Code className="w-4 h-4" />, "코드")}
+      {btn(false, addImage, <Upload className="w-4 h-4" />, "画像アップロード (ドラッグも可能)")}
+      {btn(editor.isActive("link"), addLink, <LinkIcon className="w-4 h-4" />, "リンク")}
+      {btn(editor.isActive("codeBlock"), () => editor.chain().focus().toggleCodeBlock().run(), <Code className="w-4 h-4" />, "コード")}
       <div className="w-px h-5 bg-slate-200 mx-1" />
       <button
         type="button"
         onClick={() => {
-          const html = prompt("HTML 소스를 입력하세요:", editor.getHTML());
+          const html = prompt("HTMLソースを入力してください:", editor.getHTML());
           if (html !== null) editor.commands.setContent(html);
         }}
         className="text-xs text-slate-500 hover:text-slate-700 px-2 py-1 rounded-lg hover:bg-slate-100"
-        title="HTML 소스 편집"
+        title="HTMLソースを編集"
       >
         HTML
       </button>
@@ -516,23 +516,23 @@ export default function AdminProductDetail({ params }: { params: { id: string } 
           })),
         }),
       });
-      toast({ title: isNew ? "상품이 등록되었습니다" : "상품이 수정되었습니다" });
+      toast({ title: isNew ? "商品を登録しました" : "商品を更新しました" });
       queryClient.invalidateQueries({ queryKey: ["admin-products"] });
       queryClient.invalidateQueries({ queryKey: ["admin-product-detail"] });
       navigate("/admin/products");
     },
     onError: (err: any) => {
-      toast({ title: "저장 실패", description: err?.message || "오류가 발생했습니다", variant: "destructive" });
+      toast({ title: "保存に失敗しました", description: err?.message || "エラーが発生しました", variant: "destructive" });
     },
   });
 
   const handleSave = () => {
-    if (!form.it_name) { toast({ title: "상품명을 입력해주세요", variant: "destructive" }); return; }
+    if (!form.it_name) { toast({ title: "商品名を入力してください", variant: "destructive" }); return; }
     let itId = form.it_id;
     if (isNew && !itId) { itId = generateItemId(); update("it_id", itId); }
     const hasBoxOpt = options.some(o => o.io_id.includes("박스"));
     if (hasBoxOpt && boxQty <= 0) {
-      toast({ title: "1박스 입수량을 입력해주세요", description: "박스 옵션이 있으면 입수량이 필수입니다.", variant: "destructive" });
+      toast({ title: "1ケースの入数を入力してください", description: "ケースオプションがある場合、入数は必須です。", variant: "destructive" });
       return;
     }
     const editorHtml = editor?.getHTML() || "";
@@ -541,7 +541,7 @@ export default function AdminProductDetail({ params }: { params: { id: string } 
 
   const addOption = (type: "box" | "piece" | "custom") => {
     if (type === "box" && boxQty <= 0) {
-      toast({ title: "1박스 입수량을 먼저 입력해주세요", variant: "destructive" });
+      toast({ title: "先に1ケースの入数を入力してください", variant: "destructive" });
       return;
     }
     let newOpt: ProductOption;
@@ -645,15 +645,15 @@ export default function AdminProductDetail({ params }: { params: { id: string } 
         </button>
         <div className="flex-1">
           <h1 className="text-2xl font-black text-slate-900 tracking-tight">
-            {isNew ? "상품 등록" : "상품 수정"}
+            {isNew ? "商品登録" : "商品編集"}
           </h1>
           {!isNew && (
-            <p className="text-sm text-slate-500 mt-0.5">상품코드: <span className="font-mono font-bold">{productId}</span></p>
+            <p className="text-sm text-slate-500 mt-0.5">商品コード: <span className="font-mono font-bold">{productId}</span></p>
           )}
         </div>
         <Button onClick={handleSave} disabled={saveMutation.isPending} className="h-11 px-6">
           {saveMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Save className="w-4 h-4 mr-2" />}
-          {saveMutation.isPending ? "저장 중..." : "저장"}
+          {saveMutation.isPending ? "保存中..." : "保存"}
         </Button>
       </div>
 
@@ -661,31 +661,31 @@ export default function AdminProductDetail({ params }: { params: { id: string } 
         <div className="lg:col-span-3 space-y-3">
           <Card className="p-4 space-y-4">
             <h2 className="text-lg font-black text-slate-900 flex items-center gap-2">
-              <Package className="w-5 h-5 text-primary" /> 기본 정보
+              <Package className="w-5 h-5 text-primary" /> 基本情報
             </h2>
 
             {isNew && (
               <div>
-                <Label>상품코드</Label>
+                <Label>商品コード</Label>
                 <Input value={form.it_id} readOnly className="bg-slate-50 text-slate-500 cursor-default" />
-                <p className="text-xs text-slate-400 mt-1">자동 생성됩니다</p>
+                <p className="text-xs text-slate-400 mt-1">自動生成されます</p>
               </div>
             )}
 
             <div>
-              <Label>상품명 *</Label>
-              <Input value={form.it_name} onChange={(e: any) => update("it_name", e.target.value)} placeholder="상품명을 입력하세요" className="text-base" />
+              <Label>商品名 *</Label>
+              <Input value={form.it_name} onChange={(e: any) => update("it_name", e.target.value)} placeholder="商品名を入力してください" className="text-base" />
             </div>
 
             <div className="grid grid-cols-3 gap-4">
               <div className="col-span-2">
-                <Label>카테고리</Label>
+                <Label>カテゴリ</Label>
                 {/* 검색창 */}
                 <div className="relative mb-2" ref={catSearchRef}>
                   <input
                     type="text"
                     className="w-full h-10 px-3 rounded-xl bg-white border-2 border-border text-sm focus:outline-none focus:border-primary transition-all"
-                    placeholder={selectedCatObj ? getCatPath(selectedCatObj) : "카테고리 검색..."}
+                    placeholder={selectedCatObj ? getCatPath(selectedCatObj) : "カテゴリ検索..."}
                     value={catSearch}
                     onFocus={() => setCatSearchOpen(true)}
                     onChange={(e) => { setCatSearch(e.target.value); setCatSearchOpen(true); }}
@@ -694,7 +694,7 @@ export default function AdminProductDetail({ params }: { params: { id: string } 
                   {catSearchOpen && (
                     <div className="absolute z-50 w-full bg-white border-2 border-primary rounded-xl shadow-lg mt-1 max-h-52 overflow-y-auto">
                       {filteredCats.length === 0 ? (
-                        <div className="px-3 py-2 text-sm text-slate-400">검색 결과 없음</div>
+                        <div className="px-3 py-2 text-sm text-slate-400">検索結果なし</div>
                       ) : filteredCats.map((cat: any) => (
                         <button
                           key={cat.ca_id}
@@ -721,7 +721,7 @@ export default function AdminProductDetail({ params }: { params: { id: string } 
                       update("ca_id", v);
                     }}
                   >
-                    <option value="">1차 선택</option>
+                    <option value="">第1階層を選択</option>
                     {level1Cats.map((c: any) => (
                       <option key={c.ca_id} value={c.ca_id}>{c.ca_name}</option>
                     ))}
@@ -737,7 +737,7 @@ export default function AdminProductDetail({ params }: { params: { id: string } 
                       update("ca_id", v || cat1);
                     }}
                   >
-                    <option value="">2차 선택</option>
+                    <option value="">第2階層を選択</option>
                     {level2Cats.filter((c: any) => c.ca_id.startsWith(cat1)).map((c: any) => (
                       <option key={c.ca_id} value={c.ca_id}>{c.ca_name}</option>
                     ))}
@@ -752,7 +752,7 @@ export default function AdminProductDetail({ params }: { params: { id: string } 
                       update("ca_id", v || cat2);
                     }}
                   >
-                    <option value="">3차 선택</option>
+                    <option value="">第3階層を選択</option>
                     {level3Cats.filter((c: any) => c.ca_id.startsWith(cat2)).map((c: any) => (
                       <option key={c.ca_id} value={c.ca_id}>{c.ca_name}</option>
                     ))}
@@ -760,39 +760,39 @@ export default function AdminProductDetail({ params }: { params: { id: string } 
                 </div>
               </div>
               <div>
-                <Label>판매상태</Label>
+                <Label>販売ステータス</Label>
                 <select
                   className="w-full h-10 px-3 rounded-xl bg-white border-2 border-border text-sm font-bold focus:outline-none focus:border-primary transition-all"
                   value={form.it_use}
                   onChange={(e) => update("it_use", e.target.value)}
                 >
-                  <option value="1">판매중</option>
-                  <option value="0">판매중지</option>
+                  <option value="1">販売中</option>
+                  <option value="0">販売停止</option>
                 </select>
               </div>
               <div>
-                <Label>과세구분</Label>
+                <Label>課税区分</Label>
                 <select
                   className="w-full h-10 px-3 rounded-xl bg-white border-2 border-border text-sm font-bold focus:outline-none focus:border-primary transition-all"
                   value={form.it_notax}
                   onChange={(e) => update("it_notax", e.target.value)}
                 >
-                  <option value="0">과세</option>
-                  <option value="1">면세</option>
+                  <option value="0">課税</option>
+                  <option value="1">非課税</option>
                 </select>
               </div>
               <div>
-                <Label>유통기한</Label>
+                <Label>賞味期限</Label>
                 <Input
                   value={form.it_shelf_life}
                   onChange={(e: any) => update("it_shelf_life", e.target.value)}
-                  placeholder="예: 2025-12-31, 6개월, 1년"
+                  placeholder="例: 2025-12-31、6か月、1年"
                 />
               </div>
             </div>
 
             <div>
-              <Label>상품 이미지 (1~10)</Label>
+              <Label>商品画像 (1〜10)</Label>
               <div className="grid grid-cols-5 sm:grid-cols-5 md:grid-cols-5 lg:grid-cols-10 gap-2 mt-1">
                 {Array.from({ length: 10 }, (_, i) => i + 1).map((n) => (
                   <ProductImageUpload
@@ -809,7 +809,7 @@ export default function AdminProductDetail({ params }: { params: { id: string } 
             </div>
 
             <div>
-              <Label>상품 상세설명</Label>
+              <Label>商品詳細説明</Label>
               <div className="border-2 border-border rounded-xl overflow-hidden bg-white focus-within:border-primary transition-all">
                 <EditorToolbar editor={editor} />
                 <EditorContent editor={editor} />
@@ -820,17 +820,17 @@ export default function AdminProductDetail({ params }: { params: { id: string } 
           <Card className="p-4 space-y-4">
             <div className="flex items-center justify-between">
               <h2 className="text-lg font-black text-slate-900 flex items-center gap-2">
-                <Calculator className="w-5 h-5 text-primary" /> 옵션 관리
+                <Calculator className="w-5 h-5 text-primary" /> オプション管理
               </h2>
               <div className="flex gap-2">
                 <Button variant="outline" size="sm" onClick={() => addOption("box")} className="h-8">
-                  <Box className="w-3.5 h-3.5 mr-1" /> 박스 옵션
+                  <Box className="w-3.5 h-3.5 mr-1" /> ケースオプション
                 </Button>
                 <Button variant="outline" size="sm" onClick={() => addOption("piece")} className="h-8">
-                  <ShoppingBag className="w-3.5 h-3.5 mr-1" /> 낱개 옵션
+                  <ShoppingBag className="w-3.5 h-3.5 mr-1" /> 単品オプション
                 </Button>
                 <Button variant="outline" size="sm" onClick={() => addOption("custom")} className="h-8">
-                  <Plus className="w-3.5 h-3.5 mr-1" /> 기타 옵션
+                  <Plus className="w-3.5 h-3.5 mr-1" /> その他のオプション
                 </Button>
               </div>
             </div>
@@ -838,19 +838,19 @@ export default function AdminProductDetail({ params }: { params: { id: string } 
             <div className="bg-amber-50 border border-amber-200 rounded-xl p-4">
               <div className="flex items-center gap-3 mb-3">
                 <Box className="w-5 h-5 text-amber-600" />
-                <span className="text-sm font-bold text-amber-800">박스 포장 설정</span>
+                <span className="text-sm font-bold text-amber-800">ケース梱包設定</span>
               </div>
               <div className="flex items-center gap-3">
-                <label className="text-sm text-amber-700 font-medium whitespace-nowrap">1박스 입수량</label>
+                <label className="text-sm text-amber-700 font-medium whitespace-nowrap">1ケースの入数</label>
                 <Input
                   type="number"
                   value={boxQty || ""}
                   onChange={(e: any) => updateBoxQtyLabels(Number(e.target.value) || 0)}
-                  placeholder="예: 24"
+                  placeholder="例: 24"
                   className="w-24 text-center font-bold"
                 />
-                <span className="text-sm text-amber-600">개</span>
-                {boxQty > 0 && <span className="text-xs text-amber-500 ml-2">박스 옵션에 자동 반영됩니다</span>}
+                <span className="text-sm text-amber-600">個</span>
+                {boxQty > 0 && <span className="text-xs text-amber-500 ml-2">ケースオプションに自動反映されます</span>}
               </div>
             </div>
 
@@ -858,35 +858,35 @@ export default function AdminProductDetail({ params }: { params: { id: string } 
               <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-4 text-sm text-emerald-800">
                 <div className="flex items-center gap-4">
                   <div>
-                    <span className="text-xs text-emerald-600">낱개 단가</span>
+                    <span className="text-xs text-emerald-600">単品単価</span>
                     <p className="text-lg font-black">{formatCurrency(unitPricePerItem)}</p>
                   </div>
                   <span className="text-emerald-300">=</span>
                   <div>
-                    <span className="text-xs text-emerald-600">1박스 가격</span>
+                    <span className="text-xs text-emerald-600">1ケース価格</span>
                     <p className="font-bold">{formatCurrency(boxFinalPrice!)}</p>
                   </div>
                   <span className="text-emerald-300">÷</span>
                   <div>
-                    <span className="text-xs text-emerald-600">입수량</span>
-                    <p className="font-bold">{boxQty}개</p>
+                    <span className="text-xs text-emerald-600">入数</span>
+                    <p className="font-bold">{boxQty}個</p>
                   </div>
                 </div>
               </div>
             )}
 
             <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 text-sm text-blue-800 space-y-1">
-              <p className="font-bold">자동 계산 안내</p>
-              <p>• <strong>박스 옵션</strong>: 할인율(%) 입력 시 → 박스당 가격 = 판매가 × (1 - 할인율%)</p>
-              <p>• 예) 10박스, 10% 할인 → 박스당 {formatCurrency(Math.round(basePrice * 0.9))}, 합계 {formatCurrency(Math.round(basePrice * 10 * 0.9))}</p>
-              <p>• <strong>낱개/기타 옵션</strong>: 할인율은 소비자가({formatCurrency(custPrice)}) 기준으로 계산됩니다.</p>
+              <p className="font-bold">自動計算のご案内</p>
+              <p>• <strong>ケースオプション</strong>: 割引率(%)を入力すると → ケース単価 = 販売価格 × (1 - 割引率%)</p>
+              <p>• 例) 10ケース、10%割引 → ケース単価 {formatCurrency(Math.round(basePrice * 0.9))}、合計 {formatCurrency(Math.round(basePrice * 10 * 0.9))}</p>
+              <p>• <strong>単品/その他オプション</strong>: 割引率は希望小売価格({formatCurrency(custPrice)})を基準に計算されます。</p>
             </div>
 
             {options.length === 0 ? (
               <div className="py-10 text-center border-2 border-dashed border-slate-200 rounded-xl">
                 <Package className="w-10 h-10 text-slate-200 mx-auto mb-3" />
-                <p className="text-sm text-slate-500 font-bold">등록된 옵션이 없습니다</p>
-                <p className="text-xs text-slate-400 mt-1">위 버튼으로 박스/낱개/기타 옵션을 추가하세요</p>
+                <p className="text-sm text-slate-500 font-bold">登録されたオプションがありません</p>
+                <p className="text-xs text-slate-400 mt-1">上のボタンからケース/単品/その他のオプションを追加してください</p>
               </div>
             ) : (
               <div className="space-y-3">
@@ -908,9 +908,9 @@ export default function AdminProductDetail({ params }: { params: { id: string } 
                     )}>
                       <div className="flex items-center gap-2 mb-3">
                         <span className="text-xs font-bold text-slate-400 w-6">#{idx + 1}</span>
-                        {isBox && <Badge className="bg-orange-100 text-orange-700 text-[10px]">박스</Badge>}
-                        {isPiece && <Badge className="bg-green-100 text-green-700 text-[10px]">낱개</Badge>}
-                        {!isBox && !isPiece && <Badge className="bg-slate-100 text-slate-600 text-[10px]">기타</Badge>}
+                        {isBox && <Badge className="bg-orange-100 text-orange-700 text-[10px]">ケース</Badge>}
+                        {isPiece && <Badge className="bg-green-100 text-green-700 text-[10px]">単品</Badge>}
+                        {!isBox && !isPiece && <Badge className="bg-slate-100 text-slate-600 text-[10px]">その他</Badge>}
                         <div className="flex-1" />
                         <div className="flex items-center gap-1.5">
                           <label className="flex items-center gap-1.5 text-xs">
@@ -920,7 +920,7 @@ export default function AdminProductDetail({ params }: { params: { id: string } 
                               onChange={(e) => updateOption(opt._key!, "io_use", e.target.checked ? "1" : "0")}
                               className="rounded"
                             />
-                            <span className="text-slate-500">사용</span>
+                            <span className="text-slate-500">使用</span>
                           </label>
                           <button onClick={() => removeOption(opt._key!)} className="p-1 text-red-400 hover:text-red-600 transition-colors">
                             <Trash2 className="w-4 h-4" />
@@ -932,13 +932,13 @@ export default function AdminProductDetail({ params }: { params: { id: string } 
                         isBox ? "bg-orange-100/70" : isPiece ? "bg-green-100/70" : "bg-slate-100/70"
                       )}>
                         <div className="flex items-center justify-between">
-                          <span className="text-sm font-bold text-slate-600">최종 판매가 (합계)</span>
+                          <span className="text-sm font-bold text-slate-600">最終販売価格 (合計)</span>
                           <div className="flex items-center gap-3">
                             {isBox && effectiveDiscount > 0 && (
-                              <span className="text-sm text-red-500 font-bold">{effectiveDiscount}% 할인</span>
+                              <span className="text-sm text-red-500 font-bold">{effectiveDiscount}%割引</span>
                             )}
                             {!isBox && custPrice > 0 && effectiveDiscount > 0 && (
-                              <span className="text-sm text-red-500 font-bold">소비자가 대비 {effectiveDiscount}% 할인</span>
+                              <span className="text-sm text-red-500 font-bold">希望小売価格比 {effectiveDiscount}%割引</span>
                             )}
                             <span className={cn(
                               "text-2xl font-black tracking-tight",
@@ -951,17 +951,17 @@ export default function AdminProductDetail({ params }: { params: { id: string } 
                         {isBox && bc > 0 && (
                           <div className="flex items-center gap-4 mt-2 pt-2 border-t border-orange-200/50">
                             <div className="flex items-center gap-1.5">
-                              <span className="text-xs text-slate-500">박스당</span>
+                              <span className="text-xs text-slate-500">ケース単価</span>
                               <span className="text-sm font-black text-orange-700">{formatCurrency(Math.round(finalPrice / bc))}</span>
                             </div>
                             {boxQty > 0 && (
                               <div className="flex items-center gap-1.5">
-                                <span className="text-xs text-slate-500">낱개</span>
+                                <span className="text-xs text-slate-500">単品</span>
                                 <span className="text-sm font-bold text-slate-700">{formatCurrency(Math.round(finalPrice / (bc * boxQty)))}</span>
                               </div>
                             )}
                             {boxQty > 0 && (
-                              <span className="text-xs text-slate-400">총 {bc * boxQty}개</span>
+                              <span className="text-xs text-slate-400">合計 {bc * boxQty}個</span>
                             )}
                           </div>
                         )}
@@ -969,7 +969,7 @@ export default function AdminProductDetail({ params }: { params: { id: string } 
                       <div className={cn("grid gap-3", isBox ? "grid-cols-5" : "grid-cols-4")}>
                         {isBox && (
                           <div>
-                            <label className="text-xs text-slate-500 font-bold mb-1 block">박스 수량</label>
+                            <label className="text-xs text-slate-500 font-bold mb-1 block">ケース数量</label>
                             <Input
                               type="number"
                               value={bc}
@@ -994,16 +994,16 @@ export default function AdminProductDetail({ params }: { params: { id: string } 
                           </div>
                         )}
                         <div>
-                          <label className="text-xs text-slate-500 font-bold mb-1 block">옵션명</label>
+                          <label className="text-xs text-slate-500 font-bold mb-1 block">オプション名</label>
                           <Input
                             value={opt.io_id}
                             onChange={(e: any) => updateOption(opt._key!, "io_id", e.target.value)}
-                            placeholder={isBox ? "예: 1박스(24개입)" : "예: 낱개"}
+                            placeholder={isBox ? "例: 1박스(24개입)" : "例: 낱개"}
                           />
                         </div>
                         <div>
                           <label className="text-xs text-slate-500 font-bold mb-1 block">
-                            <span className="flex items-center gap-1">할인율 <Percent className="w-3 h-3" /></span>
+                            <span className="flex items-center gap-1">割引率 <Percent className="w-3 h-3" /></span>
                           </label>
                           <div className="relative">
                             <Input
@@ -1021,7 +1021,7 @@ export default function AdminProductDetail({ params }: { params: { id: string } 
                           </div>
                         </div>
                         <div>
-                          <label className="text-xs text-slate-500 font-bold mb-1 block">추가금 (원)</label>
+                          <label className="text-xs text-slate-500 font-bold mb-1 block">追加料金 (円)</label>
                           <Input
                             type="number"
                             value={opt.io_price}
@@ -1042,7 +1042,7 @@ export default function AdminProductDetail({ params }: { params: { id: string } 
                           />
                         </div>
                         <div>
-                          <label className="text-xs text-slate-500 font-bold mb-1 block">재고수량</label>
+                          <label className="text-xs text-slate-500 font-bold mb-1 block">在庫数</label>
                           <Input
                             type="number"
                             value={opt.io_stock_qty}
@@ -1052,7 +1052,7 @@ export default function AdminProductDetail({ params }: { params: { id: string } 
                       </div>
                       {false && isBox && bc > 1 && boxQty > 0 && (
                         <div className="mt-2 text-xs text-slate-500">
-                          총 {bc * boxQty}개 | 낱개 단가 {formatCurrency(Math.round(finalPrice / (bc * boxQty)))}
+                          合計 {bc * boxQty}個 | 単品単価 {formatCurrency(Math.round(finalPrice / (bc * boxQty)))}
                         </div>
                       )}
                     </div>
@@ -1065,33 +1065,33 @@ export default function AdminProductDetail({ params }: { params: { id: string } 
 
         <div className="space-y-3">
           <Card className="p-4 space-y-3">
-            <h2 className="text-base font-black text-slate-900">가격 정보</h2>
+            <h2 className="text-base font-black text-slate-900">価格情報</h2>
             <div>
-              <Label>소비자가 (원)</Label>
+              <Label>希望小売価格 (円)</Label>
               <Input type="number" value={form.it_cust_price} onChange={(e: any) => update("it_cust_price", Number(e.target.value))} />
-              <p className="text-xs text-slate-400 mt-1">할인율 계산의 기준이 됩니다</p>
+              <p className="text-xs text-slate-400 mt-1">割引率計算の基準になります</p>
             </div>
             <div>
-              <Label>판매가 (원) *</Label>
+              <Label>販売価格 (円) *</Label>
               <Input type="number" value={form.it_price} onChange={(e: any) => update("it_price", Number(e.target.value))} className="font-bold text-lg" />
-              <p className="text-xs text-slate-400 mt-1">옵션 최종가의 기준이 됩니다</p>
+              <p className="text-xs text-slate-400 mt-1">オプション最終価格の基準になります</p>
             </div>
             <div>
-              <Label>재고수량</Label>
+              <Label>在庫数</Label>
               <Input type="number" value={form.it_stock_qty} onChange={(e: any) => update("it_stock_qty", Number(e.target.value))} />
             </div>
 
             {unitPricePerItem && (
               <div className="pt-3 border-t border-slate-100">
-                <p className="text-xs font-bold text-slate-500 mb-1">낱개 단가</p>
+                <p className="text-xs font-bold text-slate-500 mb-1">単品単価</p>
                 <p className="text-lg font-black text-emerald-600">{formatCurrency(unitPricePerItem)}</p>
-                <p className="text-[10px] text-slate-400">{formatCurrency(boxFinalPrice!)} ÷ {boxQty}개</p>
+                <p className="text-[10px] text-slate-400">{formatCurrency(boxFinalPrice!)} ÷ {boxQty}個</p>
               </div>
             )}
 
             {options.length > 0 && (
               <div className="pt-3 border-t border-slate-100 space-y-2">
-                <p className="text-xs font-bold text-slate-500">옵션별 가격 요약</p>
+                <p className="text-xs font-bold text-slate-500">オプション別価格サマリー</p>
                 {options.filter(o => o.io_use === "1").map((opt) => {
                   const fp = basePrice + (Number(opt.io_price) || 0);
                   const isBox = opt.io_id.includes("박스");
@@ -1099,13 +1099,13 @@ export default function AdminProductDetail({ params }: { params: { id: string } 
                   return (
                     <div key={opt._key} className="text-sm">
                       <div className="flex items-center justify-between">
-                        <span className="text-slate-600 truncate max-w-[100px]">{opt.io_id || "(이름없음)"}</span>
+                        <span className="text-slate-600 truncate max-w-[100px]">{opt.io_id || "(名称なし)"}</span>
                         <span className="font-bold text-slate-900">{formatCurrency(fp)}</span>
                       </div>
                       {isBox && bc > 0 && (
                         <div className="flex items-center gap-2 text-[10px] text-slate-400">
-                          <span>박스당 {formatCurrency(Math.round(fp / bc))}</span>
-                          {boxQty > 0 && <span>낱개 {formatCurrency(Math.round(fp / (bc * boxQty)))}</span>}
+                          <span>ケース単価 {formatCurrency(Math.round(fp / bc))}</span>
+                          {boxQty > 0 && <span>単品 {formatCurrency(Math.round(fp / (bc * boxQty)))}</span>}
                         </div>
                       )}
                     </div>
@@ -1116,23 +1116,23 @@ export default function AdminProductDetail({ params }: { params: { id: string } 
           </Card>
 
           <Card className="p-4 space-y-3">
-            <h2 className="text-base font-black text-slate-900">부가 정보</h2>
+            <h2 className="text-base font-black text-slate-900">付加情報</h2>
             <div>
-              <Label>제조사</Label>
-              <Input value={form.it_maker} onChange={(e: any) => update("it_maker", e.target.value)} placeholder="제조사" />
+              <Label>メーカー</Label>
+              <Input value={form.it_maker} onChange={(e: any) => update("it_maker", e.target.value)} placeholder="メーカー" />
             </div>
             <div>
-              <Label>원산지</Label>
-              <Input value={form.it_origin} onChange={(e: any) => update("it_origin", e.target.value)} placeholder="원산지" />
+              <Label>原産地</Label>
+              <Input value={form.it_origin} onChange={(e: any) => update("it_origin", e.target.value)} placeholder="原産地" />
             </div>
             <div>
-              <Label>정렬순서</Label>
+              <Label>表示順</Label>
               <Input type="number" value={form.it_order} onChange={(e: any) => update("it_order", Number(e.target.value))} />
-              <p className="text-xs text-slate-400 mt-1">숫자가 작을수록 앞에 표시</p>
+              <p className="text-xs text-slate-400 mt-1">数値が小さいほど前に表示</p>
             </div>
             <div>
-              <Label>판매자 이메일</Label>
-              <Input value={form.it_sell_email} onChange={(e: any) => update("it_sell_email", e.target.value)} placeholder="이메일 주소" />
+              <Label>販売者メールアドレス</Label>
+              <Input value={form.it_sell_email} onChange={(e: any) => update("it_sell_email", e.target.value)} placeholder="メールアドレス" />
             </div>
           </Card>
         </div>
@@ -1140,11 +1140,11 @@ export default function AdminProductDetail({ params }: { params: { id: string } 
 
       <div className="flex items-center justify-between pt-4 pb-8">
         <Button variant="ghost" onClick={() => navigate("/admin/products")}>
-          <ArrowLeft className="w-4 h-4 mr-2" /> 목록으로
+          <ArrowLeft className="w-4 h-4 mr-2" /> 一覧へ
         </Button>
         <Button onClick={handleSave} disabled={saveMutation.isPending} className="h-11 px-8">
           {saveMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Save className="w-4 h-4 mr-2" />}
-          {saveMutation.isPending ? "저장 중..." : isNew ? "상품 등록" : "변경사항 저장"}
+          {saveMutation.isPending ? "保存中..." : isNew ? "商品登録" : "変更を保存"}
         </Button>
       </div>
     </div>

@@ -11,8 +11,8 @@ import {
 import { NOTICE_CATEGORIES, NOTICE_CATEGORY_MAP, type NoticeData, parseNotice } from "@/lib/itemNotice";
 
 const IMG_BASE = "https://thegaongill17.mycafe24.com/data/item/";
-const fmtPrice = (n: number) => (n || 0).toLocaleString("ko-KR") + "원";
-const fmtDate = (s: string) => s ? new Date(s).toLocaleDateString("ko-KR") : "-";
+const fmtPrice = (n: number) => (n || 0).toLocaleString("ja-JP") + "円";
+const fmtDate = (s: string) => s ? new Date(s).toLocaleDateString("ja-JP") : "-";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -58,73 +58,73 @@ interface MenuGroup { label: string; icon: React.ReactNode; items: MenuItem[] }
 
 const MENU: MenuGroup[] = [
   {
-    label: "메인SHOP관리", icon: <LayoutDashboard size={15} />,
+    label: "メインSHOP管理", icon: <LayoutDashboard size={15} />,
     items: [
-      { id: "shop-main-slider", label: "상단배너관리", icon: <Image size={13} /> },
-      { id: "shop-banners", label: "메인배너관리", icon: <Image size={13} /> },
-      { id: "shop-categories", label: "상품카테고리", icon: <Tag size={13} /> },
-      { id: "shop-best", label: "베스트 상품", icon: <Award size={13} /> },
-      { id: "shop-sale", label: "오늘의특가/타임세일", icon: <Zap size={13} /> },
-      { id: "shop-first-purchase", label: "첫구매100원 상품", icon: <BadgePercent size={13} /> },
-      { id: "shop-diygift", label: "내가만드는 선물", icon: <Gift size={13} /> },
-      { id: "shop-new", label: "신상품", icon: <Sparkles size={13} /> },
-      { id: "shop-lowest", label: "최저가도전", icon: <TrendingDown size={13} /> },
-      { id: "shop-exclusive", label: "오직상회에만", icon: <Lock size={13} /> },
-      { id: "shop-groupbuy", label: "공동구매 상품", icon: <Users size={13} /> },
-      { id: "shop-todaydeal", label: "SNS 구매 상품", icon: <Share2 size={13} /> },
+      { id: "shop-main-slider", label: "上部バナー管理", icon: <Image size={13} /> },
+      { id: "shop-banners", label: "メインバナー管理", icon: <Image size={13} /> },
+      { id: "shop-categories", label: "商品カテゴリー", icon: <Tag size={13} /> },
+      { id: "shop-best", label: "ベスト商品", icon: <Award size={13} /> },
+      { id: "shop-sale", label: "本日の特価/タイムセール", icon: <Zap size={13} /> },
+      { id: "shop-first-purchase", label: "初回購入100円商品", icon: <BadgePercent size={13} /> },
+      { id: "shop-diygift", label: "オリジナルギフト", icon: <Gift size={13} /> },
+      { id: "shop-new", label: "新商品", icon: <Sparkles size={13} /> },
+      { id: "shop-lowest", label: "最安値に挑戦", icon: <TrendingDown size={13} /> },
+      { id: "shop-exclusive", label: "当店限定", icon: <Lock size={13} /> },
+      { id: "shop-groupbuy", label: "共同購入商品", icon: <Users size={13} /> },
+      { id: "shop-todaydeal", label: "SNS 購入商品", icon: <Share2 size={13} /> },
     ],
   },
   {
-    label: "게시판관리", icon: <Tag size={15} />,
+    label: "掲示板管理", icon: <Tag size={15} />,
     items: [
-      { id: "events", label: "이벤트 목록", icon: <Tag size={13} /> },
-      { id: "cs-board", label: "고객센터 안내", icon: <Tag size={13} /> },
+      { id: "events", label: "イベント一覧", icon: <Tag size={13} /> },
+      { id: "cs-board", label: "お客様センター案内", icon: <Tag size={13} /> },
     ],
   },
   {
-    label: "상품관리", icon: <Package size={15} />,
-    items: [{ id: "products", label: "상품 목록", icon: <Package size={13} /> }],
+    label: "商品管理", icon: <Package size={15} />,
+    items: [{ id: "products", label: "商品一覧", icon: <Package size={13} /> }],
   },
   {
-    label: "선물하기관리", icon: <Gift size={15} />,
+    label: "ギフト管理", icon: <Gift size={15} />,
     items: [
-      { id: "gift-packages", label: "선물패키지관리", icon: <Package size={13} /> },
-      { id: "gift-categories", label: "선물분류관리", icon: <Tag size={13} /> },
-      { id: "gift-products", label: "선물상품관리", icon: <Gift size={13} /> },
+      { id: "gift-packages", label: "ギフトパッケージ管理", icon: <Package size={13} /> },
+      { id: "gift-categories", label: "ギフト分類管理", icon: <Tag size={13} /> },
+      { id: "gift-products", label: "ギフト商品管理", icon: <Gift size={13} /> },
     ],
   },
   {
-    label: "회원관리", icon: <Users size={15} />,
+    label: "会員管理", icon: <Users size={15} />,
     items: [
-      { id: "pending", label: "승인 대기", icon: <Users size={13} /> },
-      { id: "members", label: "전체 회원", icon: <Users size={13} /> },
+      { id: "pending", label: "承認待ち", icon: <Users size={13} /> },
+      { id: "members", label: "全会員", icon: <Users size={13} /> },
     ],
   },
   {
-    label: "주문관리", icon: <ShoppingBag size={15} />,
-    items: [{ id: "orders", label: "주문 목록", icon: <ShoppingBag size={13} /> }],
+    label: "注文管理", icon: <ShoppingBag size={15} />,
+    items: [{ id: "orders", label: "注文一覧", icon: <ShoppingBag size={13} /> }],
   },
   {
-    label: "리뷰관리", icon: <Star size={15} />,
-    items: [{ id: "reviews", label: "리뷰 목록", icon: <Star size={13} /> }],
+    label: "レビュー管理", icon: <Star size={15} />,
+    items: [{ id: "reviews", label: "レビュー一覧", icon: <Star size={13} /> }],
   },
   {
-    label: "기본설정", icon: <Settings size={15} />,
+    label: "基本設定", icon: <Settings size={15} />,
     items: [
-      { id: "settings", label: "쇼핑몰 기본설정", icon: <Settings size={13} /> },
-      { id: "footer", label: "사업자/푸터 정보", icon: <Settings size={13} /> },
+      { id: "settings", label: "ショップ基本設定", icon: <Settings size={13} /> },
+      { id: "footer", label: "事業者/フッター情報", icon: <Settings size={13} /> },
     ],
   },
 ];
 
 const STATUS_LABELS: Record<string, { label: string; color: string }> = {
-  "주문접수": { label: "주문접수", color: "#f59e0b" },
-  "입금확인": { label: "입금확인", color: "#3b82f6" },
-  "처리중": { label: "처리중", color: "#8b5cf6" },
-  "배송준비": { label: "배송준비", color: "#6366f1" },
-  "배송중": { label: "배송중", color: "#10b981" },
-  "배송완료": { label: "배송완료", color: "#8B5E3C" },
-  "취소": { label: "취소", color: "#ef4444" },
+  "주문접수": { label: "注文受付", color: "#f59e0b" },
+  "입금확인": { label: "入金確認", color: "#3b82f6" },
+  "처리중": { label: "処理中", color: "#8b5cf6" },
+  "배송준비": { label: "発送準備中", color: "#6366f1" },
+  "배송중": { label: "配送中", color: "#10b981" },
+  "배송완료": { label: "配送完了", color: "#8B5E3C" },
+  "취소": { label: "キャンセル", color: "#ef4444" },
 };
 
 // ─── Reusable: Section Product Manager ───────────────────────────────────────
@@ -152,7 +152,7 @@ function SectionManager({
       const res = await fetch(`/api/shop-admin/sections/${sectionType}`, { headers: authHeaders() });
       const data = await res.json();
       setItems(data.items || []);
-    } catch { toast("불러오기 실패", "err"); }
+    } catch { toast("読み込みに失敗しました", "err"); }
     finally { setLoading(false); }
   }, [sectionType]);
 
@@ -183,8 +183,8 @@ function SectionManager({
       if (!res.ok) throw new Error();
       setItems(prev => [...prev, item]);
       setSearchResults(prev => prev.filter(i => i.it_id !== item.it_id));
-      toast(`"${item.it_name}" 추가 완료`);
-    } catch { toast("추가 실패", "err"); }
+      toast(`"${item.it_name}" 追加しました`);
+    } catch { toast("追加に失敗しました", "err"); }
     finally { setActionId(null); }
   };
 
@@ -196,8 +196,8 @@ function SectionManager({
       });
       if (!res.ok) throw new Error();
       setItems(prev => prev.filter(i => i.it_id !== it_id));
-      toast("제거 완료");
-    } catch { toast("제거 실패", "err"); }
+      toast("削除しました");
+    } catch { toast("削除に失敗しました", "err"); }
     finally { setActionId(null); }
   };
 
@@ -206,7 +206,7 @@ function SectionManager({
       <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", flexWrap: "wrap", gap: 10, marginBottom: 20 }}>
         <div>
           <h2 style={{ margin: "0 0 4px", fontSize: 20, fontWeight: 800, color: "#222" }}>{title}</h2>
-          <p style={{ margin: 0, fontSize: 13, color: "#888" }}>메인 페이지에 노출되는 {title} 상품을 관리합니다</p>
+          <p style={{ margin: 0, fontSize: 13, color: "#888" }}>メインページに表示される {title} 商品を管理します</p>
         </div>
         {shopPath && (
           <a
@@ -221,43 +221,43 @@ function SectionManager({
             }}
           >
             <ExternalLink size={14} />
-            쇼핑몰에서 확인
+            ショップで確認
           </a>
         )}
       </div>
 
       {/* Search & Add */}
       <Card style={{ marginBottom: 16 }}>
-        <h3 style={{ fontSize: 14, fontWeight: 700, color: "#333", margin: "0 0 12px" }}>상품 검색 및 추가</h3>
+        <h3 style={{ fontSize: 14, fontWeight: 700, color: "#333", margin: "0 0 12px" }}>商品の検索・追加</h3>
         <input
           value={searchQ}
           onChange={e => handleSearch(e.target.value)}
-          placeholder="상품명 검색..."
+          placeholder="商品名で検索..."
           style={inputStyle}
         />
-        {searching && <p style={{ fontSize: 13, color: "#aaa", margin: "8px 0 0" }}>검색 중...</p>}
+        {searching && <p style={{ fontSize: 13, color: "#aaa", margin: "8px 0 0" }}>検索中...</p>}
         {searchResults.length > 0 && (
           <div style={{ marginTop: 10, display: "flex", flexDirection: "column", gap: 8 }}>
             {searchResults.map(item => (
               <ItemRow key={item.it_id} item={item}
-                action={<Btn onClick={() => addItem(item)} disabled={actionId === "add_" + item.it_id} color="#8B5E3C">추가</Btn>}
+                action={<Btn onClick={() => addItem(item)} disabled={actionId === "add_" + item.it_id} color="#8B5E3C">追加</Btn>}
               />
             ))}
           </div>
         )}
         {searchQ && !searching && searchResults.length === 0 && (
-          <p style={{ fontSize: 13, color: "#aaa", margin: "8px 0 0" }}>검색 결과가 없거나 이미 추가된 상품입니다.</p>
+          <p style={{ fontSize: 13, color: "#aaa", margin: "8px 0 0" }}>検索結果がないか、すでに追加済みの商品です。</p>
         )}
       </Card>
 
       {/* Current Items */}
       <Card>
         <h3 style={{ fontSize: 14, fontWeight: 700, color: "#333", margin: "0 0 12px" }}>
-          현재 {title} 상품 <span style={{ color: "#8B5E3C" }}>({items.length}개)</span>
+          現在の {title} 商品 <span style={{ color: "#8B5E3C" }}>({items.length}点)</span>
         </h3>
-        {loading && <p style={{ textAlign: "center", color: "#aaa", padding: "24px 0" }}>불러오는 중...</p>}
+        {loading && <p style={{ textAlign: "center", color: "#aaa", padding: "24px 0" }}>読み込み中...</p>}
         {!loading && items.length === 0 && (
-          <p style={{ textAlign: "center", color: "#aaa", padding: "24px 0" }}>등록된 상품이 없습니다</p>
+          <p style={{ textAlign: "center", color: "#aaa", padding: "24px 0" }}>登録された商品はありません</p>
         )}
         <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
           {items.map(item => (
@@ -293,7 +293,7 @@ function BannerManager({ authHeaders, toast }: { authHeaders: () => Record<strin
   useEffect(() => { load(); }, []);
 
   const save = async () => {
-    if (!editing?.pc_img) { toast("PC 이미지를 업로드해주세요", "err"); return; }
+    if (!editing?.pc_img) { toast("PC 画像をアップロードしてください", "err"); return; }
     setSaving(true);
     try {
       const isNew = !editing.id;
@@ -304,18 +304,18 @@ function BannerManager({ authHeaders, toast }: { authHeaders: () => Record<strin
         body: JSON.stringify(editing),
       });
       if (!res.ok) throw new Error();
-      toast(isNew ? "배너 추가 완료" : "배너 수정 완료");
+      toast(isNew ? "バナーを追加しました" : "バナーを更新しました");
       setEditing(null);
       await load();
-    } catch { toast("저장 실패", "err"); }
+    } catch { toast("保存に失敗しました", "err"); }
     finally { setSaving(false); }
   };
 
   const remove = async (id: number) => {
-    if (!confirm("배너를 삭제하시겠습니까?")) return;
+    if (!confirm("バナーを削除してもよろしいですか?")) return;
     await fetch(`/api/shop-admin/banners/${id}`, { method: "DELETE", headers: authHeaders() });
     setBanners(prev => prev.filter(b => b.id !== id));
-    toast("삭제 완료");
+    toast("削除しました");
   };
 
   const toggleActive = async (banner: Banner) => {
@@ -328,41 +328,41 @@ function BannerManager({ authHeaders, toast }: { authHeaders: () => Record<strin
 
   return (
     <div>
-      <PageHeader title="메인배너관리" sub="메인 페이지 상단에 표시되는 슬라이드 배너를 관리합니다" />
+      <PageHeader title="メインバナー管理" sub="メインページ上部に表示されるスライドバナーを管理します" />
 
       {/* Form */}
       <Card style={{ marginBottom: 16 }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
           <h3 style={{ fontSize: 14, fontWeight: 700, color: "#333", margin: 0 }}>
-            {editing ? (editing.id ? "배너 수정" : "새 배너 추가") : "배너 목록"}
+            {editing ? (editing.id ? "バナーを編集" : "新しいバナーを追加") : "バナー一覧"}
           </h3>
           {!editing && (
             <Btn onClick={() => setEditing({ image_url: "", pc_img: "", mo_img: "", link_url: "", title: "", subtitle: "", sort_order: 0, is_active: 1 })} color="#8B5E3C">
-              <Plus size={13} /> 배너 추가
+              <Plus size={13} /> バナーを追加
             </Btn>
           )}
         </div>
 
         {editing && (
           <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-            <ImageBannerUpload label="PC 이미지" value={editing.pc_img || ""} onChange={url => setEditing(e => ({ ...e, pc_img: url }))} authHeaders={authHeaders} />
-            <ImageBannerUpload label="Mobile 이미지" value={editing.mo_img || ""} onChange={url => setEditing(e => ({ ...e, mo_img: url }))} authHeaders={authHeaders} />
-            <FormField label="링크 URL" value={editing.link_url || ""} onChange={v => setEditing(e => ({ ...e, link_url: v }))} placeholder="/list?ca_id=..." />
-            <FormField label="제목" value={editing.title || ""} onChange={v => setEditing(e => ({ ...e, title: v }))} placeholder="배너 제목" />
-            <FormField label="부제목" value={editing.subtitle || ""} onChange={v => setEditing(e => ({ ...e, subtitle: v }))} placeholder="배너 설명" />
-            <FormField label="정렬 순서" value={String(editing.sort_order ?? 0)} onChange={v => setEditing(e => ({ ...e, sort_order: Number(v) }))} type="number" />
+            <ImageBannerUpload label="PC 画像" value={editing.pc_img || ""} onChange={url => setEditing(e => ({ ...e, pc_img: url }))} authHeaders={authHeaders} />
+            <ImageBannerUpload label="Mobile 画像" value={editing.mo_img || ""} onChange={url => setEditing(e => ({ ...e, mo_img: url }))} authHeaders={authHeaders} />
+            <FormField label="リンクURL" value={editing.link_url || ""} onChange={v => setEditing(e => ({ ...e, link_url: v }))} placeholder="/list?ca_id=..." />
+            <FormField label="タイトル" value={editing.title || ""} onChange={v => setEditing(e => ({ ...e, title: v }))} placeholder="バナータイトル" />
+            <FormField label="サブタイトル" value={editing.subtitle || ""} onChange={v => setEditing(e => ({ ...e, subtitle: v }))} placeholder="バナーの説明" />
+            <FormField label="表示順" value={String(editing.sort_order ?? 0)} onChange={v => setEditing(e => ({ ...e, sort_order: Number(v) }))} type="number" />
             <div style={{ display: "flex", gap: 10 }}>
-              <Btn onClick={save} disabled={saving} color="#8B5E3C">{saving ? "저장 중..." : "저장"}</Btn>
-              <Btn onClick={() => setEditing(null)} color="#888">취소</Btn>
+              <Btn onClick={save} disabled={saving} color="#8B5E3C">{saving ? "保存中..." : "保存"}</Btn>
+              <Btn onClick={() => setEditing(null)} color="#888">キャンセル</Btn>
             </div>
           </div>
         )}
       </Card>
 
       {/* Banner List */}
-      {loading ? <p style={{ textAlign: "center", color: "#aaa" }}>불러오는 중...</p> : (
+      {loading ? <p style={{ textAlign: "center", color: "#aaa" }}>読み込み中...</p> : (
         <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-          {banners.length === 0 && <p style={{ textAlign: "center", color: "#aaa" }}>등록된 배너가 없습니다</p>}
+          {banners.length === 0 && <p style={{ textAlign: "center", color: "#aaa" }}>登録されたバナーはありません</p>}
           {banners.map(b => (
             <Card key={b.id}>
               <div style={{ display: "flex", gap: 16, alignItems: "center" }}>
@@ -371,14 +371,14 @@ function BannerManager({ authHeaders, toast }: { authHeaders: () => Record<strin
                     onError={e => { (e.target as HTMLImageElement).style.display = "none"; }} />
                 )}
                 <div style={{ flex: 1, minWidth: 0 }}>
-                  <p style={{ fontSize: 14, fontWeight: 700, color: "#222", margin: "0 0 2px" }}>{b.title || "(제목 없음)"}</p>
+                  <p style={{ fontSize: 14, fontWeight: 700, color: "#222", margin: "0 0 2px" }}>{b.title || "(タイトルなし)"}</p>
                   {b.subtitle && <p style={{ fontSize: 12, color: "#888", margin: "0 0 4px" }}>{b.subtitle}</p>}
                   {b.link_url && <p style={{ fontSize: 11, color: "#aaa", margin: 0 }}>{b.link_url}</p>}
                 </div>
                 <div style={{ display: "flex", gap: 8, flexShrink: 0, alignItems: "center" }}>
                   <button
                     onClick={() => toggleActive(b)}
-                    title={b.is_active ? "비활성화" : "활성화"}
+                    title={b.is_active ? "無効にする" : "有効にする"}
                     style={{ background: b.is_active ? "#e8f9f0" : "#f5f5f5", border: "none", borderRadius: 6, padding: "6px 10px", cursor: "pointer", color: b.is_active ? "#8B5E3C" : "#aaa" }}
                   >
                     {b.is_active ? <Eye size={14} /> : <EyeOff size={14} />}
@@ -456,7 +456,7 @@ function ImageBannerUpload({ label, value, onChange, authHeaders }: {
             disabled={uploading}
             style={{ padding: "7px 14px", borderRadius: 6, border: "1px solid #ddd", background: "#fff", fontSize: 12, cursor: "pointer", color: "#333" }}
           >
-            {uploading ? "업로드 중..." : value ? "이미지 변경" : "이미지 선택"}
+            {uploading ? "アップロード中..." : value ? "画像を変更" : "画像を選択"}
           </button>
           {value && (
             <div style={{ fontSize: 11, color: "#aaa", marginTop: 4, wordBreak: "break-all" }}>{value}</div>
@@ -503,10 +503,10 @@ function MainSliderBannerManager({ authHeaders, toast }: { authHeaders: () => Re
         body: JSON.stringify(edit),
       });
       if (!res.ok) throw new Error();
-      toast("저장 완료");
+      toast("保存しました");
       await load();
       setExpandedId(null);
-    } catch { toast("저장 실패", "err"); }
+    } catch { toast("保存に失敗しました", "err"); }
     finally { setSaving(false); }
   };
 
@@ -519,22 +519,22 @@ function MainSliderBannerManager({ authHeaders, toast }: { authHeaders: () => Re
         body: JSON.stringify(newBanner),
       });
       if (!res.ok) throw new Error();
-      toast("배너 추가 완료");
+      toast("バナーを追加しました");
       setNewBanner({ ...EMPTY_BANNER });
       setExpandedId(null);
       await load();
-    } catch { toast("추가 실패", "err"); }
+    } catch { toast("追加に失敗しました", "err"); }
     finally { setSaving(false); }
   };
 
   const deleteBanner = async (id: number) => {
-    if (!confirm("배너를 삭제하시겠습니까?")) return;
+    if (!confirm("バナーを削除してもよろしいですか?")) return;
     setDeleting(id);
     try {
       await fetch(`/api/admin/image-banners/${id}`, { method: "DELETE", headers: authHeaders() });
-      toast("삭제 완료");
+      toast("削除しました");
       await load();
-    } catch { toast("삭제 실패", "err"); }
+    } catch { toast("削除に失敗しました", "err"); }
     finally { setDeleting(null); }
   };
 
@@ -545,35 +545,35 @@ function MainSliderBannerManager({ authHeaders, toast }: { authHeaders: () => Re
   const BannerForm = ({ data, onChange }: { data: Omit<ImageBanner, "id">; onChange: (f: keyof Omit<ImageBanner, "id">, v: any) => void }) => (
     <div style={{ display: "flex", flexDirection: "column", gap: 18, padding: "20px 18px" }}>
       <div>
-        <SectionLabel>제목 (관리용)</SectionLabel>
+        <SectionLabel>タイトル (管理用)</SectionLabel>
         <input
-          value={data.title} onChange={e => onChange("title", e.target.value)} placeholder="배너 제목 (관리용)"
+          value={data.title} onChange={e => onChange("title", e.target.value)} placeholder="バナータイトル (管理用)"
           style={{ width: "100%", fontSize: 13, border: "1px solid #e5e7eb", borderRadius: 7, padding: "8px 11px", boxSizing: "border-box" }}
         />
       </div>
       <div>
-        <SectionLabel>이미지</SectionLabel>
+        <SectionLabel>画像</SectionLabel>
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
-          <ImageBannerUpload label="PC 이미지 (가로형 권장)" value={data.pc_image_url} onChange={v => onChange("pc_image_url", v)} authHeaders={authHeaders} />
-          <ImageBannerUpload label="모바일 이미지 (세로형 권장)" value={data.mobile_image_url} onChange={v => onChange("mobile_image_url", v)} authHeaders={authHeaders} />
+          <ImageBannerUpload label="PC 画像 (横長を推奨)" value={data.pc_image_url} onChange={v => onChange("pc_image_url", v)} authHeaders={authHeaders} />
+          <ImageBannerUpload label="モバイル画像 (縦長を推奨)" value={data.mobile_image_url} onChange={v => onChange("mobile_image_url", v)} authHeaders={authHeaders} />
         </div>
       </div>
       <div>
-        <SectionLabel>링크 & 기간</SectionLabel>
+        <SectionLabel>リンク & 期間</SectionLabel>
         <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
           <div>
-            <div style={{ fontSize: 11, color: "#888", marginBottom: 4 }}>클릭 시 이동 URL</div>
+            <div style={{ fontSize: 11, color: "#888", marginBottom: 4 }}>クリック時の遷移先URL</div>
             <input value={data.link_url} onChange={e => onChange("link_url", e.target.value)} placeholder="/list?type=3"
               style={{ width: "100%", fontSize: 12, border: "1px solid #e5e7eb", borderRadius: 6, padding: "7px 10px", boxSizing: "border-box" }} />
           </div>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
             <div>
-              <div style={{ fontSize: 11, color: "#888", marginBottom: 4 }}>노출 시작일 (비워두면 즉시 노출)</div>
+              <div style={{ fontSize: 11, color: "#888", marginBottom: 4 }}>表示開始日 (空欄の場合はすぐに表示)</div>
               <input type="date" value={data.start_date || ""} onChange={e => onChange("start_date", e.target.value)}
                 style={{ width: "100%", fontSize: 12, border: "1px solid #e5e7eb", borderRadius: 6, padding: "7px 10px", boxSizing: "border-box" }} />
             </div>
             <div>
-              <div style={{ fontSize: 11, color: "#888", marginBottom: 4 }}>노출 종료일 (비워두면 무기한)</div>
+              <div style={{ fontSize: 11, color: "#888", marginBottom: 4 }}>表示終了日 (空欄の場合は無期限)</div>
               <input type="date" value={data.end_date || ""} onChange={e => onChange("end_date", e.target.value)}
                 style={{ width: "100%", fontSize: 12, border: "1px solid #e5e7eb", borderRadius: 6, padding: "7px 10px", boxSizing: "border-box" }} />
             </div>
@@ -582,12 +582,12 @@ function MainSliderBannerManager({ authHeaders, toast }: { authHeaders: () => Re
       </div>
       <div style={{ display: "grid", gridTemplateColumns: "1fr 120px", gap: 10 }}>
         <div>
-          <div style={{ fontSize: 11, color: "#888", marginBottom: 4 }}>정렬 순서 (낮을수록 먼저)</div>
+          <div style={{ fontSize: 11, color: "#888", marginBottom: 4 }}>表示順 (小さいほど先頭)</div>
           <input type="number" value={data.sort_order} onChange={e => onChange("sort_order", Number(e.target.value))}
             style={{ width: "100%", fontSize: 12, border: "1px solid #e5e7eb", borderRadius: 6, padding: "7px 10px", boxSizing: "border-box" }} />
         </div>
         <div>
-          <div style={{ fontSize: 11, color: "#888", marginBottom: 4 }}>노출 여부</div>
+          <div style={{ fontSize: 11, color: "#888", marginBottom: 4 }}>表示設定</div>
           <button onClick={() => onChange("is_active", data.is_active ? 0 : 1)}
             style={{
               width: "100%", padding: "8px 0", borderRadius: 6, border: "1px solid #ddd",
@@ -595,18 +595,18 @@ function MainSliderBannerManager({ authHeaders, toast }: { authHeaders: () => Re
               background: data.is_active ? "#e8f9f0" : "#f5f5f5",
               color: data.is_active ? "#8B5E3C" : "#999",
             }}>
-            {data.is_active ? "✓ 노출 중" : "✗ 비활성"}
+            {data.is_active ? "✓ 表示中" : "✗ 無効"}
           </button>
         </div>
       </div>
     </div>
   );
 
-  if (loading) return <p style={{ textAlign: "center", color: "#aaa", padding: 40 }}>불러오는 중...</p>;
+  if (loading) return <p style={{ textAlign: "center", color: "#aaa", padding: 40 }}>読み込み中...</p>;
 
   return (
     <div>
-      <PageHeader title="배너 이미지 관리" sub="메인 홈 슬라이드 배너를 이미지로 관리합니다. PC/모바일 이미지를 각각 등록하고 노출 기간을 설정하세요." />
+      <PageHeader title="バナー画像管理" sub="メインホームのスライドバナーを画像で管理します。PC/モバイル画像をそれぞれ登録し、表示期間を設定してください。" />
 
       {/* 배너 목록 */}
       <div style={{ display: "flex", flexDirection: "column", gap: 12, marginBottom: 16 }}>
@@ -632,7 +632,7 @@ function MainSliderBannerManager({ authHeaders, toast }: { authHeaders: () => Re
                 }}>
                   {banner.pc_image_url
                     ? <img src={banner.pc_image_url} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                    : <span style={{ fontSize: 10, color: "#ccc" }}>PC없음</span>
+                    : <span style={{ fontSize: 10, color: "#ccc" }}>PCなし</span>
                   }
                 </div>
                 {/* 모바일 이미지 썸네일 */}
@@ -648,8 +648,8 @@ function MainSliderBannerManager({ authHeaders, toast }: { authHeaders: () => Re
                 </div>
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                    <span style={{ fontSize: 14, fontWeight: 700, color: "#222" }}>{banner.title || `배너 #${banner.id}`}</span>
-                    {!banner.is_active && <span style={{ fontSize: 10, padding: "1px 7px", borderRadius: 20, background: "#fee2e2", color: "#ef4444" }}>비활성</span>}
+                    <span style={{ fontSize: 14, fontWeight: 700, color: "#222" }}>{banner.title || `バナー #${banner.id}`}</span>
+                    {!banner.is_active && <span style={{ fontSize: 10, padding: "1px 7px", borderRadius: 20, background: "#fee2e2", color: "#ef4444" }}>無効</span>}
                     {(banner.start_date || banner.end_date) && (
                       <span style={{ fontSize: 10, color: "#888" }}>
                         {banner.start_date || "∞"} ~ {banner.end_date || "∞"}
@@ -662,8 +662,8 @@ function MainSliderBannerManager({ authHeaders, toast }: { authHeaders: () => Re
                   onClick={e => { e.stopPropagation(); deleteBanner(banner.id); }}
                   disabled={deleting === banner.id}
                   style={{ padding: "4px 10px", borderRadius: 6, border: "1px solid #fca5a5", background: "#fff5f5", color: "#ef4444", fontSize: 11, cursor: "pointer" }}
-                >삭제</button>
-                <div style={{ color: "#aaa", fontSize: 12 }}>{isOpen ? "▲ 접기" : "▼ 편집"}</div>
+                >削除</button>
+                <div style={{ color: "#aaa", fontSize: 12 }}>{isOpen ? "▲ 閉じる" : "▼ 編集"}</div>
               </div>
 
               {isOpen && (
@@ -674,9 +674,9 @@ function MainSliderBannerManager({ authHeaders, toast }: { authHeaders: () => Re
                   />
                   <div style={{ display: "flex", gap: 8, padding: "0 18px 16px" }}>
                     <Btn onClick={() => save(banner)} disabled={saving} color="#8B5E3C">
-                      <Check size={13} /> {saving ? "저장 중..." : "저장"}
+                      <Check size={13} /> {saving ? "保存中..." : "保存"}
                     </Btn>
-                    <Btn onClick={() => { setExpandedId(null); setEditMap(prev => ({ ...prev, [banner.id]: { ...banners.find(b => b.id === banner.id)! } })); }} color="#888">취소</Btn>
+                    <Btn onClick={() => { setExpandedId(null); setEditMap(prev => ({ ...prev, [banner.id]: { ...banners.find(b => b.id === banner.id)! } })); }} color="#888">キャンセル</Btn>
                   </div>
                 </>
               )}
@@ -696,7 +696,7 @@ function MainSliderBannerManager({ authHeaders, toast }: { authHeaders: () => Re
           }}
         >
           <Plus size={15} color="#8B5E3C" />
-          <span style={{ fontWeight: 700, fontSize: 14, color: "#8B5E3C" }}>새 배너 추가</span>
+          <span style={{ fontWeight: 700, fontSize: 14, color: "#8B5E3C" }}>新しいバナーを追加</span>
         </div>
         {expandedId === "new" && (
           <>
@@ -706,9 +706,9 @@ function MainSliderBannerManager({ authHeaders, toast }: { authHeaders: () => Re
             />
             <div style={{ display: "flex", gap: 8, padding: "0 18px 16px" }}>
               <Btn onClick={create} disabled={saving} color="#8B5E3C">
-                <Plus size={13} /> {saving ? "추가 중..." : "배너 추가"}
+                <Plus size={13} /> {saving ? "追加中..." : "バナーを追加"}
               </Btn>
-              <Btn onClick={() => { setExpandedId(null); setNewBanner({ ...EMPTY_BANNER }); }} color="#888">취소</Btn>
+              <Btn onClick={() => { setExpandedId(null); setNewBanner({ ...EMPTY_BANNER }); }} color="#888">キャンセル</Btn>
             </div>
           </>
         )}
@@ -726,7 +726,7 @@ interface GiftPkg {
   items?: { id: number; it_id: string; it_name: string; it_img1: string; quantity: number }[];
 }
 
-const CAT_LABELS: Record<string, string> = { "10": "🍪 과자류", "20": "🫙 유지류", "30": "🥫 통조림캔류" };
+const CAT_LABELS: Record<string, string> = { "10": "🍪 お菓子類", "20": "🫙 油脂類", "30": "🥫 缶詰類" };
 
 function GiftPackageManager({ authHeaders, toast }: {
   authHeaders: () => Record<string, string>;
@@ -773,14 +773,14 @@ function GiftPackageManager({ authHeaders, toast }: {
       const r = await fetch("/api/shop-admin/gift/packages/upload-image", { method: "POST", headers: authHeaders(), body: fd });
       const d = await r.json();
       if (d.url) setEditing(prev => prev ? { ...prev, thumb_img: d.url } : prev);
-      toast("이미지 업로드 완료", "ok");
-    } catch { toast("이미지 업로드 실패", "err"); }
+      toast("画像をアップロードしました", "ok");
+    } catch { toast("画像のアップロードに失敗しました", "err"); }
     finally { setUploading(false); e.target.value = ""; }
   };
 
   const save = async () => {
     if (!editing) return;
-    if (!editing.name.trim()) { toast("패키지명을 입력하세요", "err"); return; }
+    if (!editing.name.trim()) { toast("パッケージ名を入力してください", "err"); return; }
     setSaving(true);
     try {
       const body = JSON.stringify({
@@ -792,24 +792,24 @@ function GiftPackageManager({ authHeaders, toast }: {
       const headers = { ...authHeaders(), "Content-Type": "application/json" };
       if (isNew) {
         await fetch("/api/shop-admin/gift/packages", { method: "POST", headers, body });
-        toast("패키지 등록 완료", "ok");
+        toast("パッケージを登録しました", "ok");
       } else {
         await fetch(`/api/shop-admin/gift/packages/${editing.id}`, { method: "PUT", headers, body });
-        toast("패키지 수정 완료", "ok");
+        toast("パッケージを更新しました", "ok");
       }
       cancelEdit();
       await load();
-    } catch { toast("저장 실패", "err"); }
+    } catch { toast("保存に失敗しました", "err"); }
     finally { setSaving(false); }
   };
 
   const deletePkg = async (pkg: GiftPkg) => {
-    if (!confirm(`"${pkg.name}" 패키지를 삭제하시겠습니까?`)) return;
+    if (!confirm(`"${pkg.name}" パッケージを削除してもよろしいですか?`)) return;
     try {
       await fetch(`/api/shop-admin/gift/packages/${pkg.id}`, { method: "DELETE", headers: authHeaders() });
-      toast("삭제 완료", "ok");
+      toast("削除しました", "ok");
       await load();
-    } catch { toast("삭제 실패", "err"); }
+    } catch { toast("削除に失敗しました", "err"); }
   };
 
   const toggleExpand = (id: number) => setExpandedId(prev => prev === id ? null : id);
@@ -840,8 +840,8 @@ function GiftPackageManager({ authHeaders, toast }: {
       if (updated) setEditing(updated);
       setPkgs(await (await fetch("/api/shop-admin/gift/packages", { headers: authHeaders() })).json());
       setSearchResults(prev => prev.filter(i => i.it_id !== item.it_id));
-      toast("상품 추가 완료", "ok");
-    } catch { toast("추가 실패", "err"); }
+      toast("商品を追加しました", "ok");
+    } catch { toast("追加に失敗しました", "err"); }
   };
 
   const removeItem = async (pkgId: number, itemId: number) => {
@@ -849,8 +849,8 @@ function GiftPackageManager({ authHeaders, toast }: {
       await fetch(`/api/shop-admin/gift/packages/${pkgId}/items/${itemId}`, { method: "DELETE", headers: authHeaders() });
       setEditing(prev => prev ? { ...prev, items: prev.items?.filter(i => i.id !== itemId) } : prev);
       setPkgs(prev => prev.map(p => p.id === pkgId ? { ...p, items: p.items?.filter(i => i.id !== itemId) } : p));
-      toast("상품 제거 완료", "ok");
-    } catch { toast("제거 실패", "err"); }
+      toast("商品を削除しました", "ok");
+    } catch { toast("削除に失敗しました", "err"); }
   };
 
   const inp = (style?: React.CSSProperties): React.CSSProperties => ({
@@ -860,12 +860,12 @@ function GiftPackageManager({ authHeaders, toast }: {
 
   if (editing) return (
     <div>
-      <PageHeader title={isNew ? "선물패키지 등록" : "선물패키지 수정"} sub="선물하기 화면에 표시되는 패키지를 관리합니다" />
+      <PageHeader title={isNew ? "ギフトパッケージ登録" : "ギフトパッケージ編集"} sub="ギフト画面に表示されるパッケージを管理します" />
       <div style={{ background: "#fff", borderRadius: 12, border: "1px solid #eee", padding: 24, maxWidth: 640 }}>
         <div style={{ display: "grid", gap: 16 }}>
           {/* 썸네일 이미지 */}
           <div>
-            <label style={{ fontSize: 12, fontWeight: 700, color: "#555", display: "block", marginBottom: 6 }}>썸네일 이미지</label>
+            <label style={{ fontSize: 12, fontWeight: 700, color: "#555", display: "block", marginBottom: 6 }}>サムネイル画像</label>
             <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
               {editing.thumb_img ? (
                 <img src={editing.thumb_img} alt="" style={{ width: 80, height: 80, objectFit: "cover", borderRadius: 10, border: "1px solid #eee", flexShrink: 0 }} />
@@ -876,56 +876,56 @@ function GiftPackageManager({ authHeaders, toast }: {
                 <input type="file" ref={fileRef} accept="image/*" style={{ display: "none" }} onChange={handleUpload} />
                 <button onClick={() => fileRef.current?.click()} disabled={uploading}
                   style={{ padding: "7px 16px", background: "#8B5E3C", color: "#fff", border: "none", borderRadius: 8, fontSize: 12, fontWeight: 700, cursor: "pointer" }}>
-                  {uploading ? "업로드 중..." : "이미지 선택"}
+                  {uploading ? "アップロード中..." : "画像を選択"}
                 </button>
                 {editing.thumb_img && (
                   <button onClick={() => setEditing(p => p ? { ...p, thumb_img: "" } : p)}
                     style={{ marginLeft: 8, padding: "7px 12px", background: "#fff", border: "1px solid #ddd", borderRadius: 8, fontSize: 12, cursor: "pointer", color: "#e53e3e" }}>
-                    삭제
+                    削除
                   </button>
                 )}
-                <p style={{ fontSize: 11, color: "#999", marginTop: 6 }}>권장: 600×400px, JPG/PNG</p>
+                <p style={{ fontSize: 11, color: "#999", marginTop: 6 }}>推奨: 600×400px、JPG/PNG</p>
               </div>
             </div>
           </div>
 
           <div>
-            <label style={{ fontSize: 12, fontWeight: 700, color: "#555", display: "block", marginBottom: 6 }}>패키지명 *</label>
-            <input style={inp()} value={editing.name} onChange={e => setEditing(p => p ? { ...p, name: e.target.value } : p)} placeholder="예: seoulmono 과자폭탄 선물세트" />
+            <label style={{ fontSize: 12, fontWeight: 700, color: "#555", display: "block", marginBottom: 6 }}>パッケージ名 *</label>
+            <input style={inp()} value={editing.name} onChange={e => setEditing(p => p ? { ...p, name: e.target.value } : p)} placeholder="例: seoulmono お菓子ぎっしりギフトセット" />
           </div>
 
           <div>
-            <label style={{ fontSize: 12, fontWeight: 700, color: "#555", display: "block", marginBottom: 6 }}>설명</label>
-            <input style={inp()} value={editing.description} onChange={e => setEditing(p => p ? { ...p, description: e.target.value } : p)} placeholder="간단한 패키지 소개" />
+            <label style={{ fontSize: 12, fontWeight: 700, color: "#555", display: "block", marginBottom: 6 }}>説明</label>
+            <input style={inp()} value={editing.description} onChange={e => setEditing(p => p ? { ...p, description: e.target.value } : p)} placeholder="パッケージの簡単な紹介" />
           </div>
 
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
             <div>
-              <label style={{ fontSize: 12, fontWeight: 700, color: "#555", display: "block", marginBottom: 6 }}>카테고리 *</label>
+              <label style={{ fontSize: 12, fontWeight: 700, color: "#555", display: "block", marginBottom: 6 }}>カテゴリー *</label>
               <select style={{ ...inp(), background: "#fff" }} value={editing.ca_id} onChange={e => setEditing(p => p ? { ...p, ca_id: e.target.value } : p)}>
                 {Object.entries(CAT_LABELS).map(([v, l]) => <option key={v} value={v}>{l}</option>)}
               </select>
             </div>
             <div>
-              <label style={{ fontSize: 12, fontWeight: 700, color: "#555", display: "block", marginBottom: 6 }}>개입수</label>
+              <label style={{ fontSize: 12, fontWeight: 700, color: "#555", display: "block", marginBottom: 6 }}>入数</label>
               <input type="number" min={1} style={inp()} value={editing.item_count} onChange={e => setEditing(p => p ? { ...p, item_count: +e.target.value } : p)} />
             </div>
           </div>
 
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 12 }}>
             <div>
-              <label style={{ fontSize: 12, fontWeight: 700, color: "#555", display: "block", marginBottom: 6 }}>가격 (원)</label>
+              <label style={{ fontSize: 12, fontWeight: 700, color: "#555", display: "block", marginBottom: 6 }}>価格 (円)</label>
               <input type="number" min={0} style={inp()} value={editing.price} onChange={e => setEditing(p => p ? { ...p, price: +e.target.value } : p)} />
             </div>
             <div>
-              <label style={{ fontSize: 12, fontWeight: 700, color: "#555", display: "block", marginBottom: 6 }}>정렬순서</label>
+              <label style={{ fontSize: 12, fontWeight: 700, color: "#555", display: "block", marginBottom: 6 }}>表示順</label>
               <input type="number" style={inp()} value={editing.sort_order} onChange={e => setEditing(p => p ? { ...p, sort_order: +e.target.value } : p)} />
             </div>
             <div>
-              <label style={{ fontSize: 12, fontWeight: 700, color: "#555", display: "block", marginBottom: 6 }}>상태</label>
+              <label style={{ fontSize: 12, fontWeight: 700, color: "#555", display: "block", marginBottom: 6 }}>状態</label>
               <select style={{ ...inp(), background: "#fff" }} value={editing.is_active} onChange={e => setEditing(p => p ? { ...p, is_active: +e.target.value } : p)}>
-                <option value={1}>활성</option>
-                <option value={0}>비활성</option>
+                <option value={1}>有効</option>
+                <option value={0}>無効</option>
               </select>
             </div>
           </div>
@@ -933,7 +933,7 @@ function GiftPackageManager({ authHeaders, toast }: {
           {/* 구성 상품 (수정 모드에서만) */}
           {!isNew && (
             <div>
-              <label style={{ fontSize: 12, fontWeight: 700, color: "#555", display: "block", marginBottom: 8 }}>구성 상품</label>
+              <label style={{ fontSize: 12, fontWeight: 700, color: "#555", display: "block", marginBottom: 8 }}>構成商品</label>
               {editing.items && editing.items.length > 0 && (
                 <div style={{ display: "flex", flexDirection: "column", gap: 6, marginBottom: 10 }}>
                   {editing.items.map(item => (
@@ -948,10 +948,10 @@ function GiftPackageManager({ authHeaders, toast }: {
                 </div>
               )}
               <div style={{ position: "relative" }}>
-                <input style={inp()} value={searchQ} onChange={e => handleItemSearch(e.target.value)} placeholder="상품명으로 검색하여 추가..." />
+                <input style={inp()} value={searchQ} onChange={e => handleItemSearch(e.target.value)} placeholder="商品名で検索して追加..." />
                 {(searching || searchResults.length > 0) && (
                   <div style={{ position: "absolute", top: "100%", left: 0, right: 0, zIndex: 10, background: "#fff", border: "1px solid #eee", borderRadius: 8, boxShadow: "0 4px 16px rgba(0,0,0,0.1)", maxHeight: 220, overflowY: "auto" }}>
-                    {searching && <div style={{ padding: 12, fontSize: 12, color: "#999", textAlign: "center" }}>검색 중...</div>}
+                    {searching && <div style={{ padding: 12, fontSize: 12, color: "#999", textAlign: "center" }}>検索中...</div>}
                     {searchResults.map(item => (
                       <div key={item.it_id} onClick={() => { addItem(item); setSearchQ(""); setSearchResults([]); }}
                         style={{ display: "flex", alignItems: "center", gap: 10, padding: "8px 12px", cursor: "pointer", borderBottom: "1px solid #f5f5f5" }}
@@ -972,9 +972,9 @@ function GiftPackageManager({ authHeaders, toast }: {
           )}
 
           <div style={{ display: "flex", gap: 10, justifyContent: "flex-end", paddingTop: 8, borderTop: "1px solid #f0f0f0" }}>
-            <button onClick={cancelEdit} style={{ padding: "9px 20px", background: "#f5f5f5", border: "none", borderRadius: 8, fontSize: 13, fontWeight: 700, cursor: "pointer" }}>취소</button>
+            <button onClick={cancelEdit} style={{ padding: "9px 20px", background: "#f5f5f5", border: "none", borderRadius: 8, fontSize: 13, fontWeight: 700, cursor: "pointer" }}>キャンセル</button>
             <button onClick={save} disabled={saving} style={{ padding: "9px 20px", background: "#8B5E3C", color: "#fff", border: "none", borderRadius: 8, fontSize: 13, fontWeight: 700, cursor: "pointer" }}>
-              {saving ? "저장 중..." : isNew ? "등록" : "수정 저장"}
+              {saving ? "保存中..." : isNew ? "登録" : "更新を保存"}
             </button>
           </div>
         </div>
@@ -984,18 +984,18 @@ function GiftPackageManager({ authHeaders, toast }: {
 
   return (
     <div>
-      <PageHeader title="선물패키지관리" sub="홈·선물하기 화면에 노출되는 선물 패키지를 등록·수정합니다" />
+      <PageHeader title="ギフトパッケージ管理" sub="ホーム・ギフト画面に表示されるギフトパッケージを登録・編集します" />
       <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 16 }}>
         <button onClick={startNew} style={{ display: "flex", alignItems: "center", gap: 6, padding: "9px 18px", background: "#8B5E3C", color: "#fff", border: "none", borderRadius: 8, fontSize: 13, fontWeight: 700, cursor: "pointer" }}>
-          <Plus size={15} /> 새 패키지 등록
+          <Plus size={15} /> 新規パッケージ登録
         </button>
       </div>
       {loading ? (
-        <div style={{ padding: 48, textAlign: "center", color: "#999" }}>불러오는 중...</div>
+        <div style={{ padding: 48, textAlign: "center", color: "#999" }}>読み込み中...</div>
       ) : pkgs.length === 0 ? (
         <div style={{ padding: 48, textAlign: "center", background: "#fff", borderRadius: 12, border: "2px dashed #eee" }}>
           <div style={{ fontSize: 36, marginBottom: 12 }}>🎁</div>
-          <p style={{ color: "#999", fontSize: 14 }}>등록된 선물 패키지가 없습니다</p>
+          <p style={{ color: "#999", fontSize: 14 }}>登録されたギフトパッケージはありません</p>
         </div>
       ) : (
         <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
@@ -1011,13 +1011,13 @@ function GiftPackageManager({ authHeaders, toast }: {
                   <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
                     <span style={{ fontSize: 13, fontWeight: 900, color: "#111" }}>{pkg.name}</span>
                     <span style={{ fontSize: 10, fontWeight: 700, background: pkg.is_active ? "#e8f9f0" : "#f5f5f5", color: pkg.is_active ? "#8B5E3C" : "#999", borderRadius: 20, padding: "2px 8px" }}>
-                      {pkg.is_active ? "활성" : "비활성"}
+                      {pkg.is_active ? "有効" : "無効"}
                     </span>
                   </div>
                   <div style={{ display: "flex", gap: 10, fontSize: 12, color: "#666" }}>
                     <span>{CAT_LABELS[pkg.ca_id] || pkg.ca_id}</span>
                     <span>·</span>
-                    <span>{pkg.item_count}개입</span>
+                    <span>{pkg.item_count}点入り</span>
                     <span>·</span>
                     <span style={{ fontWeight: 700, color: "#8B5E3C" }}>{fmtPrice(pkg.price)}</span>
                   </div>
@@ -1026,7 +1026,7 @@ function GiftPackageManager({ authHeaders, toast }: {
                 <div style={{ display: "flex", gap: 6, flexShrink: 0 }}>
                   <button onClick={() => toggleExpand(pkg.id)}
                     style={{ padding: "6px 12px", background: "#f5f5f5", border: "none", borderRadius: 7, fontSize: 11, fontWeight: 700, cursor: "pointer", color: "#555" }}>
-                    구성상품 {expandedId === pkg.id ? "▲" : "▼"}
+                    構成商品 {expandedId === pkg.id ? "▲" : "▼"}
                   </button>
                   <button onClick={() => startEdit(pkg)}
                     style={{ padding: "6px 12px", background: "#e8f9f0", color: "#8B5E3C", border: "none", borderRadius: 7, fontSize: 11, fontWeight: 700, cursor: "pointer" }}>
@@ -1041,7 +1041,7 @@ function GiftPackageManager({ authHeaders, toast }: {
               {expandedId === pkg.id && (
                 <div style={{ borderTop: "1px solid #f5f5f5", padding: "12px 16px", background: "#fafafa" }}>
                   {!pkg.items || pkg.items.length === 0 ? (
-                    <p style={{ fontSize: 12, color: "#bbb", margin: 0 }}>구성 상품이 없습니다 (수정에서 추가 가능)</p>
+                    <p style={{ fontSize: 12, color: "#bbb", margin: 0 }}>構成商品がありません (編集から追加できます)</p>
                   ) : (
                     <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
                       {pkg.items.map(item => (
@@ -1099,10 +1099,10 @@ function GiftSetCategoryManager({ authHeaders, toast }: {
           description: editingSub.description, is_active: editingSub.is_active,
         }),
       });
-      toast("저장 완료");
+      toast("保存しました");
       setEditingSub(null);
       await load();
-    } catch { toast("저장 실패", "err"); }
+    } catch { toast("保存に失敗しました", "err"); }
     finally { setSaving(false); }
   };
 
@@ -1110,34 +1110,34 @@ function GiftSetCategoryManager({ authHeaders, toast }: {
 
   return (
     <div>
-      <PageHeader title="선물분류관리" sub="g5_shop_category2 기반의 선물 세트 유형을 설정합니다" />
+      <PageHeader title="ギフト分類管理" sub="g5_shop_category2 をベースにしたギフトセットタイプを設定します" />
 
       {editingSub && (
         <Card style={{ marginBottom: 16, border: "1.5px solid #8B5E3C" }}>
           <h3 style={{ fontSize: 14, fontWeight: 700, margin: "0 0 14px", color: "#8B5E3C" }}>
-            [{editingSub.ca_id}] {editingSub.ca_name} 설정
+            [{editingSub.ca_id}] {editingSub.ca_name} 設定
           </h3>
           <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-            <FormField label="슬롯 수 (담을 상품 개수)" value={String(editingSub.slot_count)}
+            <FormField label="スロット数 (入れる商品の数)" value={String(editingSub.slot_count)}
               onChange={v => setEditingSub(e => e && ({ ...e, slot_count: Number(v) }))} type="number" />
-            <FormField label="세트 가격 (0이면 숨김)" value={String(editingSub.price)}
+            <FormField label="セット価格 (0の場合は非表示)" value={String(editingSub.price)}
               onChange={v => setEditingSub(e => e && ({ ...e, price: Number(v) }))} type="number" />
-            <FormField label="설명 (선택)" value={editingSub.description}
-              onChange={v => setEditingSub(e => e && ({ ...e, description: v }))} placeholder="예) 인기 스낵 6종 선택" />
+            <FormField label="説明 (任意)" value={editingSub.description}
+              onChange={v => setEditingSub(e => e && ({ ...e, description: v }))} placeholder="例) 人気スナック6種から選択" />
             <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-              <label style={{ fontSize: 12, color: "#888", fontWeight: 600 }}>활성화</label>
+              <label style={{ fontSize: 12, color: "#888", fontWeight: 600 }}>有効にする</label>
               <input type="checkbox" checked={editingSub.is_active === 1}
                 onChange={e => setEditingSub(prev => prev && ({ ...prev, is_active: e.target.checked ? 1 : 0 }))} />
             </div>
             <div style={{ display: "flex", gap: 10 }}>
-              <Btn onClick={saveSub} disabled={saving} color="#8B5E3C">{saving ? "저장 중..." : "저장"}</Btn>
-              <Btn onClick={() => setEditingSub(null)} color="#888">취소</Btn>
+              <Btn onClick={saveSub} disabled={saving} color="#8B5E3C">{saving ? "保存中..." : "保存"}</Btn>
+              <Btn onClick={() => setEditingSub(null)} color="#888">キャンセル</Btn>
             </div>
           </div>
         </Card>
       )}
 
-      {loading ? <p style={{ textAlign: "center", color: "#aaa" }}>불러오는 중...</p> : (
+      {loading ? <p style={{ textAlign: "center", color: "#aaa" }}>読み込み中...</p> : (
         <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
           {cats.map(cat => (
             <Card key={cat.ca_id}>
@@ -1156,15 +1156,15 @@ function GiftSetCategoryManager({ authHeaders, toast }: {
                       <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
                         <span style={{ fontSize: 13, fontWeight: 700, color: "#111" }}>{sub.ca_name}</span>
                         <span style={{ fontSize: 11, padding: "2px 8px", borderRadius: 20, background: sub.is_active ? "#8B5E3C" : "#ccc", color: "#fff" }}>
-                          {sub.is_active ? "활성" : "비활성"}
+                          {sub.is_active ? "有効" : "無効"}
                         </span>
                       </div>
                       <div style={{ fontSize: 12, color: "#888", marginTop: 2 }}>
-                        {sub.slot_count}개 담기 {sub.price > 0 ? `· ${sub.price.toLocaleString()}원` : ""} {sub.description ? `· ${sub.description}` : ""}
+                        {sub.slot_count}点まで選択 {sub.price > 0 ? `· ${sub.price.toLocaleString()}円` : ""} {sub.description ? `· ${sub.description}` : ""}
                       </div>
                     </div>
                     <Btn onClick={() => setEditingSub({ ...sub, mainCaId: cat.ca_id })} color="#6366f1">
-                      <Edit2 size={13} /> 설정
+                      <Edit2 size={13} /> 設定
                     </Btn>
                   </div>
                 ))}
@@ -1240,8 +1240,8 @@ function GiftSetProductManager({ authHeaders, toast }: {
       });
       await loadProducts(selectedSub.ca_id);
       setSearchResults(prev => prev.filter(i => i.it_id !== item.it_id));
-      toast(`"${item.it_name}" 추가 완료`);
-    } catch { toast("추가 실패", "err"); }
+      toast(`"${item.it_name}" 追加しました`);
+    } catch { toast("追加に失敗しました", "err"); }
     finally { setActionId(null); }
   };
 
@@ -1250,19 +1250,19 @@ function GiftSetProductManager({ authHeaders, toast }: {
     try {
       await fetch(`/api/shop-admin/gift/set-products/${id}`, { method: "DELETE", headers: authHeaders() });
       setProducts(prev => prev.filter(p => p.id !== id));
-      toast(`"${name}" 제거 완료`);
-    } catch { toast("제거 실패", "err"); }
+      toast(`"${name}" 削除しました`);
+    } catch { toast("削除に失敗しました", "err"); }
     finally { setActionId(null); }
   };
 
   return (
     <div>
-      <PageHeader title="선물상품관리" sub="세트 유형별로 선택 가능한 상품을 등록합니다" />
+      <PageHeader title="ギフト商品管理" sub="セットタイプごとに選択可能な商品を登録します" />
       <div style={{ display: "flex", gap: 16, alignItems: "flex-start" }}>
         {/* Set type selector */}
         <div style={{ width: 210, flexShrink: 0 }}>
           <Card>
-            <p style={{ fontSize: 12, fontWeight: 700, color: "#888", margin: "0 0 10px" }}>세트 유형 선택</p>
+            <p style={{ fontSize: 12, fontWeight: 700, color: "#888", margin: "0 0 10px" }}>セットタイプを選択</p>
             {cats.map(cat => (
               <div key={cat.ca_id} style={{ marginBottom: 8 }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 12, fontWeight: 700, color: "#555", padding: "4px 6px" }}>
@@ -1287,19 +1287,19 @@ function GiftSetProductManager({ authHeaders, toast }: {
         {/* Product management */}
         <div style={{ flex: 1, minWidth: 0 }}>
           {!selectedSub ? (
-            <Card><p style={{ textAlign: "center", color: "#aaa", padding: "24px 0" }}>좌측에서 세트 유형을 선택하세요</p></Card>
+            <Card><p style={{ textAlign: "center", color: "#aaa", padding: "24px 0" }}>左側からセットタイプを選択してください</p></Card>
           ) : (
             <>
               <Card style={{ marginBottom: 12 }}>
-                <h3 style={{ fontSize: 14, fontWeight: 700, margin: "0 0 12px" }}>{selectedSub.ca_name} — 상품 검색</h3>
+                <h3 style={{ fontSize: 14, fontWeight: 700, margin: "0 0 12px" }}>{selectedSub.ca_name} — 商品検索</h3>
                 <input value={searchQ} onChange={e => handleSearch(e.target.value)}
-                  placeholder="상품명으로 검색 (상위 카테고리 상품 기준)..." style={inputStyle} />
-                {searching && <p style={{ fontSize: 13, color: "#aaa", margin: "8px 0 0" }}>검색 중...</p>}
+                  placeholder="商品名で検索 (上位カテゴリーの商品が対象)..." style={inputStyle} />
+                {searching && <p style={{ fontSize: 13, color: "#aaa", margin: "8px 0 0" }}>検索中...</p>}
                 {searchResults.length > 0 && (
                   <div style={{ marginTop: 10, display: "flex", flexDirection: "column", gap: 8 }}>
                     {searchResults.map(item => (
                       <ItemRow key={item.it_id} item={item}
-                        action={<Btn onClick={() => addProduct(item)} disabled={actionId === "add_" + item.it_id} color="#8B5E3C">추가</Btn>}
+                        action={<Btn onClick={() => addProduct(item)} disabled={actionId === "add_" + item.it_id} color="#8B5E3C">追加</Btn>}
                       />
                     ))}
                   </div>
@@ -1307,10 +1307,10 @@ function GiftSetProductManager({ authHeaders, toast }: {
               </Card>
               <Card>
                 <h3 style={{ fontSize: 14, fontWeight: 700, margin: "0 0 12px" }}>
-                  등록된 상품 <span style={{ color: "#8B5E3C" }}>({products.length}개)</span>
+                  登録済みの商品 <span style={{ color: "#8B5E3C" }}>({products.length}点)</span>
                 </h3>
-                {loadingProd && <p style={{ textAlign: "center", color: "#aaa" }}>불러오는 중...</p>}
-                {!loadingProd && products.length === 0 && <p style={{ textAlign: "center", color: "#aaa" }}>등록된 상품이 없습니다. 위에서 검색하여 추가하세요.</p>}
+                {loadingProd && <p style={{ textAlign: "center", color: "#aaa" }}>読み込み中...</p>}
+                {!loadingProd && products.length === 0 && <p style={{ textAlign: "center", color: "#aaa" }}>登録された商品がありません。上で検索して追加してください。</p>}
                 <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
                   {products.map(p => (
                     <ItemRow key={p.id} item={{ it_id: p.it_id, it_name: p.it_name, it_price: p.it_price, it_cust_price: 0, it_img1: p.it_img1 }}
@@ -1348,7 +1348,7 @@ function ShopCategoriesManager({ authHeaders, toast }: { authHeaders: () => Reco
         list.forEach((c: any) => { m[c.ca_id] = c.ca_img || ""; });
         setImgMap(m);
       })
-      .catch(() => toast("불러오기 실패", "err"))
+      .catch(() => toast("読み込みに失敗しました", "err"))
       .finally(() => setLoading(false));
   };
 
@@ -1367,12 +1367,12 @@ function ShopCategoriesManager({ authHeaders, toast }: { authHeaders: () => Reco
       const d = await r.json();
       if (d.url) {
         setImgMap(prev => ({ ...prev, [caId]: d.url }));
-        toast("이미지 업로드 완료. 저장 버튼을 눌러 적용하세요.", "ok");
+        toast("画像をアップロードしました。保存ボタンを押して反映してください。", "ok");
       } else {
-        toast(d.error || "업로드 실패", "err");
+        toast(d.error || "アップロードに失敗しました", "err");
       }
     } catch {
-      toast("업로드 중 오류가 발생했습니다", "err");
+      toast("アップロード中にエラーが発生しました", "err");
     } finally {
       setUploading(null);
     }
@@ -1391,10 +1391,10 @@ function ShopCategoriesManager({ authHeaders, toast }: { authHeaders: () => Reco
           ca_img: imgMap[cat.ca_id] || "",
         }),
       });
-      if (r.ok) toast("저장 완료", "ok");
-      else toast("저장 실패", "err");
+      if (r.ok) toast("保存しました", "ok");
+      else toast("保存に失敗しました", "err");
     } catch {
-      toast("저장 중 오류가 발생했습니다", "err");
+      toast("保存中にエラーが発生しました", "err");
     } finally {
       setSaving(null);
     }
@@ -1402,11 +1402,11 @@ function ShopCategoriesManager({ authHeaders, toast }: { authHeaders: () => Reco
 
   return (
     <div>
-      <PageHeader title="상품카테고리 이미지 관리" sub="카테고리별 대표 이미지를 등록·수정합니다. 이미지는 카테고리 탭 및 상품 목록에서 사용됩니다." />
+      <PageHeader title="商品カテゴリー画像管理" sub="カテゴリーごとの代表画像を登録・編集します。画像はカテゴリータブおよび商品一覧で使用されます。" />
       <Card>
-        {loading && <p style={{ textAlign: "center", color: "#aaa", padding: "24px 0" }}>불러오는 중...</p>}
+        {loading && <p style={{ textAlign: "center", color: "#aaa", padding: "24px 0" }}>読み込み中...</p>}
         {!loading && cats.length === 0 && (
-          <p style={{ textAlign: "center", color: "#aaa", padding: "24px 0" }}>등록된 카테고리가 없습니다</p>
+          <p style={{ textAlign: "center", color: "#aaa", padding: "24px 0" }}>登録されたカテゴリーはありません</p>
         )}
         {!loading && cats.length > 0 && (
           <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
@@ -1429,14 +1429,14 @@ function ShopCategoriesManager({ authHeaders, toast }: { authHeaders: () => Reco
                   }}>
                     {imgUrl
                       ? <img src={imgUrl} alt={cat.ca_name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                      : <span style={{ fontSize: 11, color: "#bbb", textAlign: "center", lineHeight: 1.3 }}>이미지<br />없음</span>
+                      : <span style={{ fontSize: 11, color: "#bbb", textAlign: "center", lineHeight: 1.3 }}>画像<br />なし</span>
                     }
                   </div>
 
                   {/* 카테고리 정보 */}
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{ fontWeight: 700, fontSize: 15, color: "#222", marginBottom: 2 }}>{cat.ca_name}</div>
-                    <div style={{ fontSize: 12, color: "#999" }}>ID: {cat.ca_id} · 순서: {cat.ca_order}</div>
+                    <div style={{ fontSize: 12, color: "#999" }}>ID: {cat.ca_id} · 順序: {cat.ca_order}</div>
                     {imgUrl && (
                       <div style={{ fontSize: 11, color: "#aaa", marginTop: 4, wordBreak: "break-all", maxWidth: 360 }}>
                         {imgUrl}
@@ -1467,7 +1467,7 @@ function ShopCategoriesManager({ authHeaders, toast }: { authHeaders: () => Reco
                         display: "flex", alignItems: "center", gap: 5,
                       }}
                     >
-                      {isUploading ? "업로드 중..." : imgUrl ? "이미지 변경" : "이미지 등록"}
+                      {isUploading ? "アップロード中..." : imgUrl ? "画像を変更" : "画像を登録"}
                     </button>
                     {imgUrl && (
                       <button
@@ -1476,9 +1476,9 @@ function ShopCategoriesManager({ authHeaders, toast }: { authHeaders: () => Reco
                           padding: "6px 10px", borderRadius: 7, border: "1px solid #fca5a5",
                           background: "#fff5f5", color: "#ef4444", fontSize: 12, cursor: "pointer",
                         }}
-                        title="이미지 삭제"
+                        title="画像を削除"
                       >
-                        삭제
+                        削除
                       </button>
                     )}
                     <button
@@ -1490,7 +1490,7 @@ function ShopCategoriesManager({ authHeaders, toast }: { authHeaders: () => Reco
                         fontSize: 12, cursor: isSaving ? "not-allowed" : "pointer", fontWeight: 600,
                       }}
                     >
-                      {isSaving ? "저장 중..." : "저장"}
+                      {isSaving ? "保存中..." : "保存"}
                     </button>
                   </div>
                 </div>
@@ -1514,13 +1514,13 @@ interface AdminProduct {
 }
 
 const USE_LABELS: Record<string, { label: string; color: string; bg: string }> = {
-  "1": { label: "노출", color: "#8B5E3C", bg: "#e8f9f0" },
-  "0": { label: "미노출", color: "#888", bg: "#f0f0f0" },
+  "1": { label: "表示", color: "#8B5E3C", bg: "#e8f9f0" },
+  "0": { label: "非表示", color: "#888", bg: "#f0f0f0" },
 };
 const SOLDOUT_LABELS: Record<string, { label: string; color: string; bg: string }> = {
-  "0": { label: "판매중", color: "#2563eb", bg: "#eff6ff" },
-  "2": { label: "판매준비중", color: "#d97706", bg: "#fffbeb" },
-  "1": { label: "품절", color: "#ef4444", bg: "#fff3f3" },
+  "0": { label: "販売中", color: "#2563eb", bg: "#eff6ff" },
+  "2": { label: "販売準備中", color: "#d97706", bg: "#fffbeb" },
+  "1": { label: "売り切れ", color: "#ef4444", bg: "#fff3f3" },
 };
 
 interface CatNode { ca_id: string; ca_name: string; children?: CatNode[]; }
@@ -1679,7 +1679,7 @@ function ProductList({ authHeaders, toast }: { authHeaders: () => Record<string,
           };
         }),
       });
-    } catch { toast("상품 정보 로드 실패", "err"); }
+    } catch { toast("商品情報の読み込みに失敗しました", "err"); }
     finally { setEditLoading(false); }
   };
 
@@ -1732,9 +1732,9 @@ function ProductList({ authHeaders, toast }: { authHeaders: () => Record<string,
           ? { ...p, it_price: editForm.it_price, it_cust_price: editForm.it_cust_price, ca_id: editForm.ca_id, ca_name: newCaName }
           : p
       ));
-      toast("저장 완료");
+      toast("保存しました");
       setEditItem(null);
-    } catch { toast("저장 실패", "err"); }
+    } catch { toast("保存に失敗しました", "err"); }
     finally { setEditSaving(false); }
   };
 
@@ -1765,7 +1765,7 @@ function ProductList({ authHeaders, toast }: { authHeaders: () => Record<string,
       const data = await r.json();
       setItems(data.products || []);
       setTotal(data.total || 0);
-    } catch { toast("불러오기 실패", "err"); }
+    } catch { toast("読み込みに失敗しました", "err"); }
     finally { setLoading(false); }
   }, [authHeaders]);
 
@@ -1805,10 +1805,10 @@ function ProductList({ authHeaders, toast }: { authHeaders: () => Record<string,
       if (!res.ok) throw new Error();
       setItems(prev => prev.map(p => p.it_id === it_id ? { ...p, [field]: value } : p));
       toast(field === "it_use"
-        ? (value === "1" ? "노출로 변경" : "미노출로 변경")
-        : (value === "0" ? "판매중으로 변경" : value === "2" ? "판매준비중으로 변경" : "품절로 변경")
+        ? (value === "1" ? "表示に変更" : "非表示に変更")
+        : (value === "0" ? "販売中に変更" : value === "2" ? "販売準備中に変更" : "売り切れに変更")
       );
-    } catch { toast("변경 실패", "err"); }
+    } catch { toast("変更に失敗しました", "err"); }
     finally { setUpdating(null); }
   };
 
@@ -1829,9 +1829,9 @@ function ProductList({ authHeaders, toast }: { authHeaders: () => Record<string,
       });
       if (!res.ok) throw new Error();
       setItems(prev => prev.map(p => p.it_id === noticeItem.it_id ? { ...p, it_info: JSON.stringify(noticeData) } : p));
-      toast("상품정보고시 저장 완료");
+      toast("商品情報表示を保存しました");
       setNoticeItem(null);
-    } catch { toast("저장 실패", "err"); }
+    } catch { toast("保存に失敗しました", "err"); }
     finally { setNoticeSaving(false); }
   };
 
@@ -1878,15 +1878,15 @@ function ProductList({ authHeaders, toast }: { authHeaders: () => Record<string,
 
   return (
     <div>
-      <PageHeader title="상품 목록" sub="상품별 노출 여부와 판매상태를 관리합니다" />
+      <PageHeader title="商品一覧" sub="商品ごとの表示設定と販売状態を管理します" />
 
       {/* ── 카테고리별 통계 패널 ── */}
       <Card style={{ marginBottom: 12 }}>
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 14 }}>
-          <span style={{ fontSize: 14, fontWeight: 800, color: "#222" }}>카테고리별 상품 현황</span>
+          <span style={{ fontSize: 14, fontWeight: 800, color: "#222" }}>カテゴリー別商品状況</span>
           <button onClick={loadStats} disabled={statsLoading}
             style={{ fontSize: 12, padding: "4px 12px", borderRadius: 6, border: "1px solid #ddd", background: "#fff", color: "#555", cursor: "pointer" }}>
-            {statsLoading ? "갱신 중..." : "새로고침"}
+            {statsLoading ? "更新中..." : "更新"}
           </button>
         </div>
 
@@ -1894,15 +1894,15 @@ function ProductList({ authHeaders, toast }: { authHeaders: () => Record<string,
         {catSummary && (
           <div style={{ display: "flex", gap: 10, marginBottom: 16, flexWrap: "wrap" }}>
             {[
-              { label: "전체 상품", value: catSummary.total, color: "#8B5E3C", bg: "#e8f8f0", onClick: null },
-              { label: "노출(판매중)", value: catSummary.use_on, color: "#8B5E3C", bg: "#e8f8f0",
+              { label: "全商品", value: catSummary.total, color: "#8B5E3C", bg: "#e8f8f0", onClick: null },
+              { label: "表示(販売中)", value: catSummary.use_on, color: "#8B5E3C", bg: "#e8f8f0",
                 onClick: () => { setFilterUse("1"); setFilterUnassigned(false); setFilterSoldout(""); setCatL1(""); setCatL2(""); setCatL3(""); setCurPage(1); load({ page: 1, limit: perPage, it_use: "1" }); } },
-              { label: "미노출", value: catSummary.use_off, color: "#f5a623", bg: "#fff8ec",
+              { label: "非表示", value: catSummary.use_off, color: "#f5a623", bg: "#fff8ec",
                 onClick: () => { setFilterUse("0"); setFilterUnassigned(false); setFilterSoldout(""); setCatL1(""); setCatL2(""); setCatL3(""); setCurPage(1); load({ page: 1, limit: perPage, it_use: "0" }); } },
-              { label: "품절", value: catSummary.soldout, color: "#e53935", bg: "#fff0f0",
+              { label: "売り切れ", value: catSummary.soldout, color: "#e53935", bg: "#fff0f0",
                 onClick: () => { setFilterSoldout("1"); setFilterUse(""); setFilterUnassigned(false); setCatL1(""); setCatL2(""); setCatL3(""); setCurPage(1); load({ page: 1, limit: perPage, it_soldout: "1" }); } },
               {
-                label: "카테고리 미지정 ⚠️", value: catSummary.unassigned, color: "#7b1fa2", bg: "#f8f0ff",
+                label: "カテゴリー未設定 ⚠️", value: catSummary.unassigned, color: "#7b1fa2", bg: "#f8f0ff",
                 onClick: () => { setFilterUnassigned(true); setFilterUse(""); setFilterSoldout(""); setCatL1(""); setCatL2(""); setCatL3(""); setCurPage(1); load({ page: 1, limit: perPage, category: "__unassigned" }); }
               },
             ].map(card => (
@@ -1919,7 +1919,7 @@ function ProductList({ authHeaders, toast }: { authHeaders: () => Record<string,
               >
                 <div style={{ fontSize: 11, color: card.color, fontWeight: 700, marginBottom: 4 }}>{card.label}</div>
                 <div style={{ fontSize: 22, fontWeight: 900, color: card.color }}>{Number(card.value).toLocaleString()}</div>
-                {card.onClick && <div style={{ fontSize: 10, color: card.color, marginTop: 3, opacity: 0.7 }}>클릭하여 필터</div>}
+                {card.onClick && <div style={{ fontSize: 10, color: card.color, marginTop: 3, opacity: 0.7 }}>クリックして絞り込み</div>}
               </div>
             ))}
           </div>
@@ -1930,7 +1930,7 @@ function ProductList({ authHeaders, toast }: { authHeaders: () => Record<string,
           <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12 }}>
             <thead>
               <tr style={{ background: "#f5f7f5" }}>
-                {["카테고리", "카테고리명", "노출여부", "전체", "노출", "미노출", "품절", "바로가기"].map(h => (
+                {["カテゴリー", "カテゴリー名", "表示設定", "すべて", "表示", "非表示", "売り切れ", "ショートカット"].map(h => (
                   <th key={h} style={{ padding: "7px 10px", textAlign: "center", fontWeight: 700, color: "#555", borderBottom: "1.5px solid #e0e0e0", whiteSpace: "nowrap" }}>{h}</th>
                 ))}
               </tr>
@@ -1945,13 +1945,13 @@ function ProductList({ authHeaders, toast }: { authHeaders: () => Record<string,
                       {isUnassigned ? "—" : row.ca_2}
                     </td>
                     <td style={{ padding: "6px 10px", color: isUnassigned ? "#7b1fa2" : isHidden ? "#aaa" : "#333", fontWeight: isUnassigned ? 700 : 400 }}>
-                      {isUnassigned ? "카테고리 미지정" : (row.ca_name || "(이름없음)")}
+                      {isUnassigned ? "カテゴリー未設定" : (row.ca_name || "(名称なし)")}
                     </td>
                     <td style={{ padding: "6px 10px", textAlign: "center" }}>
                       {isUnassigned ? <span style={{ fontSize: 10, color: "#aaa" }}>—</span>
                         : isHidden
-                          ? <span style={{ fontSize: 10, padding: "2px 6px", borderRadius: 4, background: "#f5f5f5", color: "#999", fontWeight: 700 }}>비노출카테고리</span>
-                          : <span style={{ fontSize: 10, padding: "2px 6px", borderRadius: 4, background: "#e8f8f0", color: "#8B5E3C", fontWeight: 700 }}>노출</span>}
+                          ? <span style={{ fontSize: 10, padding: "2px 6px", borderRadius: 4, background: "#f5f5f5", color: "#999", fontWeight: 700 }}>非表示カテゴリー</span>
+                          : <span style={{ fontSize: 10, padding: "2px 6px", borderRadius: 4, background: "#e8f8f0", color: "#8B5E3C", fontWeight: 700 }}>表示</span>}
                     </td>
                     <td style={{ padding: "6px 10px", textAlign: "center", fontWeight: 700 }}>{Number(row.total).toLocaleString()}</td>
                     <td style={{ padding: "6px 10px", textAlign: "center", color: "#8B5E3C", fontWeight: 700 }}>{Number(row.use_on).toLocaleString()}</td>
@@ -1969,7 +1969,7 @@ function ProductList({ authHeaders, toast }: { authHeaders: () => Record<string,
                           }
                         }}
                         style={{ fontSize: 11, padding: "3px 10px", borderRadius: 5, border: "1px solid #8B5E3C", background: "#fff", color: "#8B5E3C", cursor: "pointer", fontWeight: 700 }}>
-                        보기
+                        表示
                       </button>
                     </td>
                   </tr>
@@ -1986,17 +1986,17 @@ function ProductList({ authHeaders, toast }: { authHeaders: () => Record<string,
           <tbody>
             {/* 검색어 */}
             <tr style={{ borderBottom: "1px solid #f0f0f0" }}>
-              <td style={{ width: 90, padding: "10px 12px", background: "#f7f8f7", fontWeight: 700, color: "#444", fontSize: 13, whiteSpace: "nowrap" as const }}>검색어</td>
+              <td style={{ width: 90, padding: "10px 12px", background: "#f7f8f7", fontWeight: 700, color: "#444", fontSize: 13, whiteSpace: "nowrap" as const }}>キーワード</td>
               <td style={{ padding: "10px 12px" }}>
                 <div style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" as const }}>
                   <select value={searchField} onChange={e => setSearchField(e.target.value)} style={filterSel}>
-                    <option value="all">전체</option>
-                    <option value="name">상품명</option>
-                    <option value="id">상품코드</option>
+                    <option value="all">すべて</option>
+                    <option value="name">商品名</option>
+                    <option value="id">商品コード</option>
                   </select>
                   <input value={q} onChange={e => setQ(e.target.value)}
                     onKeyDown={e => e.key === "Enter" && doSearch()}
-                    placeholder="검색어를 입력하세요"
+                    placeholder="キーワードを入力してください"
                     style={{ ...filterSel, flex: 1, minWidth: 200, maxWidth: 400 }} />
                 </div>
               </td>
@@ -2004,19 +2004,19 @@ function ProductList({ authHeaders, toast }: { authHeaders: () => Record<string,
 
             {/* 카테고리 */}
             <tr style={{ borderBottom: "1px solid #f0f0f0" }}>
-              <td style={{ padding: "10px 12px", background: "#f7f8f7", fontWeight: 700, color: "#444", whiteSpace: "nowrap" as const }}>카테고리</td>
+              <td style={{ padding: "10px 12px", background: "#f7f8f7", fontWeight: 700, color: "#444", whiteSpace: "nowrap" as const }}>カテゴリー</td>
               <td style={{ padding: "10px 12px" }}>
                 <div style={{ display: "flex", gap: 8, flexWrap: "wrap" as const, alignItems: "center" }}>
                   <select value={catL1} onChange={e => { setCatL1(e.target.value); setCatL2(""); setCatL3(""); setFilterUnassigned(false); }} style={filterSel} disabled={filterUnassigned}>
-                    <option value="">1차분류</option>
+                    <option value="">1サブ分類</option>
                     {catTree.map(c => <option key={c.ca_id} value={c.ca_id}>{c.ca_name}</option>)}
                   </select>
                   <select value={catL2} onChange={e => { setCatL2(e.target.value); setCatL3(""); }} style={filterSel} disabled={!catL2Children.length || filterUnassigned}>
-                    <option value="">2차분류</option>
+                    <option value="">2サブ分類</option>
                     {catL2Children.map(c => <option key={c.ca_id} value={c.ca_id}>{c.ca_name}</option>)}
                   </select>
                   <select value={catL3} onChange={e => setCatL3(e.target.value)} style={filterSel} disabled={!catL3Children.length || filterUnassigned}>
-                    <option value="">3차분류</option>
+                    <option value="">3サブ分類</option>
                     {catL3Children.map(c => <option key={c.ca_id} value={c.ca_id}>{c.ca_name}</option>)}
                   </select>
                   <button
@@ -2027,7 +2027,7 @@ function ProductList({ authHeaders, toast }: { authHeaders: () => Record<string,
                       background: filterUnassigned ? "#f8f0ff" : "#fafafa",
                       color: filterUnassigned ? "#7b1fa2" : "#888",
                     }}>
-                    ⚠ 카테고리 미지정만 보기
+                    ⚠ カテゴリー未設定のみ表示
                   </button>
                 </div>
               </td>
@@ -2035,19 +2035,19 @@ function ProductList({ authHeaders, toast }: { authHeaders: () => Record<string,
 
             {/* 날짜 */}
             <tr style={{ borderBottom: "1px solid #f0f0f0" }}>
-              <td style={{ padding: "10px 12px", background: "#f7f8f7", fontWeight: 700, color: "#444", whiteSpace: "nowrap" as const }}>날짜</td>
+              <td style={{ padding: "10px 12px", background: "#f7f8f7", fontWeight: 700, color: "#444", whiteSpace: "nowrap" as const }}>日付</td>
               <td style={{ padding: "10px 12px" }}>
                 <div style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" as const }}>
                   <input type="date" value={dateFrom} onChange={e => setDateFrom(e.target.value)} style={filterSel} />
                   <span style={{ color: "#aaa" }}>~</span>
                   <input type="date" value={dateTo} onChange={e => setDateTo(e.target.value)} style={filterSel} />
                   <div style={{ display: "flex", gap: 4 }}>
-                    {qBtn("오늘", 0)}
-                    {qBtn("7일", 7)}
-                    {qBtn("14일", 14)}
-                    {qBtn("1개월", 30)}
-                    {qBtn("3개월", 90)}
-                    {qBtn("전체", null)}
+                    {qBtn("今日", 0)}
+                    {qBtn("7日", 7)}
+                    {qBtn("14日", 14)}
+                    {qBtn("1か月", 30)}
+                    {qBtn("3か月", 90)}
+                    {qBtn("すべて", null)}
                   </div>
                 </div>
               </td>
@@ -2055,10 +2055,10 @@ function ProductList({ authHeaders, toast }: { authHeaders: () => Record<string,
 
             {/* 판매 여부 */}
             <tr style={{ borderBottom: "1px solid #f0f0f0" }}>
-              <td style={{ padding: "10px 12px", background: "#f7f8f7", fontWeight: 700, color: "#444", whiteSpace: "nowrap" as const }}>판매 여부</td>
+              <td style={{ padding: "10px 12px", background: "#f7f8f7", fontWeight: 700, color: "#444", whiteSpace: "nowrap" as const }}>販売有無</td>
               <td style={{ padding: "10px 12px" }}>
                 <div style={{ display: "flex", flexWrap: "wrap" as const }}>
-                  {[["", "전체"], ["0", "판매중"], ["2", "판매준비중"], ["1", "품절"]].map(([v, label]) => (
+                  {[["", "すべて"], ["0", "販売中"], ["2", "販売準備中"], ["1", "売り切れ"]].map(([v, label]) => (
                     <label key={v} style={radioLabel}>
                       <input type="radio" name="soldout" value={v} checked={filterSoldout === v} onChange={() => setFilterSoldout(v)} />
                       {label}
@@ -2070,10 +2070,10 @@ function ProductList({ authHeaders, toast }: { authHeaders: () => Record<string,
 
             {/* 노출 여부 */}
             <tr>
-              <td style={{ padding: "10px 12px", background: "#f7f8f7", fontWeight: 700, color: "#444", whiteSpace: "nowrap" as const }}>노출 여부</td>
+              <td style={{ padding: "10px 12px", background: "#f7f8f7", fontWeight: 700, color: "#444", whiteSpace: "nowrap" as const }}>表示設定</td>
               <td style={{ padding: "10px 12px" }}>
                 <div style={{ display: "flex", flexWrap: "wrap" as const }}>
-                  {[["", "전체"], ["1", "노출"], ["0", "미노출"]].map(([v, label]) => (
+                  {[["", "すべて"], ["1", "表示"], ["0", "非表示"]].map(([v, label]) => (
                     <label key={v} style={radioLabel}>
                       <input type="radio" name="use" value={v} checked={filterUse === v} onChange={() => setFilterUse(v)} />
                       {label}
@@ -2093,10 +2093,10 @@ function ProductList({ authHeaders, toast }: { authHeaders: () => Record<string,
             setCurPage(1);
             load({ page: 1, limit: perPage });
           }} style={{ padding: "8px 24px", borderRadius: 8, border: "1.5px solid #e0e0e0", background: "#fff", color: "#555", fontSize: 13, fontWeight: 700, cursor: "pointer" }}>
-            초기화
+            リセット
           </button>
           <button onClick={doSearch} style={{ padding: "8px 32px", borderRadius: 8, border: "none", background: "#8B5E3C", color: "#fff", fontSize: 13, fontWeight: 800, cursor: "pointer" }}>
-            검색
+            検索
           </button>
         </div>
       </Card>
@@ -2105,20 +2105,20 @@ function ProductList({ authHeaders, toast }: { authHeaders: () => Record<string,
         {/* 상단: 총 개수 + 페이지수 */}
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
           <span style={{ fontSize: 13, color: "#666" }}>
-            총 <strong style={{ color: "#222" }}>{total}</strong>개
-            {loading && <span style={{ color: "#aaa", marginLeft: 8 }}>불러오는 중...</span>}
+            全 <strong style={{ color: "#222" }}>{total}</strong>件
+            {loading && <span style={{ color: "#aaa", marginLeft: 8 }}>読み込み中...</span>}
           </span>
           <PerPageSelect value={perPage} onChange={n => { setPerPage(n); setCurPage(1); }} total={total} />
         </div>
 
         {/* 범례 */}
         <div style={{ display: "flex", gap: 12, marginBottom: 12, fontSize: 12, color: "#888", flexWrap: "wrap" }}>
-          <span style={{ fontWeight: 700 }}>노출 여부:</span>
+          <span style={{ fontWeight: 700 }}>表示設定:</span>
           {Object.entries(USE_LABELS).map(([k, v]) => (
             <span key={k} style={{ padding: "2px 8px", borderRadius: 4, background: v.bg, color: v.color, fontWeight: 700 }}>{v.label}</span>
           ))}
           <span style={{ margin: "0 6px" }}>|</span>
-          <span style={{ fontWeight: 700 }}>판매상태:</span>
+          <span style={{ fontWeight: 700 }}>販売状態:</span>
           {Object.entries(SOLDOUT_LABELS).map(([k, v]) => (
             <span key={k} style={{ padding: "2px 8px", borderRadius: 4, background: v.bg, color: v.color, fontWeight: 700 }}>{v.label}</span>
           ))}
@@ -2128,23 +2128,23 @@ function ProductList({ authHeaders, toast }: { authHeaders: () => Record<string,
           <table style={tableStyle}>
             <thead>
               <tr style={{ background: "#f5f7f5" }}>
-                <Th>이미지</Th>
-                <Th>상품명</Th>
-                <Th>카테고리</Th>
-                <Th>판매가</Th>
-                <Th>1박스 입수</Th>
-                <Th>노출 여부</Th>
-                <Th>판매상태</Th>
-                <Th>상품고시</Th>
-                <Th>편집</Th>
+                <Th>画像</Th>
+                <Th>商品名</Th>
+                <Th>カテゴリー</Th>
+                <Th>販売価格</Th>
+                <Th>1ケース入数</Th>
+                <Th>表示設定</Th>
+                <Th>販売状態</Th>
+                <Th>商品情報表示</Th>
+                <Th>編集</Th>
               </tr>
             </thead>
             <tbody>
               {items.length === 0 && !loading && (
-                <tr><td colSpan={9} style={{ textAlign: "center", padding: "40px", color: "#aaa" }}>상품이 없습니다</td></tr>
+                <tr><td colSpan={9} style={{ textAlign: "center", padding: "40px", color: "#aaa" }}>商品がありません</td></tr>
               )}
               {loading && items.length === 0 && (
-                <tr><td colSpan={9} style={{ textAlign: "center", padding: "40px", color: "#aaa" }}>불러오는 중...</td></tr>
+                <tr><td colSpan={9} style={{ textAlign: "center", padding: "40px", color: "#aaa" }}>読み込み中...</td></tr>
               )}
               {items.map((item, i) => {
                 const useInfo = USE_LABELS[item.it_use] || USE_LABELS["0"];
@@ -2169,7 +2169,7 @@ function ProductList({ authHeaders, toast }: { authHeaders: () => Record<string,
 
                     {/* 1박스 입수 */}
                     <Td style={{ color: "#555", fontSize: 12, textAlign: "center" as const }}>
-                      {(item as any).it_2 ? `${(item as any).it_2}개` : "-"}
+                      {(item as any).it_2 ? `${(item as any).it_2}件` : "-"}
                     </Td>
 
                     {/* 노출 여부 */}
@@ -2197,7 +2197,7 @@ function ProductList({ authHeaders, toast }: { authHeaders: () => Record<string,
                             <button key={v} disabled={isUpdating || item.it_use === "0"}
                               onClick={() => item.it_soldout !== v && updateStatus(item.it_id, "it_soldout", v)}
                               style={selStyle(item.it_soldout === v, info.color, info.bg)}
-                              title={item.it_use === "0" ? "미노출 상태에서는 변경 불가" : ""}>
+                              title={item.it_use === "0" ? "非表示状態では変更できません" : ""}>
                               {info.label}
                             </button>
                           );
@@ -2208,7 +2208,7 @@ function ProductList({ authHeaders, toast }: { authHeaders: () => Record<string,
                     {/* 상품고시 */}
                     <Td>
                       <button onClick={() => openNoticeEditor(item)}
-                        title="상품정보고시 편집"
+                        title="商品情報表示を編集"
                         style={{
                           display: "flex", alignItems: "center", gap: 4,
                           padding: "4px 10px", borderRadius: 6, border: "none", cursor: "pointer", fontSize: 11, fontWeight: 700,
@@ -2216,14 +2216,14 @@ function ProductList({ authHeaders, toast }: { authHeaders: () => Record<string,
                           color: hasNotice ? "#8B5E3C" : "#aaa",
                         }}>
                         <FileText size={12} />
-                        {hasNotice ? "등록됨" : "미등록"}
+                        {hasNotice ? "登録済み" : "未登録"}
                       </button>
                     </Td>
 
                     {/* 편집 버튼 */}
                     <Td>
                       <button onClick={() => openEditDrawer(item)}
-                        title="입수 · 할인율 · 옵션 편집"
+                        title="入数・割引率・オプションを編集"
                         style={{
                           display: "flex", alignItems: "center", gap: 4,
                           padding: "4px 10px", borderRadius: 6,
@@ -2231,7 +2231,7 @@ function ProductList({ authHeaders, toast }: { authHeaders: () => Record<string,
                           background: "#FDF6EE", color: "#8B5E3C",
                         }}>
                         <Settings size={12} />
-                        판매정보
+                        販売情報
                       </button>
                     </Td>
                   </tr>
@@ -2256,7 +2256,7 @@ function ProductList({ authHeaders, toast }: { authHeaders: () => Record<string,
             <div style={{ padding: "20px 24px 16px", borderBottom: "1px solid #eee", background: "#fafafa", flexShrink: 0 }}>
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
                 <div>
-                  <p style={{ margin: 0, fontSize: 16, fontWeight: 800, color: "#222" }}>판매정보 편집</p>
+                  <p style={{ margin: 0, fontSize: 16, fontWeight: 800, color: "#222" }}>販売情報を編集</p>
                   <p style={{ margin: "2px 0 0", fontSize: 12, color: "#888" }}>{editItem.it_name}</p>
                 </div>
                 <button onClick={() => !editSaving && setEditItem(null)} style={{ border: "none", background: "none", cursor: "pointer", padding: 4 }}>
@@ -2266,7 +2266,7 @@ function ProductList({ authHeaders, toast }: { authHeaders: () => Record<string,
             </div>
 
             <div style={{ padding: "20px 24px", flex: 1, overflowY: "auto" }}>
-              {editLoading && <p style={{ color: "#aaa", textAlign: "center", padding: 40 }}>불러오는 중...</p>}
+              {editLoading && <p style={{ color: "#aaa", textAlign: "center", padding: 40 }}>読み込み中...</p>}
               {!editLoading && editForm && (() => {
                 const itPrice = editForm.it_price;
 
@@ -2291,7 +2291,7 @@ function ProductList({ authHeaders, toast }: { authHeaders: () => Record<string,
                 const editCatL2Children = editCatL1Node?.children || [];
                 const editCatL2Node = editCatL2Children.find(c => c.ca_id === editCatL2);
                 const editCatL3Children = editCatL2Node?.children || [];
-                const currentCatPath = flatCats.find(c => c.ca_id === editForm.ca_id)?.path || editForm.ca_id || "(미지정)";
+                const currentCatPath = flatCats.find(c => c.ca_id === editForm.ca_id)?.path || editForm.ca_id || "(未設定)";
 
                 const selectCatFromSearch = (cat: { ca_id: string; ca_name: string; path: string }) => {
                   initEditCatLevels(cat.ca_id);
@@ -2304,12 +2304,12 @@ function ProductList({ authHeaders, toast }: { authHeaders: () => Record<string,
                   <div>
                     {/* ── 카테고리 섹션 ── */}
                     <p style={{ fontSize: 13, fontWeight: 800, color: "#8B5E3C", marginBottom: 12, borderBottom: "2px solid #F2E4D0", paddingBottom: 6 }}>
-                      카테고리
+                      カテゴリー
                     </p>
 
                     {/* 현재 카테고리 표시 */}
                     <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
-                      <span style={{ fontSize: 11, color: "#888", minWidth: 56 }}>현재</span>
+                      <span style={{ fontSize: 11, color: "#888", minWidth: 56 }}>現在の</span>
                       <span style={{
                         display: "inline-block", padding: "3px 10px", borderRadius: 20,
                         background: editForm.ca_id ? "#e8f9f0" : "#f5f5f5",
@@ -2321,14 +2321,14 @@ function ProductList({ authHeaders, toast }: { authHeaders: () => Record<string,
                     {/* 검색 */}
                     <div style={{ position: "relative", marginBottom: 10 }}>
                       <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                        <span style={{ fontSize: 11, color: "#888", minWidth: 56 }}>이름 검색</span>
+                        <span style={{ fontSize: 11, color: "#888", minWidth: 56 }}>名前で検索</span>
                         <div style={{ flex: 1, position: "relative" }}>
                           <input
                             type="text"
                             value={catSearchQ}
                             onChange={e => { setCatSearchQ(e.target.value); setCatSearchOpen(true); }}
                             onFocus={() => setCatSearchOpen(true)}
-                            placeholder="카테고리명 입력..."
+                            placeholder="カテゴリー名を入力..."
                             style={{ ...inputStyle, width: "100%", paddingRight: catSearchQ ? 28 : 10 }}
                           />
                           {catSearchQ && (
@@ -2364,7 +2364,7 @@ function ProductList({ authHeaders, toast }: { authHeaders: () => Record<string,
                           ))}
                           {filteredCats.length > 20 && (
                             <div style={{ padding: "6px 14px", fontSize: 11, color: "#aaa" }}>
-                              {filteredCats.length - 20}개 더 있음 — 더 구체적으로 입력하세요
+                              {filteredCats.length - 20}件さらにあります — より具体的に入力してください
                             </div>
                           )}
                         </div>
@@ -2380,7 +2380,7 @@ function ProductList({ authHeaders, toast }: { authHeaders: () => Record<string,
                           setEditForm(f => f && ({ ...f, ca_id: v }));
                         }}
                         style={{ flex: 1, fontSize: 12, padding: "7px 8px", borderRadius: 6, border: "1.5px solid #e0e0e0", background: "#fafafa" }}>
-                        <option value="">대분류</option>
+                        <option value="">大分類</option>
                         {catTree.map(c => <option key={c.ca_id} value={c.ca_id}>{c.ca_name}</option>)}
                       </select>
                       <select value={editCatL2} disabled={!editCatL2Children.length}
@@ -2390,7 +2390,7 @@ function ProductList({ authHeaders, toast }: { authHeaders: () => Record<string,
                           setEditForm(f => f && ({ ...f, ca_id: v }));
                         }}
                         style={{ flex: 1, fontSize: 12, padding: "7px 8px", borderRadius: 6, border: "1.5px solid #e0e0e0", background: "#fafafa", opacity: editCatL2Children.length ? 1 : 0.5 }}>
-                        <option value="">중분류</option>
+                        <option value="">中分類</option>
                         {editCatL2Children.map(c => <option key={c.ca_id} value={c.ca_id}>{c.ca_name}</option>)}
                       </select>
                       <select value={editCatL3} disabled={!editCatL3Children.length}
@@ -2400,20 +2400,20 @@ function ProductList({ authHeaders, toast }: { authHeaders: () => Record<string,
                           setEditForm(f => f && ({ ...f, ca_id: v }));
                         }}
                         style={{ flex: 1, fontSize: 12, padding: "7px 8px", borderRadius: 6, border: "1.5px solid #e0e0e0", background: "#fafafa", opacity: editCatL3Children.length ? 1 : 0.5 }}>
-                        <option value="">소분류</option>
+                        <option value="">小分類</option>
                         {editCatL3Children.map(c => <option key={c.ca_id} value={c.ca_id}>{c.ca_name}</option>)}
                       </select>
                     </div>
 
                     {/* ── 판매정보 섹션 ── */}
                     <p style={{ fontSize: 13, fontWeight: 800, color: "#8B5E3C", marginBottom: 14, borderBottom: "2px solid #F2E4D0", paddingBottom: 6 }}>
-                      판매정보
+                      販売情報
                     </p>
 
-                    <InfoRow label="정상가">
-                      {numInput(editForm.it_cust_price, v => setEditForm(f => f && ({ ...f, it_cust_price: v })), "원")}
+                    <InfoRow label="通常価格">
+                      {numInput(editForm.it_cust_price, v => setEditForm(f => f && ({ ...f, it_cust_price: v })), "円")}
                     </InfoRow>
-                    <InfoRow label="판매가">
+                    <InfoRow label="販売価格">
                       {numInput(editForm.it_price, v => setEditForm(f => {
                         if (!f) return f;
                         const newOpts = f.options.map((o, i) => {
@@ -2421,29 +2421,29 @@ function ProductList({ authHeaders, toast }: { authHeaders: () => Record<string,
                           return { ...o, io_price: sale - v };
                         });
                         return { ...f, it_price: v, options: newOpts };
-                      }), "원")}
+                      }), "円")}
                     </InfoRow>
-                    <InfoRow label="재고수량">
-                      {numInput(editForm.it_stock_qty, v => setEditForm(f => f && ({ ...f, it_stock_qty: v })), "개")}
+                    <InfoRow label="在庫数量">
+                      {numInput(editForm.it_stock_qty, v => setEditForm(f => f && ({ ...f, it_stock_qty: v })), "件")}
                     </InfoRow>
-                    <InfoRow label="유통기한">
+                    <InfoRow label="賞味期限">
                       <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
                         <input type="text" value={editForm.it_shelf_life}
                           onChange={e => setEditForm(f => f && ({ ...f, it_shelf_life: e.target.value }))}
-                          placeholder="예: 18개월, 2026-12-31"
+                          placeholder="例: 18か月、2026-12-31"
                           style={{ ...inputStyle, width: 160 }} />
-                        <span style={{ fontSize: 12, color: "#888" }}>값이 있으면 상품 상세에 표시됩니다</span>
+                        <span style={{ fontSize: 12, color: "#888" }}>値がある場合は商品詳細に表示されます</span>
                       </div>
                     </InfoRow>
-                    <InfoRow label="1박스 입수" red>
+                    <InfoRow label="1ケース入数" red>
                       <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
                         <input type="number" value={editForm.box_qty ?? 0}
                           onChange={e => setEditForm(f => f && ({ ...f, box_qty: Number(e.target.value) }))}
                           style={{ ...inputStyle, width: 80, textAlign: "right" as const }} />
-                        <span style={{ fontSize: 12, color: "#888" }}>개 (박스당 상품 수)</span>
+                        <span style={{ fontSize: 12, color: "#888" }}>個 (ケースあたりの商品数)</span>
                       </div>
                     </InfoRow>
-                    <InfoRow label="박스당 할인율" red>
+                    <InfoRow label="ケースあたり割引率" red>
                       <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
                         <input type="number" value={editForm.box_discount} min={0} max={100}
                           onChange={e => setEditForm(f => f && ({ ...f, box_discount: Number(e.target.value) }))}
@@ -2454,24 +2454,24 @@ function ProductList({ authHeaders, toast }: { authHeaders: () => Record<string,
 
                     {/* ── 옵션 테이블 ── */}
                     <p style={{ fontSize: 13, fontWeight: 800, color: "#8B5E3C", marginTop: 24, marginBottom: 12, borderBottom: "2px solid #F2E4D0", paddingBottom: 6 }}>
-                      상품선택옵션
+                      商品選択オプション
                     </p>
 
                     {editForm.options.length === 0 && (
-                      <p style={{ color: "#bbb", fontSize: 13, textAlign: "center", padding: 20 }}>등록된 옵션이 없습니다</p>
+                      <p style={{ color: "#bbb", fontSize: 13, textAlign: "center", padding: 20 }}>登録されたオプションはありません</p>
                     )}
                     {editForm.options.length > 0 && (
                       <div style={{ overflowX: "auto" }}>
                         <table style={{ ...tableStyle, fontSize: 12 }}>
                           <thead>
                             <tr style={{ background: "#f5f7f5" }}>
-                              <Th>옵션명</Th>
-                              <Th>수량(입)</Th>
-                              <Th>할인율</Th>
-                              <Th>추가금액</Th>
-                              <Th>판매금액</Th>
-                              <Th>재고수량</Th>
-                              <Th>사용여부</Th>
+                              <Th>オプション名</Th>
+                              <Th>数量(入)</Th>
+                              <Th>割引率</Th>
+                              <Th>追加金額</Th>
+                              <Th>販売金額</Th>
+                              <Th>在庫数量</Th>
+                              <Th>使用有無</Th>
                             </tr>
                           </thead>
                           <tbody>
@@ -2520,10 +2520,10 @@ function ProductList({ authHeaders, toast }: { authHeaders: () => Record<string,
                                     </div>
                                   </Td>
                                   <Td style={{ color: opt.io_price >= 0 ? "#333" : "#c0392b", fontWeight: 600 }}>
-                                    {opt.io_price.toLocaleString()}원
+                                    {opt.io_price.toLocaleString()}円
                                   </Td>
                                   <Td style={{ color: "#8B5E3C", fontWeight: 700 }}>
-                                    {salePrice.toLocaleString()}원
+                                    {salePrice.toLocaleString()}円
                                   </Td>
                                   <Td>
                                     <input type="number" value={opt.io_stock_qty} min={0}
@@ -2542,8 +2542,8 @@ function ProductList({ authHeaders, toast }: { authHeaders: () => Record<string,
                                         return { ...f, options: opts };
                                       })}
                                       style={{ fontSize: 11, padding: "3px 6px", borderRadius: 4, border: "1px solid #e0e0e0" }}>
-                                      <option value="1">사용</option>
-                                      <option value="0">미사용</option>
+                                      <option value="1">使用</option>
+                                      <option value="0">未使用</option>
                                     </select>
                                   </Td>
                                 </tr>
@@ -2566,7 +2566,7 @@ function ProductList({ authHeaders, toast }: { authHeaders: () => Record<string,
                         return { ...f, options: [...f.options, newOpt] };
                       })}
                       style={{ marginTop: 10, fontSize: 12, padding: "6px 14px", borderRadius: 6, border: "1.5px dashed #8B5E3C", background: "#FDF6EE", color: "#8B5E3C", cursor: "pointer", fontWeight: 700 }}>
-                      + 옵션 추가
+                      + オプションを追加
                     </button>
                   </div>
                 );
@@ -2577,11 +2577,11 @@ function ProductList({ authHeaders, toast }: { authHeaders: () => Record<string,
             <div style={{ padding: "16px 24px", borderTop: "1px solid #eee", background: "#fafafa", flexShrink: 0, display: "flex", gap: 10, justifyContent: "flex-end" }}>
               <button onClick={() => !editSaving && setEditItem(null)}
                 style={{ padding: "8px 20px", borderRadius: 8, border: "1.5px solid #e0e0e0", background: "#fff", color: "#555", fontSize: 13, fontWeight: 700, cursor: "pointer" }}>
-                취소
+                キャンセル
               </button>
               <button onClick={saveEdit} disabled={editSaving || !editForm}
                 style={{ padding: "8px 24px", borderRadius: 8, border: "none", background: "#8B5E3C", color: "#fff", fontSize: 13, fontWeight: 800, cursor: editSaving ? "not-allowed" : "pointer", opacity: editSaving ? 0.7 : 1 }}>
-                {editSaving ? "저장 중..." : "저장"}
+                {editSaving ? "保存中..." : "保存"}
               </button>
             </div>
           </div>
@@ -2601,7 +2601,7 @@ function ProductList({ authHeaders, toast }: { authHeaders: () => Record<string,
             <div style={{ padding: "20px 24px 16px", borderBottom: "1px solid #eee", background: "#fafafa", flexShrink: 0 }}>
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
                 <div>
-                  <p style={{ margin: 0, fontSize: 16, fontWeight: 800, color: "#222" }}>상품정보고시</p>
+                  <p style={{ margin: 0, fontSize: 16, fontWeight: 800, color: "#222" }}>商品情報表示</p>
                   <p style={{ margin: "2px 0 0", fontSize: 12, color: "#888" }}>{noticeItem.it_name}</p>
                 </div>
                 <button onClick={() => setNoticeItem(null)} style={{ border: "none", background: "none", cursor: "pointer", padding: 4 }}>
@@ -2614,8 +2614,8 @@ function ProductList({ authHeaders, toast }: { authHeaders: () => Record<string,
               {/* 상품군 선택 */}
               <div style={{ marginBottom: 20 }}>
                 <label style={{ fontSize: 13, fontWeight: 700, color: "#444", display: "block", marginBottom: 6 }}>
-                  상품군 선택
-                  <span style={{ fontSize: 11, color: "#aaa", fontWeight: 400, marginLeft: 6 }}>상품군을 선택하면 항목이 자동으로 변경됩니다</span>
+                  商品群を選択
+                  <span style={{ fontSize: 11, color: "#aaa", fontWeight: 400, marginLeft: 6 }}>商品群を選択すると項目が自動で切り替わります</span>
                 </label>
                 <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
                   <select
@@ -2626,7 +2626,7 @@ function ProductList({ authHeaders, toast }: { authHeaders: () => Record<string,
                     }}
                     style={{ flex: 1, padding: "8px 12px", borderRadius: 8, border: "1.5px solid #e0e0e0", fontSize: 13, color: "#333", outline: "none" }}
                   >
-                    <option value="">상품군을 선택하세요</option>
+                    <option value="">商品群を選択してください</option>
                     {NOTICE_CATEGORIES.map(c => (
                       <option key={c.key} value={c.key}>{c.title}</option>
                     ))}
@@ -2639,7 +2639,7 @@ function ProductList({ authHeaders, toast }: { authHeaders: () => Record<string,
                         onChange={e => fillAll(e.target.checked)}
                         style={{ width: 15, height: 15, cursor: "pointer" }}
                       />
-                      상품상세 참조로 전체 입력
+                      「商品詳細を参照」で全項目を入力
                     </label>
                   )}
                 </div>
@@ -2671,7 +2671,7 @@ function ProductList({ authHeaders, toast }: { authHeaders: () => Record<string,
                           ...prev,
                           fields: { ...prev.fields, [field.key]: e.target.value },
                         }))}
-                        placeholder="내용 입력"
+                        placeholder="内容を入力"
                         style={{
                           flex: 1, padding: "10px 12px", border: "none", outline: "none",
                           fontSize: 13, color: "#333", background: "#fff", minHeight: 42,
@@ -2682,7 +2682,7 @@ function ProductList({ authHeaders, toast }: { authHeaders: () => Record<string,
                 </div>
               ) : (
                 <div style={{ padding: "40px 0", textAlign: "center", color: "#aaa", fontSize: 13 }}>
-                  상품군을 먼저 선택해주세요
+                  先に商品群を選択してください
                 </div>
               )}
             </div>
@@ -2691,11 +2691,11 @@ function ProductList({ authHeaders, toast }: { authHeaders: () => Record<string,
             <div style={{ padding: "16px 24px", borderTop: "1px solid #eee", background: "#fafafa", flexShrink: 0, display: "flex", gap: 10, justifyContent: "flex-end" }}>
               <button onClick={() => setNoticeItem(null)}
                 style={{ padding: "10px 20px", border: "1px solid #e0e0e0", borderRadius: 8, background: "#fff", color: "#666", fontSize: 13, cursor: "pointer" }}>
-                취소
+                キャンセル
               </button>
               <button onClick={saveNotice} disabled={noticeSaving || !noticeData.category}
                 style={{ padding: "10px 24px", border: "none", borderRadius: 8, background: noticeSaving || !noticeData.category ? "#ccc" : "#8B5E3C", color: "#fff", fontSize: 13, fontWeight: 700, cursor: noticeSaving || !noticeData.category ? "default" : "pointer" }}>
-                {noticeSaving ? "저장 중..." : "저장"}
+                {noticeSaving ? "保存中..." : "保存"}
               </button>
             </div>
           </div>
@@ -2727,20 +2727,20 @@ function PendingMembers({ authHeaders, toast }: { authHeaders: () => Record<stri
       if (!res.ok) throw new Error();
       setMembers(prev => prev.filter(m => m.mb_id !== mb_id));
       setSelected(prev => { const s = new Set(prev); s.delete(mb_id); return s; });
-      toast(`${mb_id} 승인 완료`);
-    } catch { toast("승인 실패", "err"); }
+      toast(`${mb_id} 承認しました`);
+    } catch { toast("承認に失敗しました", "err"); }
     finally { setActionId(null); }
   };
 
   const reject = async (mb_id: string) => {
-    if (!confirm(`${mb_id} 회원을 거절하시겠습니까?`)) return;
+    if (!confirm(`${mb_id} 会員を拒否してもよろしいですか?`)) return;
     setActionId(mb_id + "_r");
     try {
       await fetch(`/api/admin/members/${mb_id}/reject`, { method: "POST", headers: authHeaders() });
       setMembers(prev => prev.filter(m => m.mb_id !== mb_id));
       setSelected(prev => { const s = new Set(prev); s.delete(mb_id); return s; });
-      toast(`${mb_id} 거절 완료`);
-    } catch { toast("처리 실패", "err"); }
+      toast(`${mb_id} 拒否しました`);
+    } catch { toast("処理に失敗しました", "err"); }
     finally { setActionId(null); }
   };
 
@@ -2749,7 +2749,7 @@ function PendingMembers({ authHeaders, toast }: { authHeaders: () => Record<stri
   const deselectAll = () => setSelected(new Set());
 
   const bulkApprove = async () => {
-    if (!confirm(`선택한 ${selected.size}명을 일괄 승인하시겠습니까?`)) return;
+    if (!confirm(`選択した ${selected.size}名を一括承認してもよろしいですか?`)) return;
     setBulkAction(true);
     const ids = [...selected];
     let ok = 0;
@@ -2761,11 +2761,11 @@ function PendingMembers({ authHeaders, toast }: { authHeaders: () => Record<stri
     }
     setSelected(new Set());
     setBulkAction(false);
-    toast(`${ok}명 일괄 승인 완료`);
+    toast(`${ok}名を一括承認しました`);
   };
 
   const bulkReject = async () => {
-    if (!confirm(`선택한 ${selected.size}명을 일괄 거절하시겠습니까?`)) return;
+    if (!confirm(`選択した ${selected.size}名を一括拒否してもよろしいですか?`)) return;
     setBulkAction(true);
     const ids = [...selected];
     let ok = 0;
@@ -2777,16 +2777,16 @@ function PendingMembers({ authHeaders, toast }: { authHeaders: () => Record<stri
     }
     setSelected(new Set());
     setBulkAction(false);
-    toast(`${ok}명 일괄 거절 완료`);
+    toast(`${ok}名を一括拒否しました`);
   };
 
   const allSelected = members.length > 0 && members.every(m => selected.has(m.mb_id));
 
   return (
     <div>
-      <PageHeader title={`승인 대기 (${members.length}명)`} sub="회원가입 후 승인 대기 중인 B2B 회원입니다" />
-      {loading && <p style={{ textAlign: "center", color: "#aaa" }}>불러오는 중...</p>}
-      {!loading && members.length === 0 && <Card><p style={{ textAlign: "center", color: "#aaa" }}>승인 대기 중인 회원이 없습니다</p></Card>}
+      <PageHeader title={`承認待ち (${members.length}名)`} sub="会員登録後、承認待ちのB2B会員です" />
+      {loading && <p style={{ textAlign: "center", color: "#aaa" }}>読み込み中...</p>}
+      {!loading && members.length === 0 && <Card><p style={{ textAlign: "center", color: "#aaa" }}>承認待ちの会員はいません</p></Card>}
       {!loading && members.length > 0 && (
         <>
           {selected.size > 0 && (
@@ -2794,19 +2794,19 @@ function PendingMembers({ authHeaders, toast }: { authHeaders: () => Record<stri
               display: "flex", alignItems: "center", gap: 10, padding: "10px 16px",
               background: "#fff8f0", border: "1px solid #f59e0b", borderRadius: 8, marginBottom: 12, flexWrap: "wrap",
             }}>
-              <span style={{ fontSize: 13, fontWeight: 700, color: "#92400e" }}>{selected.size}명 선택됨</span>
+              <span style={{ fontSize: 13, fontWeight: 700, color: "#92400e" }}>{selected.size}名選択中</span>
               <div style={{ display: "flex", gap: 8, marginLeft: "auto", flexWrap: "wrap" }}>
                 {selected.size < members.length && (
-                  <button onClick={selectAll} style={{ fontSize: 12, padding: "5px 12px", border: "1px solid #d97706", borderRadius: 6, background: "#fff", color: "#92400e", cursor: "pointer" }}>전체 선택</button>
+                  <button onClick={selectAll} style={{ fontSize: 12, padding: "5px 12px", border: "1px solid #d97706", borderRadius: 6, background: "#fff", color: "#92400e", cursor: "pointer" }}>すべて選択</button>
                 )}
-                <button onClick={deselectAll} style={{ fontSize: 12, padding: "5px 12px", border: "1px solid #ccc", borderRadius: 6, background: "#fff", color: "#555", cursor: "pointer" }}>선택해제</button>
+                <button onClick={deselectAll} style={{ fontSize: 12, padding: "5px 12px", border: "1px solid #ccc", borderRadius: 6, background: "#fff", color: "#555", cursor: "pointer" }}>選択解除</button>
                 <button onClick={bulkApprove} disabled={bulkAction}
                   style={{ fontSize: 12, padding: "5px 14px", border: "none", borderRadius: 6, background: "#8B5E3C", color: "#fff", fontWeight: 700, cursor: bulkAction ? "not-allowed" : "pointer", opacity: bulkAction ? 0.7 : 1 }}>
-                  {bulkAction ? "처리 중..." : `일괄승인 (${selected.size})`}
+                  {bulkAction ? "処理中..." : `一括承認 (${selected.size})`}
                 </button>
                 <button onClick={bulkReject} disabled={bulkAction}
                   style={{ fontSize: 12, padding: "5px 14px", border: "none", borderRadius: 6, background: "#ef4444", color: "#fff", fontWeight: 700, cursor: bulkAction ? "not-allowed" : "pointer", opacity: bulkAction ? 0.7 : 1 }}>
-                  일괄거절 ({selected.size})
+                  一括拒否 ({selected.size})
                 </button>
               </div>
             </div>
@@ -2814,7 +2814,7 @@ function PendingMembers({ authHeaders, toast }: { authHeaders: () => Record<stri
           <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
             <label style={{ fontSize: 13, color: "#555", display: "flex", alignItems: "center", gap: 6, cursor: "pointer" }}>
               <input type="checkbox" checked={allSelected} onChange={() => allSelected ? deselectAll() : selectAll()} style={{ width: 15, height: 15 }} />
-              전체 선택 ({members.length}명)
+              すべて選択 ({members.length}名)
             </label>
           </div>
           <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
@@ -2832,20 +2832,20 @@ function PendingMembers({ authHeaders, toast }: { authHeaders: () => Record<stri
                           <span style={{ fontSize: 12, color: "#888", background: "#f5f5f5", padding: "2px 8px", borderRadius: 4 }}>{m.mb_id}</span>
                         </div>
                         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(180px, 1fr))", gap: "5px 20px", fontSize: 13, color: "#555" }}>
-                          <div><strong>상호명:</strong> {m.company_name || "-"}</div>
-                          <div><strong>사업자번호:</strong> {m.business_number || "-"}</div>
-                          <div><strong>대표자:</strong> {m.representative || "-"}</div>
-                          <div><strong>이메일:</strong> {m.mb_email || "-"}</div>
-                          <div><strong>연락처:</strong> {m.mb_hp || "-"}</div>
-                          <div><strong>가입일:</strong> {fmtDate(m.mb_datetime)}</div>
+                          <div><strong>屋号:</strong> {m.company_name || "-"}</div>
+                          <div><strong>事業者番号:</strong> {m.business_number || "-"}</div>
+                          <div><strong>代表者:</strong> {m.representative || "-"}</div>
+                          <div><strong>メールアドレス:</strong> {m.mb_email || "-"}</div>
+                          <div><strong>連絡先:</strong> {m.mb_hp || "-"}</div>
+                          <div><strong>登録日:</strong> {fmtDate(m.mb_datetime)}</div>
                         </div>
                       </div>
                     </div>
                     <div style={{ display: "flex", gap: 8, flexShrink: 0 }}>
                       <Btn onClick={() => approve(m.mb_id)} disabled={actionId === m.mb_id || bulkAction} color="#8B5E3C">
-                        {actionId === m.mb_id ? "처리중..." : "승인"}
+                        {actionId === m.mb_id ? "処理中..." : "承認"}
                       </Btn>
-                      <Btn onClick={() => reject(m.mb_id)} disabled={actionId === m.mb_id + "_r" || bulkAction} color="#ef4444">거절</Btn>
+                      <Btn onClick={() => reject(m.mb_id)} disabled={actionId === m.mb_id + "_r" || bulkAction} color="#ef4444">拒否</Btn>
                     </div>
                   </div>
                 </Card>
@@ -2891,7 +2891,7 @@ function AllMembers({ authHeaders, toast }: { authHeaders: () => Record<string, 
   const deselectAll = () => setSelected(new Set());
 
   const deleteSelected = async () => {
-    if (!confirm(`선택한 ${selected.size}명의 회원을 삭제하시겠습니까?\n이 작업은 되돌릴 수 없습니다.`)) return;
+    if (!confirm(`選択した ${selected.size}名の会員を削除してもよろしいですか?\nこの操作は元に戻せません。`)) return;
     setDeleting(true);
     try {
       const res = await fetch("/api/admin/members/batch-delete", {
@@ -2902,16 +2902,16 @@ function AllMembers({ authHeaders, toast }: { authHeaders: () => Record<string, 
       if (!res.ok) throw new Error(data.error);
       setMembers(prev => prev.filter(m => !selected.has(m.mb_id)));
       setSelected(new Set());
-      toast(`${data.deleted}명 삭제 완료`);
-    } catch (e: any) { toast(e.message || "삭제 실패", "err"); }
+      toast(`${data.deleted}名を削除しました`);
+    } catch (e: any) { toast(e.message || "削除に失敗しました", "err"); }
     finally { setDeleting(false); }
   };
 
   return (
     <div>
-      <PageHeader title="전체 회원" sub="가입된 모든 회원 목록입니다" />
+      <PageHeader title="全会員" sub="登録済みの全会員の一覧です" />
       <Card>
-        {loading && <p style={{ textAlign: "center", color: "#aaa" }}>불러오는 중...</p>}
+        {loading && <p style={{ textAlign: "center", color: "#aaa" }}>読み込み中...</p>}
         {!loading && (
           <>
             <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 10 }}>
@@ -2929,11 +2929,11 @@ function AllMembers({ authHeaders, toast }: { authHeaders: () => Record<string, 
                     <input type="checkbox" checked={allPageSelected} onChange={togglePageAll}
                       style={{ cursor: "pointer", width: 15, height: 15 }} />
                   </th>
-                  {["아이디", "이름", "상호명", "이메일", "연락처", "등급", "가입일"].map(h => <Th key={h}>{h}</Th>)}
+                  {["ID", "お名前", "屋号", "メールアドレス", "連絡先", "ランク", "登録日"].map(h => <Th key={h}>{h}</Th>)}
                 </tr></thead>
                 <tbody>
                   {paged.length === 0 && (
-                    <tr><td colSpan={8} style={{ textAlign: "center", padding: "40px", color: "#aaa" }}>회원이 없습니다</td></tr>
+                    <tr><td colSpan={8} style={{ textAlign: "center", padding: "40px", color: "#aaa" }}>会員がいません</td></tr>
                   )}
                   {paged.map((m, i) => {
                     const isAdmin = m.mb_level >= 10;
@@ -2956,7 +2956,7 @@ function AllMembers({ authHeaders, toast }: { authHeaders: () => Record<string, 
                             background: isAdmin ? "#defaec" : m.mb_level >= 2 ? "#e8f4ff" : "#fff3e0",
                             color: isAdmin ? "#8B5E3C" : m.mb_level >= 2 ? "#1a73e8" : "#f59e0b",
                           }}>
-                            {isAdmin ? "관리자" : m.mb_level >= 2 ? "승인됨" : "대기중"}
+                            {isAdmin ? "管理者" : m.mb_level >= 2 ? "承認済み" : "待機中"}
                           </span>
                         </Td>
                         <Td style={{ color: "#888", fontSize: 12 }}>{fmtDate(m.mb_datetime)}</Td>
@@ -3005,8 +3005,8 @@ function OrderList({ authHeaders, toast }: { authHeaders: () => Record<string, s
       });
       if (!res.ok) throw new Error();
       setStatuses(prev => ({ ...prev, [od_id]: status }));
-      toast("주문 상태 변경 완료");
-    } catch { toast("변경 실패", "err"); }
+      toast("注文状態を変更しました");
+    } catch { toast("変更に失敗しました", "err"); }
     finally { setActionId(null); }
   };
 
@@ -3024,7 +3024,7 @@ function OrderList({ authHeaders, toast }: { authHeaders: () => Record<string, s
   const deselectAll = () => setSelected(new Set());
 
   const deleteSelected = async () => {
-    if (!confirm(`선택한 ${selected.size}건의 주문을 삭제하시겠습니까?\n이 작업은 되돌릴 수 없습니다.`)) return;
+    if (!confirm(`選択した ${selected.size}件の注文を削除してもよろしいですか?\nこの操作は元に戻せません。`)) return;
     setDeleting(true);
     try {
       const res = await fetch("/api/orders/batch-delete", {
@@ -3035,16 +3035,16 @@ function OrderList({ authHeaders, toast }: { authHeaders: () => Record<string, s
       if (!res.ok) throw new Error(data.error);
       setOrders(prev => prev.filter(o => !selected.has(o.od_id)));
       setSelected(new Set());
-      toast(`${data.deleted}건 삭제 완료`);
-    } catch (e: any) { toast(e.message || "삭제 실패", "err"); }
+      toast(`${data.deleted}件を削除しました`);
+    } catch (e: any) { toast(e.message || "削除に失敗しました", "err"); }
     finally { setDeleting(false); }
   };
 
   return (
     <div>
-      <PageHeader title="주문 관리" sub="고객 주문 목록 및 상태를 관리합니다" />
+      <PageHeader title="注文管理" sub="お客様の注文一覧と状態を管理します" />
       <Card>
-        {loading && <p style={{ textAlign: "center", color: "#aaa" }}>불러오는 중...</p>}
+        {loading && <p style={{ textAlign: "center", color: "#aaa" }}>読み込み中...</p>}
         {!loading && (
           <>
             <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 10 }}>
@@ -3062,10 +3062,10 @@ function OrderList({ authHeaders, toast }: { authHeaders: () => Record<string, s
                     <input type="checkbox" checked={allPageSelected} onChange={togglePageAll}
                       style={{ cursor: "pointer", width: 15, height: 15 }} />
                   </th>
-                  {["주문번호", "상호명", "주문자", "연락처", "금액", "상태", "주문일"].map(h => <Th key={h}>{h}</Th>)}
+                  {["注文番号", "屋号", "ご注文者", "連絡先", "金額", "状態", "注文日"].map(h => <Th key={h}>{h}</Th>)}
                 </tr></thead>
                 <tbody>
-                  {paged.length === 0 && <tr><td colSpan={8} style={{ textAlign: "center", padding: "40px", color: "#aaa" }}>주문이 없습니다</td></tr>}
+                  {paged.length === 0 && <tr><td colSpan={8} style={{ textAlign: "center", padding: "40px", color: "#aaa" }}>注文がありません</td></tr>}
                   {paged.map((o, i) => {
                     const st = statuses[o.od_id] || o.od_status;
                     const info = STATUS_LABELS[st] || { label: st, color: "#888" };
@@ -3076,7 +3076,7 @@ function OrderList({ authHeaders, toast }: { authHeaders: () => Record<string, s
                           <input type="checkbox" checked={isSel} readOnly style={{ cursor: "pointer", width: 15, height: 15 }} />
                         </td>
                         <Td style={{ fontWeight: 600, fontSize: 11 }}>{o.od_id}</Td>
-                        <Td>{o.company_name || o.mb_id || "비회원"}</Td>
+                        <Td>{o.company_name || o.mb_id || "ゲスト"}</Td>
                         <Td>{o.mb_name || o.od_name}</Td>
                         <Td style={{ color: "#555" }}>{o.od_hp}</Td>
                         <Td style={{ fontWeight: 700 }}>{fmtPrice(o.od_receipt_price)}</Td>
@@ -3126,18 +3126,18 @@ function ReviewList({ authHeaders, toast }: { authHeaders: () => Record<string, 
     try {
       await fetch(`/api/shop-admin/reviews/${id}/toggle`, { method: "PATCH", headers: authHeaders() });
       setReviews(prev => prev.map(r => r.id === id ? { ...r, is_visible: r.is_visible ? 0 : 1 } : r));
-    } catch { toast("처리 실패", "err"); }
+    } catch { toast("処理に失敗しました", "err"); }
     finally { setActionId(null); }
   };
 
   const remove = async (id: number) => {
-    if (!confirm("리뷰를 삭제하시겠습니까?")) return;
+    if (!confirm("レビューを削除してもよろしいですか?")) return;
     setActionId(id);
     try {
       await fetch(`/api/shop-admin/reviews/${id}`, { method: "DELETE", headers: authHeaders() });
       setReviews(prev => prev.filter(r => r.id !== id));
-      toast("삭제 완료");
-    } catch { toast("삭제 실패", "err"); }
+      toast("削除しました");
+    } catch { toast("削除に失敗しました", "err"); }
     finally { setActionId(null); }
   };
 
@@ -3155,7 +3155,7 @@ function ReviewList({ authHeaders, toast }: { authHeaders: () => Record<string, 
   const deselectAll = () => setSelected(new Set());
 
   const deleteSelected = async () => {
-    if (!confirm(`선택한 ${selected.size}건의 리뷰를 삭제하시겠습니까?`)) return;
+    if (!confirm(`選択した ${selected.size}件のレビューを削除してもよろしいですか?`)) return;
     setDeleting(true);
     try {
       const res = await fetch("/api/shop-admin/reviews/batch-delete", {
@@ -3166,19 +3166,19 @@ function ReviewList({ authHeaders, toast }: { authHeaders: () => Record<string, 
       if (!res.ok) throw new Error(data.error);
       setReviews(prev => prev.filter(r => !selected.has(r.id)));
       setSelected(new Set());
-      toast(`${data.deleted}건 삭제 완료`);
-    } catch (e: any) { toast(e.message || "삭제 실패", "err"); }
+      toast(`${data.deleted}件を削除しました`);
+    } catch (e: any) { toast(e.message || "削除に失敗しました", "err"); }
     finally { setDeleting(false); }
   };
 
   return (
     <div>
-      <PageHeader title="리뷰 관리" sub="고객 상품 리뷰를 관리합니다" />
+      <PageHeader title="レビュー管理" sub="お客様の商品レビューを管理します" />
       <Card>
-        {loading && <p style={{ textAlign: "center", color: "#aaa" }}>불러오는 중...</p>}
+        {loading && <p style={{ textAlign: "center", color: "#aaa" }}>読み込み中...</p>}
         {!loading && reviews.length === 0 && (
           <p style={{ textAlign: "center", color: "#aaa", padding: "24px 0" }}>
-            등록된 리뷰가 없습니다. 마이페이지에서 고객이 리뷰를 작성하면 여기에 표시됩니다.
+            登録されたレビューがありません。お客様がマイページでレビューを投稿すると、ここに表示されます。
           </p>
         )}
         {!loading && reviews.length > 0 && (
@@ -3207,7 +3207,7 @@ function ReviewList({ authHeaders, toast }: { authHeaders: () => Record<string, 
                             <span style={{ fontSize: 13, fontWeight: 700 }}>{r.author || r.mb_id}</span>
                             <span style={{ fontSize: 12, color: "#888" }}>{r.it_name}</span>
                             <span style={{ fontSize: 12, color: "#f59e0b" }}>{"★".repeat(r.rating)}</span>
-                            {!r.is_visible && <span style={{ fontSize: 11, color: "#ef4444", background: "#fff3f3", padding: "1px 6px", borderRadius: 4 }}>숨김</span>}
+                            {!r.is_visible && <span style={{ fontSize: 11, color: "#ef4444", background: "#fff3f3", padding: "1px 6px", borderRadius: 4 }}>非表示</span>}
                           </div>
                           <p style={{ fontSize: 13, color: "#444", margin: 0 }}>{r.content}</p>
                           <p style={{ fontSize: 11, color: "#aaa", margin: "4px 0 0" }}>{fmtDate(r.created_at)}</p>
@@ -3228,7 +3228,7 @@ function ReviewList({ authHeaders, toast }: { authHeaders: () => Record<string, 
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 4 }}>
               <label style={{ fontSize: 13, color: "#888", display: "flex", alignItems: "center", gap: 6, cursor: "pointer" }}>
                 <input type="checkbox" checked={allPageSelected} onChange={togglePageAll} style={{ width: 15, height: 15 }} />
-                현재 페이지 전체 선택
+                現在のページをすべて選択
               </label>
             </div>
             <Paginator page={curPage} totalPages={totalPages} onPage={setCurPage} />
@@ -3254,8 +3254,8 @@ const FOOTER_DEFAULTS: FooterCfg = {
   company: "주식회사 와이앤에이치에스", ceo: "윤석민",
   address: "서울특별시 중랑구 용마산로 536(망우동)", business_num: "429-81-03401",
   tel: "", online_num: "", privacy: "윤석민",
-  cs_tel: "", cs_hours: "평일 : 10:00~ 18:00",
-  cs_lunch: "점심시간 : 12:00 ~ 13:00 일요일 / 공휴일 휴무",
+  cs_tel: "", cs_hours: "平日 : 10:00~ 18:00",
+  cs_lunch: "昼休み : 12:00 ~ 13:00 日曜 / 祝日休業",
   bank_name: "", bank_num: "", bank_holder: "",
 };
 
@@ -3304,7 +3304,7 @@ function CsBoardManager({ authHeaders, toast }: { authHeaders: () => Record<stri
 
   async function save() {
     if (!editing) return;
-    if (!editing.title?.trim() || !editing.content?.trim()) { toast("제목과 내용을 입력하세요", "err"); return; }
+    if (!editing.title?.trim() || !editing.content?.trim()) { toast("タイトルと内容を入力してください", "err"); return; }
     setSaving(true);
     try {
       const isNew = !editing.id;
@@ -3315,74 +3315,74 @@ function CsBoardManager({ authHeaders, toast }: { authHeaders: () => Record<stri
         body: JSON.stringify(editing),
       });
       if (!r.ok) throw new Error();
-      toast(isNew ? "등록 완료" : "수정 완료");
+      toast(isNew ? "登録しました" : "更新しました");
       setEditing(null);
       load();
     } catch {
-      toast("저장에 실패했습니다", "err");
+      toast("保存に失敗しました", "err");
     } finally {
       setSaving(false);
     }
   }
 
   async function remove(id: number) {
-    if (!confirm("삭제하시겠습니까?")) return;
+    if (!confirm("削除してもよろしいですか?")) return;
     await fetch(`/api/boards/cs/${id}`, { method: "DELETE", headers: authHeaders() });
-    toast("삭제되었습니다");
+    toast("削除しました");
     load();
   }
 
   return (
     <div>
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 20 }}>
-        <h2 style={{ margin: 0, fontSize: 18, fontWeight: 800 }}>고객센터 안내 게시판</h2>
+        <h2 style={{ margin: 0, fontSize: 18, fontWeight: 800 }}>お客様センター案内掲示板</h2>
         <button
           onClick={() => setEditing({ title: "", content: "", is_notice: 0, is_active: 1, sort_order: 0 })}
           style={{ background: "#8B5E3C", color: "#fff", border: "none", borderRadius: 8, padding: "9px 18px", fontWeight: 700, fontSize: 13, cursor: "pointer" }}
-        >+ 새 게시글</button>
+        >+ 新規投稿</button>
       </div>
 
       {editing && (
         <div style={{ background: "#f8faf9", border: "1.5px solid #DEC4A8", borderRadius: 12, padding: 24, marginBottom: 24 }}>
-          <h3 style={{ margin: "0 0 16px", fontSize: 15, fontWeight: 700 }}>{editing.id ? "게시글 수정" : "새 게시글"}</h3>
+          <h3 style={{ margin: "0 0 16px", fontSize: 15, fontWeight: 700 }}>{editing.id ? "投稿を編集" : "新規投稿"}</h3>
           <input
             value={editing.title || ""}
             onChange={e => setEditing(p => ({ ...p!, title: e.target.value }))}
-            placeholder="제목"
+            placeholder="タイトル"
             style={{ width: "100%", border: "1.5px solid #d0e8d8", borderRadius: 8, padding: "10px 14px", fontSize: 14, marginBottom: 10, boxSizing: "border-box" }}
           />
           <textarea
             value={editing.content || ""}
             onChange={e => setEditing(p => ({ ...p!, content: e.target.value }))}
-            placeholder="내용"
+            placeholder="内容"
             rows={6}
             style={{ width: "100%", border: "1.5px solid #d0e8d8", borderRadius: 8, padding: "10px 14px", fontSize: 14, resize: "vertical", boxSizing: "border-box" }}
           />
           <div style={{ display: "flex", gap: 20, alignItems: "center", marginTop: 12, flexWrap: "wrap" }}>
             <label style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 13, fontWeight: 600, color: "#8B5E3C", cursor: "pointer" }}>
               <input type="checkbox" checked={editing.is_notice === 1} onChange={e => setEditing(p => ({ ...p!, is_notice: e.target.checked ? 1 : 0 }))} style={{ width: 15, height: 15, accentColor: "#8B5E3C" }} />
-              공지 (상단 고정)
+              お知らせ (上部に固定)
             </label>
             <label style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 13, color: "#555", cursor: "pointer" }}>
               <input type="checkbox" checked={editing.is_active !== 0} onChange={e => setEditing(p => ({ ...p!, is_active: e.target.checked ? 1 : 0 }))} style={{ width: 15, height: 15 }} />
-              공개
+              公開
             </label>
             <label style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 13, color: "#555" }}>
-              정렬:
+              表示順:
               <input type="number" value={editing.sort_order ?? 0} onChange={e => setEditing(p => ({ ...p!, sort_order: Number(e.target.value) }))} style={{ width: 60, border: "1px solid #d0e8d8", borderRadius: 6, padding: "4px 8px", fontSize: 13, textAlign: "center" }} />
             </label>
           </div>
           <div style={{ display: "flex", gap: 8, marginTop: 16, justifyContent: "flex-end" }}>
-            <button onClick={() => setEditing(null)} style={{ padding: "9px 20px", border: "1px solid #ccc", borderRadius: 8, background: "#fff", cursor: "pointer", fontSize: 13 }}>취소</button>
+            <button onClick={() => setEditing(null)} style={{ padding: "9px 20px", border: "1px solid #ccc", borderRadius: 8, background: "#fff", cursor: "pointer", fontSize: 13 }}>キャンセル</button>
             <button onClick={save} disabled={saving} style={{ padding: "9px 20px", background: "#8B5E3C", color: "#fff", border: "none", borderRadius: 8, cursor: "pointer", fontWeight: 700, fontSize: 13 }}>
-              {saving ? "저장 중..." : "저장"}
+              {saving ? "保存中..." : "保存"}
             </button>
           </div>
         </div>
       )}
 
       {posts.length === 0 ? (
-        <div style={{ textAlign: "center", padding: "48px 0", color: "#bbb", fontSize: 14 }}>등록된 게시글이 없습니다</div>
+        <div style={{ textAlign: "center", padding: "48px 0", color: "#bbb", fontSize: 14 }}>登録された投稿はありません</div>
       ) : (
         <div style={{ borderTop: "2px solid #1a1a1a" }}>
           {posts.map(p => (
@@ -3392,15 +3392,15 @@ function CsBoardManager({ authHeaders, toast }: { authHeaders: () => Record<stri
             }}>
               <div style={{ flex: 1, minWidth: 0 }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                  {p.is_notice === 1 && <span style={{ background: "#8B5E3C", color: "#fff", fontSize: 10, fontWeight: 700, padding: "2px 6px", borderRadius: 3 }}>공지</span>}
-                  {p.is_active === 0 && <span style={{ background: "#e0e0e0", color: "#888", fontSize: 10, fontWeight: 700, padding: "2px 6px", borderRadius: 3 }}>비공개</span>}
+                  {p.is_notice === 1 && <span style={{ background: "#8B5E3C", color: "#fff", fontSize: 10, fontWeight: 700, padding: "2px 6px", borderRadius: 3 }}>お知らせ</span>}
+                  {p.is_active === 0 && <span style={{ background: "#e0e0e0", color: "#888", fontSize: 10, fontWeight: 700, padding: "2px 6px", borderRadius: 3 }}>非公開</span>}
                   <span style={{ fontSize: 14, fontWeight: 600, color: p.is_active === 0 ? "#aaa" : "#1a1a1a", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{p.title}</span>
                 </div>
-                <div style={{ fontSize: 11, color: "#bbb", marginTop: 3 }}>{p.created_at?.slice(0, 10)} · 정렬 {p.sort_order}</div>
+                <div style={{ fontSize: 11, color: "#bbb", marginTop: 3 }}>{p.created_at?.slice(0, 10)} · 表示順 {p.sort_order}</div>
               </div>
               <div style={{ display: "flex", gap: 6, flexShrink: 0 }}>
-                <button onClick={() => setEditing({ ...p })} style={{ padding: "5px 12px", border: "1px solid #DEC4A8", borderRadius: 6, background: "#fff", color: "#8B5E3C", fontWeight: 600, fontSize: 12, cursor: "pointer" }}>수정</button>
-                <button onClick={() => remove(p.id)} style={{ padding: "5px 12px", border: "1px solid #fcc", borderRadius: 6, background: "#fff", color: "#e53935", fontWeight: 600, fontSize: 12, cursor: "pointer" }}>삭제</button>
+                <button onClick={() => setEditing({ ...p })} style={{ padding: "5px 12px", border: "1px solid #DEC4A8", borderRadius: 6, background: "#fff", color: "#8B5E3C", fontWeight: 600, fontSize: 12, cursor: "pointer" }}>編集</button>
+                <button onClick={() => remove(p.id)} style={{ padding: "5px 12px", border: "1px solid #fcc", borderRadius: 6, background: "#fff", color: "#e53935", fontWeight: 600, fontSize: 12, cursor: "pointer" }}>削除</button>
               </div>
             </div>
           ))}
@@ -3425,7 +3425,7 @@ function EventManager({ authHeaders, toast }: { authHeaders: () => Record<string
 
   const save = async () => {
     if (!editing) return;
-    if (!editing.title?.trim()) { toast("제목을 입력하세요", "err"); return; }
+    if (!editing.title?.trim()) { toast("タイトルを入力してください", "err"); return; }
     setSaving(true);
     try {
       const isNew = !editing.id;
@@ -3436,17 +3436,17 @@ function EventManager({ authHeaders, toast }: { authHeaders: () => Record<string
         body: JSON.stringify(editing),
       });
       if (!r.ok) throw new Error();
-      toast(isNew ? "이벤트 등록 완료" : "이벤트 수정 완료");
+      toast(isNew ? "イベントを登録しました" : "イベントを更新しました");
       setEditing(null);
       load();
-    } catch { toast("저장 실패", "err"); }
+    } catch { toast("保存に失敗しました", "err"); }
     finally { setSaving(false); }
   };
 
   const del = async (id: number) => {
-    if (!confirm("이벤트를 삭제하시겠습니까?")) return;
+    if (!confirm("イベントを削除してもよろしいですか?")) return;
     await fetch(`/api/shop-events/${id}`, { method: "DELETE", headers: authHeaders() });
-    toast("삭제 완료");
+    toast("削除しました");
     load();
   };
 
@@ -3462,47 +3462,47 @@ function EventManager({ authHeaders, toast }: { authHeaders: () => Record<string
     return (
       <div>
         <PageHeader
-          title={editing.id ? "이벤트 수정" : "이벤트 등록"}
-          sub="이벤트 정보를 입력하세요"
-          action={<button onClick={() => setEditing(null)} style={{ background: "#f5f5f5", border: "none", borderRadius: 7, padding: "8px 16px", cursor: "pointer", fontSize: 13 }}>← 목록</button>}
+          title={editing.id ? "イベント編集" : "イベント登録"}
+          sub="イベント情報を入力してください"
+          action={<button onClick={() => setEditing(null)} style={{ background: "#f5f5f5", border: "none", borderRadius: 7, padding: "8px 16px", cursor: "pointer", fontSize: 13 }}>← 一覧</button>}
         />
         <div style={{ display: "flex", flexDirection: "column", gap: 16, maxWidth: 700 }}>
-          <FormField label="제목 *" value={editing.title || ""} onChange={v => setEditing(e => ({ ...e, title: v }))} placeholder="이벤트 제목" />
-          <FormField label="썸네일 URL" value={editing.thumbnail || ""} onChange={v => setEditing(e => ({ ...e, thumbnail: v }))} placeholder="https://..." />
+          <FormField label="タイトル *" value={editing.title || ""} onChange={v => setEditing(e => ({ ...e, title: v }))} placeholder="イベントタイトル" />
+          <FormField label="サムネイルURL" value={editing.thumbnail || ""} onChange={v => setEditing(e => ({ ...e, thumbnail: v }))} placeholder="https://..." />
           {editing.thumbnail && (
             <div style={{ marginTop: -8 }}>
-              <img src={editing.thumbnail} alt="미리보기" style={{ maxWidth: 320, maxHeight: 160, borderRadius: 8, border: "1px solid #eee", objectFit: "cover" }}
+              <img src={editing.thumbnail} alt="プレビュー" style={{ maxWidth: 320, maxHeight: 160, borderRadius: 8, border: "1px solid #eee", objectFit: "cover" }}
                 onError={e => { (e.target as HTMLImageElement).style.display = "none"; }} />
             </div>
           )}
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
-            <FormField label="시작일" value={editing.start_date || ""} onChange={v => setEditing(e => ({ ...e, start_date: v }))} type="date" placeholder="" />
-            <FormField label="종료일" value={editing.end_date || ""} onChange={v => setEditing(e => ({ ...e, end_date: v }))} type="date" placeholder="" />
+            <FormField label="開始日" value={editing.start_date || ""} onChange={v => setEditing(e => ({ ...e, start_date: v }))} type="date" placeholder="" />
+            <FormField label="終了日" value={editing.end_date || ""} onChange={v => setEditing(e => ({ ...e, end_date: v }))} type="date" placeholder="" />
           </div>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
             <div>
-              <label style={{ display: "block", fontSize: 12, color: "#888", marginBottom: 5, fontWeight: 600 }}>활성화</label>
+              <label style={{ display: "block", fontSize: 12, color: "#888", marginBottom: 5, fontWeight: 600 }}>有効にする</label>
               <select value={editing.is_active ?? 1} onChange={e => setEditing(ev => ({ ...ev, is_active: Number(e.target.value) }))} style={inputStyle}>
-                <option value={1}>활성</option>
-                <option value={0}>비활성</option>
+                <option value={1}>有効</option>
+                <option value={0}>無効</option>
               </select>
             </div>
-            <FormField label="정렬순서" value={String(editing.sort_order ?? 0)} onChange={v => setEditing(e => ({ ...e, sort_order: Number(v) || 0 }))} type="number" placeholder="0" />
+            <FormField label="表示順" value={String(editing.sort_order ?? 0)} onChange={v => setEditing(e => ({ ...e, sort_order: Number(v) || 0 }))} type="number" placeholder="0" />
           </div>
           <div>
-            <label style={{ display: "block", fontSize: 12, color: "#888", marginBottom: 5, fontWeight: 600 }}>내용 (HTML 직접 입력 가능)</label>
+            <label style={{ display: "block", fontSize: 12, color: "#888", marginBottom: 5, fontWeight: 600 }}>内容 (HTML直接入力可)</label>
             <textarea
               value={editing.content || ""}
               onChange={e => setEditing(ev => ({ ...ev, content: e.target.value }))}
-              placeholder="이벤트 내용을 입력하세요. HTML 태그 사용 가능합니다."
+              placeholder="イベント内容を入力してください。HTMLタグが使用できます。"
               rows={14}
               style={{ ...inputStyle, resize: "vertical", fontFamily: "monospace", fontSize: 13, lineHeight: 1.5 }}
             />
           </div>
           <div style={{ display: "flex", gap: 10, justifyContent: "flex-end", paddingTop: 8 }}>
-            <button onClick={() => setEditing(null)} style={{ background: "#f5f5f5", border: "none", borderRadius: 7, padding: "10px 20px", cursor: "pointer", fontSize: 13 }}>취소</button>
+            <button onClick={() => setEditing(null)} style={{ background: "#f5f5f5", border: "none", borderRadius: 7, padding: "10px 20px", cursor: "pointer", fontSize: 13 }}>キャンセル</button>
             <button onClick={save} disabled={saving} style={{ background: "#8B5E3C", color: "#fff", border: "none", borderRadius: 7, padding: "10px 24px", cursor: "pointer", fontSize: 13, fontWeight: 700 }}>
-              {saving ? "저장 중…" : "저장"}
+              {saving ? "保存中…" : "保存"}
             </button>
           </div>
         </div>
@@ -3513,21 +3513,21 @@ function EventManager({ authHeaders, toast }: { authHeaders: () => Record<string
   return (
     <div>
       <PageHeader
-        title="이벤트관리"
-        sub="쇼핑몰 이벤트 페이지에 표시되는 이벤트를 관리합니다"
-        action={<button onClick={() => setEditing({ ...EMPTY_EVENT })} style={{ background: "#8B5E3C", color: "#fff", border: "none", borderRadius: 7, padding: "8px 16px", cursor: "pointer", fontSize: 13, display: "flex", alignItems: "center", gap: 5 }}><Plus size={13} /> 이벤트 추가</button>}
+        title="イベント管理"
+        sub="ショップのイベントページに表示されるイベントを管理します"
+        action={<button onClick={() => setEditing({ ...EMPTY_EVENT })} style={{ background: "#8B5E3C", color: "#fff", border: "none", borderRadius: 7, padding: "8px 16px", cursor: "pointer", fontSize: 13, display: "flex", alignItems: "center", gap: 5 }}><Plus size={13} /> イベントを追加</button>}
       />
-      {events.length === 0 && <p style={{ textAlign: "center", color: "#aaa", padding: "40px 0" }}>등록된 이벤트가 없습니다</p>}
+      {events.length === 0 && <p style={{ textAlign: "center", color: "#aaa", padding: "40px 0" }}>登録されたイベントはありません</p>}
       <div style={{ overflowX: "auto" }}>
         <table style={tableStyle}>
           <thead>
             <tr style={{ borderBottom: "2px solid #eee", background: "#fafafa" }}>
-              <Th>썸네일</Th>
-              <Th>제목</Th>
-              <Th>기간</Th>
-              <Th>정렬</Th>
-              <Th>상태</Th>
-              <Th>관리</Th>
+              <Th>サムネイル</Th>
+              <Th>タイトル</Th>
+              <Th>期間</Th>
+              <Th>表示順</Th>
+              <Th>状態</Th>
+              <Th>管理</Th>
             </tr>
           </thead>
           <tbody>
@@ -3536,7 +3536,7 @@ function EventManager({ authHeaders, toast }: { authHeaders: () => Record<string
                 <Td>
                   {ev.thumbnail
                     ? <img src={ev.thumbnail} alt="" style={{ width: 72, height: 40, objectFit: "cover", borderRadius: 6, border: "1px solid #eee" }} onError={e => { (e.target as HTMLImageElement).style.display = "none"; }} />
-                    : <div style={{ width: 72, height: 40, background: "#f3f4f6", borderRadius: 6, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 10, color: "#bbb" }}>없음</div>
+                    : <div style={{ width: 72, height: 40, background: "#f3f4f6", borderRadius: 6, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 10, color: "#bbb" }}>なし</div>
                   }
                 </Td>
                 <Td style={{ fontWeight: 600, maxWidth: 280 }}>{ev.title}</Td>
@@ -3552,16 +3552,16 @@ function EventManager({ authHeaders, toast }: { authHeaders: () => Record<string
                     onClick={() => toggleActive(ev)}
                     style={{ background: ev.is_active ? "#dcfce7" : "#f3f4f6", color: ev.is_active ? "#8B5E3C" : "#888", border: "none", borderRadius: 20, padding: "3px 12px", fontSize: 12, fontWeight: 600, cursor: "pointer" }}
                   >
-                    {ev.is_active ? "활성" : "비활성"}
+                    {ev.is_active ? "有効" : "無効"}
                   </button>
                 </Td>
                 <Td>
                   <div style={{ display: "flex", gap: 6 }}>
                     <button onClick={() => setEditing(ev)} style={{ background: "#f0f4ff", color: "#3b5bdb", border: "none", borderRadius: 6, padding: "5px 10px", fontSize: 12, cursor: "pointer", display: "flex", alignItems: "center", gap: 3 }}>
-                      <Edit2 size={11} /> 수정
+                      <Edit2 size={11} /> 編集
                     </button>
                     <button onClick={() => del(ev.id)} style={{ background: "#fff0f0", color: "#e53e3e", border: "none", borderRadius: 6, padding: "5px 10px", fontSize: 12, cursor: "pointer", display: "flex", alignItems: "center", gap: 3 }}>
-                      <Trash2 size={11} /> 삭제
+                      <Trash2 size={11} /> 削除
                     </button>
                   </div>
                 </Td>
@@ -3601,12 +3601,12 @@ function FooterConfigManager({ authHeaders, toast }: {
         body: JSON.stringify(cfg),
       });
       if (!res.ok) throw new Error();
-      toast("저장되었습니다!");
-    } catch { toast("저장 실패", "err"); }
+      toast("保存しました!");
+    } catch { toast("保存に失敗しました", "err"); }
     setSaving(false);
   };
 
-  if (!loaded) return <div style={{ padding: 40, color: "#aaa", textAlign: "center" }}>불러오는 중…</div>;
+  if (!loaded) return <div style={{ padding: 40, color: "#aaa", textAlign: "center" }}>読み込み中…</div>;
 
   const field = (label: string, key: keyof FooterCfg, placeholder = "") => (
     <div>
@@ -3623,48 +3623,48 @@ function FooterConfigManager({ authHeaders, toast }: {
 
   return (
     <div>
-      <PageHeader title="사업자/푸터 정보" sub="쇼핑몰 하단 푸터에 표시되는 사업자 정보를 관리합니다" />
+      <PageHeader title="事業者/フッター情報" sub="ショップ下部のフッターに表示される事業者情報を管理します" />
 
       <Card style={{ marginBottom: 20 }}>
-        <h3 style={{ fontSize: 15, fontWeight: 800, color: "#333", margin: "0 0 20px", paddingBottom: 12, borderBottom: "1px solid #f0f0f0" }}>사업자 기본 정보</h3>
+        <h3 style={{ fontSize: 15, fontWeight: 800, color: "#333", margin: "0 0 20px", paddingBottom: 12, borderBottom: "1px solid #f0f0f0" }}>事業者基本情報</h3>
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
-          {field("법인명", "company", "주식회사 와이앤에이치에스")}
-          {field("대표자", "ceo", "윤석민")}
-          {field("사업자등록번호", "business_num", "429-81-03401")}
-          {field("전화번호", "tel", "02-0000-0000")}
+          {field("法人名", "company", "주식회사 와이앤에이치에스")}
+          {field("代表者", "ceo", "윤석민")}
+          {field("事業者登録番号", "business_num", "429-81-03401")}
+          {field("電話番号", "tel", "02-0000-0000")}
           <div style={{ gridColumn: "1 / -1" }}>
-            {field("주소", "address", "서울특별시 중랑구 용마산로 536(망우동)")}
+            {field("住所", "address", "서울특별시 중랑구 용마산로 536(망우동)")}
           </div>
           <div style={{ gridColumn: "1 / -1" }}>
-            {field("통신판매업신고번호", "online_num", "제 0000-서울중랑-0000호")}
+            {field("通信販売業届出番号", "online_num", "第0000-ソウル中浪-0000号")}
           </div>
-          {field("개인정보책임자", "privacy", "윤석민")}
+          {field("個人情報管理責任者", "privacy", "윤석민")}
         </div>
       </Card>
 
       <Card style={{ marginBottom: 20 }}>
-        <h3 style={{ fontSize: 15, fontWeight: 800, color: "#333", margin: "0 0 20px", paddingBottom: 12, borderBottom: "1px solid #f0f0f0" }}>고객센터 정보</h3>
+        <h3 style={{ fontSize: 15, fontWeight: 800, color: "#333", margin: "0 0 20px", paddingBottom: 12, borderBottom: "1px solid #f0f0f0" }}>お客様センター情報</h3>
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
-          {field("고객센터 전화", "cs_tel", "02-0000-0000")}
-          {field("운영시간", "cs_hours", "평일 : 10:00~ 18:00")}
+          {field("お客様センター電話番号", "cs_tel", "02-0000-0000")}
+          {field("営業時間", "cs_hours", "平日 : 10:00~ 18:00")}
           <div style={{ gridColumn: "1 / -1" }}>
-            {field("점심/휴무 안내", "cs_lunch", "점심시간 : 12:00 ~ 13:00 일요일 / 공휴일 휴무")}
+            {field("昼休み/休業日のご案内", "cs_lunch", "昼休み : 12:00 ~ 13:00 日曜 / 祝日休業")}
           </div>
         </div>
       </Card>
 
       <Card style={{ marginBottom: 20 }}>
-        <h3 style={{ fontSize: 15, fontWeight: 800, color: "#333", margin: "0 0 20px", paddingBottom: 12, borderBottom: "1px solid #f0f0f0" }}>계좌 정보</h3>
+        <h3 style={{ fontSize: 15, fontWeight: 800, color: "#333", margin: "0 0 20px", paddingBottom: 12, borderBottom: "1px solid #f0f0f0" }}>口座情報</h3>
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 16 }}>
-          {field("은행명", "bank_name", "국민은행")}
-          {field("계좌번호", "bank_num", "000000-00-000000")}
-          {field("예금주", "bank_holder", "주식회사 와이앤에이치에스")}
+          {field("銀行名", "bank_name", "三菱UFJ銀行")}
+          {field("口座番号", "bank_num", "000000-00-000000")}
+          {field("口座名義", "bank_holder", "주식회사 와이앤에이치에스")}
         </div>
       </Card>
 
       <div style={{ textAlign: "right" }}>
         <Btn onClick={save} disabled={saving} color="#8B5E3C">
-          {saving ? "저장 중…" : "저장"}
+          {saving ? "保存中…" : "保存"}
         </Btn>
       </div>
     </div>
@@ -3694,24 +3694,24 @@ function SettingsManager({ authHeaders, toast }: {
         body: JSON.stringify(settings),
       });
       if (!res.ok) throw new Error();
-      toast("설정이 저장되었습니다!");
-    } catch { toast("저장 실패", "err"); }
+      toast("設定を保存しました!");
+    } catch { toast("保存に失敗しました", "err"); }
     setSaving(false);
   };
 
-  if (!loaded) return <div style={{ padding: 40, color: "#aaa", textAlign: "center" }}>불러오는 중…</div>;
+  if (!loaded) return <div style={{ padding: 40, color: "#aaa", textAlign: "center" }}>読み込み中…</div>;
 
   return (
     <div>
-      <PageHeader title="쇼핑몰 기본설정" sub="쇼핑몰 운영에 필요한 기본 값을 설정합니다" />
+      <PageHeader title="ショップ基本設定" sub="ショップ運営に必要な基本値を設定します" />
       <Card style={{ marginBottom: 20 }}>
         <h3 style={{ fontSize: 15, fontWeight: 800, color: "#333", margin: "0 0 20px", paddingBottom: 12, borderBottom: "1px solid #f0f0f0" }}>
-          카카오채널 설정
+          Kakaoチャンネル設定
         </h3>
         <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
           <div>
             <label style={{ display: "block", fontSize: 13, fontWeight: 700, color: "#444", marginBottom: 6 }}>
-              채널 추가 시 적립 포인트 (원)
+              チャンネル追加時の付与ポイント (円)
             </label>
             <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
               <input
@@ -3721,12 +3721,12 @@ function SettingsManager({ authHeaders, toast }: {
                 onChange={e => set("kakao_channel_point", e.target.value)}
                 style={{ ...inputStyle, width: 180 }}
               />
-              <span style={{ fontSize: 13, color: "#888" }}>P — 카카오채널 배너 클릭 시 1회 지급</span>
+              <span style={{ fontSize: 13, color: "#888" }}>P — Kakaoチャンネルバナークリック時に1回付与</span>
             </div>
           </div>
           <div>
             <label style={{ display: "block", fontSize: 13, fontWeight: 700, color: "#444", marginBottom: 6 }}>
-              카카오채널 URL
+              KakaoチャンネルURL
             </label>
             <input
               type="text"
@@ -3740,7 +3740,7 @@ function SettingsManager({ authHeaders, toast }: {
       </Card>
       <Card style={{ marginBottom: 20 }}>
         <h3 style={{ fontSize: 15, fontWeight: 800, color: "#333", margin: "0 0 20px", paddingBottom: 12, borderBottom: "1px solid #f0f0f0" }}>
-          첫구매 기획전 설정
+          初回購入キャンペーン設定
         </h3>
         <div>
           <label style={{ display: "flex", alignItems: "center", gap: 10, cursor: "pointer" }}>
@@ -3751,14 +3751,14 @@ function SettingsManager({ authHeaders, toast }: {
               style={{ width: 16, height: 16 }}
             />
             <span style={{ fontSize: 13, color: "#444" }}>
-              첫구매 기획전 활성화 (비활성화 시 메뉴에서 숨김)
+              初回購入キャンペーンを有効化 (無効にするとメニューから非表示)
             </span>
           </label>
         </div>
       </Card>
       <div style={{ textAlign: "right" }}>
         <Btn onClick={save} disabled={saving} color="#8B5E3C">
-          {saving ? "저장 중…" : "설정 저장"}
+          {saving ? "保存中…" : "設定を保存"}
         </Btn>
       </div>
     </div>
@@ -3836,7 +3836,7 @@ export default function Admin() {
         <div style={{ padding: "20px 16px 12px", borderBottom: "1px solid #f0f0f0" }}>
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
             <div>
-              <p style={{ fontSize: 14, fontWeight: 800, color: "#8B5E3C", margin: 0 }}>seoulmono 관리자</p>
+              <p style={{ fontSize: 14, fontWeight: 800, color: "#8B5E3C", margin: 0 }}>seoulmono 管理者</p>
               <p style={{ fontSize: 11, color: "#aaa", margin: "2px 0 0" }}>{user.mb_name}</p>
             </div>
             <button onClick={() => setSidebarOpen(false)} style={{ background: "none", border: "none", cursor: "pointer", color: "#aaa", display: "none" }} className="sidebar-close">
@@ -3889,7 +3889,7 @@ export default function Admin() {
         <div style={{ padding: "12px 16px", borderTop: "1px solid #f0f0f0" }}>
           <button onClick={() => navigate("/")}
             style={{ width: "100%", padding: "8px", border: "1px solid #e0e0e0", borderRadius: 8, background: "#fff", fontSize: 12, color: "#888", cursor: "pointer" }}>
-            쇼핑몰 홈으로
+            ショップのホームへ
           </button>
         </div>
       </aside>
@@ -3902,7 +3902,7 @@ export default function Admin() {
             <Menu size={20} />
           </button>
           <span style={{ fontSize: 14, fontWeight: 600, color: "#333" }}>
-            {MENU.flatMap(g => g.items).find(i => i.id === page)?.label || "관리자"}
+            {MENU.flatMap(g => g.items).find(i => i.id === page)?.label || "管理者"}
           </span>
         </div>
 
@@ -3910,15 +3910,15 @@ export default function Admin() {
           {page === "shop-main-slider" && <MainSliderBannerManager authHeaders={authHeaders} toast={showToast} />}
           {page === "shop-banners" && <BannerManager authHeaders={authHeaders} toast={showToast} />}
           {page === "shop-categories" && <ShopCategoriesManager authHeaders={authHeaders} toast={showToast} />}
-          {page === "shop-best" && <SectionManager sectionType="best" title="베스트 상품" authHeaders={authHeaders} toast={showToast} />}
-          {page === "shop-sale" && <SectionManager sectionType="sale" title="오늘의특가/타임세일" authHeaders={authHeaders} toast={showToast} />}
-          {page === "shop-first-purchase" && <SectionManager sectionType="first_purchase" title="첫구매100원 기획전 상품" authHeaders={authHeaders} toast={showToast} />}
-          {page === "shop-diygift" && <SectionManager sectionType="diygift" title="내가만드는 선물" authHeaders={authHeaders} toast={showToast} />}
-          {page === "shop-new" && <SectionManager sectionType="new" title="신상품" authHeaders={authHeaders} toast={showToast} />}
-          {page === "shop-lowest" && <SectionManager sectionType="lowest" title="최저가도전" authHeaders={authHeaders} toast={showToast} />}
-          {page === "shop-exclusive" && <SectionManager sectionType="exclusive" title="오직상회에만" authHeaders={authHeaders} toast={showToast} />}
-          {page === "shop-groupbuy" && <SectionManager sectionType="groupbuy" title="공동구매 상품" authHeaders={authHeaders} toast={showToast} shopPath="/groupbuy" />}
-          {page === "shop-todaydeal" && <SectionManager sectionType="todaydeal" title="SNS 구매 상품" authHeaders={authHeaders} toast={showToast} shopPath="/todaydeal" />}
+          {page === "shop-best" && <SectionManager sectionType="best" title="ベスト商品" authHeaders={authHeaders} toast={showToast} />}
+          {page === "shop-sale" && <SectionManager sectionType="sale" title="本日の特価/タイムセール" authHeaders={authHeaders} toast={showToast} />}
+          {page === "shop-first-purchase" && <SectionManager sectionType="first_purchase" title="初回購入100円キャンペーン商品" authHeaders={authHeaders} toast={showToast} />}
+          {page === "shop-diygift" && <SectionManager sectionType="diygift" title="オリジナルギフト" authHeaders={authHeaders} toast={showToast} />}
+          {page === "shop-new" && <SectionManager sectionType="new" title="新商品" authHeaders={authHeaders} toast={showToast} />}
+          {page === "shop-lowest" && <SectionManager sectionType="lowest" title="最安値に挑戦" authHeaders={authHeaders} toast={showToast} />}
+          {page === "shop-exclusive" && <SectionManager sectionType="exclusive" title="当店限定" authHeaders={authHeaders} toast={showToast} />}
+          {page === "shop-groupbuy" && <SectionManager sectionType="groupbuy" title="共同購入商品" authHeaders={authHeaders} toast={showToast} shopPath="/groupbuy" />}
+          {page === "shop-todaydeal" && <SectionManager sectionType="todaydeal" title="SNS 購入商品" authHeaders={authHeaders} toast={showToast} shopPath="/todaydeal" />}
           {page === "events" && <EventManager authHeaders={authHeaders} toast={showToast} />}
           {page === "cs-board" && <CsBoardManager authHeaders={authHeaders} toast={showToast} />}
           {page === "products" && <ProductList authHeaders={authHeaders} toast={showToast} />}
@@ -3956,7 +3956,7 @@ export default function Admin() {
 
 // ─── Select Delete Bar ────────────────────────────────────────────────────────
 
-function SelectDeleteBar({ selected, total, onSelectAll, onDeselectAll, onDelete, deleting, label = "선택삭제", extraActions }: {
+function SelectDeleteBar({ selected, total, onSelectAll, onDeselectAll, onDelete, deleting, label = "選択を削除", extraActions }: {
   selected: number; total: number; onSelectAll: () => void; onDeselectAll: () => void;
   onDelete: () => void; deleting?: boolean; label?: string; extraActions?: React.ReactNode;
 }) {
@@ -3968,21 +3968,21 @@ function SelectDeleteBar({ selected, total, onSelectAll, onDeselectAll, onDelete
       marginBottom: 12, flexWrap: "wrap",
     }}>
       <span style={{ fontSize: 13, fontWeight: 700, color: "#92400e" }}>
-        {selected}개 선택됨 / 전체 {total}개
+        {selected}件選択中 / 全 {total}件
       </span>
       <div style={{ display: "flex", gap: 8, alignItems: "center", marginLeft: "auto", flexWrap: "wrap" }}>
         {selected < total && (
           <button onClick={onSelectAll} style={{ fontSize: 12, padding: "5px 12px", border: "1px solid #d97706", borderRadius: 6, background: "#fff", color: "#92400e", cursor: "pointer" }}>
-            전체 선택
+            すべて選択
           </button>
         )}
         <button onClick={onDeselectAll} style={{ fontSize: 12, padding: "5px 12px", border: "1px solid #ccc", borderRadius: 6, background: "#fff", color: "#555", cursor: "pointer" }}>
-          선택해제
+          選択解除
         </button>
         {extraActions}
         <button onClick={onDelete} disabled={deleting}
           style={{ fontSize: 12, padding: "5px 14px", border: "none", borderRadius: 6, background: "#ef4444", color: "#fff", fontWeight: 700, cursor: deleting ? "not-allowed" : "pointer", opacity: deleting ? 0.7 : 1 }}>
-          {deleting ? "삭제 중..." : `${label} (${selected})`}
+          {deleting ? "削除中..." : `${label} (${selected})`}
         </button>
       </div>
     </div>
@@ -3994,9 +3994,9 @@ function SelectDeleteBar({ selected, total, onSelectAll, onDeselectAll, onDelete
 function PerPageSelect({ value, onChange, total }: { value: number; onChange: (n: number) => void; total: number }) {
   return (
     <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 13, color: "#555", flexWrap: "wrap" }}>
-      <span style={{ fontWeight: 600 }}>전체 {total.toLocaleString()}개</span>
+      <span style={{ fontWeight: 600 }}>すべて {total.toLocaleString()}件</span>
       <span style={{ color: "#ddd", margin: "0 2px" }}>|</span>
-      <span>개수</span>
+      <span>表示件数</span>
       {[10, 20, 50, 100].map(n => (
         <button key={n} onClick={() => onChange(n)}
           style={{
@@ -4033,14 +4033,14 @@ function Paginator({ page, totalPages, onPage }: { page: number; totalPages: num
   });
   return (
     <div style={{ display: "flex", gap: 4, justifyContent: "center", alignItems: "center", marginTop: 20, flexWrap: "wrap" }}>
-      <button style={pgBtn(false, page === 1)} onClick={() => page > 1 && onPage(1)} disabled={page === 1}>맨앞</button>
-      <button style={pgBtn(false, page === 1)} onClick={() => page > 1 && onPage(page - 1)} disabled={page === 1}>이전</button>
+      <button style={pgBtn(false, page === 1)} onClick={() => page > 1 && onPage(1)} disabled={page === 1}>最初</button>
+      <button style={pgBtn(false, page === 1)} onClick={() => page > 1 && onPage(page - 1)} disabled={page === 1}>前へ</button>
       {pageNums.map((p, i) =>
         p === "..." ? <span key={"el" + i} style={{ padding: "6px 4px", color: "#aaa", fontSize: 13 }}>...</span>
           : <button key={p} style={pgBtn(p === page)} onClick={() => onPage(p as number)}>{p}</button>
       )}
-      <button style={pgBtn(false, page === totalPages)} onClick={() => page < totalPages && onPage(page + 1)} disabled={page === totalPages}>이후</button>
-      <button style={pgBtn(false, page === totalPages)} onClick={() => page < totalPages && onPage(totalPages)} disabled={page === totalPages}>맨마지막</button>
+      <button style={pgBtn(false, page === totalPages)} onClick={() => page < totalPages && onPage(page + 1)} disabled={page === totalPages}>次へ</button>
+      <button style={pgBtn(false, page === totalPages)} onClick={() => page < totalPages && onPage(totalPages)} disabled={page === totalPages}>最後</button>
     </div>
   );
 }

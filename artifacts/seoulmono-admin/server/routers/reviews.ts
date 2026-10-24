@@ -90,7 +90,7 @@ export const reviewsRouter = router({
                 userId: review[0].userId,
                 amount: pointsToGive,
                 type: "earn",
-                description: `리뷰 좋아요 ${newLikeCount}개 달성 보너스`,
+                description: `レビューいいね${newLikeCount}件達成ボーナス`,
                 createdAt: new Date(),
               });
 
@@ -360,7 +360,7 @@ export const reviewsRouter = router({
       if (!orderItem) {
         throw new TRPCError({
           code: "NOT_FOUND",
-          message: "주문 아이템을 찾을 수 없습니다.",
+          message: "注文商品が見つかりません。",
         });
       }
 
@@ -378,21 +378,21 @@ export const reviewsRouter = router({
       if (!order) {
         throw new TRPCError({
           code: "NOT_FOUND",
-          message: "주문을 찾을 수 없습니다.",
+          message: "注文が見つかりません。",
         });
       }
 
       if (order.userId !== userId) {
         throw new TRPCError({
           code: "FORBIDDEN",
-          message: "본인의 주문에만 리뷰를 작성할 수 있습니다.",
+          message: "ご自身の注文にのみレビューを投稿できます。",
         });
       }
 
       if (order.status !== "delivered") {
         throw new TRPCError({
           code: "BAD_REQUEST",
-          message: "배송 완료된 주문에만 리뷰를 작성할 수 있습니다.",
+          message: "配送完了した注文にのみレビューを投稿できます。",
         });
       }
 
@@ -411,7 +411,7 @@ export const reviewsRouter = router({
       if (existingReview) {
         throw new TRPCError({
           code: "BAD_REQUEST",
-          message: "이미 리뷰를 작성하셨습니다.",
+          message: "すでにレビューを投稿済みです。",
         });
       }
 
@@ -425,7 +425,7 @@ export const reviewsRouter = router({
       if (!reviewBoard) {
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
-          message: "리뷰 게시판을 찾을 수 없습니다.",
+          message: "レビュー掲示板が見つかりません。",
         });
       }
 
@@ -487,7 +487,7 @@ export const reviewsRouter = router({
             userId,
             amount: pointsToGive,
             type: "earn",
-            description: `리뷰 작성 (주문 #${orderItem.orderId})`,
+            description: `レビュー投稿 (注文 #${orderItem.orderId})`,
             orderId: orderItem.orderId,
             createdAt: new Date(),
           });
@@ -504,7 +504,7 @@ export const reviewsRouter = router({
       return {
         success: true,
         reviewId,
-        message: "리뷰가 작성되었습니다.",
+        message: "レビューを投稿しました。",
       };
     }),
 
@@ -592,11 +592,11 @@ export const reviewsRouter = router({
         .limit(1);
 
       if (!review) {
-        throw new TRPCError({ code: "NOT_FOUND", message: "리뷰를 찾을 수 없습니다." });
+        throw new TRPCError({ code: "NOT_FOUND", message: "レビューが見つかりません。" });
       }
 
       if (review.userId !== ctx.user.id) {
-        throw new TRPCError({ code: "FORBIDDEN", message: "본인의 리뷰만 수정할 수 있습니다." });
+        throw new TRPCError({ code: "FORBIDDEN", message: "ご自身のレビューのみ編集できます。" });
       }
 
       // 리뷰 수정
@@ -624,7 +624,7 @@ export const reviewsRouter = router({
         `);
       }
 
-      return { success: true, message: "리뷰가 수정되었습니다." };
+      return { success: true, message: "レビューを更新しました。" };
     }),
 
   /**
@@ -644,11 +644,11 @@ export const reviewsRouter = router({
         .limit(1);
 
       if (!review) {
-        throw new TRPCError({ code: "NOT_FOUND", message: "리뷰를 찾을 수 없습니다." });
+        throw new TRPCError({ code: "NOT_FOUND", message: "レビューが見つかりません。" });
       }
 
       if (review.userId !== ctx.user.id) {
-        throw new TRPCError({ code: "FORBIDDEN", message: "본인의 리뷰만 삭제할 수 있습니다." });
+        throw new TRPCError({ code: "FORBIDDEN", message: "ご自身のレビューのみ削除できます。" });
       }
 
       // 리뷰 삭제
@@ -666,7 +666,7 @@ export const reviewsRouter = router({
         WHERE id = ${review.productId}
       `);
 
-      return { success: true, message: "리뷰가 삭제되었습니다." };
+      return { success: true, message: "レビューを削除しました。" };
     }),
 
   /**

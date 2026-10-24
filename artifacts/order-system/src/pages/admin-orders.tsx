@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useEffect } from "react";
+import { ja } from "../lib/ja";
 import { useQueryClient, useQuery, useMutation } from "@tanstack/react-query";
 import { useGetOrders, useUpdateOrderStatus, getGetOrdersQueryKey, type Order } from "@workspace/api-client-react";
 import { Card, Badge, Modal, Button, Input, Label } from "../components/ui";
@@ -17,10 +18,10 @@ import TrackingModal from "../components/TrackingModal";
 
 // ── Gift orders ─────────────────────────────────────────────────────────────
 const GIFT_STATUS_LABEL: Record<string, string> = {
-  pending: "대기중",
-  address_filled: "주소입력완료",
-  shipped: "배송중",
-  done: "완료",
+  pending: "待機中",
+  address_filled: "住所入力済み",
+  shipped: "配送中",
+  done: "完了",
 };
 const GIFT_STATUS_COLOR: Record<string, string> = {
   pending: "bg-amber-100 text-amber-700",
@@ -44,7 +45,7 @@ function GiftOrdersPanel() {
     return (
       <Card className="py-20 text-center">
         <Gift className="w-16 h-16 text-slate-200 mx-auto mb-4" />
-        <h3 className="text-xl font-bold text-slate-700">선물 주문이 없습니다</h3>
+        <h3 className="text-xl font-bold text-slate-700">ギフト注文がありません</h3>
       </Card>
     );
   return (
@@ -53,13 +54,13 @@ function GiftOrdersPanel() {
         <table className="w-full text-left border-collapse min-w-[900px]">
           <thead>
             <tr className="bg-slate-50 border-b border-slate-200">
-              <th className="px-4 py-3 text-xs font-bold text-slate-500 uppercase whitespace-nowrap">주문일시 / 번호</th>
-              <th className="px-4 py-3 text-xs font-bold text-slate-500 uppercase whitespace-nowrap">보낸이</th>
-              <th className="px-4 py-3 text-xs font-bold text-slate-500 uppercase">선물세트</th>
-              <th className="px-4 py-3 text-xs font-bold text-slate-500 uppercase whitespace-nowrap">받는이</th>
-              <th className="px-4 py-3 text-xs font-bold text-slate-500 uppercase text-center whitespace-nowrap">구성</th>
-              <th className="px-4 py-3 text-xs font-bold text-slate-500 uppercase text-center whitespace-nowrap w-32">상태</th>
-              <th className="px-4 py-3 text-xs font-bold text-slate-500 uppercase text-center whitespace-nowrap w-24">수신링크</th>
+              <th className="px-4 py-3 text-xs font-bold text-slate-500 uppercase whitespace-nowrap">注文日時 / 番号</th>
+              <th className="px-4 py-3 text-xs font-bold text-slate-500 uppercase whitespace-nowrap">送り主</th>
+              <th className="px-4 py-3 text-xs font-bold text-slate-500 uppercase">ギフトセット</th>
+              <th className="px-4 py-3 text-xs font-bold text-slate-500 uppercase whitespace-nowrap">受取人</th>
+              <th className="px-4 py-3 text-xs font-bold text-slate-500 uppercase text-center whitespace-nowrap">構成</th>
+              <th className="px-4 py-3 text-xs font-bold text-slate-500 uppercase text-center whitespace-nowrap w-32">ステータス</th>
+              <th className="px-4 py-3 text-xs font-bold text-slate-500 uppercase text-center whitespace-nowrap w-24">受信リンク</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100">
@@ -70,7 +71,7 @@ function GiftOrdersPanel() {
                   <p className="text-xs text-blue-500 font-mono mt-0.5">#{o.id}</p>
                 </td>
                 <td className="px-4 py-3">
-                  <p className="font-bold text-slate-900 text-sm">{o.sender_mb_id || "비로그인"}</p>
+                  <p className="font-bold text-slate-900 text-sm">{o.sender_mb_id || "未ログイン"}</p>
                 </td>
                 <td className="px-4 py-3">
                   <p className="text-sm font-bold text-slate-700">{o.set_name || "-"}</p>
@@ -79,10 +80,10 @@ function GiftOrdersPanel() {
                 <td className="px-4 py-3">
                   {o.recipient_name
                     ? <><p className="text-sm font-bold text-slate-800">{o.recipient_name}</p><p className="text-xs text-slate-500">{o.recipient_phone}</p></>
-                    : <span className="text-xs text-slate-300">미입력</span>}
+                    : <span className="text-xs text-slate-300">未入力</span>}
                 </td>
                 <td className="px-4 py-3 text-center">
-                  <span className="text-sm font-bold text-slate-700">{o.slot_count}구성</span>
+                  <span className="text-sm font-bold text-slate-700">{o.slot_count}点構成</span>
                 </td>
                 <td className="px-4 py-3 text-center">
                   <span className={cn("text-xs px-2.5 py-1 rounded-full font-bold", GIFT_STATUS_COLOR[o.status] ?? "bg-slate-100 text-slate-600")}>
@@ -96,7 +97,7 @@ function GiftOrdersPanel() {
                     rel="noopener noreferrer"
                     className="text-xs text-blue-600 hover:underline font-bold"
                   >
-                    링크 열기 →
+                    リンクを開く →
                   </a>
                 </td>
               </tr>
@@ -125,7 +126,7 @@ function useBatchUpdateStatus() {
         body: JSON.stringify(body),
       }),
     onSuccess: (data: any) => {
-      toast({ title: "일괄 처리 완료", description: data.message });
+      toast({ title: "一括処理完了", description: data.message });
       qc.invalidateQueries({ queryKey: getGetOrdersQueryKey() });
     },
   });
@@ -186,12 +187,12 @@ function ClaimsAdminPanel() {
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
         body: JSON.stringify({ status: editClaimStatus, admin_memo: editMemo }),
       });
-      if (!res.ok) throw new Error("저장 실패");
-      toast({ title: "저장 완료", description: "클레임이 처리되었습니다." });
+      if (!res.ok) throw new Error("保存に失敗しました");
+      toast({ title: "保存完了", description: "クレームを処理しました。" });
       queryClient.invalidateQueries({ queryKey: ["admin-claims"] });
       setEditingClaim(null);
     } catch (e: any) {
-      toast({ title: "오류", description: e.message, variant: "destructive" });
+      toast({ title: "エラー", description: e.message, variant: "destructive" });
     } finally {
       setSaving(false);
     }
@@ -205,7 +206,7 @@ function ClaimsAdminPanel() {
             className={cn("px-4 py-1.5 rounded-full text-sm font-bold border transition-all",
               claimStatusFilter === s ? "bg-primary text-white border-primary" : "bg-white text-slate-500 border-slate-200 hover:border-primary hover:text-primary"
             )}>
-            {s}
+            {ja(s)}
           </button>
         ))}
       </div>
@@ -215,7 +216,7 @@ function ClaimsAdminPanel() {
       ) : claims.length === 0 ? (
         <Card className="py-20 text-center">
           <RotateCcw className="w-12 h-12 text-slate-200 mx-auto mb-3" />
-          <h3 className="text-lg font-bold text-slate-600">클레임 내역이 없습니다</h3>
+          <h3 className="text-lg font-bold text-slate-600">クレーム履歴がありません</h3>
         </Card>
       ) : (
         <Card className="p-0 overflow-hidden">
@@ -223,13 +224,13 @@ function ClaimsAdminPanel() {
             <table className="w-full text-left border-collapse min-w-[900px]">
               <thead>
                 <tr className="bg-slate-50 border-b border-slate-200">
-                  <th className="px-4 py-3 text-xs font-bold text-slate-500 uppercase whitespace-nowrap">접수일시</th>
-                  <th className="px-4 py-3 text-xs font-bold text-slate-500 uppercase whitespace-nowrap">유형 / 상태</th>
-                  <th className="px-4 py-3 text-xs font-bold text-slate-500 uppercase whitespace-nowrap">주문번호</th>
-                  <th className="px-4 py-3 text-xs font-bold text-slate-500 uppercase">고객 / 상품</th>
-                  <th className="px-4 py-3 text-xs font-bold text-slate-500 uppercase">사유</th>
-                  <th className="px-4 py-3 text-xs font-bold text-slate-500 uppercase">관리자 메모</th>
-                  <th className="px-4 py-3 text-xs font-bold text-slate-500 uppercase w-16 text-center">관리</th>
+                  <th className="px-4 py-3 text-xs font-bold text-slate-500 uppercase whitespace-nowrap">受付日時</th>
+                  <th className="px-4 py-3 text-xs font-bold text-slate-500 uppercase whitespace-nowrap">種別 / ステータス</th>
+                  <th className="px-4 py-3 text-xs font-bold text-slate-500 uppercase whitespace-nowrap">注文番号</th>
+                  <th className="px-4 py-3 text-xs font-bold text-slate-500 uppercase">お客様 / 商品</th>
+                  <th className="px-4 py-3 text-xs font-bold text-slate-500 uppercase">理由</th>
+                  <th className="px-4 py-3 text-xs font-bold text-slate-500 uppercase">管理者メモ</th>
+                  <th className="px-4 py-3 text-xs font-bold text-slate-500 uppercase w-16 text-center">管理</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
@@ -240,8 +241,8 @@ function ClaimsAdminPanel() {
                       <p className="text-xs text-slate-400">{new Date(c.created_at).toLocaleTimeString("ko-KR", { hour: "2-digit", minute: "2-digit" })}</p>
                     </td>
                     <td className="px-4 py-3">
-                      <span className={cn("text-xs px-2.5 py-1 rounded-full font-bold block w-fit mb-1.5", CLAIM_TYPE_COLORS[c.claim_type] || "bg-gray-100 text-gray-700")}>{c.claim_type}</span>
-                      <span className={cn("text-xs px-2.5 py-1 rounded-full font-bold block w-fit", CLAIM_STATUS_COLORS[c.status] || "bg-gray-100 text-gray-700")}>{c.status}</span>
+                      <span className={cn("text-xs px-2.5 py-1 rounded-full font-bold block w-fit mb-1.5", CLAIM_TYPE_COLORS[c.claim_type] || "bg-gray-100 text-gray-700")}>{ja(c.claim_type)}</span>
+                      <span className={cn("text-xs px-2.5 py-1 rounded-full font-bold block w-fit", CLAIM_STATUS_COLORS[c.status] || "bg-gray-100 text-gray-700")}>{ja(c.status)}</span>
                     </td>
                     <td className="px-4 py-3 whitespace-nowrap">
                       <p className="text-xs font-mono text-blue-600 font-bold">#{c.od_id}</p>
@@ -257,11 +258,11 @@ function ClaimsAdminPanel() {
                     <td className="px-4 py-3">
                       {c.admin_memo
                         ? <p className="text-sm text-slate-500 max-w-[160px] line-clamp-2">{c.admin_memo}</p>
-                        : <span className="text-xs text-slate-300">없음</span>}
+                        : <span className="text-xs text-slate-300">なし</span>}
                     </td>
                     <td className="px-4 py-3 text-center">
                       <Button variant="outline" size="sm" onClick={() => openEdit(c)} className="h-7 text-xs px-2">
-                        <Edit className="w-3.5 h-3.5 mr-0.5" /> 처리
+                        <Edit className="w-3.5 h-3.5 mr-0.5" /> 処理
                       </Button>
                     </td>
                   </tr>
@@ -272,35 +273,35 @@ function ClaimsAdminPanel() {
         </Card>
       )}
 
-      <Modal isOpen={!!editingClaim} onClose={() => setEditingClaim(null)} title="클레임 처리">
+      <Modal isOpen={!!editingClaim} onClose={() => setEditingClaim(null)} title="クレーム処理">
         {editingClaim && (
           <div className="space-y-4">
             <div className="bg-slate-50 p-4 rounded-xl border border-slate-100 text-sm space-y-1.5">
-              <p><span className="text-slate-500 font-bold mr-2">주문번호:</span><span className="font-mono text-blue-600 font-bold">#{editingClaim.od_id}</span></p>
-              <p><span className="text-slate-500 font-bold mr-2">요청 유형:</span><span className={cn("text-xs px-2 py-0.5 rounded-full font-bold", CLAIM_TYPE_COLORS[editingClaim.claim_type])}>{editingClaim.claim_type}</span></p>
-              <p><span className="text-slate-500 font-bold mr-2">고객:</span><span>{editingClaim.mb_name || editingClaim.mb_id} {editingClaim.mb_hp ? `(${editingClaim.mb_hp})` : ""}</span></p>
-              <p><span className="text-slate-500 font-bold mr-2">사유:</span><span className="text-slate-700">{editingClaim.reason}</span></p>
+              <p><span className="text-slate-500 font-bold mr-2">注文番号:</span><span className="font-mono text-blue-600 font-bold">#{editingClaim.od_id}</span></p>
+              <p><span className="text-slate-500 font-bold mr-2">リクエスト種別:</span><span className={cn("text-xs px-2 py-0.5 rounded-full font-bold", CLAIM_TYPE_COLORS[editingClaim.claim_type])}>{ja(editingClaim.claim_type)}</span></p>
+              <p><span className="text-slate-500 font-bold mr-2">お客様:</span><span>{editingClaim.mb_name || editingClaim.mb_id} {editingClaim.mb_hp ? `(${editingClaim.mb_hp})` : ""}</span></p>
+              <p><span className="text-slate-500 font-bold mr-2">理由:</span><span className="text-slate-700">{editingClaim.reason}</span></p>
             </div>
             <div>
-              <Label>처리 상태</Label>
+              <Label>処理ステータス</Label>
               <select className="w-full px-4 py-3 rounded-xl bg-white border-2 border-border font-bold focus:outline-none focus:border-primary transition-all"
                 value={editClaimStatus} onChange={e => setEditClaimStatus(e.target.value)}>
                 {["접수", "처리중", "승인", "반려", "완료"].map(s => (
-                  <option key={s} value={s}>{s}</option>
+                  <option key={s} value={s}>{ja(s)}</option>
                 ))}
               </select>
             </div>
             <div>
-              <Label>관리자 메모 (고객에게 표시됩니다)</Label>
+              <Label>管理者メモ (お客様に表示されます)</Label>
               <textarea
                 className="w-full px-4 py-3 rounded-xl bg-white border-2 border-border focus:outline-none focus:border-primary transition-all resize-y min-h-[80px] text-sm font-normal"
                 value={editMemo} onChange={e => setEditMemo(e.target.value)}
-                placeholder="처리 내용, 안내 사항 등을 입력하세요"
+                placeholder="処理内容、ご案内事項などを入力してください"
               />
             </div>
             <div className="pt-4 border-t border-slate-100 flex justify-end gap-3">
-              <Button variant="ghost" onClick={() => setEditingClaim(null)}>닫기</Button>
-              <Button onClick={handleSave} disabled={saving}>{saving ? "저장 중..." : "저장하기"}</Button>
+              <Button variant="ghost" onClick={() => setEditingClaim(null)}>閉じる</Button>
+              <Button onClick={handleSave} disabled={saving}>{saving ? "保存中..." : "保存する"}</Button>
             </div>
           </div>
         )}
@@ -374,7 +375,7 @@ export default function AdminOrders() {
   const { mutate: updateOrder, isPending: isUpdating } = useUpdateOrderStatus({
     mutation: {
       onSuccess: () => {
-        toast({ title: "수정 완료", description: "주문 상태가 변경되었습니다." });
+        toast({ title: "更新完了", description: "注文ステータスを変更しました。" });
         queryClient.invalidateQueries({ queryKey: getGetOrdersQueryKey() });
         setEditingOrder(null);
       },
@@ -439,7 +440,7 @@ export default function AdminOrders() {
 
   const openBatchModal = () => {
     if (selectedOrders.size === 0) {
-      toast({ title: "주문을 선택해주세요", variant: "destructive" });
+      toast({ title: "注文を選択してください", variant: "destructive" });
       return;
     }
     setBatchInvoiceNumbers({});
@@ -511,14 +512,14 @@ export default function AdminOrders() {
         body: formData,
       });
       const result = await resp.json();
-      if (!resp.ok) throw new Error(result.error || "업로드 실패");
+      if (!resp.ok) throw new Error(result.error || "アップロードに失敗しました");
       toast({
-        title: "배송처리 완료",
-        description: result.message + (result.errors?.length ? `\n오류: ${result.errors.join(", ")}` : ""),
+        title: "配送処理完了",
+        description: result.message + (result.errors?.length ? `\nエラー: ${result.errors.join(", ")}` : ""),
       });
       queryClient.invalidateQueries({ queryKey: getGetOrdersQueryKey() });
     } catch (err: any) {
-      toast({ title: "업로드 실패", description: err.message, variant: "destructive" });
+      toast({ title: "アップロードに失敗しました", description: err.message, variant: "destructive" });
     } finally {
       setIsImporting(false);
       if (fileInputRef.current) fileInputRef.current.value = "";
@@ -539,20 +540,20 @@ export default function AdminOrders() {
       const resp = await fetch(`${base}api/orders/export-shipping?${params.toString()}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      if (!resp.ok) throw new Error("다운로드 실패");
+      if (!resp.ok) throw new Error("ダウンロードに失敗しました");
       const blob = await resp.blob();
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
       const today = new Date().toISOString().slice(0, 10).replace(/-/g, "");
-      a.download = `배송요청_${today}.xlsx`;
+      a.download = `配送依頼_${today}.xlsx`;
       document.body.appendChild(a);
       a.click();
       a.remove();
       URL.revokeObjectURL(url);
-      toast({ title: "다운로드 완료", description: "배송요청 엑셀 파일이 다운로드되었습니다" });
+      toast({ title: "ダウンロード完了", description: "配送依頼のExcelファイルをダウンロードしました" });
     } catch (e: any) {
-      toast({ title: "다운로드 실패", description: e.message, variant: "destructive" });
+      toast({ title: "ダウンロードに失敗しました", description: e.message, variant: "destructive" });
     } finally {
       setIsExporting(false);
     }
@@ -563,25 +564,25 @@ export default function AdminOrders() {
       {/* 헤더 */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-black text-slate-900 tracking-tight">발주/주문 관리</h1>
-          <p className="text-slate-500 mt-1 font-medium">파트너사 발주 내역 확인, 상태 변경, 배송 처리</p>
+          <h1 className="text-3xl font-black text-slate-900 tracking-tight">発注・注文管理</h1>
+          <p className="text-slate-500 mt-1 font-medium">取引先の発注履歴の確認、ステータス変更、配送処理</p>
         </div>
         {(orderType === "일반" || orderType === "특별지역") && (
           <div className="flex items-center gap-3 flex-wrap">
             <Button variant="outline" onClick={handleExportShipping} disabled={isExporting} className="h-10 border-green-300 text-green-700 hover:bg-green-50">
               {isExporting ? <Loader2 className="w-4 h-4 mr-1.5 animate-spin" /> : <Download className="w-4 h-4 mr-1.5" />}
-              배송요청 엑셀 다운로드
+              配送依頼Excelダウンロード
             </Button>
             <input ref={fileInputRef} type="file" accept=".xlsx,.xls" className="hidden" onChange={handleImportShipping} />
             <Button variant="outline" onClick={() => fileInputRef.current?.click()} disabled={isImporting} className="h-10 border-blue-300 text-blue-700 hover:bg-blue-50">
               {isImporting ? <Loader2 className="w-4 h-4 mr-1.5 animate-spin" /> : <Upload className="w-4 h-4 mr-1.5" />}
-              배송처리 엑셀 업로드
+              配送処理Excelアップロード
             </Button>
             {selectedOrders.size > 0 && (
               <>
-                <span className="text-sm font-bold text-blue-600">{selectedOrders.size}건 선택됨</span>
-                <Button onClick={openBatchModal} className="h-10"><Truck className="w-4 h-4 mr-1.5" />일괄 배송처리</Button>
-                <Button variant="outline" size="sm" onClick={() => setSelectedOrders(new Set())}>선택 해제</Button>
+                <span className="text-sm font-bold text-blue-600">{selectedOrders.size}件選択中</span>
+                <Button onClick={openBatchModal} className="h-10"><Truck className="w-4 h-4 mr-1.5" />一括配送処理</Button>
+                <Button variant="outline" size="sm" onClick={() => setSelectedOrders(new Set())}>選択解除</Button>
               </>
             )}
           </div>
@@ -591,10 +592,10 @@ export default function AdminOrders() {
       {/* 주문 유형 탭 */}
       <div className="flex gap-1 bg-slate-100 p-1 rounded-xl w-fit flex-wrap">
         {([
-          { type: "일반", icon: <Package className="w-4 h-4" />, label: "일반 주문" },
-          { type: "선물하기", icon: <Gift className="w-4 h-4" />, label: "선물하기 주문" },
-          { type: "특별지역", icon: <MapPin className="w-4 h-4" />, label: "특별지역" },
-          { type: "클레임", icon: <RotateCcw className="w-4 h-4" />, label: "클레임 관리" },
+          { type: "일반", icon: <Package className="w-4 h-4" />, label: "一般注文" },
+          { type: "선물하기", icon: <Gift className="w-4 h-4" />, label: "ギフト注文" },
+          { type: "특별지역", icon: <MapPin className="w-4 h-4" />, label: "特別地域" },
+          { type: "클레임", icon: <RotateCcw className="w-4 h-4" />, label: "クレーム管理" },
         ] as const).map(({ type, icon, label }) => (
           <button
             key={type}
@@ -622,15 +623,15 @@ export default function AdminOrders() {
                   specialCity === city ? "bg-white text-slate-900 shadow-sm" : "text-slate-500 hover:text-slate-700"
                 )}
               >
-                <MapPin className="w-3.5 h-3.5" />{city === "전체" ? "전체 지역" : city}
+                <MapPin className="w-3.5 h-3.5" />{city === "전체" ? "全地域" : ja(city)}
               </button>
             ))}
           </div>
           <div className="flex items-center gap-2 px-4 py-2.5 bg-amber-50 border border-amber-200 rounded-xl text-sm text-amber-700 font-medium">
             <AlertCircle className="w-4 h-4 shrink-0" />
             {specialCity === "전체"
-              ? "동두천·의정부·양주·포천 주소의 주문만 표시됩니다."
-              : `${specialCity} 주소의 주문만 표시됩니다.`}
+              ? "東豆川・議政府・楊州・抱川の住所の注文のみ表示されます。"
+              : `${ja(specialCity)}の住所の注文のみ表示されます。`}
           </div>
         </div>
       )}
@@ -651,7 +652,7 @@ export default function AdminOrders() {
           onChange={(e) => setPageSize(Number(e.target.value))}
         >
           {pageSizeOptions.map((size) => (
-            <option key={size} value={size}>{size}개씩 보기</option>
+            <option key={size} value={size}>{size}件ずつ表示</option>
           ))}
         </select>
       </div>
@@ -659,10 +660,10 @@ export default function AdminOrders() {
       <Card className="p-5 space-y-4">
         <div className="flex items-center gap-2 mb-1">
           <Filter className="w-4 h-4 text-slate-500" />
-          <span className="text-sm font-bold text-slate-700">검색 및 필터</span>
+          <span className="text-sm font-bold text-slate-700">検索・フィルター</span>
           {hasFilters && (
             <button onClick={clearFilters} className="ml-auto text-xs text-blue-600 hover:text-blue-800 font-bold flex items-center gap-1">
-              <X className="w-3 h-3" /> 초기화
+              <X className="w-3 h-3" /> リセット
             </button>
           )}
         </div>
@@ -672,7 +673,7 @@ export default function AdminOrders() {
             <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
             <Input
               className="pl-10 h-10"
-              placeholder="주문번호, 이름, 회사명 검색..."
+              placeholder="注文番号、名前、会社名で検索..."
               value={search}
               onChange={(e: any) => setSearch(e.target.value)}
             />
@@ -684,7 +685,7 @@ export default function AdminOrders() {
             onChange={(e) => updateStatusFilter(e.target.value)}
           >
             {STATUS_OPTIONS.map((s) => (
-              <option key={s} value={s}>{s}</option>
+              <option key={s} value={s}>{ja(s)}</option>
             ))}
           </select>
 
@@ -693,7 +694,7 @@ export default function AdminOrders() {
             value={partnerFilter}
             onChange={(e) => setPartnerFilter(e.target.value)}
           >
-            <option value="">전체 파트너사</option>
+            <option value="">すべての取引先</option>
             {partnersData?.partners?.map((p: any) => (
               <option key={p.mb_id} value={p.mb_id}>
                 {p.company_name || p.mb_name} ({p.mb_id})
@@ -721,7 +722,7 @@ export default function AdminOrders() {
 
       <div className="flex items-center justify-between px-1">
         <div className="text-sm text-slate-500 font-medium">
-          총 <span className="font-bold text-primary">{data?.total ?? 0}</span>건
+          合計 <span className="font-bold text-primary">{data?.total ?? 0}</span>件
         </div>
       </div>
 
@@ -732,8 +733,8 @@ export default function AdminOrders() {
       ) : orders.length === 0 ? (
         <Card className="py-20 text-center">
           <ClipboardList className="w-16 h-16 text-slate-200 mx-auto mb-4" />
-          <h3 className="text-xl font-bold text-slate-700">주문 내역이 없습니다</h3>
-          <p className="text-slate-500 mt-2">검색 조건을 변경해보세요.</p>
+          <h3 className="text-xl font-bold text-slate-700">注文履歴がありません</h3>
+          <p className="text-slate-500 mt-2">検索条件を変更してお試しください。</p>
         </Card>
       ) : (
         <Card className="p-0 overflow-hidden">
@@ -749,13 +750,13 @@ export default function AdminOrders() {
                     </button>
                   </th>
                   <th className="px-1 py-3 w-8"></th>
-                  <th className="px-3 py-3 text-xs font-bold text-slate-500 uppercase whitespace-nowrap">주문일시 / 번호</th>
-                  <th className="px-3 py-3 text-xs font-bold text-slate-500 uppercase whitespace-nowrap">파트너사</th>
-                  <th className="px-3 py-3 text-xs font-bold text-slate-500 uppercase">상품요약</th>
-                  <th className="px-3 py-3 text-xs font-bold text-slate-500 uppercase text-right whitespace-nowrap">결제금액</th>
-                  <th className="px-3 py-3 text-xs font-bold text-slate-500 uppercase text-center whitespace-nowrap w-20">상태</th>
-                  <th className="px-3 py-3 text-xs font-bold text-slate-500 uppercase text-center whitespace-nowrap w-28">배송정보</th>
-                  <th className="px-3 py-3 text-xs font-bold text-slate-500 uppercase text-center whitespace-nowrap w-16">관리</th>
+                  <th className="px-3 py-3 text-xs font-bold text-slate-500 uppercase whitespace-nowrap">注文日時 / 番号</th>
+                  <th className="px-3 py-3 text-xs font-bold text-slate-500 uppercase whitespace-nowrap">取引先</th>
+                  <th className="px-3 py-3 text-xs font-bold text-slate-500 uppercase">商品サマリー</th>
+                  <th className="px-3 py-3 text-xs font-bold text-slate-500 uppercase text-right whitespace-nowrap">決済金額</th>
+                  <th className="px-3 py-3 text-xs font-bold text-slate-500 uppercase text-center whitespace-nowrap w-20">ステータス</th>
+                  <th className="px-3 py-3 text-xs font-bold text-slate-500 uppercase text-center whitespace-nowrap w-28">配送情報</th>
+                  <th className="px-3 py-3 text-xs font-bold text-slate-500 uppercase text-center whitespace-nowrap w-16">管理</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
@@ -781,38 +782,38 @@ export default function AdminOrders() {
         </Card>
       )}
 
-      <Modal isOpen={!!editingOrder} onClose={() => setEditingOrder(null)} title="주문 상태 / 배송정보 수정">
+      <Modal isOpen={!!editingOrder} onClose={() => setEditingOrder(null)} title="注文ステータス / 配送情報の編集">
         {editingOrder && (
           <div className="space-y-5">
             <div className="bg-slate-50 p-4 rounded-xl border border-slate-100 text-sm space-y-1">
-              <p><span className="text-slate-500 font-bold mr-2">주문번호:</span><span className="font-bold text-slate-900">#{editingOrder.od_id}</span></p>
-              <p><span className="text-slate-500 font-bold mr-2">파트너사:</span><span className="font-bold text-slate-900">{editingOrder.company_name}</span></p>
-              <p><span className="text-slate-500 font-bold mr-2">금액:</span><span className="font-bold text-slate-900">{formatCurrency(editingOrder.od_receipt_price)}</span></p>
+              <p><span className="text-slate-500 font-bold mr-2">注文番号:</span><span className="font-bold text-slate-900">#{editingOrder.od_id}</span></p>
+              <p><span className="text-slate-500 font-bold mr-2">取引先:</span><span className="font-bold text-slate-900">{editingOrder.company_name}</span></p>
+              <p><span className="text-slate-500 font-bold mr-2">金額:</span><span className="font-bold text-slate-900">{formatCurrency(editingOrder.od_receipt_price)}</span></p>
             </div>
 
             <div>
-              <Label>처리 상태</Label>
+              <Label>処理ステータス</Label>
               <select
                 className="w-full px-4 py-3 rounded-xl bg-white border-2 border-border text-foreground focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all duration-200 font-bold"
                 value={editStatus}
                 onChange={(e) => setEditStatus(e.target.value)}
               >
-                <option value="주문접수">주문접수</option>
-                <option value="처리중">처리중</option>
-                <option value="배송준비">배송준비</option>
-                <option value="배송중">배송중</option>
-                <option value="배송완료">배송완료</option>
-                <option value="취소">취소</option>
+                <option value="주문접수">注文受付</option>
+                <option value="처리중">処理中</option>
+                <option value="배송준비">配送準備</option>
+                <option value="배송중">配送中</option>
+                <option value="배송완료">配送完了</option>
+                <option value="취소">キャンセル</option>
               </select>
             </div>
 
             <div>
-              <Label>택배사</Label>
+              <Label>配送業者</Label>
               <Input value={editDeliveryCompany} onChange={(e: any) => setEditDeliveryCompany(e.target.value)} placeholder="CJ대한통운" />
             </div>
             <div>
-              <Label>송장번호</Label>
-              <Input value={editInvoiceNo} onChange={(e: any) => setEditInvoiceNo(e.target.value)} placeholder="송장번호 입력" />
+              <Label>送り状番号</Label>
+              <Input value={editInvoiceNo} onChange={(e: any) => setEditInvoiceNo(e.target.value)} placeholder="送り状番号を入力" />
               {editInvoiceNo && (
                 <a
                   href={trackingUrl(editInvoiceNo)}
@@ -820,46 +821,46 @@ export default function AdminOrders() {
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-1 mt-2 text-xs text-blue-600 hover:text-blue-800 font-bold"
                 >
-                  <Truck className="w-3 h-3" /> CJ대한통운 배송조회 <ExternalLink className="w-3 h-3" />
+                  <Truck className="w-3 h-3" /> CJ大韓通運 配送照会 <ExternalLink className="w-3 h-3" />
                 </a>
               )}
             </div>
 
             <div className="pt-4 border-t border-slate-100 flex justify-end gap-3">
-              <Button variant="ghost" onClick={() => setEditingOrder(null)}>취소</Button>
+              <Button variant="ghost" onClick={() => setEditingOrder(null)}>キャンセル</Button>
               <Button onClick={handleEditUpdate} disabled={isUpdating}>
-                {isUpdating ? "저장 중..." : "저장하기"}
+                {isUpdating ? "保存中..." : "保存する"}
               </Button>
             </div>
           </div>
         )}
       </Modal>
 
-      <Modal isOpen={batchModalOpen} onClose={() => setBatchModalOpen(false)} title="일괄 배송처리">
+      <Modal isOpen={batchModalOpen} onClose={() => setBatchModalOpen(false)} title="一括配送処理">
         <div className="space-y-5">
           <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 text-sm">
-            <p className="font-bold text-blue-800">{selectedOrders.size}건의 주문을 일괄 처리합니다.</p>
+            <p className="font-bold text-blue-800">{selectedOrders.size}件の注文を一括処理します。</p>
           </div>
 
           <div>
-            <Label>변경할 상태</Label>
+            <Label>変更するステータス</Label>
             <select
               className="w-full px-4 py-3 rounded-xl bg-white border-2 border-border font-bold focus:outline-none focus:border-primary transition-all"
               value={batchStatus}
               onChange={(e) => setBatchStatus(e.target.value)}
             >
-              <option value="처리중">처리중</option>
-              <option value="배송준비">배송준비</option>
-              <option value="배송중">배송중</option>
-              <option value="배송완료">배송완료</option>
+              <option value="처리중">処理中</option>
+              <option value="배송준비">配送準備</option>
+              <option value="배송중">配送中</option>
+              <option value="배송완료">配送完了</option>
             </select>
           </div>
 
           {(batchStatus === "배송중" || batchStatus === "배송완료") && (
             <div className="space-y-3 animate-in slide-in-from-top-2">
               <div className="bg-slate-50 rounded-xl p-4 border border-slate-100">
-                <p className="text-xs font-bold text-slate-500 mb-1">택배사: CJ대한통운 (고정)</p>
-                <p className="text-xs text-slate-400">각 주문별 송장번호를 입력해주세요. 비워두면 송장번호 없이 처리됩니다.</p>
+                <p className="text-xs font-bold text-slate-500 mb-1">配送業者: CJ大韓通運 (固定)</p>
+                <p className="text-xs text-slate-400">各注文の送り状番号を入力してください。空欄の場合は送り状番号なしで処理されます。</p>
               </div>
               <div className="max-h-64 overflow-y-auto space-y-2">
                 {Array.from(selectedOrders).map((odId) => {
@@ -872,7 +873,7 @@ export default function AdminOrders() {
                       </div>
                       <Input
                         className="w-48 h-8 text-sm"
-                        placeholder="송장번호"
+                        placeholder="送り状番号"
                         value={batchInvoiceNumbers[odId] || ""}
                         onChange={(e: any) => setBatchInvoiceNumbers((prev) => ({ ...prev, [odId]: e.target.value }))}
                       />
@@ -884,9 +885,9 @@ export default function AdminOrders() {
           )}
 
           <div className="pt-4 border-t border-slate-100 flex justify-end gap-3">
-            <Button variant="ghost" onClick={() => setBatchModalOpen(false)}>취소</Button>
+            <Button variant="ghost" onClick={() => setBatchModalOpen(false)}>キャンセル</Button>
             <Button onClick={handleBatchUpdate} disabled={isBatchUpdating}>
-              {isBatchUpdating ? "처리 중..." : `${selectedOrders.size}건 일괄 처리`}
+              {isBatchUpdating ? "処理中..." : `${selectedOrders.size}件を一括処理`}
             </Button>
           </div>
         </div>
@@ -943,23 +944,23 @@ function OrderRow({
           <Link href={`/orders/${order.od_id}`} className="hover:text-blue-600 transition-colors">
             <p className="text-sm font-bold text-slate-700 hover:underline">
               {items.length > 0
-                ? `${items[0].it_name}${items.length > 1 ? ` 외 ${items.length - 1}건` : ""}`
-                : `상품 ${order.item_count || 0}종`}
+                ? `${items[0].it_name}${items.length > 1 ? ` 他${items.length - 1}件` : ""}`
+                : `商品 ${order.item_count || 0}種類`}
             </p>
           </Link>
-          {order.od_memo && <p className="text-xs text-amber-600 mt-0.5 truncate max-w-[180px]">요청: {order.od_memo}</p>}
+          {order.od_memo && <p className="text-xs text-amber-600 mt-0.5 truncate max-w-[180px]">ご要望: {order.od_memo}</p>}
         </td>
         <td className="px-3 py-3 text-right whitespace-nowrap">
           <span className="font-black text-slate-900">{formatCurrency(order.od_receipt_price)}</span>
         </td>
         <td className="px-3 py-3 text-center whitespace-nowrap w-20">
-          <Badge className={cn("text-xs", getStatusColor(order.od_status))}>{order.od_status}</Badge>
+          <Badge className={cn("text-xs", getStatusColor(order.od_status))}>{ja(order.od_status)}</Badge>
         </td>
         <td className="px-3 py-3 text-center whitespace-nowrap w-28">
           {order.od_invoice_no ? (
             <div className="space-y-0.5">
               <Badge className="bg-blue-100 text-blue-700 text-[10px] font-bold">
-                {order.od_delivery_company || "CJ대한통운"}
+                {ja(order.od_delivery_company || "CJ대한통운")}
               </Badge>
               <button
                 onClick={() => setShowTracking(true)}
@@ -970,12 +971,12 @@ function OrderRow({
               </button>
             </div>
           ) : (
-            <span className="text-xs text-slate-300">미등록</span>
+            <span className="text-xs text-slate-300">未登録</span>
           )}
         </td>
         <td className="px-2 py-3 text-center whitespace-nowrap w-16">
           <Button variant="outline" size="sm" onClick={onEdit} className="h-7 text-xs px-2">
-            <Edit className="w-3.5 h-3.5 mr-0.5" /> 수정
+            <Edit className="w-3.5 h-3.5 mr-0.5" /> 編集
           </Button>
         </td>
       </tr>
@@ -986,7 +987,7 @@ function OrderRow({
             <div className="p-5 grid grid-cols-1 lg:grid-cols-3 gap-5">
               <div className="lg:col-span-2">
                 <h4 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3 flex items-center gap-1.5">
-                  <Package className="w-4 h-4" /> 주문 상품 ({items.length}건)
+                  <Package className="w-4 h-4" /> 注文商品 ({items.length}件)
                 </h4>
                 <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
                   {items.length > 0 ? (
@@ -995,18 +996,18 @@ function OrderRow({
                         <div key={idx} className="px-4 py-3 flex items-center justify-between">
                           <div>
                             <p className="font-bold text-sm text-slate-900">{item.it_name}</p>
-                            <p className="text-xs text-slate-500 mt-0.5">{item.it_maker ? `${item.it_maker} · ` : ""}{formatCurrency(item.ct_price)} x {item.ct_qty}개</p>
+                            <p className="text-xs text-slate-500 mt-0.5">{item.it_maker ? `${item.it_maker} · ` : ""}{formatCurrency(item.ct_price)} x {item.ct_qty}個</p>
                           </div>
                           <span className="font-black text-slate-900 text-sm">{formatCurrency(item.ct_price * item.ct_qty)}</span>
                         </div>
                       ))}
                       <div className="px-4 py-3 bg-slate-50/50 flex justify-between">
-                        <span className="text-sm text-slate-600 font-bold">합계 (배송비 {order.od_send_cost ? formatCurrency(order.od_send_cost) : "포함"})</span>
+                        <span className="text-sm text-slate-600 font-bold">合計 (送料 {order.od_send_cost ? formatCurrency(order.od_send_cost) : "込み"})</span>
                         <span className="font-black text-primary text-lg">{formatCurrency(order.od_receipt_price)}</span>
                       </div>
                     </div>
                   ) : (
-                    <p className="p-4 text-sm text-slate-400">상품 정보 없음</p>
+                    <p className="p-4 text-sm text-slate-400">商品情報なし</p>
                   )}
                 </div>
               </div>
@@ -1014,26 +1015,26 @@ function OrderRow({
               <div className="space-y-4">
                 <div>
                   <h4 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3 flex items-center gap-1.5">
-                    <Building2 className="w-4 h-4" /> 파트너 정보
+                    <Building2 className="w-4 h-4" /> 取引先情報
                   </h4>
                   <div className="bg-white rounded-xl border border-slate-200 p-4 space-y-2 text-sm">
                     <div className="flex justify-between">
-                      <span className="text-slate-500 font-bold">회사명</span>
+                      <span className="text-slate-500 font-bold">会社名</span>
                       <span className="font-bold text-slate-900">{order.company_name || "-"}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-slate-500 font-bold">담당자</span>
+                      <span className="text-slate-500 font-bold">担当者</span>
                       <span className="text-slate-900">{order.mb_name || "-"}</span>
                     </div>
                     {order.mb_hp && (
                       <div className="flex justify-between">
-                        <span className="text-slate-500 font-bold">연락처</span>
+                        <span className="text-slate-500 font-bold">連絡先</span>
                         <span className="text-slate-900">{order.mb_hp}</span>
                       </div>
                     )}
                     {order.business_number && (
                       <div className="flex justify-between">
-                        <span className="text-slate-500 font-bold">사업자번호</span>
+                        <span className="text-slate-500 font-bold">事業者番号</span>
                         <span className="text-slate-900">{order.business_number}</span>
                       </div>
                     )}
@@ -1042,35 +1043,35 @@ function OrderRow({
 
                 <div>
                   <h4 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3 flex items-center gap-1.5">
-                    <MapPin className="w-4 h-4" /> 배송지 정보
+                    <MapPin className="w-4 h-4" /> 配送先情報
                   </h4>
                   <div className="bg-white rounded-xl border border-slate-200 p-4 space-y-2 text-sm">
                     {shipping?.name && (
                       <div className="flex justify-between">
-                        <span className="text-slate-500 font-bold">수령인</span>
+                        <span className="text-slate-500 font-bold">受取人</span>
                         <span className="font-bold text-slate-900">{shipping.name}</span>
                       </div>
                     )}
                     {shipping?.hp && (
                       <div className="flex justify-between">
-                        <span className="text-slate-500 font-bold">연락처</span>
+                        <span className="text-slate-500 font-bold">連絡先</span>
                         <span className="text-slate-900">{shipping.hp}</span>
                       </div>
                     )}
                     {(shipping?.addr1 || shipping?.addr2) && (
                       <div className="flex justify-between">
-                        <span className="text-slate-500 font-bold shrink-0">주소</span>
+                        <span className="text-slate-500 font-bold shrink-0">住所</span>
                         <span className="text-slate-900 text-right ml-2">{[shipping.addr1, shipping.addr2, shipping.addr3].filter(Boolean).join(" ")}</span>
                       </div>
                     )}
                     {shipping?.zip && (
                       <div className="flex justify-between">
-                        <span className="text-slate-500 font-bold">우편번호</span>
+                        <span className="text-slate-500 font-bold">郵便番号</span>
                         <span className="text-slate-900">{shipping.zip}</span>
                       </div>
                     )}
                     {!shipping?.name && !shipping?.addr1 && (
-                      <p className="text-slate-400">배송지 정보 없음</p>
+                      <p className="text-slate-400">配送先情報なし</p>
                     )}
                   </div>
                 </div>
@@ -1081,7 +1082,7 @@ function OrderRow({
                     className="flex items-center justify-center gap-2 w-full px-4 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors font-bold text-sm"
                   >
                     <Truck className="w-4 h-4" />
-                    배송 현황 조회
+                    配送状況を照会
                   </button>
                 )}
               </div>

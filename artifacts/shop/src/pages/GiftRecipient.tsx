@@ -69,13 +69,13 @@ export default function GiftRecipientPage() {
         },
       }).open();
     } else {
-      alert("주소 검색 기능을 불러오는 중입니다. 잠시 후 다시 시도해주세요.");
+      alert("住所検索機能を読み込み中です。しばらくしてからもう一度お試しください。");
     }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name || !phone || !address) { alert("모든 필수 항목을 입력해주세요"); return; }
+    if (!name || !phone || !address) { alert("必須項目をすべて入力してください"); return; }
     setSubmitting(true);
     try {
       const r = await fetch(`/api/shop/gift/recipient/${token}/address`, {
@@ -85,8 +85,8 @@ export default function GiftRecipientPage() {
       });
       const data = await r.json();
       if (data.ok) setDone(true);
-      else alert(data.error || "저장에 실패했습니다");
-    } catch { alert("오류가 발생했습니다. 다시 시도해주세요."); }
+      else alert(data.error || "保存に失敗しました");
+    } catch { alert("エラーが発生しました。もう一度お試しください。"); }
     setSubmitting(false);
   };
 
@@ -112,8 +112,8 @@ export default function GiftRecipientPage() {
     return (
       <div style={{ ...S.page, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "0 24px" }}>
         <AlertCircle size={44} style={{ color: "#ddd", marginBottom: 16 }} />
-        <h2 style={{ fontSize: 17, fontWeight: 700, color: "#555", margin: "0 0 6px" }}>선물을 찾을 수 없습니다</h2>
-        <p style={{ fontSize: 14, color: "#aaa", textAlign: "center" }}>링크가 만료되었거나 존재하지 않는 선물입니다.</p>
+        <h2 style={{ fontSize: 17, fontWeight: 700, color: "#555", margin: "0 0 6px" }}>ギフトが見つかりません</h2>
+        <p style={{ fontSize: 14, color: "#aaa", textAlign: "center" }}>リンクの有効期限が切れているか、存在しないギフトです。</p>
       </div>
     );
   }
@@ -141,10 +141,10 @@ export default function GiftRecipientPage() {
             <span style={{ fontSize: 32, lineHeight: 1 }}>🎁</span>
           </div>
           <h1 className="gf gf-2" style={{ fontSize: 26, fontWeight: 800, color: COLORS.textMain, margin: "0 0 10px", letterSpacing: "-0.5px" }}>
-            선물이 도착했어요
+            ギフトが届きました
           </h1>
           <p className="gf gf-3" style={{ fontSize: 15, color: COLORS.textMuted, margin: 0, lineHeight: 1.5 }}>
-            소중한 분이 마음을 담아 보내셨습니다
+            大切な方が心を込めて贈ってくださいました
           </p>
         </div>
 
@@ -160,7 +160,7 @@ export default function GiftRecipientPage() {
                 </div>
                 <div>
                   <p style={{ margin: 0, fontSize: 16, fontWeight: 800, color: COLORS.textMain, lineHeight: 1.35 }}>{order.set_name}</p>
-                  <p style={{ margin: "3px 0 0", fontSize: 13, color: COLORS.textSoft }}>{order.slot_count}개 구성</p>
+                  <p style={{ margin: "3px 0 0", fontSize: 13, color: COLORS.textSoft }}>{order.slot_count}点セット</p>
                 </div>
               </div>
 
@@ -185,7 +185,7 @@ export default function GiftRecipientPage() {
                 <div style={{ background: COLORS.accentSoft, borderRadius: 14, padding: "14px 16px", border: `1px solid ${COLORS.accentLight}` }}>
                   <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 6 }}>
                     <span style={{ fontSize: 13 }}>💌</span>
-                    <span style={{ fontSize: 12, fontWeight: 800, color: COLORS.accent, letterSpacing: "0.3px" }}>선물 메시지</span>
+                    <span style={{ fontSize: 12, fontWeight: 800, color: COLORS.accent, letterSpacing: "0.3px" }}>ギフトメッセージ</span>
                   </div>
                   <p style={{ margin: 0, fontSize: 14, color: "#5c4a4a", lineHeight: 1.75, whiteSpace: "pre-line" }}>
                     {order.sender_message}
@@ -207,12 +207,12 @@ export default function GiftRecipientPage() {
               }}>
                 <Check size={28} color="#fff" strokeWidth={3} />
               </div>
-              <h3 style={{ fontSize: 19, fontWeight: 800, color: COLORS.textMain, margin: "0 0 8px" }}>배송지가 등록되었습니다</h3>
+              <h3 style={{ fontSize: 19, fontWeight: 800, color: COLORS.textMain, margin: "0 0 8px" }}>お届け先が登録されました</h3>
               <p style={{ fontSize: 14, color: COLORS.textMuted, margin: 0, lineHeight: 1.7 }}>
-                입력해 주신 주소로 선물이 배송될 예정입니다.<br />감사합니다!
+                ご入力いただいた住所にギフトをお届けします。<br />ありがとうございます!
               </p>
               <div style={{ marginTop: 18, padding: "12px 14px", background: "#fff", borderRadius: 12, border: `1px solid ${COLORS.successBorder}`, fontSize: 13, color: COLORS.success }}>
-                📦 배송 준비가 완료되면 안내 문자를 보내드립니다
+                📦 発送準備が完了しましたらSMSでご案内します
               </div>
             </div>
           ) : (
@@ -222,23 +222,23 @@ export default function GiftRecipientPage() {
               <div>
                 <h3 style={{ margin: "0 0 2px", fontSize: 16, fontWeight: 800, color: COLORS.textMain, display: "flex", alignItems: "center", gap: 7 }}>
                   <MapPin size={16} color={COLORS.accent} />
-                  배송지 입력
+                  お届け先入力
                 </h3>
-                <p style={{ margin: "4px 0 0", fontSize: 13, color: COLORS.textSoft }}>선물을 받으실 주소를 입력해주세요</p>
+                <p style={{ margin: "4px 0 0", fontSize: 13, color: COLORS.textSoft }}>ギフトをお受け取りになる住所を入力してください</p>
               </div>
 
               {/* Name */}
               <div>
-                <label style={S.label}>받는 분 이름 *</label>
+                <label style={S.label}>お受け取り人のお名前 *</label>
                 <div style={{ position: "relative" }}>
                   <User size={15} color={COLORS.textSoft} style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)", pointerEvents: "none" }} />
-                  <input className="gift-input" style={S.input} value={name} onChange={e => setName(e.target.value)} placeholder="성함을 입력해주세요" required />
+                  <input className="gift-input" style={S.input} value={name} onChange={e => setName(e.target.value)} placeholder="お名前を入力してください" required />
                 </div>
               </div>
 
               {/* Phone */}
               <div>
-                <label style={S.label}>연락처 *</label>
+                <label style={S.label}>ご連絡先 *</label>
                 <div style={{ position: "relative" }}>
                   <Phone size={15} color={COLORS.textSoft} style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)", pointerEvents: "none" }} />
                   <input className="gift-input" style={S.input} value={phone} onChange={e => setPhone(e.target.value)} placeholder="010-0000-0000" type="tel" required />
@@ -247,12 +247,12 @@ export default function GiftRecipientPage() {
 
               {/* Address */}
               <div>
-                <label style={S.label}>주소 *</label>
+                <label style={S.label}>ご住所 *</label>
                 <div style={{ display: "flex", gap: 8, marginBottom: 8 }}>
                   <input
                     className="gift-input-bare"
                     style={{ ...S.inputBare, width: 100, cursor: "pointer", color: postcode ? COLORS.textMain : COLORS.textSoft, background: postcode ? COLORS.surface : "#FAF8F6" }}
-                    value={postcode} readOnly placeholder="우편번호"
+                    value={postcode} readOnly placeholder="郵便番号"
                     onClick={openPostcode}
                   />
                   <button type="button" onClick={openPostcode} style={{
@@ -261,20 +261,20 @@ export default function GiftRecipientPage() {
                     fontSize: 14, fontWeight: 700, cursor: "pointer",
                     display: "flex", alignItems: "center", justifyContent: "center", gap: 4,
                   }}>
-                    주소 검색 <ChevronRight size={14} />
+                    住所検索 <ChevronRight size={14} />
                   </button>
                 </div>
                 <input
                   className="gift-input-bare"
                   style={{ ...S.inputBare, marginBottom: 8, cursor: "pointer", color: address ? COLORS.textMain : COLORS.textSoft, background: address ? COLORS.surface : "#FAF8F6" }}
-                  value={address} readOnly placeholder="기본 주소"
+                  value={address} readOnly placeholder="基本住所"
                   onClick={openPostcode}
                 />
                 <input
                   className="gift-input-bare gift-input"
                   style={{ ...S.inputBare, cursor: "text" }}
                   value={addressDetail} onChange={e => setAddressDetail(e.target.value)}
-                  placeholder="상세 주소 (동·호수 등)"
+                  placeholder="建物名・部屋番号など"
                 />
               </div>
 
@@ -291,14 +291,14 @@ export default function GiftRecipientPage() {
                 }}
               >
                 {submitting ? (
-                  <><Loader2 size={17} style={{ animation: "spin 1s linear infinite" }} /> 등록 중...</>
+                  <><Loader2 size={17} style={{ animation: "spin 1s linear infinite" }} /> 登録中...</>
                 ) : (
-                  <><Check size={17} strokeWidth={2.5} /> 배송지 확인</>
+                  <><Check size={17} strokeWidth={2.5} /> お届け先を確認</>
                 )}
               </button>
 
               <p style={{ margin: 0, textAlign: "center", fontSize: 12, color: COLORS.textSoft }}>
-                입력하신 정보는 배송 목적으로만 사용됩니다
+                ご入力いただいた情報は配送目的のみに使用されます
               </p>
             </form>
           )}

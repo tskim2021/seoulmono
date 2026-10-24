@@ -24,7 +24,7 @@ export default function PaymentSuccess() {
       const sessionId = params.get("session_id");
 
       if (!pendingId) {
-        setError("결제 정보가 올바르지 않습니다.");
+        setError("決済情報が正しくありません。");
         setLoading(false);
         return;
       }
@@ -34,7 +34,7 @@ export default function PaymentSuccess() {
       catch {}
 
       if (!cd) {
-        setError("주문 정보를 찾을 수 없습니다. 이미 처리된 결제이거나 세션이 만료되었습니다.");
+        setError("注文情報が見つかりません。すでに処理済みの決済か、セッションの有効期限が切れています。");
         setLoading(false);
         return;
       }
@@ -58,7 +58,7 @@ export default function PaymentSuccess() {
           sessionStorage.removeItem("stripe_checkout_data");
           sessionStorage.removeItem(CHECKOUT_KEY);
         })
-        .catch(() => setError("주문 처리 중 오류가 발생했습니다."))
+        .catch(() => setError("注文処理中にエラーが発生しました。"))
         .finally(() => setLoading(false));
       return;
     }
@@ -68,7 +68,7 @@ export default function PaymentSuccess() {
     const amount = params.get("amount");
 
     if (!paymentKey || !orderId || !amount) {
-      setError("결제 정보가 올바르지 않습니다.");
+      setError("決済情報が正しくありません。");
       setLoading(false);
       return;
     }
@@ -78,7 +78,7 @@ export default function PaymentSuccess() {
     catch {}
 
     if (!cd) {
-      setError("주문 정보를 찾을 수 없습니다. 이미 처리된 결제이거나 세션이 만료되었습니다.");
+      setError("注文情報が見つかりません。すでに処理済みの決済か、セッションの有効期限が切れています。");
       setLoading(false);
       return;
     }
@@ -121,7 +121,7 @@ export default function PaymentSuccess() {
         sessionStorage.removeItem("toss_checkout_data");
         sessionStorage.removeItem(CHECKOUT_KEY);
       })
-      .catch(() => setError("주문 처리 중 오류가 발생했습니다."))
+      .catch(() => setError("注文処理中にエラーが発生しました。"))
       .finally(() => setLoading(false));
   }, []);
 
@@ -132,7 +132,7 @@ export default function PaymentSuccess() {
         <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center" }}>
           <div style={{ textAlign: "center" }}>
             <div className="toss-spinner" />
-            <p style={{ color: "#666", marginTop: 16 }}>결제를 처리하는 중입니다...</p>
+            <p style={{ color: "#666", marginTop: 16 }}>決済を処理しています...</p>
           </div>
         </div>
         <Footer />
@@ -158,16 +158,16 @@ export default function PaymentSuccess() {
         <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", padding: 24 }}>
           <div style={{ textAlign: "center", maxWidth: 400 }}>
             <XCircle size={56} color="#e53935" style={{ marginBottom: 16 }} />
-            <h2 style={{ fontSize: 20, fontWeight: 700, color: "#111", marginBottom: 8 }}>결제 처리 오류</h2>
+            <h2 style={{ fontSize: 20, fontWeight: 700, color: "#111", marginBottom: 8 }}>決済処理エラー</h2>
             <p style={{ fontSize: 14, color: "#666", marginBottom: 24, lineHeight: 1.6 }}>{error}</p>
             <div style={{ display: "flex", gap: 10, justifyContent: "center" }}>
               <button onClick={() => navigate("/checkout")}
                 style={{ height: 48, padding: "0 24px", background: "#8B5E3C", border: "none", borderRadius: 12, color: "#fff", fontSize: 15, fontWeight: 700, cursor: "pointer" }}>
-                주문 페이지로
+                注文ページへ
               </button>
               <button onClick={() => navigate("/")}
                 style={{ height: 48, padding: "0 24px", background: "#fff", border: "1px solid #ddd", borderRadius: 12, color: "#555", fontSize: 15, cursor: "pointer" }}>
-                홈으로
+                ホームへ
               </button>
             </div>
           </div>
@@ -199,13 +199,13 @@ export default function PaymentSuccess() {
       <div style={{ maxWidth: 680, margin: "0 auto", padding: "32px 16px 80px" }}>
         <div style={{ background: "#fff", borderRadius: 14, padding: "32px 24px", textAlign: "center", border: "1px solid #eee", marginBottom: 12 }}>
           <CheckCircle size={52} color="#8B5E3C" style={{ marginBottom: 12 }} />
-          <h2 style={{ fontSize: 22, fontWeight: 800, color: "#111", margin: "0 0 6px" }}>주문이 완료되었습니다!</h2>
+          <h2 style={{ fontSize: 22, fontWeight: 800, color: "#111", margin: "0 0 6px" }}>ご注文が完了しました!</h2>
           <p style={{ fontSize: 13, color: "#888", margin: 0 }}>
-            주문번호: <strong style={{ color: "#8B5E3C", fontFamily: "monospace" }}>{orderResult.od_id}</strong>
+            注文番号: <strong style={{ color: "#8B5E3C", fontFamily: "monospace" }}>{orderResult.od_id}</strong>
           </p>
         </div>
 
-        <DoneSection title="주문 상품" icon={<Package size={15} />}>
+        <DoneSection title="ご注文商品" icon={<Package size={15} />}>
           {checkoutData.items.map((item: any, i: number) => (
             <div key={i} style={{ display: "flex", gap: 12, marginBottom: i < checkoutData.items.length - 1 ? 12 : 0, paddingBottom: i < checkoutData.items.length - 1 ? 12 : 0, borderBottom: i < checkoutData.items.length - 1 ? "1px solid #f0f0f0" : "none" }}>
               <div style={{ width: 52, height: 52, borderRadius: 8, overflow: "hidden", background: "#f5f5f5", border: "1px solid #eee", flexShrink: 0 }}>
@@ -213,49 +213,49 @@ export default function PaymentSuccess() {
               </div>
               <div style={{ flex: 1 }}>
                 <p style={{ margin: "0 0 2px", fontSize: 13, color: "#222", fontWeight: 600 }}>{item.it_name}</p>
-                <p style={{ margin: "0 0 2px", fontSize: 11, color: "#aaa", fontFamily: "monospace" }}>상품번호: {item.it_id}</p>
-                {item.option && <p style={{ margin: "0 0 2px", fontSize: 12, color: "#aaa" }}>옵션: {item.option}</p>}
-                <p style={{ margin: 0, fontSize: 12, color: "#888" }}>{item.quantity}개 · {formatPrice((item.it_price + (item.option_price || 0)) * item.quantity)}</p>
+                <p style={{ margin: "0 0 2px", fontSize: 11, color: "#aaa", fontFamily: "monospace" }}>商品番号: {item.it_id}</p>
+                {item.option && <p style={{ margin: "0 0 2px", fontSize: 12, color: "#aaa" }}>オプション: {item.option}</p>}
+                <p style={{ margin: 0, fontSize: 12, color: "#888" }}>{item.quantity}点 · {formatPrice((item.it_price + (item.option_price || 0)) * item.quantity)}</p>
               </div>
             </div>
           ))}
         </DoneSection>
 
-        <DoneSection title="배송지 정보" icon={<MapPin size={15} />}>
-          <DoneRow label="수령인" value={checkoutData.name} />
-          <DoneRow label="연락처" value={checkoutData.phone} />
-          <DoneRow label="주소" value={<>{checkoutData.postcode && <span style={{ fontSize: 12, background: "#f0f9f4", color: "#8B5E3C", borderRadius: 4, padding: "1px 6px", marginRight: 6 }}>{checkoutData.postcode}</span>}{checkoutData.addr1} {checkoutData.addr2}</>} />
-          {checkoutData.memo && <DoneRow label="배송 메모" value={checkoutData.memo} />}
+        <DoneSection title="お届け先情報" icon={<MapPin size={15} />}>
+          <DoneRow label="お受け取り人" value={checkoutData.name} />
+          <DoneRow label="ご連絡先" value={checkoutData.phone} />
+          <DoneRow label="ご住所" value={<>{checkoutData.postcode && <span style={{ fontSize: 12, background: "#f0f9f4", color: "#8B5E3C", borderRadius: 4, padding: "1px 6px", marginRight: 6 }}>{checkoutData.postcode}</span>}{checkoutData.addr1} {checkoutData.addr2}</>} />
+          {checkoutData.memo && <DoneRow label="配送メモ" value={checkoutData.memo} />}
         </DoneSection>
 
-        <DoneSection title="결제 금액" icon={<Banknote size={15} />}>
-          <DoneRow label="상품금액" value={formatPrice(orderResult.od_cart_price)} />
-          {orderResult.coupon_discount > 0 && <DoneRow label="쿠폰할인" value={<span style={{ color: "#e53935" }}>-{formatPrice(orderResult.coupon_discount)}</span>} />}
-          {orderResult.point_use > 0 && <DoneRow label="포인트사용" value={<span style={{ color: "#e53935" }}>-{formatPrice(orderResult.point_use)}</span>} />}
-          <DoneRow label="배송비" value={orderResult.od_send_cost === 0 ? <span style={{ color: "#8B5E3C" }}>무료</span> : formatPrice(orderResult.od_send_cost)} />
+        <DoneSection title="お支払い金額" icon={<Banknote size={15} />}>
+          <DoneRow label="商品金額" value={formatPrice(orderResult.od_cart_price)} />
+          {orderResult.coupon_discount > 0 && <DoneRow label="クーポン割引" value={<span style={{ color: "#e53935" }}>-{formatPrice(orderResult.coupon_discount)}</span>} />}
+          {orderResult.point_use > 0 && <DoneRow label="ポイント利用" value={<span style={{ color: "#e53935" }}>-{formatPrice(orderResult.point_use)}</span>} />}
+          <DoneRow label="送料" value={orderResult.od_send_cost === 0 ? <span style={{ color: "#8B5E3C" }}>無料</span> : formatPrice(orderResult.od_send_cost)} />
           <div style={{ display: "flex", justifyContent: "space-between", fontSize: 15, fontWeight: 800, borderTop: "1px solid #eee", paddingTop: 10, marginTop: 6 }}>
-            <span>총 결제금액</span>
+            <span>お支払い合計</span>
             <span style={{ color: "#8B5E3C" }}>{formatPrice(orderResult.od_receipt_price)}</span>
           </div>
         </DoneSection>
 
         <div style={{ background: "#f0f9f4", border: "1.5px solid #b8e6cc", borderRadius: 14, padding: "20px", marginBottom: 16 }}>
           <p style={{ fontSize: 13, fontWeight: 700, color: "#8B5E3C", margin: "0 0 8px", display: "flex", alignItems: "center", gap: 6 }}>
-            <CreditCard size={15} /> {new URLSearchParams(window.location.search).get("pg") === "stripe" ? "Stripe 카드 결제 완료" : "토스페이먼츠 카드 결제 완료"}
+            <CreditCard size={15} /> {new URLSearchParams(window.location.search).get("pg") === "stripe" ? "Stripeカード決済完了" : "TossPaymentsカード決済完了"}
           </p>
-          <p style={{ fontSize: 13, color: "#555", margin: 0 }}>결제가 정상적으로 처리되었습니다.</p>
+          <p style={{ fontSize: 13, color: "#555", margin: 0 }}>決済は正常に処理されました。</p>
         </div>
 
         <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
           {checkoutData.token && (
             <button onClick={() => navigate("/mypage")}
               style={{ height: 50, background: "#8B5E3C", border: "none", borderRadius: 12, color: "#fff", fontSize: 15, fontWeight: 700, cursor: "pointer" }}>
-              주문 내역 확인
+              注文履歴を確認
             </button>
           )}
           <button onClick={() => navigate("/")}
             style={{ height: 46, background: "#fff", border: "1px solid #ddd", borderRadius: 12, color: "#555", fontSize: 14, cursor: "pointer" }}>
-            쇼핑 계속하기
+            ショッピングを続ける
           </button>
         </div>
       </div>

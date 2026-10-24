@@ -82,12 +82,12 @@ export default function Catalog() {
     const qty = getQty(product.it_id);
     const boxOpt = (product as any).box_option;
     const effectivePrice = boxOpt ? boxOpt.box_price : product.it_price;
-    const optionLabel = boxOpt ? boxOpt.io_id : "1개";
+    const optionLabel = boxOpt ? boxOpt.io_id : "1個";
 
     setAddingToCart(product.it_id);
     addItem({ ...product, it_price: effectivePrice, it_name: `${product.it_name} (${optionLabel})` }, qty);
     toast({
-      title: "장바구니에 담겼습니다",
+      title: "カートに追加しました",
       description: `${product.it_name} ${optionLabel} × ${qty}`,
     });
     if (!cartExpanded) setCartExpanded(true);
@@ -101,16 +101,16 @@ export default function Catalog() {
     <div className={cn("space-y-6 animate-in fade-in duration-500", cartItems.length > 0 && "pb-24")}>
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 bg-white p-6 md:p-8 rounded-3xl premium-shadow border border-slate-100">
         <div>
-          <h1 className="text-3xl font-black text-slate-900 tracking-tight">상품목록</h1>
+          <h1 className="text-3xl font-black text-slate-900 tracking-tight">商品一覧</h1>
           <p className="text-slate-500 mt-2 font-medium">
-            원하시는 상품을 검색하고 장바구니에 담아주세요.
+            ご希望の商品を検索してカートに追加してください。
           </p>
         </div>
         <div className="w-full md:w-80 relative">
           <Search className="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
           <Input
             className="pl-12 bg-slate-50/50"
-            placeholder="상품명 검색..."
+            placeholder="商品名で検索..."
             value={search}
             onChange={(e: any) => setSearch(e.target.value)}
           />
@@ -119,7 +119,7 @@ export default function Catalog() {
 
       <div className="bg-white rounded-2xl border border-slate-200 p-5 space-y-3 premium-shadow">
         <div className="flex flex-wrap items-center gap-3">
-          <span className="text-sm font-bold text-slate-500 w-16 shrink-0">1차 분류</span>
+          <span className="text-sm font-bold text-slate-500 w-16 shrink-0">大分類</span>
           <div className="flex flex-wrap gap-2">
             <button
               onClick={() => handleCat1Change("")}
@@ -130,7 +130,7 @@ export default function Catalog() {
                   : "bg-slate-100 text-slate-600 hover:bg-slate-200"
               )}
             >
-              전체
+              すべて
             </button>
             {tree.map((c) => (
               <button
@@ -148,46 +148,46 @@ export default function Catalog() {
             ))}
           </div>
         <div className="flex flex-wrap items-center gap-2 pt-2 border-t border-slate-100">
-          <span className="text-sm font-bold text-slate-500 w-16 shrink-0">정렬</span>
+          <span className="text-sm font-bold text-slate-500 w-16 shrink-0">並び替え</span>
           <button
             onClick={() => setSort("newest")}
             className={cn("px-3 py-1.5 rounded-md text-sm font-medium transition-all", sort === "newest" ? "bg-blue-600 text-white" : "bg-slate-50 text-slate-600 hover:bg-slate-100")}
           >
-            등록순
+            登録順
           </button>
           <button
             onClick={() => setSort("price_desc")}
             className={cn("px-3 py-1.5 rounded-md text-sm font-medium transition-all", sort === "price_desc" ? "bg-blue-600 text-white" : "bg-slate-50 text-slate-600 hover:bg-slate-100")}
           >
-            가격순 높은순
+            価格の高い順
           </button>
           <button
             onClick={() => setSort("price_asc")}
             className={cn("px-3 py-1.5 rounded-md text-sm font-medium transition-all", sort === "price_asc" ? "bg-blue-600 text-white" : "bg-slate-50 text-slate-600 hover:bg-slate-100")}
           >
-            가격순 낮은순
+            価格の低い順
           </button>
           <button
             onClick={() => setSort("name_asc")}
             className={cn("px-3 py-1.5 rounded-md text-sm font-medium transition-all", sort === "name_asc" ? "bg-blue-600 text-white" : "bg-slate-50 text-slate-600 hover:bg-slate-100")}
           >
-            이름순
+            名前順
           </button>
           <select
             value={pageSize}
             onChange={(e) => setPageSize(Number(e.target.value))}
             className="ml-auto h-9 px-3 rounded-lg border border-slate-200 bg-white text-sm font-medium text-slate-700"
           >
-            <option value={10}>10개씩 보기</option>
-            <option value={20}>20개씩 보기</option>
-            <option value={50}>50개씩 보기</option>
+            <option value={10}>10件ずつ表示</option>
+            <option value={20}>20件ずつ表示</option>
+            <option value={50}>50件ずつ表示</option>
           </select>
         </div>
         </div>
 
         {level2List.length > 0 && (
           <div className="flex flex-wrap items-center gap-3 pt-3 border-t border-slate-100">
-            <span className="text-sm font-bold text-slate-500 w-16 shrink-0">2차 분류</span>
+            <span className="text-sm font-bold text-slate-500 w-16 shrink-0">中分類</span>
             <div className="flex flex-wrap gap-2">
               <button
                 onClick={() => handleCat2Change("")}
@@ -198,7 +198,7 @@ export default function Catalog() {
                     : "bg-slate-50 text-slate-600 hover:bg-slate-100"
                 )}
               >
-                전체
+                すべて
               </button>
               {level2List.map((c) => (
                 <button
@@ -220,7 +220,7 @@ export default function Catalog() {
 
         {level3List.length > 0 && (
           <div className="flex flex-wrap items-center gap-3 pt-3 border-t border-slate-100">
-            <span className="text-sm font-bold text-slate-500 w-16 shrink-0">3차 분류</span>
+            <span className="text-sm font-bold text-slate-500 w-16 shrink-0">小分類</span>
             <div className="flex flex-wrap gap-2">
               <button
                 onClick={() => setCat3("")}
@@ -231,7 +231,7 @@ export default function Catalog() {
                     : "bg-slate-50 text-slate-500 hover:bg-slate-100"
                 )}
               >
-                전체
+                すべて
               </button>
               {level3List.map((c) => (
                 <button
@@ -253,7 +253,7 @@ export default function Catalog() {
       </div>
 
       <div className="text-sm text-slate-500 font-medium px-1">
-        총 <span className="font-bold text-primary">{totalCount}</span>개 상품
+        合計 <span className="font-bold text-primary">{totalCount}</span>件の商品
       </div>
 
       {isLoading ? (
@@ -263,8 +263,8 @@ export default function Catalog() {
       ) : prodData?.products?.length === 0 ? (
         <div className="py-32 text-center bg-white rounded-3xl border border-slate-100 border-dashed">
           <Package className="w-16 h-16 text-slate-200 mx-auto mb-4" />
-          <h3 className="text-xl font-bold text-slate-700">검색된 상품이 없습니다</h3>
-          <p className="text-slate-500 mt-2">다른 검색어나 카테고리를 선택해보세요.</p>
+          <h3 className="text-xl font-bold text-slate-700">該当する商品がありません</h3>
+          <p className="text-slate-500 mt-2">別のキーワードやカテゴリをお試しください。</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
@@ -274,7 +274,7 @@ export default function Catalog() {
             const boxPrice = boxOpt?.box_price ? Number(boxOpt.box_price) : Number(product.it_price) || 0;
             const unitPrice = boxOpt?.unit_price ? Number(boxOpt.unit_price) : (boxQty ? Math.round(boxPrice / boxQty) : null);
             const displayPrice = boxPrice;
-            const unitLabel = boxQty ? `1박스(${boxQty}입)` : "1개";
+            const unitLabel = boxQty ? `1ケース(${boxQty}個入)` : "1個";
             const qty = getQty(product.it_id);
             const isSoldOut = product.it_stock_qty !== undefined && product.it_stock_qty <= 0;
             const retailUnitPrice = product.it_cust_price ? Number(product.it_cust_price) : null;
@@ -304,7 +304,7 @@ export default function Catalog() {
                     {isSoldOut && (
                       <div className="absolute inset-0 bg-white/60 backdrop-blur-sm flex items-center justify-center">
                         <span className="px-4 py-2 bg-slate-900 text-white font-bold rounded-lg shadow-xl">
-                          품절
+                          品切れ
                         </span>
                       </div>
                     )}
@@ -329,7 +329,7 @@ export default function Catalog() {
                     <div className="flex items-center gap-2 text-sm text-slate-500 mb-2 flex-wrap">
                       {product.it_maker && <span>{product.it_maker}</span>}
                       {product.it_shelf_life && (
-                        <span className="text-xs bg-amber-50 text-amber-700 px-1.5 py-0.5 rounded font-medium">유통기한 {product.it_shelf_life}</span>
+                        <span className="text-xs bg-amber-50 text-amber-700 px-1.5 py-0.5 rounded font-medium">賞味期限 {product.it_shelf_life}</span>
                       )}
                     </div>
                   )}
@@ -352,9 +352,9 @@ export default function Catalog() {
                       </p>
                       {boxQty ? (
                         <div className="mt-1 text-xs text-slate-500 space-y-0.5">
-                          <p>박스입수 1박스 {boxQty}입</p>
-                          <p>낱개가격 {formatCurrency(unitPrice || 0)}</p>
-                          <p>박스금액 {formatCurrency(displayPrice)}</p>
+                          <p>ケース入数 1ケース {boxQty}個入</p>
+                          <p>単品価格 {formatCurrency(unitPrice || 0)}</p>
+                          <p>ケース金額 {formatCurrency(displayPrice)}</p>
                         </div>
                       ) : null}
                     </div>
@@ -369,7 +369,7 @@ export default function Catalog() {
                           <Minus className="w-4 h-4" />
                         </button>
                         <div className="flex items-center gap-0.5 px-1">
-                          <span className="text-xs text-blue-600 font-bold">박스</span>
+                          <span className="text-xs text-blue-600 font-bold">ケース</span>
                           <input
                             type="number"
                             className="w-8 text-center font-bold bg-transparent border-none focus:ring-0 p-0 text-sm"
@@ -399,9 +399,9 @@ export default function Catalog() {
                         disabled={isSoldOut}
                       >
                         {addingToCart === product.it_id ? (
-                          <><Check className="w-4 h-4 mr-1" /> 담김</>
+                          <><Check className="w-4 h-4 mr-1" /> 追加済み</>
                         ) : (
-                          "담기"
+                          "追加"
                         )}
                       </Button>
                     </div>
@@ -432,7 +432,7 @@ export default function Catalog() {
                         <Minus className="w-3.5 h-3.5" />
                       </button>
                       <div className="flex items-center gap-0.5 px-1">
-                        <span className="text-[10px] text-blue-600 font-bold">박스</span>
+                        <span className="text-[10px] text-blue-600 font-bold">ケース</span>
                         <span className="w-6 text-center font-bold text-sm">{item.cart_qty}</span>
                       </div>
                       <button
@@ -469,14 +469,14 @@ export default function Catalog() {
                     {cartItems.length}
                   </span>
                 </div>
-                <span className="font-bold text-sm hidden sm:inline">선택내역</span>
+                <span className="font-bold text-sm hidden sm:inline">選択内容</span>
                 {cartExpanded ? <ChevronDown className="w-4 h-4" /> : <ChevronUp className="w-4 h-4" />}
               </button>
 
               <div className="flex-1 text-right">
-                <span className="text-sm text-slate-500">합계</span>
+                <span className="text-sm text-slate-500">合計</span>
                 <span className="text-xl font-black text-primary ml-2">{formatCurrency(cartTotal)}</span>
-                <span className="text-xs text-slate-400 ml-1">({cartItems.reduce((s, i) => s + i.cart_qty, 0)}박스)</span>
+                <span className="text-xs text-slate-400 ml-1">({cartItems.reduce((s, i) => s + i.cart_qty, 0)}ケース)</span>
               </div>
 
               <Button
@@ -484,7 +484,7 @@ export default function Catalog() {
                 className="h-11 px-6 font-bold"
               >
                 <ShoppingCart className="w-4 h-4 mr-1.5" />
-                주문하기
+                発注する
               </Button>
             </div>
           </div>

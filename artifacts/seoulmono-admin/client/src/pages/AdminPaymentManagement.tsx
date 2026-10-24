@@ -13,7 +13,7 @@ export default function AdminPaymentManagement() {
   
   return (
       <div className="p-6">
-        <h1 className="text-2xl font-bold mb-6">무통장 입금 관리</h1>
+        <h1 className="text-2xl font-bold mb-6">銀行振込管理</h1>
         
         {/* Tabs */}
         <div className="flex gap-2 mb-6 border-b">
@@ -26,7 +26,7 @@ export default function AdminPaymentManagement() {
             }`}
           >
             <Clock className="w-4 h-4 inline mr-2" />
-            입금 대기 목록
+            入金待ち一覧
           </button>
           <button
             onClick={() => setSelectedTab("accounts")}
@@ -37,7 +37,7 @@ export default function AdminPaymentManagement() {
             }`}
           >
             <Banknote className="w-4 h-4 inline mr-2" />
-            입금 계좌 관리
+            振込先口座管理
           </button>
           <button
             onClick={() => setSelectedTab("settings")}
@@ -48,7 +48,7 @@ export default function AdminPaymentManagement() {
             }`}
           >
             <Settings className="w-4 h-4 inline mr-2" />
-            자동취소 설정
+            自動キャンセル設定
           </button>
         </div>
 
@@ -64,7 +64,7 @@ function PendingPaymentsList() {
   const { data: payments, refetch } = trpc.payment.adminGetPendingPayments.useQuery();
   const confirmPayment = trpc.payment.adminConfirmPayment.useMutation({
     onSuccess: () => {
-      toast.success("입금이 확인되었습니다");
+      toast.success("入金を確認しました");
       refetch();
     },
     onError: (e: any) => toast.error(e.message),
@@ -74,7 +74,7 @@ function PendingPaymentsList() {
     return (
       <div className="text-center py-12 text-muted-foreground">
         <Clock className="w-12 h-12 mx-auto mb-4 opacity-50" />
-        <p>입금 대기 중인 주문이 없습니다</p>
+        <p>入金待ちの注文はありません</p>
       </div>
     );
   }
@@ -96,24 +96,24 @@ function PendingPaymentsList() {
           >
             <div className="flex items-start justify-between mb-3">
               <div>
-                <p className="font-medium">주문번호: {formatOrderNumber(payment.order?.orderNumber)}</p>
-                <p className="text-sm text-muted-foreground">주문자: {payment.order?.recipientName ?? "-"}</p>
+                <p className="font-medium">注文番号: {formatOrderNumber(payment.order?.orderNumber)}</p>
+                <p className="text-sm text-muted-foreground">注文者: {payment.order?.recipientName ?? "-"}</p>
               </div>
               <div className="text-right">
                 <p className="font-bold text-lg price-text">{formatPrice(payment.depositAmount ?? 0)}</p>
                 {remainingHours !== null && (
                   <p className={`text-xs ${isUrgent ? "text-rose-600 font-medium" : "text-muted-foreground"}`}>
-                    {remainingHours > 0 ? `${remainingHours}시간 남음` : "기한 만료"}
+                    {remainingHours > 0 ? `残り${remainingHours}時間` : "期限切れ"}
                   </p>
                 )}
               </div>
             </div>
 
             <div className="grid grid-cols-2 gap-2 text-sm mb-3">
-              <div><span className="text-muted-foreground">입금자명:</span> <span className="font-medium">{payment.depositorName ?? "-"}</span></div>
-              <div><span className="text-muted-foreground">입금계좌:</span> <span className="font-medium">{payment.bankAccount?.bankName ?? "-"} {payment.bankAccount?.accountNumber ?? ""}</span></div>
-              <div><span className="text-muted-foreground">주문일시:</span> <span>{formatDateTime(payment.createdAt)}</span></div>
-              <div><span className="text-muted-foreground">입금기한:</span> <span>{formatDateTime(payment.expiresAt)}</span></div>
+              <div><span className="text-muted-foreground">振込名義:</span> <span className="font-medium">{payment.depositorName ?? "-"}</span></div>
+              <div><span className="text-muted-foreground">振込先口座:</span> <span className="font-medium">{payment.bankAccount?.bankName ?? "-"} {payment.bankAccount?.accountNumber ?? ""}</span></div>
+              <div><span className="text-muted-foreground">注文日時:</span> <span>{formatDateTime(payment.createdAt)}</span></div>
+              <div><span className="text-muted-foreground">振込期限:</span> <span>{formatDateTime(payment.expiresAt)}</span></div>
             </div>
 
             <Button
@@ -123,7 +123,7 @@ function PendingPaymentsList() {
               className="w-full"
             >
               <CheckCircle2 className="w-4 h-4 mr-2" />
-              {confirmPayment.isPending ? "처리 중..." : "입금 확인"}
+              {confirmPayment.isPending ? "処理中..." : "入金確認"}
             </Button>
           </div>
         );
@@ -140,7 +140,7 @@ function BankAccountsManagement() {
 
   const createAccount = trpc.payment.adminCreateBankAccount.useMutation({
     onSuccess: () => {
-      toast.success("계좌가 추가되었습니다");
+      toast.success("口座を追加しました");
       setDialogOpen(false);
       refetch();
     },
@@ -149,7 +149,7 @@ function BankAccountsManagement() {
 
   const updateAccount = trpc.payment.adminUpdateBankAccount.useMutation({
     onSuccess: () => {
-      toast.success("계좌가 수정되었습니다");
+      toast.success("口座を更新しました");
       setDialogOpen(false);
       setEditingAccount(null);
       refetch();
@@ -159,7 +159,7 @@ function BankAccountsManagement() {
 
   const deleteAccount = trpc.payment.adminDeleteBankAccount.useMutation({
     onSuccess: () => {
-      toast.success("계좌가 삭제되었습니다");
+      toast.success("口座を削除しました");
       refetch();
     },
     onError: (e: any) => toast.error(e.message),
@@ -168,17 +168,17 @@ function BankAccountsManagement() {
   return (
     <div>
       <div className="flex justify-between items-center mb-4">
-        <p className="text-sm text-muted-foreground">고객이 선택할 수 있는 입금 계좌를 관리합니다</p>
+        <p className="text-sm text-muted-foreground">お客様が選択できる振込先口座を管理します</p>
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
           <DialogTrigger asChild>
             <Button onClick={() => setEditingAccount(null)}>
               <Plus className="w-4 h-4 mr-2" />
-              계좌 추가
+              口座を追加
             </Button>
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>{editingAccount ? "계좌 수정" : "계좌 추가"}</DialogTitle>
+              <DialogTitle>{editingAccount ? "口座の編集" : "口座の追加"}</DialogTitle>
             </DialogHeader>
             <BankAccountForm
               account={editingAccount}
@@ -198,7 +198,7 @@ function BankAccountsManagement() {
       {!accounts || accounts.length === 0 ? (
         <div className="text-center py-12 text-muted-foreground">
           <Banknote className="w-12 h-12 mx-auto mb-4 opacity-50" />
-          <p>등록된 입금 계좌가 없습니다</p>
+          <p>登録された振込先口座がありません</p>
         </div>
       ) : (
         <div className="grid gap-4">
@@ -207,7 +207,7 @@ function BankAccountsManagement() {
               <div>
                 <p className="font-medium">{account.bankName}</p>
                 <p className="text-sm text-muted-foreground font-mono">{account.accountNumber}</p>
-                <p className="text-sm text-muted-foreground">예금주: {account.accountHolder}</p>
+                <p className="text-sm text-muted-foreground">口座名義: {account.accountHolder}</p>
               </div>
               <div className="flex gap-2">
                 <Button
@@ -224,7 +224,7 @@ function BankAccountsManagement() {
                   size="sm"
                   variant="destructive"
                   onClick={() => {
-                    if (confirm("정말 삭제하시겠습니까?")) {
+                    if (confirm("本当に削除しますか？")) {
                       deleteAccount.mutate({ id: account.id });
                     }
                   }}
@@ -257,34 +257,34 @@ function BankAccountForm({ account, onSubmit, isPending }: { account: any; onSub
       className="space-y-4"
     >
       <div>
-        <Label>은행명</Label>
+        <Label>銀行名</Label>
         <Input
           value={form.bankName}
           onChange={(e) => setForm({ ...form, bankName: e.target.value })}
-          placeholder="예: 국민은행"
+          placeholder="例: みずほ銀行"
           required
         />
       </div>
       <div>
-        <Label>계좌번호</Label>
+        <Label>口座番号</Label>
         <Input
           value={form.accountNumber}
           onChange={(e) => setForm({ ...form, accountNumber: e.target.value })}
-          placeholder="예: 123-456-789012"
+          placeholder="例: 123-456-789012"
           required
         />
       </div>
       <div>
-        <Label>예금주</Label>
+        <Label>口座名義</Label>
         <Input
           value={form.accountHolder}
           onChange={(e) => setForm({ ...form, accountHolder: e.target.value })}
-          placeholder="예: (주)영카트"
+          placeholder="例: 株式会社ソウルモノ"
           required
         />
       </div>
       <Button type="submit" disabled={isPending} className="w-full">
-        {isPending ? "처리 중..." : account ? "수정" : "추가"}
+        {isPending ? "処理中..." : account ? "更新" : "追加"}
       </Button>
     </form>
   );
@@ -294,7 +294,7 @@ function BankAccountForm({ account, onSubmit, isPending }: { account: any; onSub
 function AutoCancelSettings() {
   const { data: config } = trpc.payment.adminGetAutoCancelHours.useQuery();
   const updateConfig = trpc.payment.adminUpdateAutoCancelHours.useMutation({
-    onSuccess: () => toast.success("설정이 저장되었습니다"),
+    onSuccess: () => toast.success("設定を保存しました"),
     onError: (e: any) => toast.error(e.message),
   });
 
@@ -305,9 +305,9 @@ function AutoCancelSettings() {
   return (
     <div className="max-w-2xl">
       <div className="bg-card border rounded-lg p-6">
-        <h3 className="font-semibold mb-4">자동 취소 시간 설정</h3>
+        <h3 className="font-semibold mb-4">自動キャンセル時間の設定</h3>
         <p className="text-sm text-muted-foreground mb-6">
-          주문 후 설정된 시간 내에 입금하지 않으면 주문이 자동으로 취소됩니다.
+          注文後、設定された時間内に入金がない場合、注文は自動的にキャンセルされます。
         </p>
 
         <div className="grid grid-cols-4 gap-3 mb-6">
@@ -323,14 +323,14 @@ function AutoCancelSettings() {
               }`}
             >
               <p className="text-2xl font-bold">{hours}</p>
-              <p className="text-xs text-muted-foreground">시간</p>
+              <p className="text-xs text-muted-foreground">時間</p>
             </button>
           ))}
         </div>
 
         <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-6">
           <p className="text-sm text-amber-900">
-            현재 설정: 주문 후 <strong>{selectedHours}시간</strong> 이내 미입금 시 자동 취소
+            現在の設定: 注文後 <strong>{selectedHours}時間</strong> 以内に未入金の場合、自動キャンセル
           </p>
         </div>
 
@@ -339,7 +339,7 @@ function AutoCancelSettings() {
           disabled={updateConfig.isPending || selectedHours === config?.hours}
           className="w-full"
         >
-          {updateConfig.isPending ? "저장 중..." : "설정 저장"}
+          {updateConfig.isPending ? "保存中..." : "設定を保存"}
         </Button>
       </div>
     </div>

@@ -26,10 +26,10 @@ export default function AdminPointHistory() {
 
   const getTypeLabel = (t: string) => {
     switch (t) {
-      case "earn": return "적립";
-      case "use": return "사용";
-      case "admin": return "관리자 지급";
-      case "refund": return "환불";
+      case "earn": return "付与";
+      case "use": return "使用";
+      case "admin": return "管理者付与";
+      case "refund": return "返金";
       default: return t;
     }
   };
@@ -47,24 +47,24 @@ export default function AdminPointHistory() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold">포인트 내역 관리</h1>
-        <p className="text-muted-foreground mt-2">전체 회원의 포인트 지급 및 사용 내역을 조회할 수 있습니다.</p>
+        <h1 className="text-3xl font-bold">ポイント履歴管理</h1>
+        <p className="text-muted-foreground mt-2">全会員のポイント付与・使用履歴を確認できます。</p>
       </div>
 
       {/* Filters */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-lg">필터</CardTitle>
+          <CardTitle className="text-lg">フィルター</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
-              <label className="text-sm font-medium mb-2 block">회원 이메일</label>
+              <label className="text-sm font-medium mb-2 block">会員メールアドレス</label>
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                 <Input
                   type="email"
-                  placeholder="회원 이메일 입력"
+                  placeholder="会員のメールアドレスを入力"
                   value={userEmail}
                   onChange={(e) => {
                     setUserEmail(e.target.value);
@@ -75,17 +75,17 @@ export default function AdminPointHistory() {
               </div>
             </div>
             <div>
-              <label className="text-sm font-medium mb-2 block">유형</label>
+              <label className="text-sm font-medium mb-2 block">種類</label>
               <Select value={type} onValueChange={(v: any) => { setType(v); setPage(1); }}>
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">전체</SelectItem>
-                  <SelectItem value="earn">적립</SelectItem>
-                  <SelectItem value="use">사용</SelectItem>
-                  <SelectItem value="admin">관리자 지급</SelectItem>
-                  <SelectItem value="refund">환불</SelectItem>
+                  <SelectItem value="all">すべて</SelectItem>
+                  <SelectItem value="earn">付与</SelectItem>
+                  <SelectItem value="use">使用</SelectItem>
+                  <SelectItem value="admin">管理者付与</SelectItem>
+                  <SelectItem value="refund">返金</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -99,7 +99,7 @@ export default function AdminPointHistory() {
                 }}
                 className="w-full"
               >
-                초기화
+                リセット
               </Button>
             </div>
           </div>
@@ -109,13 +109,13 @@ export default function AdminPointHistory() {
       {/* History Table */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-lg">포인트 내역 ({data?.total ?? 0}건)</CardTitle>
+          <CardTitle className="text-lg">ポイント履歴 ({data?.total ?? 0}件)</CardTitle>
         </CardHeader>
         <CardContent>
           {isLoading ? (
-            <div className="text-center py-12 text-muted-foreground">로딩 중...</div>
+            <div className="text-center py-12 text-muted-foreground">読み込み中...</div>
           ) : (data?.history ?? []).length === 0 ? (
-            <div className="text-center py-12 text-muted-foreground">조회된 내역이 없습니다</div>
+            <div className="text-center py-12 text-muted-foreground">該当する履歴がありません</div>
           ) : (
             <div className="space-y-4">
               {/* Desktop Table */}
@@ -124,12 +124,12 @@ export default function AdminPointHistory() {
                   <thead>
                     <tr className="border-b">
                       <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">ID</th>
-                      <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">회원</th>
-                      <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">유형</th>
-                      <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">설명</th>
-                      <th className="text-right py-3 px-4 text-sm font-medium text-muted-foreground">포인트</th>
-                      <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">주문번호</th>
-                      <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">일시</th>
+                      <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">会員</th>
+                      <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">種類</th>
+                      <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">説明</th>
+                      <th className="text-right py-3 px-4 text-sm font-medium text-muted-foreground">ポイント</th>
+                      <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">注文番号</th>
+                      <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">日時</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -138,7 +138,7 @@ export default function AdminPointHistory() {
                         <td className="py-3 px-4 text-sm">{h.id}</td>
                         <td className="py-3 px-4 text-sm">
                           <div>
-                            <p className="font-medium">{h.userName ?? "알 수 없음"}</p>
+                            <p className="font-medium">{h.userName ?? "不明"}</p>
                             <p className="text-xs text-muted-foreground">ID: {h.userId}</p>
                           </div>
                         </td>
@@ -178,7 +178,7 @@ export default function AdminPointHistory() {
                   <div key={h.id} className="border rounded-lg p-4 space-y-2">
                     <div className="flex items-start justify-between">
                       <div>
-                        <p className="font-medium">{h.userName ?? "알 수 없음"}</p>
+                        <p className="font-medium">{h.userName ?? "不明"}</p>
                         <p className="text-xs text-muted-foreground">ID: {h.userId}</p>
                       </div>
                       <Badge variant={getTypeBadgeVariant(h.type) as any}>
@@ -202,7 +202,7 @@ export default function AdminPointHistory() {
                       </span>
                     </div>
                     {h.orderNumber && (
-                      <p className="text-xs text-muted-foreground">주문번호: #{formatOrderNumber(h.orderNumber)}</p>
+                      <p className="text-xs text-muted-foreground">注文番号: #{formatOrderNumber(h.orderNumber)}</p>
                     )}
                   </div>
                 ))}

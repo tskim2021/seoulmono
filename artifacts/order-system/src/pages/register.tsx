@@ -9,20 +9,20 @@ import { ArrowLeft, CheckCircle2, Upload, FileText, X } from "lucide-react";
 const API_BASE = import.meta.env.VITE_API_URL || "/api";
 
 const schema = z.object({
-  mb_id: z.string().min(4, "4자 이상 입력해주세요"),
-  mb_password: z.string().min(6, "6자 이상 입력해주세요"),
+  mb_id: z.string().min(4, "4文字以上で入力してください"),
+  mb_password: z.string().min(6, "6文字以上で入力してください"),
   password_confirm: z.string(),
-  mb_name: z.string().min(2, "담당자명을 입력해주세요"),
-  mb_email: z.string().email("올바른 이메일 형식이 아닙니다"),
-  mb_hp: z.string().min(10, "연락처를 입력해주세요"),
-  company_name: z.string().min(1, "상호명을 입력해주세요"),
-  business_number: z.string().min(10, "사업자등록번호를 입력해주세요"),
-  representative: z.string().min(2, "대표자명을 입력해주세요"),
+  mb_name: z.string().min(2, "担当者名を入力してください"),
+  mb_email: z.string().email("メールアドレスの形式が正しくありません"),
+  mb_hp: z.string().min(10, "連絡先を入力してください"),
+  company_name: z.string().min(1, "会社名を入力してください"),
+  business_number: z.string().min(10, "事業者登録番号を入力してください"),
+  representative: z.string().min(2, "代表者名を入力してください"),
   business_type: z.string().optional(),
   business_category: z.string().optional(),
-  company_address: z.string().min(5, "사업장 주소를 입력해주세요"),
+  company_address: z.string().min(5, "事業所の住所を入力してください"),
 }).refine((data) => data.mb_password === data.password_confirm, {
-  message: "비밀번호가 일치하지 않습니다",
+  message: "パスワードが一致しません",
   path: ["password_confirm"],
 });
 
@@ -46,14 +46,14 @@ export default function Register() {
 
     const maxSize = 10 * 1024 * 1024;
     if (file.size > maxSize) {
-      setFileError("파일 크기는 10MB 이하만 가능합니다.");
+      setFileError("ファイルサイズは10MB以下にしてください。");
       return;
     }
 
     const ext = file.name.split(".").pop()?.toLowerCase();
     const allowed = ["pdf", "jpg", "jpeg", "png", "gif", "bmp", "webp"];
     if (!ext || !allowed.includes(ext)) {
-      setFileError("PDF, JPG, PNG 파일만 업로드 가능합니다.");
+      setFileError("PDF、JPG、PNGファイルのみアップロードできます。");
       return;
     }
 
@@ -69,7 +69,7 @@ export default function Register() {
 
   const onSubmit = async (data: FormValues) => {
     if (!licenseFile) {
-      setFileError("사업자등록증을 첨부해주세요.");
+      setFileError("事業者登録証を添付してください。");
       return;
     }
 
@@ -89,12 +89,12 @@ export default function Register() {
 
       if (!res.ok) {
         const err = await res.json().catch(() => ({}));
-        throw new Error(err.error || "가입 신청 중 오류가 발생했습니다.");
+        throw new Error(err.error || "登録申請中にエラーが発生しました。");
       }
 
       setSuccess(true);
     } catch (err: any) {
-      alert(err.message || "가입 신청 중 오류가 발생했습니다.");
+      alert(err.message || "登録申請中にエラーが発生しました。");
     } finally {
       setIsPending(false);
     }
@@ -107,14 +107,14 @@ export default function Register() {
           <div className="w-20 h-20 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-6">
             <CheckCircle2 className="w-10 h-10 text-emerald-600" />
           </div>
-          <h2 className="text-2xl font-bold text-slate-900 mb-2">가입 신청 완료</h2>
+          <h2 className="text-2xl font-bold text-slate-900 mb-2">登録申請が完了しました</h2>
           <p className="text-slate-600 mb-8 leading-relaxed">
-            파트너사 가입 신청이 성공적으로 접수되었습니다.<br/>
-            사업자등록증 확인 후 관리자가 승인하면<br/>
-            로그인하여 이용하실 수 있습니다.
+            取引先の登録申請を受け付けました。<br/>
+            事業者登録証の確認後、管理者が承認すると<br/>
+            ログインしてご利用いただけます。
           </p>
           <Link href="/login" className="block">
-            <Button size="lg" className="w-full">로그인 페이지로 돌아가기</Button>
+            <Button size="lg" className="w-full">ログインページに戻る</Button>
           </Link>
         </Card>
       </div>
@@ -126,12 +126,12 @@ export default function Register() {
       <div className="max-w-3xl mx-auto">
         <Link href="/login" className="inline-flex items-center text-slate-500 hover:text-slate-900 mb-8 font-medium transition-colors">
           <ArrowLeft className="w-4 h-4 mr-1" />
-          돌아가기
+          戻る
         </Link>
         
         <div className="mb-10">
-          <h1 className="text-4xl font-black text-slate-900 tracking-tight mb-3">파트너사 가입 신청</h1>
-          <p className="text-slate-500 text-lg">사업자 정보를 정확하게 입력해 주시기 바랍니다.</p>
+          <h1 className="text-4xl font-black text-slate-900 tracking-tight mb-3">取引先 登録申請</h1>
+          <p className="text-slate-500 text-lg">事業者情報を正確にご入力ください。</p>
         </div>
 
         <Card className="p-8 md:p-10">
@@ -139,20 +139,20 @@ export default function Register() {
             <div>
               <h3 className="text-lg font-bold text-slate-900 mb-6 flex items-center gap-2">
                 <span className="w-8 h-8 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center text-sm">1</span>
-                계정 정보
+                アカウント情報
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <Label required>아이디</Label>
-                  <Input {...register("mb_id")} error={errors.mb_id?.message} placeholder="영문/숫자 조합" />
+                  <Label required>ID</Label>
+                  <Input {...register("mb_id")} error={errors.mb_id?.message} placeholder="英数字の組み合わせ" />
                 </div>
                 <div className="hidden md:block"></div>
                 <div>
-                  <Label required>비밀번호</Label>
+                  <Label required>パスワード</Label>
                   <Input type="password" {...register("mb_password")} error={errors.mb_password?.message} />
                 </div>
                 <div>
-                  <Label required>비밀번호 확인</Label>
+                  <Label required>パスワード（確認）</Label>
                   <Input type="password" {...register("password_confirm")} error={errors.password_confirm?.message} />
                 </div>
               </div>
@@ -163,44 +163,44 @@ export default function Register() {
             <div>
               <h3 className="text-lg font-bold text-slate-900 mb-6 flex items-center gap-2">
                 <span className="w-8 h-8 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center text-sm">2</span>
-                사업자 및 담당자 정보
+                事業者・担当者情報
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="md:col-span-2">
-                  <Label required>상호명 (법인명)</Label>
+                  <Label required>会社名（法人名）</Label>
                   <Input {...register("company_name")} error={errors.company_name?.message} />
                 </div>
                 <div>
-                  <Label required>사업자등록번호</Label>
+                  <Label required>事業者登録番号</Label>
                   <Input {...register("business_number")} error={errors.business_number?.message} placeholder="123-45-67890" />
                 </div>
                 <div>
-                  <Label required>대표자명</Label>
+                  <Label required>代表者名</Label>
                   <Input {...register("representative")} error={errors.representative?.message} />
                 </div>
                 <div>
-                  <Label>업태</Label>
+                  <Label>業態</Label>
                   <Input {...register("business_type")} error={errors.business_type?.message} />
                 </div>
                 <div>
-                  <Label>종목</Label>
+                  <Label>業種</Label>
                   <Input {...register("business_category")} error={errors.business_category?.message} />
                 </div>
                 <div className="md:col-span-2">
-                  <Label required>사업장 주소</Label>
+                  <Label required>事業所の住所</Label>
                   <Input {...register("company_address")} error={errors.company_address?.message} />
                 </div>
                 
                 <div>
-                  <Label required>담당자명</Label>
+                  <Label required>担当者名</Label>
                   <Input {...register("mb_name")} error={errors.mb_name?.message} />
                 </div>
                 <div>
-                  <Label required>담당자 연락처</Label>
+                  <Label required>担当者の連絡先</Label>
                   <Input {...register("mb_hp")} error={errors.mb_hp?.message} placeholder="010-0000-0000" />
                 </div>
                 <div className="md:col-span-2">
-                  <Label required>담당자 이메일</Label>
+                  <Label required>担当者のメールアドレス</Label>
                   <Input type="email" {...register("mb_email")} error={errors.mb_email?.message} />
                 </div>
               </div>
@@ -211,15 +211,15 @@ export default function Register() {
             <div>
               <h3 className="text-lg font-bold text-slate-900 mb-6 flex items-center gap-2">
                 <span className="w-8 h-8 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center text-sm">3</span>
-                사업자등록증 첨부
+                事業者登録証の添付
               </h3>
-              <p className="text-sm text-slate-500 mb-4">사업자등록증 사본을 첨부해주세요. (PDF, JPG, PNG / 최대 10MB)</p>
+              <p className="text-sm text-slate-500 mb-4">事業者登録証のコピーを添付してください。(PDF、JPG、PNG / 最大10MB)</p>
               
               {!licenseFile ? (
                 <label className="flex flex-col items-center justify-center w-full h-40 border-2 border-dashed border-slate-300 rounded-xl cursor-pointer bg-slate-50 hover:bg-slate-100 hover:border-blue-400 transition-all">
                   <Upload className="w-10 h-10 text-slate-400 mb-3" />
-                  <span className="text-sm font-semibold text-slate-600">파일을 선택하거나 드래그하세요</span>
-                  <span className="text-xs text-slate-400 mt-1">PDF, JPG, PNG (최대 10MB)</span>
+                  <span className="text-sm font-semibold text-slate-600">ファイルを選択するかドラッグしてください</span>
+                  <span className="text-xs text-slate-400 mt-1">PDF、JPG、PNG (最大10MB)</span>
                   <input
                     ref={fileInputRef}
                     type="file"
@@ -249,7 +249,7 @@ export default function Register() {
 
             <div className="pt-6">
               <Button type="submit" size="lg" className="w-full text-lg h-14" disabled={isPending}>
-                {isPending ? "신청 처리 중..." : "가입 신청하기"}
+                {isPending ? "申請処理中..." : "登録を申請する"}
               </Button>
             </div>
           </form>

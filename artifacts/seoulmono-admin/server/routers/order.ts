@@ -46,7 +46,7 @@ export const orderRouter = router({
     if (pointsUsed > 0) {
       const user = await db.getUserById(ctx.user.id);
       if (!user || user.points < pointsUsed) {
-        throw new TRPCError({ code: "BAD_REQUEST", message: "포인트가 부족합니다." });
+        throw new TRPCError({ code: "BAD_REQUEST", message: "ポイントが不足しています。" });
       }
     }
 
@@ -59,7 +59,7 @@ export const orderRouter = router({
       const cIds = [...new Set(prods.map(p => p.categoryId).filter(Boolean))] as number[];
       const userCouponList = await db.getAvailableUserCoupons(ctx.user.id, totalAmount, pIds, cIds);
       const uc = userCouponList.find(c => c.id === input.userCouponId);
-      if (!uc) throw new TRPCError({ code: "BAD_REQUEST", message: "사용할 수 없는 쿠폰입니다." });
+      if (!uc) throw new TRPCError({ code: "BAD_REQUEST", message: "ご利用いただけないクーポンです。" });
       // noDiscount 상품은 쿠폰 적용에서 제외
       const eligibleItems = input.items.filter(item => {
         const prod = prods.find(p => p.id === item.productId);
@@ -75,18 +75,18 @@ export const orderRouter = router({
     let promoCodeId: number | null = null;
     if (input.promoCodeId) {
       const promo = await db.getPromoCodeById(input.promoCodeId);
-      if (!promo) throw new TRPCError({ code: "BAD_REQUEST", message: "존재하지 않는 프로모코드입니다." });
-      if (!promo.isActive) throw new TRPCError({ code: "BAD_REQUEST", message: "사용할 수 없는 프로모코드입니다." });
+      if (!promo) throw new TRPCError({ code: "BAD_REQUEST", message: "存在しないプロモコードです。" });
+      if (!promo.isActive) throw new TRPCError({ code: "BAD_REQUEST", message: "ご利用いただけないプロモコードです。" });
       const now = new Date();
       if (now < promo.startDate || now > promo.endDate) {
-        throw new TRPCError({ code: "BAD_REQUEST", message: "프로모코드 사용 기간이 아닙니다." });
+        throw new TRPCError({ code: "BAD_REQUEST", message: "プロモコードの利用期間外です。" });
       }
       if (promo.totalUsageLimit !== -1 && promo.usedCount >= promo.totalUsageLimit) {
-        throw new TRPCError({ code: "BAD_REQUEST", message: "프로모코드가 모두 소진되었습니다." });
+        throw new TRPCError({ code: "BAD_REQUEST", message: "プロモコードは上限に達しました。" });
       }
       const userUsageCount = await db.getPromoCodeUsageCountByUser(promo.id, ctx.user.id);
       if (userUsageCount >= promo.perUserLimit) {
-        throw new TRPCError({ code: "BAD_REQUEST", message: `한 사람당 ${promo.perUserLimit}회만 사용 가능한 프로모코드입니다.` });
+        throw new TRPCError({ code: "BAD_REQUEST", message: `お一人様${promo.perUserLimit}回までご利用いただけるプロモコードです。` });
       }
       // 상품/카테고리 타겟 검증
       const pIds = input.items.map(i => i.productId);
@@ -95,18 +95,18 @@ export const orderRouter = router({
       if (promo.targetProductIds) {
         const targetIds = promo.targetProductIds.split(",").map(Number).filter(Boolean);
         if (!pIds.some(pid => targetIds.includes(pid))) {
-          throw new TRPCError({ code: "BAD_REQUEST", message: "해당 상품에 적용되지 않는 프로모코드입니다." });
+          throw new TRPCError({ code: "BAD_REQUEST", message: "この商品には適用できないプロモコードです。" });
         }
       }
       if (promo.targetCategoryIds) {
         const targetIds = promo.targetCategoryIds.split(",").map(Number).filter(Boolean);
         if (!cIds.some(cid => targetIds.includes(cid))) {
-          throw new TRPCError({ code: "BAD_REQUEST", message: "해당 카테고리에 적용되지 않는 프로모코드입니다." });
+          throw new TRPCError({ code: "BAD_REQUEST", message: "このカテゴリには適用できないプロモコードです。" });
         }
       }
       // 최소 주문금액 검증
       if (subtotal < promo.minOrderAmount) {
-        throw new TRPCError({ code: "BAD_REQUEST", message: `최소 ${promo.minOrderAmount.toLocaleString()}원 이상 구매 시 사용 가능합니다.` });
+        throw new TRPCError({ code: "BAD_REQUEST", message: `${promo.minOrderAmount.toLocaleString()}円以上のご購入でご利用いただけます。` });
       }
       // 할인 계산
       if (promo.discountType === "percent") {
@@ -151,7 +151,7 @@ export const orderRouter = router({
     }, input.items);
 
     if (pointsUsed > 0) {
-      await db.addPoints(ctx.user.id, pointsUsed, "use", `주문 ${orderNumber} 포인트 사용`, orderId);
+      await db.addPoints(ctx.user.id, pointsUsed, "use", `注文 ${orderNumber} ポイント利用`, orderId);
     }
 
     // 쿠폰 사용 처리
@@ -200,8 +200,8 @@ export const orderRouter = router({
       await db.createNotification(
         ctx.user.id,
         "order",
-        "입금 계좌 안내",
-        `주문번호 ${orderNumber}의 입금 계좌: ${bankAccount?.bankName ?? ""} ${bankAccount?.accountNumber ?? ""}. ${autoCancelHours}시간 이내에 입금해주세요.`,
+        "お振込先のご案内",
+        `注文番号 ${orderNumber} のお振込先: ${bankAccount?.bankName ?? ""} ${bankAccount?.accountNumber ?? ""}。${autoCancelHours}時間以内にお振込みください。`,
         `/mypage/orders`
       );
 
@@ -209,56 +209,56 @@ export const orderRouter = router({
       if (ctx.user.email && bankAccount) {
         await sendEmail({
           to: ctx.user.email,
-          subject: `[탈모학교] 주문 ${orderNumber} 입금 안내`,
+          subject: `[ソウルモノ] ご注文 ${orderNumber} お振込のご案内`,
           html: await generateEmailTemplate({
-            title: "입금 계좌 안내",
+            title: "お振込先のご案内",
             content: `
-              <p>안녕하세요, ${ctx.user.name || "고객"}님.</p>
-              <p>주문이 정상적으로 접수되었습니다.</p>
-              <p>아래 계좌로 <strong>${autoCancelHours}시간 이내</strong>에 입금해주시면 확인 후 상품을 발송해드립니다.</p>
+              <p>いつもご利用ありがとうございます。${ctx.user.name || "お客様"}様</p>
+              <p>ご注文を正常に承りました。</p>
+              <p>下記の口座に<strong>${autoCancelHours}時間以内</strong>にお振込みいただくと、確認後に商品を発送いたします。</p>
               <div style="background:#fef3c7;border:2px solid #f59e0b;border-radius:8px;padding:20px;margin:20px 0;">
-                <h3 style="margin:0 0 15px 0;color:#92400e;">📌 입금 정보</h3>
+                <h3 style="margin:0 0 15px 0;color:#92400e;">📌 お振込情報</h3>
                 <table style="width:100%;border-collapse:collapse;">
-                  <tr style="border-bottom:1px solid #fbbf24;"><td style="padding:8px 0;color:#78350f;font-weight:600;">주문번호</td><td style="padding:8px 0;text-align:right;color:#92400e;">${orderNumber}</td></tr>
-                  <tr style="border-bottom:1px solid #fbbf24;"><td style="padding:8px 0;color:#78350f;font-weight:600;">입금 계좌</td><td style="padding:8px 0;text-align:right;color:#92400e;">${bankAccount.bankName} ${bankAccount.accountNumber}</td></tr>
-                  <tr style="border-bottom:1px solid #fbbf24;"><td style="padding:8px 0;color:#78350f;font-weight:600;">예금주</td><td style="padding:8px 0;text-align:right;color:#92400e;">${bankAccount.accountHolder}</td></tr>
-                  <tr style="border-bottom:1px solid #fbbf24;"><td style="padding:8px 0;color:#78350f;font-weight:600;">입금 금액</td><td style="padding:8px 0;text-align:right;color:#92400e;font-size:18px;font-weight:700;">${depositAmount.toLocaleString()}원</td></tr>
-                  <tr style="border-bottom:1px solid #fbbf24;"><td style="padding:8px 0;color:#78350f;font-weight:600;">입금자명</td><td style="padding:8px 0;text-align:right;color:#92400e;">${input.depositorName ?? ""}</td></tr>
-                  <tr><td style="padding:8px 0;color:#78350f;font-weight:600;">입금 기한</td><td style="padding:8px 0;text-align:right;color:#dc2626;font-weight:700;">${expiresAt.toLocaleString("ja-JP")}</td></tr>
+                  <tr style="border-bottom:1px solid #fbbf24;"><td style="padding:8px 0;color:#78350f;font-weight:600;">ご注文番号</td><td style="padding:8px 0;text-align:right;color:#92400e;">${orderNumber}</td></tr>
+                  <tr style="border-bottom:1px solid #fbbf24;"><td style="padding:8px 0;color:#78350f;font-weight:600;">お振込先口座</td><td style="padding:8px 0;text-align:right;color:#92400e;">${bankAccount.bankName} ${bankAccount.accountNumber}</td></tr>
+                  <tr style="border-bottom:1px solid #fbbf24;"><td style="padding:8px 0;color:#78350f;font-weight:600;">口座名義</td><td style="padding:8px 0;text-align:right;color:#92400e;">${bankAccount.accountHolder}</td></tr>
+                  <tr style="border-bottom:1px solid #fbbf24;"><td style="padding:8px 0;color:#78350f;font-weight:600;">お振込金額</td><td style="padding:8px 0;text-align:right;color:#92400e;font-size:18px;font-weight:700;">${depositAmount.toLocaleString()}円</td></tr>
+                  <tr style="border-bottom:1px solid #fbbf24;"><td style="padding:8px 0;color:#78350f;font-weight:600;">お振込名義</td><td style="padding:8px 0;text-align:right;color:#92400e;">${input.depositorName ?? ""}</td></tr>
+                  <tr><td style="padding:8px 0;color:#78350f;font-weight:600;">お振込期限</td><td style="padding:8px 0;text-align:right;color:#dc2626;font-weight:700;">${expiresAt.toLocaleString("ja-JP")}</td></tr>
                 </table>
               </div>
               <div style="background:#fee2e2;border-left:4px solid #dc2626;padding:15px;margin:20px 0;">
                 <p style="margin:0;color:#7f1d1d;font-size:14px;">
-                  <strong>⚠️ 주의사항</strong><br/>
-                  • 입금 기한(${autoCancelHours}시간) 내 미입금 시 자동으로 주문이 취소됩니다.<br/>
-                  • 입금자명이 주문자명과 다른 경우 확인이 지연될 수 있습니다.
+                  <strong>⚠️ ご注意</strong><br/>
+                  • お振込期限（${autoCancelHours}時間）内にご入金がない場合、ご注文は自動的にキャンセルされます。<br/>
+                  • お振込名義がご注文者名と異なる場合、確認が遅れることがあります。
                 </p>
               </div>
             `,
-            actionText: "주문 내역 보기",
+            actionText: "ご注文履歴を見る",
             actionUrl: `${process.env.VITE_APP_URL || ""}/mypage/orders`,
           }),
         }).catch(() => {}); // 이메일 실패해도 주문은 성공
       }
     } else {
-      await db.createNotification(ctx.user.id, "order", "주문이 접수되었습니다", `주문번호: ${orderNumber}`, `/mypage/orders`);
+      await db.createNotification(ctx.user.id, "order", "ご注文を承りました", `注文番号: ${orderNumber}`, `/mypage/orders`);
     }
 
     // 자동 등급 승급 확인
     const upgradeResult = await db.checkAndUpgradeUserGrade(ctx.user.id);
     if (upgradeResult) {
       const gradeLabels: Record<string, string> = {
-        bronze: "브론즈",
-        silver: "실버",
-        gold: "골드",
+        bronze: "ブロンズ",
+        silver: "シルバー",
+        gold: "ゴールド",
         vip: "VIP",
         vvip: "VVIP",
       };
       await db.createNotification(
         ctx.user.id,
         "system",
-        "축하합니다! 등급이 상승했습니다",
-        `${gradeLabels[upgradeResult.oldGrade]} → ${gradeLabels[upgradeResult.newGrade]} 등급으로 승급되었습니다.`,
+        "おめでとうございます！ランクがアップしました",
+        `${gradeLabels[upgradeResult.oldGrade]} → ${gradeLabels[upgradeResult.newGrade]} ランクにアップしました。`,
         `/mypage/profile`
       );
     }
@@ -292,7 +292,7 @@ export const orderRouter = router({
     if (!order || order.userId !== ctx.user.id) throw new TRPCError({ code: "NOT_FOUND" });
     const cancellableStatuses = ["pending", "paid"];
     if (!cancellableStatuses.includes(order.status)) {
-      throw new TRPCError({ code: "BAD_REQUEST", message: "상품 준비 중 이후에는 취소할 수 없습니다. 고객센터에 문의해주세요." });
+      throw new TRPCError({ code: "BAD_REQUEST", message: "商品準備中以降はキャンセルできません。カスタマーサポートまでお問い合わせください。" });
     }
     const wasPaid = order.status === "paid";
     await db.updateOrderStatus(order.id, "cancelled");
@@ -300,7 +300,7 @@ export const orderRouter = router({
     await db.markAllItemsCancelled(order.id, wasPaid, order);
     // 사용한 포인트 환불
     if (order.pointsUsed > 0) {
-      await db.addPoints(ctx.user.id, order.pointsUsed, "refund", `주문 ${order.orderNumber} 취소 환불`, order.id);
+      await db.addPoints(ctx.user.id, order.pointsUsed, "refund", `注文 ${order.orderNumber} キャンセル返金`, order.id);
     }
     // 사용한 쿠폰 복원 (orderId로 조회)
     await db.unuseCouponByOrderId(order.id);
@@ -309,7 +309,7 @@ export const orderRouter = router({
       await db.deletePromoCodeUsageByOrderId(order.promoCodeId, order.id);
       await db.decrementPromoCodeUsedCount(order.promoCodeId);
     }
-    await db.createNotification(ctx.user.id, "order", "주문이 취소되었습니다", `주문번호 ${order.orderNumber}`, `/mypage/orders`);
+    await db.createNotification(ctx.user.id, "order", "ご注文がキャンセルされました", `注文番号 ${order.orderNumber}`, `/mypage/orders`);
     return { success: true };
   }),
   cancelItems: protectedProcedure.input(z.object({
@@ -326,13 +326,13 @@ export const orderRouter = router({
     if (!order || order.userId !== ctx.user.id) throw new TRPCError({ code: "NOT_FOUND" });
     const cancellableStatuses = ["pending", "paid"];
     if (!cancellableStatuses.includes(order.status)) {
-      throw new TRPCError({ code: "BAD_REQUEST", message: "상품 준비 중 이후에는 취소할 수 없습니다. 고객센터에 문의해주세요." });
+      throw new TRPCError({ code: "BAD_REQUEST", message: "商品準備中以降はキャンセルできません。カスタマーサポートまでお問い合わせください。" });
     }
     // 취소 사유 + 환불계좌 정보 합치기
     let fullReason = input.reason ?? "";
     if (input.refundBankInfo) {
       const { bankName, accountNumber, accountHolder } = input.refundBankInfo;
-      const bankStr = `[환불계좌] ${bankName} ${accountNumber} (예금주: ${accountHolder})`;
+      const bankStr = `[返金口座] ${bankName} ${accountNumber} (口座名義: ${accountHolder})`;
       fullReason = fullReason ? `${fullReason}\n${bankStr}` : bankStr;
     }
     const result = await db.partialCancelOrderItems(input.orderId, input.itemIds, fullReason || undefined);
@@ -340,11 +340,11 @@ export const orderRouter = router({
     if (result.allCancelled) {
       // 사용 포인트 전액 환불
       if (order.pointsUsed > 0) {
-        await db.addPoints(ctx.user.id, order.pointsUsed, "refund", `주문 ${order.orderNumber} 취소 포인트 환불`, order.id);
+        await db.addPoints(ctx.user.id, order.pointsUsed, "refund", `注文 ${order.orderNumber} キャンセルポイント返還`, order.id);
       }
       // 적립 포인트 회수 (결제 확인 후 적립된 경우만)
       if (order.pointsEarned > 0 && order.status === "paid") {
-        await db.addPoints(ctx.user.id, -order.pointsEarned, "admin", `주문 ${order.orderNumber} 취소 적립 포인트 회수`, order.id);
+        await db.addPoints(ctx.user.id, -order.pointsEarned, "admin", `注文 ${order.orderNumber} キャンセル付与ポイント回収`, order.id);
       }
       // 쿠폰 복원
       await db.unuseCouponByOrderId(order.id);
@@ -354,8 +354,8 @@ export const orderRouter = router({
         await db.decrementPromoCodeUsedCount(order.promoCodeId);
       }
     }
-    await db.createNotification(ctx.user.id, "order", "주문 상품이 취소되었습니다",
-      `주문번호 ${order.orderNumber}: ${result.cancelledCount}개 상품 취소`, `/mypage/orders/${order.id}`);
+    await db.createNotification(ctx.user.id, "order", "ご注文商品がキャンセルされました",
+      `注文番号 ${order.orderNumber}: ${result.cancelledCount}点の商品をキャンセル`, `/mypage/orders/${order.id}`);
     return result;
   }),
   // Admin
@@ -378,7 +378,7 @@ export const orderRouter = router({
     await db.logAdminAction({
       adminId: ctx.user.id, adminName: ctx.user.name || ctx.user.email || `admin#${ctx.user.id}`,
       action: "order.updateStatus", entityType: "order", entityId: order.id,
-      description: `주문 #${order.orderNumber} 상태 변경: ${prevStatus} → ${input.status}`,
+      description: `注文 #${order.orderNumber} ステータス変更: ${prevStatus} → ${input.status}`,
       detail: { orderId: order.id, orderNumber: order.orderNumber, from: prevStatus, to: input.status },
     });
 
@@ -387,8 +387,8 @@ export const orderRouter = router({
       await db.createNotification(
         order.userId,
         "order",
-        "통관검사 안내",
-        `주문번호 ${order.orderNumber}: 고객님의 주문 상품이 통관검사 대상으로 선정되었습니다. 통관 절차가 완료되면 배송이 재개됩니다.`,
+        "通関検査のお知らせ",
+        `注文番号 ${order.orderNumber}: お客様のご注文商品が通関検査の対象となりました。通関手続きが完了次第、配送を再開いたします。`,
         `/mypage/orders/${order.id}`
       );
 
@@ -399,7 +399,7 @@ export const orderRouter = router({
           const { sendEmail } = await import("../_core/email");
           const { generateCustomsHoldEmail } = await import("../_core/customsHoldEmail");
           const emailHtml = generateCustomsHoldEmail({
-            customerName: user.name || "고객",
+            customerName: user.name || "お客様",
             orderNumber: order.orderNumber,
             orderId: order.id,
             customsNumber: order.customsNumber ?? null,
@@ -407,7 +407,7 @@ export const orderRouter = router({
           });
           await sendEmail({
             to: user.email,
-            subject: `[탈모학교] 통관검사 안내 - 주문번호 ${order.orderNumber}`,
+            subject: `[ソウルモノ] 通関検査のお知らせ - ご注文番号 ${order.orderNumber}`,
             html: emailHtml,
             userId: user.id,
           });
@@ -420,12 +420,12 @@ export const orderRouter = router({
       if (input.status === "delivered" && order.pointsEarned > 0) {
         const alreadyAwarded = await db.hasOrderEarnPoints(order.id);
         if (!alreadyAwarded) {
-          await db.addPoints(order.userId, order.pointsEarned, "earn", `주문 ${order.orderNumber} 배송완료 포인트 적립`, order.id);
+          await db.addPoints(order.userId, order.pointsEarned, "earn", `注文 ${order.orderNumber} 配送完了ポイント付与`, order.id);
           await db.createNotification(
             order.userId,
             "point",
-            "포인트가 적립되었습니다",
-            `${order.pointsEarned.toLocaleString()}P 적립 (주문번호: ${order.orderNumber})`,
+            "ポイントが付与されました",
+            `${order.pointsEarned.toLocaleString()}ポイント付与 (注文番号: ${order.orderNumber})`,
             `/mypage/points`
           );
         }
@@ -433,15 +433,15 @@ export const orderRouter = router({
 
       // 기존 일반 상태 변경 알림
       const statusLabels: Record<string, string> = {
-        pending: "주문접수", paid: "결제완료", preparing: "상품준비중",
-        shipping: "배송중", delivered: "배송완료", cancelled: "주문취소", refunded: "환불완료",
+        pending: "注文受付", paid: "お支払い完了", preparing: "商品準備中",
+        shipping: "配送中", delivered: "配送完了", cancelled: "注文キャンセル", refunded: "返金完了",
       };
       const statusText = statusLabels[input.status] || input.status;
       await db.createNotification(
         order.userId,
         "order",
-        "주문 상태가 변경되었습니다",
-        `주문번호 ${order.orderNumber}: ${statusText}`,
+        "ご注文のステータスが変更されました",
+        `注文番号 ${order.orderNumber}: ${statusText}`,
         `/mypage/orders`
       );
     }
@@ -472,7 +472,7 @@ export const orderRouter = router({
     await db.logAdminAction({
       adminId: ctx.user.id, adminName: ctx.user.name || ctx.user.email || `admin#${ctx.user.id}`,
       action: "order.partialCancel", entityType: "order", entityId: input.orderId,
-      description: `주문 #${order?.orderNumber ?? input.orderId} 부분취소 (${input.itemIds.length}개 상품)${input.reason ? ` - 사유: ${input.reason}` : ""}`,
+      description: `注文 #${order?.orderNumber ?? input.orderId} 一部キャンセル (${input.itemIds.length}点)${input.reason ? ` - 理由: ${input.reason}` : ""}`,
       detail: { orderId: input.orderId, itemIds: input.itemIds, reason: input.reason },
     });
     return result;
@@ -513,7 +513,7 @@ export const orderRouter = router({
     await db.logAdminAction({
       adminId: ctx.user.id, adminName: ctx.user.name || ctx.user.email || `admin#${ctx.user.id}`,
       action: "order.markRefunded", entityType: "order", entityId: input.orderId,
-      description: `주문 #${order?.orderNumber ?? input.orderId} 환불완료 처리`,
+      description: `注文 #${order?.orderNumber ?? input.orderId} 返金完了処理`,
       detail: { orderId: input.orderId },
     });
     return { ok: true };
@@ -525,7 +525,7 @@ export const orderRouter = router({
     await db.logAdminAction({
       adminId: ctx.user.id, adminName: ctx.user.name || ctx.user.email || `admin#${ctx.user.id}`,
       action: "order.markItemRefunded", entityType: "orderItem", entityId: input.itemId,
-      description: `주문 상품 #${input.itemId} 환불완료 처리`,
+      description: `注文商品 #${input.itemId} 返金完了処理`,
       detail: { itemId: input.itemId },
     });
     return { ok: true };
@@ -537,7 +537,7 @@ export const orderRouter = router({
     await db.logAdminAction({
       adminId: ctx.user.id, adminName: ctx.user.name || ctx.user.email || `admin#${ctx.user.id}`,
       action: "order.markItemRefundPending", entityType: "orderItem", entityId: input.itemId,
-      description: `주문 상품 #${input.itemId} 환불대기 처리`,
+      description: `注文商品 #${input.itemId} 返金待ち処理`,
       detail: { itemId: input.itemId },
     });
     return { ok: true };
@@ -551,7 +551,7 @@ export const orderRouter = router({
     await db.logAdminAction({
       adminId: ctx.user.id, adminName: ctx.user.name || ctx.user.email || `admin#${ctx.user.id}`,
       action: "claim.update", entityType: "claim", entityId: input.id,
-      description: `클레임 #${input.id}${input.status ? ` 상태를 '${input.status}'로 변경` : ""}`,
+      description: `クレーム #${input.id}${input.status ? ` ステータスを「${input.status}」に変更` : ""}`,
       detail: { id: input.id, status: input.status, adminMemo: input.adminMemo },
     });
     return { ok: true };

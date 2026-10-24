@@ -40,7 +40,7 @@ export const cartRouter = router({
   })).mutation(async ({ ctx, input }) => {
     // 등급 제한 확인
     const product = await db.getProductById(input.productId);
-    if (!product) throw new Error("상품을 찾을 수 없습니다");
+    if (!product) throw new Error("商品が見つかりません");
     
     const gradeOrder = { bronze: 0, silver: 1, gold: 2, vip: 3, vvip: 4 };
     const userGrade = ctx.user.grade;
@@ -48,13 +48,13 @@ export const cartRouter = router({
     
     if (!canPurchase) {
       const gradeLabels: Record<string, string> = {
-        bronze: "브론즈",
-        silver: "실버",
-        gold: "골드",
+        bronze: "ブロンズ",
+        silver: "シルバー",
+        gold: "ゴールド",
         vip: "VIP",
         vvip: "VVIP",
       };
-      throw new Error(`이 상품은 ${gradeLabels[product.minGrade]} 등급 이상부터 구매 가능합니다.`);
+      throw new Error(`この商品は${gradeLabels[product.minGrade]}ランク以上の会員様からご購入いただけます。`);
     }
     
     await db.addToCart(ctx.user.id, input.productId, input.quantity, input.options);
@@ -100,12 +100,12 @@ export const cartRouter = router({
   })).mutation(async ({ ctx, input }) => {
     const cartItemsData = await db.getCartItems(input.userId);
     if (cartItemsData.length === 0) {
-      throw new Error("장바구니가 비어있습니다.");
+      throw new Error("カートが空です。");
     }
 
     const items = cartItemsData.map(i => ({
       productId: i.productId,
-      productName: i.product?.name ?? `상품 #${i.productId}`,
+      productName: i.product?.name ?? `商品 #${i.productId}`,
       productThumbnail: i.product?.thumbnail ?? undefined,
       price: i.optionPrice ?? i.product?.salePrice ?? i.product?.price ?? 0,
       quantity: i.quantity,
@@ -148,7 +148,7 @@ export const cartRouter = router({
       action: "cart_convert_to_order",
       entityType: "order",
       entityId: orderId,
-      description: `장바구니 주문 전환: userId=${input.userId}, orderNumber=${orderNumber}`,
+      description: `カート注文変換: userId=${input.userId}, orderNumber=${orderNumber}`,
     });
 
     return { orderId, orderNumber };

@@ -111,12 +111,12 @@ async function handleCustomsHold(
   await db.createNotification(
     order.userId,
     "order",
-    "통관검사 안내",
-    `주문번호 ${order.orderNumber}: 고객님의 주문 상품이 통관검사 대상으로 선정되었습니다.${
+    "通関検査のお知らせ",
+    `注文番号 ${order.orderNumber}: お客様のご注文商品が通関検査の対象となりました。${
       koreaPostResult?.customsInfo?.customsOffice 
-        ? ` (${koreaPostResult.customsInfo.customsOffice} 통관번호: ${koreaPostResult.customsInfo.customsNumber})` 
+        ? ` (${koreaPostResult.customsInfo.customsOffice} 通関番号: ${koreaPostResult.customsInfo.customsNumber})` 
         : ''
-    } 통관 절차가 완료되면 배송이 재개됩니다.`,
+    } 通関手続きが完了次第、配送を再開いたします。`,
     `/mypage/orders/${order.id}`
   );
 
@@ -124,12 +124,12 @@ async function handleCustomsHold(
   try {
     const { notifyOwner } = await import("../_core/notification");
     await notifyOwner({
-      title: "⚠️ 통관검사 감지",
-      content: `주문번호: ${order.orderNumber}\n운송장: ${shipment.trackingNumber}${
+      title: "⚠️ 通関検査を検知",
+      content: `注文番号: ${order.orderNumber}\n追跡番号: ${shipment.trackingNumber}${
         koreaPostResult?.customsInfo 
-          ? `\n세관: ${koreaPostResult.customsInfo.customsOffice}\n통관번호: ${koreaPostResult.customsInfo.customsNumber}` 
+          ? `\n税関: ${koreaPostResult.customsInfo.customsOffice}\n通関番号: ${koreaPostResult.customsInfo.customsNumber}` 
           : ''
-      }\n\n통관검사 대상으로 확인되었습니다. 관리자 대시보드에서 확인해주세요.`,
+      }\n\n通関検査の対象であることが確認されました。管理者ダッシュボードでご確認ください。`,
     });
   } catch (e) {
     console.error("[ShippingSync] Failed to notify owner about customs hold:", e);
@@ -142,13 +142,13 @@ async function handleCustomsHold(
       const { sendEmail } = await import("../_core/email");
       const { generateCustomsHoldEmail } = await import("../_core/customsHoldEmail");
       const emailHtml = generateCustomsHoldEmail({
-        customerName: user.name || "고객",
+        customerName: user.name || "お客様",
         orderNumber: order.orderNumber,
         orderId: order.id,
       });
       await sendEmail({
         to: user.email,
-        subject: `[탈모학교] 통관검사 안내 - 주문번호 ${order.orderNumber}`,
+        subject: `[ソウルモノ] 通関検査のお知らせ - ご注文番号 ${order.orderNumber}`,
         html: emailHtml,
         userId: user.id,
       });
@@ -173,8 +173,8 @@ async function handleCustomsCleared(shipment: { id: number; orderId: number; tra
   await db.createNotification(
     order.userId,
     "order",
-    "통관검사 완료 - 배송 재개",
-    `주문번호 ${order.orderNumber}: 통관검사가 완료되어 배송이 재개되었습니다.`,
+    "通関検査完了 - 配送再開",
+    `注文番号 ${order.orderNumber}: 通関検査が完了し、配送が再開されました。`,
     `/mypage/orders/${order.id}`
   );
   console.log(`[ShippingSync] Order ${order.orderNumber} customs cleared, resumed shipping`);
@@ -193,12 +193,12 @@ async function handleDelivered(shipment: { id: number; orderId: number; tracking
   if (order.pointsEarned > 0) {
     const alreadyAwarded = await db.hasOrderEarnPoints(order.id);
     if (!alreadyAwarded) {
-      await db.addPoints(order.userId, order.pointsEarned, "earn", `주문 ${order.orderNumber} 배송완료 포인트 적립`, order.id);
+      await db.addPoints(order.userId, order.pointsEarned, "earn", `注文 ${order.orderNumber} 配送完了ポイント付与`, order.id);
       await db.createNotification(
         order.userId,
         "point",
-        "포인트가 적립되었습니다",
-        `${order.pointsEarned.toLocaleString()}P 적립 (주문번호: ${order.orderNumber})`,
+        "ポイントが付与されました",
+        `${order.pointsEarned.toLocaleString()}ポイント付与 (注文番号: ${order.orderNumber})`,
         `/mypage/points`
       );
     }
@@ -207,8 +207,8 @@ async function handleDelivered(shipment: { id: number; orderId: number; tracking
   await db.createNotification(
     order.userId,
     "order",
-    "배송이 완료되었습니다",
-    `주문번호: ${order.orderNumber}. 상품은 어떠셨나요? 리뷰를 작성해주세요!`,
+    "配送が完了しました",
+    `注文番号: ${order.orderNumber}。商品はいかがでしたか？レビューをお寄せください！`,
     `/mypage/orders/${order.id}`
   );
 
@@ -221,15 +221,15 @@ async function handleDelivered(shipment: { id: number; orderId: number; tracking
       const { sendEmail, generateReviewRequestEmail } = await import("../_core/email");
       const reviewUrl = `${process.env.VITE_OAUTH_PORTAL_URL || 'https://app.manus.im'}/mypage/orders/${order.id}`;
       const emailHtml = generateReviewRequestEmail({
-        customerName: user.name || "고객",
+        customerName: user.name || "お客様",
         orderNumber: order.orderNumber,
-        productName: firstProduct.productName + (items.length > 1 ? ` 외 ${items.length - 1}건` : ""),
+        productName: firstProduct.productName + (items.length > 1 ? ` 他${items.length - 1}点` : ""),
         reviewUrl,
       });
       
       await sendEmail({
         to: user.email,
-        subject: "배송이 완료되었습니다! 리뷰를 작성해주세요 💜",
+        subject: "配送が完了しました！レビューをお寄せください 💜",
         html: emailHtml,
       });
     }

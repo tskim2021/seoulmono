@@ -9,10 +9,10 @@ import {
 const BASE = import.meta.env.BASE_URL.replace(/\/$/, "");
 
 const STATUS_MAP: Record<string, { label: string; color: string; bg: string; icon: any }> = {
-  pending:        { label: "주소 대기중",   color: "#d97706", bg: "#fef3c7", icon: Clock },
-  address_filled: { label: "배송지 입력완료", color: "#059669", bg: "#d1fae5", icon: MapPin },
-  shipped:        { label: "배송중",        color: "#2563eb", bg: "#dbeafe", icon: Truck },
-  delivered:      { label: "배송완료",      color: "#6b7280", bg: "#f3f4f6", icon: Package },
+  pending:        { label: "住所入力待ち",   color: "#d97706", bg: "#fef3c7", icon: Clock },
+  address_filled: { label: "お届け先入力完了", color: "#059669", bg: "#d1fae5", icon: MapPin },
+  shipped:        { label: "配送中",        color: "#2563eb", bg: "#dbeafe", icon: Truck },
+  delivered:      { label: "配送完了",      color: "#6b7280", bg: "#f3f4f6", icon: Package },
 };
 
 interface GiftOrder {
@@ -49,7 +49,7 @@ export default function GiftOrderDetail() {
         if (data.error) { setError(data.error); } else { setOrder(data); }
         setLoading(false);
       })
-      .catch(() => { setError("불러오는 중 오류가 발생했습니다."); setLoading(false); });
+      .catch(() => { setError("読み込み中にエラーが発生しました。"); setLoading(false); });
   }, [id, user]);
 
   const giftLink = order ? `${window.location.origin}${BASE}/gift/recipient/${order.token}` : "";
@@ -63,14 +63,14 @@ export default function GiftOrderDetail() {
 
   const shareKakao = () => {
     if (!order) return;
-    const text = `${order.set_name} 선물이 도착했어요! 🎁\n아래 링크에서 배송지를 입력해주세요.\n${giftLink}`;
+    const text = `${order.set_name} のギフトが届きました! 🎁\n下のリンクからお届け先を入力してください。\n${giftLink}`;
     if ((window as any).Kakao?.isInitialized?.()) {
       (window as any).Kakao.Share.sendDefault({
         objectType: "text", text,
         link: { mobileWebUrl: giftLink, webUrl: giftLink },
       });
     } else if (navigator.share) {
-      navigator.share({ title: `${order.set_name} 선물이 도착했어요!`, text, url: giftLink });
+      navigator.share({ title: `${order.set_name} のギフトが届きました!`, text, url: giftLink });
     }
   };
 
@@ -82,10 +82,10 @@ export default function GiftOrderDetail() {
 
   if (error || !order) return (
     <div style={{ textAlign: "center", padding: "80px 20px" }}>
-      <p style={{ color: "#999" }}>{error || "주문을 찾을 수 없습니다."}</p>
+      <p style={{ color: "#999" }}>{error || "注文が見つかりません。"}</p>
       <button onClick={() => navigate(`${BASE}/gift/my`)}
         style={{ marginTop: 16, padding: "10px 24px", background: "#8B5E3C", color: "#fff", border: "none", borderRadius: 10, cursor: "pointer", fontWeight: 700 }}>
-        목록으로
+        一覧へ
       </button>
     </div>
   );
@@ -102,9 +102,9 @@ export default function GiftOrderDetail() {
         <div className="page-wrap" style={{ display: "flex", alignItems: "center", gap: 12 }}>
           <button onClick={() => navigate(`${BASE}/gift/my`)}
             style={{ background: "none", border: "none", cursor: "pointer", display: "flex", alignItems: "center", gap: 4, color: "#555", fontWeight: 600, padding: 0 }}>
-            <ArrowLeft size={18} /> 뒤로
+            <ArrowLeft size={18} /> 戻る
           </button>
-          <h1 style={{ margin: 0, fontSize: 17, fontWeight: 900, color: "#111" }}>보낸 선물 상세</h1>
+          <h1 style={{ margin: 0, fontSize: 17, fontWeight: 900, color: "#111" }}>送ったギフトの詳細</h1>
         </div>
       </div>
 
@@ -132,7 +132,7 @@ export default function GiftOrderDetail() {
             </div>
             <p style={{ margin: 0, fontSize: 16, fontWeight: 900, color: "#111", letterSpacing: "-0.3px" }}>{order.set_name}</p>
             <p style={{ margin: "3px 0 0", fontSize: 12, color: "#999" }}>
-              주문일: {new Date(order.created_at).toLocaleDateString("ko-KR", { year: "numeric", month: "long", day: "numeric", hour: "2-digit", minute: "2-digit" })}
+              注文日: {new Date(order.created_at).toLocaleDateString("ja-JP", { year: "numeric", month: "long", day: "numeric", hour: "2-digit", minute: "2-digit" })}
             </p>
           </div>
         </div>
@@ -141,8 +141,8 @@ export default function GiftOrderDetail() {
         <div style={{ background: "#fff", borderRadius: 16, border: "1px solid #eee", marginBottom: 12, overflow: "hidden" }}>
           <div style={{ padding: "14px 18px", borderBottom: "1px solid #f5f5f5", display: "flex", alignItems: "center", gap: 6 }}>
             <Gift size={15} color="#8B5E3C" />
-            <span style={{ fontSize: 14, fontWeight: 800, color: "#111" }}>구성 상품</span>
-            <span style={{ fontSize: 12, color: "#bbb", marginLeft: 4 }}>{order.slot_count}개입</span>
+            <span style={{ fontSize: 14, fontWeight: 800, color: "#111" }}>構成商品</span>
+            <span style={{ fontSize: 12, color: "#bbb", marginLeft: 4 }}>{order.slot_count}点入り</span>
           </div>
           <div style={{ padding: "14px 18px", display: "flex", flexDirection: "column", gap: 10 }}>
             {order.items.map((item, i) => (
@@ -156,12 +156,12 @@ export default function GiftOrderDetail() {
                 </div>
                 <div style={{ flex: 1 }}>
                   <p style={{ margin: 0, fontSize: 13.5, fontWeight: 700, color: "#111" }}>{item.it_name}</p>
-                  <p style={{ margin: "2px 0 0", fontSize: 12, color: "#aaa" }}>수량 {item.quantity}개</p>
+                  <p style={{ margin: "2px 0 0", fontSize: 12, color: "#aaa" }}>数量 {item.quantity}点</p>
                 </div>
               </div>
             ))}
             {order.items.length === 0 && (
-              <p style={{ margin: 0, color: "#bbb", fontSize: 13 }}>구성 상품 정보가 없습니다.</p>
+              <p style={{ margin: 0, color: "#bbb", fontSize: 13 }}>構成商品の情報がありません。</p>
             )}
           </div>
         </div>
@@ -171,7 +171,7 @@ export default function GiftOrderDetail() {
           <div style={{ background: "#fff", borderRadius: 16, border: "1px solid #eee", marginBottom: 12, overflow: "hidden" }}>
             <div style={{ padding: "14px 18px", borderBottom: "1px solid #f5f5f5", display: "flex", alignItems: "center", gap: 6 }}>
               <MessageSquareHeart size={15} color="#c2640a" />
-              <span style={{ fontSize: 14, fontWeight: 800, color: "#111" }}>선물 메시지</span>
+              <span style={{ fontSize: 14, fontWeight: 800, color: "#111" }}>ギフトメッセージ</span>
             </div>
             <div style={{ padding: "14px 18px" }}>
               <p style={{ margin: 0, fontSize: 14, color: "#444", lineHeight: 1.7, background: "#fef9f0", borderRadius: 10, padding: "12px 14px", borderLeft: "3px solid #c2640a" }}>
@@ -185,23 +185,23 @@ export default function GiftOrderDetail() {
         <div style={{ background: "#fff", borderRadius: 16, border: "1px solid #eee", marginBottom: 12, overflow: "hidden" }}>
           <div style={{ padding: "14px 18px", borderBottom: "1px solid #f5f5f5", display: "flex", alignItems: "center", gap: 6 }}>
             <MapPin size={15} color="#2563eb" />
-            <span style={{ fontSize: 14, fontWeight: 800, color: "#111" }}>받는 분 정보</span>
+            <span style={{ fontSize: 14, fontWeight: 800, color: "#111" }}>お受け取り人情報</span>
           </div>
           <div style={{ padding: "14px 18px" }}>
             {!addressFilled ? (
               <div style={{ textAlign: "center", padding: "16px 0", color: "#bbb" }}>
                 <Clock size={28} color="#e5e7eb" style={{ marginBottom: 8 }} />
-                <p style={{ margin: 0, fontSize: 13 }}>아직 배송지를 입력하지 않았습니다</p>
-                <p style={{ margin: "4px 0 0", fontSize: 12, color: "#ccc" }}>아래 링크를 받는 분께 전달해주세요</p>
+                <p style={{ margin: 0, fontSize: 13 }}>お届け先はまだ入力されていません</p>
+                <p style={{ margin: "4px 0 0", fontSize: 12, color: "#ccc" }}>下のリンクを受取人様にお送りください</p>
               </div>
             ) : (
               <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
                 {[
-                  { icon: "👤", label: "이름",    value: order.recipient_name },
-                  { icon: "📱", label: "연락처",  value: order.recipient_phone },
-                  { icon: "📮", label: "우편번호", value: order.recipient_postcode },
-                  { icon: "📍", label: "주소",    value: order.recipient_address },
-                  { icon: "🏠", label: "상세주소", value: order.recipient_address_detail },
+                  { icon: "👤", label: "お名前",    value: order.recipient_name },
+                  { icon: "📱", label: "ご連絡先",  value: order.recipient_phone },
+                  { icon: "📮", label: "郵便番号", value: order.recipient_postcode },
+                  { icon: "📍", label: "住所",    value: order.recipient_address },
+                  { icon: "🏠", label: "建物名・部屋番号", value: order.recipient_address_detail },
                 ].filter(r => r.value).map((row, i) => (
                   <div key={i} style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
                     <span style={{ fontSize: 16, flexShrink: 0, marginTop: 1 }}>{row.icon}</span>
@@ -213,7 +213,7 @@ export default function GiftOrderDetail() {
                 ))}
                 {order.address_filled_at && (
                   <p style={{ margin: "4px 0 0", fontSize: 11, color: "#bbb" }}>
-                    입력일시: {new Date(order.address_filled_at).toLocaleDateString("ko-KR", { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" })}
+                    入力日時: {new Date(order.address_filled_at).toLocaleDateString("ja-JP", { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" })}
                   </p>
                 )}
               </div>
@@ -226,10 +226,10 @@ export default function GiftOrderDetail() {
           <div style={{ background: "#fff", borderRadius: 16, border: "1px solid #eee", marginBottom: 12, overflow: "hidden" }}>
             <div style={{ padding: "14px 18px", borderBottom: "1px solid #f5f5f5", display: "flex", alignItems: "center", gap: 6 }}>
               <Truck size={15} color="#2563eb" />
-              <span style={{ fontSize: 14, fontWeight: 800, color: "#111" }}>배송 추적</span>
+              <span style={{ fontSize: 14, fontWeight: 800, color: "#111" }}>配送状況</span>
             </div>
             <div style={{ padding: "14px 18px" }}>
-              <p style={{ margin: 0, fontSize: 13, color: "#444" }}>운송장 번호: <strong>{order.tracking_number}</strong></p>
+              <p style={{ margin: 0, fontSize: 13, color: "#444" }}>送り状番号: <strong>{order.tracking_number}</strong></p>
             </div>
           </div>
         )}
@@ -238,7 +238,7 @@ export default function GiftOrderDetail() {
         <div style={{ background: "#fff", borderRadius: 16, border: "1px solid #eee", marginBottom: 12, overflow: "hidden" }}>
           <div style={{ padding: "14px 18px", borderBottom: "1px solid #f5f5f5", display: "flex", alignItems: "center", gap: 6 }}>
             <Share2 size={15} color="#7c3aed" />
-            <span style={{ fontSize: 14, fontWeight: 800, color: "#111" }}>선물 링크</span>
+            <span style={{ fontSize: 14, fontWeight: 800, color: "#111" }}>ギフトリンク</span>
           </div>
           <div style={{ padding: "14px 18px" }}>
             <div style={{ background: "#f8f9fa", border: "1.5px solid #eee", borderRadius: 10, padding: "10px 14px", marginBottom: 12 }}>
@@ -255,7 +255,7 @@ export default function GiftOrderDetail() {
                 transition: "all .2s",
               }}>
                 {copied ? <Check size={14} /> : <Copy size={14} />}
-                {copied ? "복사됨!" : "링크 복사"}
+                {copied ? "コピーしました!" : "リンクをコピー"}
               </button>
               <button onClick={shareKakao} style={{
                 flex: 1, padding: "11px 0",
@@ -264,7 +264,7 @@ export default function GiftOrderDetail() {
                 fontSize: 13, fontWeight: 800, cursor: "pointer",
                 display: "flex", alignItems: "center", justifyContent: "center", gap: 5,
               }}>
-                <ExternalLink size={14} /> 카카오 공유
+                <ExternalLink size={14} /> Kakaoで共有
               </button>
             </div>
             {!showSmsInput ? (
@@ -277,11 +277,11 @@ export default function GiftOrderDetail() {
                   color: "#fff", border: "none", borderRadius: 10,
                   fontSize: 13, fontWeight: 800, cursor: "pointer",
                 }}>
-                <Phone size={14} strokeWidth={2.5} /> 문자로 전송하기
+                <Phone size={14} strokeWidth={2.5} /> SMSで送信する
               </button>
             ) : (
               <div style={{ marginTop: 8, background: "#f0faf8", border: "1.5px solid #00b894", borderRadius: 12, padding: "14px" }}>
-                <p style={{ margin: "0 0 8px", fontSize: 12, fontWeight: 800, color: "#00856e" }}>받는 분 전화번호</p>
+                <p style={{ margin: "0 0 8px", fontSize: 12, fontWeight: 800, color: "#00856e" }}>受取人様の電話番号</p>
                 <div style={{ display: "flex", gap: 8 }}>
                   <input
                     type="tel" value={smsPhone}
@@ -304,8 +304,8 @@ export default function GiftOrderDetail() {
                         });
                         const d = await r.json();
                         if (d.ok) { setSmsSent(true); setTimeout(() => { setSmsSent(false); setShowSmsInput(false); setSmsPhone(""); }, 2500); }
-                        else alert(d.error || "발송 실패");
-                      } catch { alert("오류가 발생했습니다."); }
+                        else alert(d.error || "送信に失敗しました");
+                      } catch { alert("エラーが発生しました。"); }
                       setSmsSending(false);
                     }}
                     style={{
@@ -315,12 +315,12 @@ export default function GiftOrderDetail() {
                       opacity: (smsSending || smsPhone.length < 10) ? 0.6 : 1,
                     }}
                   >
-                    {smsSending ? "발송중..." : smsSent ? "✓ 발송완료" : "전송"}
+                    {smsSending ? "送信中..." : smsSent ? "✓ 送信完了" : "送信"}
                   </button>
                 </div>
                 <button onClick={() => { setShowSmsInput(false); setSmsPhone(""); }}
                   style={{ marginTop: 8, background: "none", border: "none", fontSize: 11, color: "#aaa", cursor: "pointer" }}>
-                  취소
+                  キャンセル
                 </button>
               </div>
             )}

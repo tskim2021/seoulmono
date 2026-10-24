@@ -18,18 +18,18 @@ function imgUrl(p: string) {
   if (p.startsWith("http") || p.startsWith("/api/")) return p;
   return `/api/product-image/${p}`;
 }
-function formatPrice(n: number | string) { return Number(n || 0).toLocaleString() + "원"; }
+function formatPrice(n: number | string) { return Number(n || 0).toLocaleString() + "円"; }
 
 const MAIN_TABS = [
-  { ca_id: "10", label: "과자류", emoji: "🍪" },
-  { ca_id: "20", label: "유지류", emoji: "🫙" },
-  { ca_id: "30", label: "통조림캔류", emoji: "🥫" },
+  { ca_id: "10", label: "お菓子類", emoji: "🍪" },
+  { ca_id: "20", label: "食用油類", emoji: "🫙" },
+  { ca_id: "30", label: "缶詰類", emoji: "🥫" },
 ];
 
 const CA_OPTIONS = [
-  { value: "10", label: "과자류 (ca_id: 10)" },
-  { value: "20", label: "유지류 (ca_id: 20)" },
-  { value: "30", label: "통조림캔류 (ca_id: 30)" },
+  { value: "10", label: "お菓子類 (ca_id: 10)" },
+  { value: "20", label: "食用油類 (ca_id: 20)" },
+  { value: "30", label: "缶詰類 (ca_id: 30)" },
 ];
 
 // ── API 훅 ───────────────────────────────────────────────────────────────────
@@ -81,14 +81,14 @@ function OptionEditor({ options, onChange }: { options: OptionRow[]; onChange: (
           <input
             value={opt.io_id}
             onChange={e => update(opt._key, "io_id", e.target.value)}
-            placeholder="옵션값 (예: 3개입, 소형)"
+            placeholder="オプション値 (例: 3個入り、小)"
             className="flex-1 h-8 px-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-primary"
           />
           <input
             type="number"
             value={opt.io_price}
             onChange={e => update(opt._key, "io_price", Number(e.target.value))}
-            placeholder="추가금액"
+            placeholder="追加金額"
             className="w-24 h-8 px-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-primary"
           />
           <select
@@ -96,8 +96,8 @@ function OptionEditor({ options, onChange }: { options: OptionRow[]; onChange: (
             onChange={e => update(opt._key, "io_use", Number(e.target.value))}
             className="h-8 px-2 border border-slate-200 rounded-lg text-xs focus:outline-none"
           >
-            <option value={1}>사용</option>
-            <option value={0}>중지</option>
+            <option value={1}>使用</option>
+            <option value={0}>停止</option>
           </select>
           <button onClick={() => remove(opt._key)} className="w-7 h-7 flex items-center justify-center rounded-lg text-slate-400 hover:text-red-500 hover:bg-red-50">
             <X className="w-3.5 h-3.5" />
@@ -108,7 +108,7 @@ function OptionEditor({ options, onChange }: { options: OptionRow[]; onChange: (
         onClick={add}
         className="flex items-center gap-1.5 text-xs font-bold text-primary hover:text-primary/80 transition-colors"
       >
-        <Plus className="w-3.5 h-3.5" /> 옵션 추가
+        <Plus className="w-3.5 h-3.5" /> オプションを追加
       </button>
     </div>
   );
@@ -206,11 +206,11 @@ function ItemModal({
         ? customFetch("/api/shop-admin/gift/items", { method: "POST", body: JSON.stringify(form) })
         : customFetch(`/api/shop-admin/gift/items/${it_id}`, { method: "PUT", body: JSON.stringify(form) }),
     onSuccess: () => {
-      toast({ title: mode === "create" ? "상품 등록 완료" : "상품 수정 완료" });
+      toast({ title: mode === "create" ? "商品の登録完了" : "商品の更新完了" });
       queryClient.invalidateQueries({ queryKey: ["gift-items"] });
       onSaved();
     },
-    onError: (e: any) => toast({ title: "저장 실패: " + (e.message ?? ""), variant: "destructive" }),
+    onError: (e: any) => toast({ title: "保存に失敗しました: " + (e.message ?? ""), variant: "destructive" }),
   });
 
   const handleImgBlur = (url: string) => {
@@ -225,7 +225,7 @@ function ItemModal({
         <div className="flex items-center gap-3 px-6 py-4 border-b border-slate-100 flex-shrink-0">
           <Gift className="w-5 h-5 text-primary" />
           <h2 className="text-lg font-black text-slate-900">
-            {mode === "create" ? "상품 등록" : "상품 수정"}
+            {mode === "create" ? "商品登録" : "商品編集"}
           </h2>
           <button onClick={onClose} className="ml-auto p-1.5 rounded-lg hover:bg-slate-100 text-slate-400">
             <X className="w-5 h-5" />
@@ -243,7 +243,7 @@ function ItemModal({
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
                 <div>
-                  <label className="text-xs font-bold text-slate-600 mb-1.5 block">1차 카테고리 *</label>
+                  <label className="text-xs font-bold text-slate-600 mb-1.5 block">第1階層カテゴリ *</label>
                   <select
                     value={mainCaId}
                     onChange={e => handleMainCaChange(e.target.value)}
@@ -253,40 +253,40 @@ function ItemModal({
                   </select>
                 </div>
                 <div>
-                  <label className="text-xs font-bold text-slate-600 mb-1.5 block">2차 카테고리 *</label>
+                  <label className="text-xs font-bold text-slate-600 mb-1.5 block">第2階層カテゴリ *</label>
                   {subCategories.length > 0 ? (
                     <select
                       value={form.ca_id.length === 4 ? form.ca_id : ""}
                       onChange={e => set("ca_id", e.target.value)}
                       className="w-full h-9 px-3 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-primary"
                     >
-                      <option value="">-- 선택 --</option>
+                      <option value="">-- 選択 --</option>
                       {subCategories.map((s: any) => (
                         <option key={s.ca_id} value={s.ca_id}>{s.ca_name}</option>
                       ))}
                     </select>
                   ) : (
                     <div className="w-full h-9 px-3 border border-slate-100 rounded-lg text-sm text-slate-400 flex items-center bg-slate-50">
-                      서브카테고리 없음
+                      サブカテゴリなし
                     </div>
                   )}
                 </div>
               </div>
               <div className="flex items-end gap-3">
                 <div className="flex-1">
-                  <label className="text-xs font-bold text-slate-600 mb-1.5 block">사용여부</label>
+                  <label className="text-xs font-bold text-slate-600 mb-1.5 block">使用有無</label>
                   <select value={form.it_use} onChange={e => set("it_use", Number(e.target.value))}
                     className="w-full h-9 px-3 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-primary">
-                    <option value={1}>사용</option>
-                    <option value={0}>중지</option>
+                    <option value={1}>使用</option>
+                    <option value={0}>停止</option>
                   </select>
                 </div>
                 <div className="flex-1">
-                  <label className="text-xs font-bold text-slate-600 mb-1.5 block">품절여부</label>
+                  <label className="text-xs font-bold text-slate-600 mb-1.5 block">品切れ有無</label>
                   <select value={form.it_soldout} onChange={e => set("it_soldout", Number(e.target.value))}
                     className="w-full h-9 px-3 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-primary">
-                    <option value={0}>정상</option>
-                    <option value={1}>품절</option>
+                    <option value={0}>正常</option>
+                    <option value={1}>品切れ</option>
                   </select>
                 </div>
               </div>
@@ -294,24 +294,24 @@ function ItemModal({
 
             {/* 상품명 */}
             <div>
-              <label className="text-xs font-bold text-slate-600 mb-1.5 block">상품명 *</label>
+              <label className="text-xs font-bold text-slate-600 mb-1.5 block">商品名 *</label>
               <input
                 value={form.it_name}
                 onChange={e => set("it_name", e.target.value)}
-                placeholder="상품명을 입력하세요"
+                placeholder="商品名を入力してください"
                 className="w-full h-9 px-3 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-primary"
               />
             </div>
 
             {/* 이미지 */}
             <div>
-              <label className="text-xs font-bold text-slate-600 mb-1.5 block">이미지 URL</label>
+              <label className="text-xs font-bold text-slate-600 mb-1.5 block">画像URL</label>
               <div className="flex gap-3">
                 <input
                   value={form.it_img1}
                   onChange={e => set("it_img1", e.target.value)}
                   onBlur={e => setImgPreview(e.target.value)}
-                  placeholder="이미지 URL 또는 경로 (예: 1234567890/image.jpg)"
+                  placeholder="画像URLまたはパス (例: 1234567890/image.jpg)"
                   className="flex-1 h-9 px-3 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-primary"
                 />
                 {imgPreview ? (
@@ -332,7 +332,7 @@ function ItemModal({
             {/* 가격 */}
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="text-xs font-bold text-slate-600 mb-1.5 block">소비자가 (원)</label>
+                <label className="text-xs font-bold text-slate-600 mb-1.5 block">希望小売価格 (円)</label>
                 <input
                   type="number" min={0}
                   value={form.it_price}
@@ -341,7 +341,7 @@ function ItemModal({
                 />
               </div>
               <div>
-                <label className="text-xs font-bold text-slate-600 mb-1.5 block">B2B 공급가 (원)</label>
+                <label className="text-xs font-bold text-slate-600 mb-1.5 block">B2B仕入価格 (円)</label>
                 <input
                   type="number" min={0}
                   value={form.it_cust_price}
@@ -353,11 +353,11 @@ function ItemModal({
 
             {/* 상품 설명 */}
             <div>
-              <label className="text-xs font-bold text-slate-600 mb-1.5 block">상품 설명</label>
+              <label className="text-xs font-bold text-slate-600 mb-1.5 block">商品説明</label>
               <textarea
                 value={form.it_basic}
                 onChange={e => set("it_basic", e.target.value)}
-                placeholder="상품 설명을 입력하세요"
+                placeholder="商品説明を入力してください"
                 rows={3}
                 className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-primary resize-none"
               />
@@ -366,18 +366,18 @@ function ItemModal({
             {/* 옵션 */}
             <div className="border border-slate-100 rounded-xl p-4 space-y-3">
               <div>
-                <label className="text-xs font-bold text-slate-600 mb-1.5 block">옵션 구분명</label>
+                <label className="text-xs font-bold text-slate-600 mb-1.5 block">オプション区分名</label>
                 <input
                   value={form.it_option_subject}
                   onChange={e => set("it_option_subject", e.target.value)}
-                  placeholder="예: 용량, 수량, 종류"
+                  placeholder="例: 容量、数量、種類"
                   className="w-full h-9 px-3 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-primary"
                 />
               </div>
               {form.it_option_subject && (
                 <div>
                   <label className="text-xs font-bold text-slate-600 mb-2 block">
-                    옵션 목록 <span className="text-slate-400 font-normal">(값 · 추가금액 · 사용여부)</span>
+                    オプション一覧 <span className="text-slate-400 font-normal">(値・追加金額・使用有無)</span>
                   </label>
                   <OptionEditor
                     options={form.options}
@@ -392,7 +392,7 @@ function ItemModal({
         {/* 하단 버튼 */}
         <div className="flex items-center justify-end gap-3 px-6 py-4 border-t border-slate-100 flex-shrink-0">
           <button onClick={onClose} className="px-4 h-9 rounded-lg text-sm font-bold text-slate-600 hover:bg-slate-100">
-            취소
+            キャンセル
           </button>
           <button
             onClick={() => saveMutation.mutate()}
@@ -400,7 +400,7 @@ function ItemModal({
             className="px-5 h-9 bg-primary text-white rounded-lg text-sm font-bold flex items-center gap-1.5 hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {saveMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
-            {mode === "create" ? "등록" : "수정 저장"}
+            {mode === "create" ? "登録" : "更新を保存"}
           </button>
         </div>
       </div>
@@ -414,11 +414,11 @@ function DeleteModal({ item, onClose, onDeleted }: { item: any; onClose: () => v
   const deleteMutation = useMutation({
     mutationFn: () => customFetch(`/api/shop-admin/gift/items/${item.it_id}`, { method: "DELETE" }),
     onSuccess: () => {
-      toast({ title: "상품이 비활성 처리되었습니다" });
+      toast({ title: "商品を無効にしました" });
       queryClient.invalidateQueries({ queryKey: ["gift-items"] });
       onDeleted();
     },
-    onError: () => toast({ title: "삭제 실패", variant: "destructive" }),
+    onError: () => toast({ title: "削除に失敗しました", variant: "destructive" }),
   });
 
   return (
@@ -429,8 +429,8 @@ function DeleteModal({ item, onClose, onDeleted }: { item: any; onClose: () => v
             <AlertTriangle className="w-5 h-5 text-red-500" />
           </div>
           <div>
-            <p className="font-black text-slate-900">상품 비활성 처리</p>
-            <p className="text-xs text-slate-500">삭제 후 세트에서도 제외됩니다</p>
+            <p className="font-black text-slate-900">商品の無効化</p>
+            <p className="text-xs text-slate-500">削除後、セットからも除外されます</p>
           </div>
         </div>
         <p className="text-sm text-slate-600 bg-slate-50 rounded-xl px-4 py-3">
@@ -438,7 +438,7 @@ function DeleteModal({ item, onClose, onDeleted }: { item: any; onClose: () => v
         </p>
         <div className="flex gap-2">
           <button onClick={onClose} className="flex-1 h-9 rounded-lg border border-slate-200 text-sm font-bold text-slate-600 hover:bg-slate-50">
-            취소
+            キャンセル
           </button>
           <button
             onClick={() => deleteMutation.mutate()}
@@ -446,7 +446,7 @@ function DeleteModal({ item, onClose, onDeleted }: { item: any; onClose: () => v
             className="flex-1 h-9 rounded-lg bg-red-500 text-white text-sm font-bold hover:bg-red-600 flex items-center justify-center gap-1.5"
           >
             {deleteMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 className="w-4 h-4" />}
-            비활성 처리
+            無効にする
           </button>
         </div>
       </div>
@@ -491,7 +491,7 @@ function ItemListTab({ ca_id }: { ca_id: string }) {
                 : "bg-white text-slate-600 border-slate-200 hover:border-primary/40 hover:text-primary"
             )}
           >
-            전체
+            すべて
           </button>
           {subList.map((sub: any) => (
             <button
@@ -519,21 +519,21 @@ function ItemListTab({ ca_id }: { ca_id: string }) {
               value={searchInput}
               onChange={e => setSearchInput(e.target.value)}
               onKeyDown={e => e.key === "Enter" && handleSearch()}
-              placeholder="상품명 검색..."
+              placeholder="商品名で検索..."
               className="w-full h-9 pl-9 pr-3 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-primary"
             />
           </div>
           <button onClick={handleSearch} className="px-4 h-9 bg-slate-800 text-white rounded-xl text-sm font-bold hover:bg-slate-700">
-            검색
+            検索
           </button>
         </div>
         <div className="flex items-center gap-2 ml-auto">
-          <span className="text-xs text-slate-500">총 {total}개</span>
+          <span className="text-xs text-slate-500">合計 {total}件</span>
           <button
             onClick={() => setModal("create")}
             className="flex items-center gap-1.5 h-9 px-4 bg-primary text-white rounded-xl text-sm font-bold hover:bg-primary/90"
           >
-            <Plus className="w-4 h-4" /> 상품 등록
+            <Plus className="w-4 h-4" /> 商品登録
           </button>
         </div>
       </div>
@@ -546,9 +546,9 @@ function ItemListTab({ ca_id }: { ca_id: string }) {
       ) : items.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-16 border-2 border-dashed border-slate-200 rounded-2xl">
           <Package className="w-10 h-10 text-slate-200 mb-3" />
-          <p className="text-slate-400 font-medium">등록된 상품이 없습니다</p>
+          <p className="text-slate-400 font-medium">登録された商品がありません</p>
           <button onClick={() => setModal("create")} className="mt-3 text-sm text-primary font-bold hover:underline">
-            상품 등록하기 →
+            商品を登録する →
           </button>
         </div>
       ) : (
@@ -578,14 +578,14 @@ function ItemListTab({ ca_id }: { ca_id: string }) {
                 <div className="flex items-center gap-2 flex-wrap">
                   <p className="text-sm font-bold text-slate-900 truncate">{item.it_name}</p>
                   {!item.it_use && (
-                    <span className="text-xs px-1.5 py-0.5 bg-slate-200 text-slate-500 rounded font-medium">중지</span>
+                    <span className="text-xs px-1.5 py-0.5 bg-slate-200 text-slate-500 rounded font-medium">停止</span>
                   )}
                   {item.it_soldout ? (
-                    <span className="text-xs px-1.5 py-0.5 bg-red-100 text-red-600 rounded font-medium">품절</span>
+                    <span className="text-xs px-1.5 py-0.5 bg-red-100 text-red-600 rounded font-medium">品切れ</span>
                   ) : null}
                   {item.it_option_subject && (
                     <span className="text-xs px-1.5 py-0.5 bg-blue-50 text-blue-600 rounded font-medium">
-                      옵션: {item.it_option_subject}
+                      オプション: {item.it_option_subject}
                     </span>
                   )}
                 </div>
@@ -626,7 +626,7 @@ function ItemListTab({ ca_id }: { ca_id: string }) {
             onClick={() => setPage(p => p - 1)}
             className="px-3 h-8 rounded-lg border border-slate-200 text-sm text-slate-600 hover:bg-slate-50 disabled:opacity-40"
           >
-            이전
+            前へ
           </button>
           <span className="text-sm text-slate-500">{page} / {totalPages}</span>
           <button
@@ -634,7 +634,7 @@ function ItemListTab({ ca_id }: { ca_id: string }) {
             onClick={() => setPage(p => p + 1)}
             className="px-3 h-8 rounded-lg border border-slate-200 text-sm text-slate-600 hover:bg-slate-50 disabled:opacity-40"
           >
-            다음
+            次へ
           </button>
         </div>
       )}
@@ -692,11 +692,11 @@ function SetConfigPanel({ sub }: { sub: any }) {
       }),
     }),
     onSuccess: () => {
-      toast({ title: "설정 저장 완료" });
+      toast({ title: "設定の保存完了" });
       queryClient.invalidateQueries({ queryKey: ["admin-gift-categories"] });
       setCfg(null);
     },
-    onError: () => toast({ title: "저장 실패", variant: "destructive" }),
+    onError: () => toast({ title: "保存に失敗しました", variant: "destructive" }),
   });
 
   const addMutation = useMutation({
@@ -706,18 +706,18 @@ function SetConfigPanel({ sub }: { sub: any }) {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin-gift-set-products", sub.ca_id] });
       setSearchResults([]); setSearchQ("");
-      toast({ title: "상품 추가 완료" });
+      toast({ title: "商品の追加完了" });
     },
-    onError: () => toast({ title: "추가 실패", variant: "destructive" }),
+    onError: () => toast({ title: "追加に失敗しました", variant: "destructive" }),
   });
 
   const removeMutation = useMutation({
     mutationFn: (id: number) => customFetch(`/api/shop-admin/gift/set-products/${id}`, { method: "DELETE" }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin-gift-set-products", sub.ca_id] });
-      toast({ title: "상품 제거" });
+      toast({ title: "商品を削除しました" });
     },
-    onError: () => toast({ title: "제거 실패", variant: "destructive" }),
+    onError: () => toast({ title: "削除に失敗しました", variant: "destructive" }),
   });
 
   const handleSearch = async () => {
@@ -728,7 +728,7 @@ function SetConfigPanel({ sub }: { sub: any }) {
         `/api/shop-admin/gift/search-products?q=${encodeURIComponent(searchQ)}&ca_id=${sub.ca_id}`
       );
       setSearchResults(res as any[]);
-    } catch { toast({ title: "검색 오류", variant: "destructive" }); }
+    } catch { toast({ title: "検索エラー", variant: "destructive" }); }
     setSearching(false);
   };
 
@@ -741,51 +741,51 @@ function SetConfigPanel({ sub }: { sub: any }) {
         <h3 className="font-black text-slate-900">{sub.ca_name}</h3>
         <span className={cn("text-xs font-bold px-2.5 py-0.5 rounded-full ml-auto",
           sub.is_active ? "bg-emerald-100 text-emerald-700" : "bg-slate-200 text-slate-500")}>
-          {sub.is_active ? "활성" : "비활성"}
+          {sub.is_active ? "有効" : "無効"}
         </span>
       </div>
 
       {/* 설정 */}
       <div className="flex items-end gap-3 p-4 bg-slate-50 rounded-xl border border-slate-100">
         <div>
-          <label className="text-xs font-bold text-slate-600 mb-1 block">구성 수</label>
+          <label className="text-xs font-bold text-slate-600 mb-1 block">構成数</label>
           <input type="number" min={1} max={20} value={subCfg.slot_count ?? 1}
             onChange={e => set("slot_count", e.target.value)}
             className="w-20 h-8 px-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-primary" />
         </div>
         <div>
-          <label className="text-xs font-bold text-slate-600 mb-1 block">최소금액</label>
+          <label className="text-xs font-bold text-slate-600 mb-1 block">最低金額</label>
           <input type="number" min={0} value={subCfg.price ?? 0}
             onChange={e => set("price", e.target.value)}
             className="w-28 h-8 px-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-primary" />
         </div>
         <div>
-          <label className="text-xs font-bold text-slate-600 mb-1 block">상태</label>
+          <label className="text-xs font-bold text-slate-600 mb-1 block">ステータス</label>
           <select value={subCfg.is_active ?? 1} onChange={e => set("is_active", Number(e.target.value))}
             className="h-8 px-2 border border-slate-200 rounded-lg text-sm focus:outline-none">
-            <option value={1}>활성</option>
-            <option value={0}>비활성</option>
+            <option value={1}>有効</option>
+            <option value={0}>無効</option>
           </select>
         </div>
         <button onClick={() => saveMutation.mutate()} disabled={!isDirty || saveMutation.isPending}
           className={cn("h-8 px-3 rounded-lg text-xs font-bold flex items-center gap-1 ml-auto",
             isDirty ? "bg-primary text-white" : "bg-slate-200 text-slate-400 cursor-not-allowed")}>
           {saveMutation.isPending ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Save className="w-3.5 h-3.5" />}
-          저장
+          保存
         </button>
       </div>
 
       {/* 상품 검색 */}
       <div>
-        <p className="text-xs font-bold text-slate-600 mb-2">상품 추가 (이 세트에 노출할 상품 지정)</p>
+        <p className="text-xs font-bold text-slate-600 mb-2">商品を追加 (このセットに表示する商品を指定)</p>
         <div className="flex gap-2">
           <input value={searchQ} onChange={e => setSearchQ(e.target.value)}
             onKeyDown={e => e.key === "Enter" && handleSearch()}
-            placeholder="등록된 상품 이름으로 검색..."
+            placeholder="登録済みの商品名で検索..."
             className="flex-1 h-8 px-3 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-primary" />
           <button onClick={handleSearch} disabled={searching}
             className="px-3 h-8 bg-slate-800 text-white rounded-lg text-xs font-bold flex items-center gap-1">
-            {searching ? <Loader2 className="w-3 h-3 animate-spin" /> : <Search className="w-3 h-3" />} 검색
+            {searching ? <Loader2 className="w-3 h-3 animate-spin" /> : <Search className="w-3 h-3" />} 検索
           </button>
         </div>
         {searchResults.length > 0 && (
@@ -811,13 +811,13 @@ function SetConfigPanel({ sub }: { sub: any }) {
       {/* 등록 상품 */}
       <div>
         <p className="text-sm font-bold text-slate-700 mb-2">
-          세트 노출 상품 <span className="text-primary">{(products as any[]).length}개</span>
+          セット表示商品 <span className="text-primary">{(products as any[]).length}件</span>
         </p>
         {isLoading ? (
           <div className="py-6 flex justify-center"><Loader2 className="w-5 h-5 animate-spin text-primary" /></div>
         ) : (products as any[]).length === 0 ? (
           <div className="py-8 text-center border-2 border-dashed border-slate-200 rounded-xl text-slate-400 text-sm">
-            등록된 상품 없음 — 위 검색으로 추가하세요
+            登録された商品なし — 上の検索から追加してください
           </div>
         ) : (
           <div className="grid grid-cols-2 gap-2 max-h-72 overflow-y-auto">
@@ -857,7 +857,7 @@ function SetConfigTab({ ca_id }: { ca_id: string }) {
     <div className="flex gap-5 min-h-[500px]">
       {/* 좌측: 서브카테고리 */}
       <div className="w-52 flex-shrink-0 space-y-1">
-        <p className="text-xs font-bold text-slate-400 uppercase tracking-wider px-2 mb-3">서브메뉴</p>
+        <p className="text-xs font-bold text-slate-400 uppercase tracking-wider px-2 mb-3">サブメニュー</p>
         {subList.map((sub: any) => {
           const isActive = (selectedSub?.ca_id ?? subList[0]?.ca_id) === sub.ca_id;
           return (
@@ -867,7 +867,7 @@ function SetConfigTab({ ca_id }: { ca_id: string }) {
               <Tag className={cn("w-3.5 h-3.5 flex-shrink-0", isActive ? "text-white/80" : "text-slate-400")} />
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-bold truncate">{sub.ca_name}</p>
-                <p className={cn("text-xs", isActive ? "text-white/70" : "text-slate-400")}>{sub.slot_count}구성</p>
+                <p className={cn("text-xs", isActive ? "text-white/70" : "text-slate-400")}>{sub.slot_count}点構成</p>
               </div>
               <ChevronRight className={cn("w-3 h-3 flex-shrink-0", isActive ? "text-white/60" : "text-slate-300")} />
             </button>
@@ -884,7 +884,7 @@ function SetConfigTab({ ca_id }: { ca_id: string }) {
         ) : (
           <Card className="p-10 flex flex-col items-center justify-center h-full text-center">
             <CheckCircle2 className="w-10 h-10 text-slate-200 mb-2" />
-            <p className="text-slate-400">왼쪽 서브메뉴를 선택하세요</p>
+            <p className="text-slate-400">左のサブメニューを選択してください</p>
           </Card>
         )}
       </div>
@@ -894,9 +894,9 @@ function SetConfigTab({ ca_id }: { ca_id: string }) {
 
 // ── 패키지 관리 탭 ───────────────────────────────────────────────────────────
 const CA_LABEL: Record<string, { label: string; emoji: string }> = {
-  "10": { label: "과자류", emoji: "🍪" },
-  "20": { label: "유지류", emoji: "🫙" },
-  "30": { label: "통조림캔류", emoji: "🥫" },
+  "10": { label: "お菓子類", emoji: "🍪" },
+  "20": { label: "食用油類", emoji: "🫙" },
+  "30": { label: "缶詰類", emoji: "🥫" },
 };
 
 type PkgForm = {
@@ -940,7 +940,7 @@ function PkgFormModal({
         `/api/shop-admin/gift/packages/search-items?q=${encodeURIComponent(searchQ)}&ca_id=${form.ca_id}`
       );
       setSearchResults(res as any[]);
-    } catch { toast({ title: "검색 오류", variant: "destructive" }); }
+    } catch { toast({ title: "検索エラー", variant: "destructive" }); }
     setSearching(false);
   };
 
@@ -960,8 +960,8 @@ function PkgFormModal({
       setSearchResults([]);
       setSearchQ("");
       queryClient.invalidateQueries({ queryKey: ["admin-gift-packages"] });
-      toast({ title: "상품 추가 완료" });
-    } catch { toast({ title: "추가 실패", variant: "destructive" }); }
+      toast({ title: "商品の追加完了" });
+    } catch { toast({ title: "追加に失敗しました", variant: "destructive" }); }
   };
 
   const removeItem = async (itemId: number, temp: boolean) => {
@@ -973,12 +973,12 @@ function PkgFormModal({
       await customFetch(`/api/shop-admin/gift/packages/${pkg.id}/items/${itemId}`, { method: "DELETE" });
       setPkgItems(prev => prev.filter(i => i.id !== itemId));
       queryClient.invalidateQueries({ queryKey: ["admin-gift-packages"] });
-      toast({ title: "상품 제거" });
-    } catch { toast({ title: "제거 실패", variant: "destructive" }); }
+      toast({ title: "商品を削除しました" });
+    } catch { toast({ title: "削除に失敗しました", variant: "destructive" }); }
   };
 
   const handleSave = async () => {
-    if (!form.name.trim()) { toast({ title: "패키지 이름을 입력하세요", variant: "destructive" }); return; }
+    if (!form.name.trim()) { toast({ title: "パッケージ名を入力してください", variant: "destructive" }); return; }
     setSaving(true);
     try {
       let pkgId = pkg?.id;
@@ -1000,10 +1000,10 @@ function PkgFormModal({
         }
       }
       queryClient.invalidateQueries({ queryKey: ["admin-gift-packages"] });
-      toast({ title: isEdit ? "패키지 수정 완료" : "패키지 등록 완료" });
+      toast({ title: isEdit ? "パッケージの更新完了" : "パッケージの登録完了" });
       onSaved();
     } catch (e: any) {
-      toast({ title: "저장 실패: " + (e.message ?? ""), variant: "destructive" });
+      toast({ title: "保存に失敗しました: " + (e.message ?? ""), variant: "destructive" });
     }
     setSaving(false);
   };
@@ -1014,7 +1014,7 @@ function PkgFormModal({
         {/* 헤더 */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100">
           <h2 className="text-lg font-black text-slate-900">
-            {isEdit ? "패키지 수정" : "패키지 등록"}
+            {isEdit ? "パッケージ編集" : "パッケージ登録"}
           </h2>
           <button onClick={onClose} className="w-7 h-7 flex items-center justify-center rounded-lg text-slate-400 hover:bg-slate-100">
             <X className="w-4 h-4" />
@@ -1025,59 +1025,59 @@ function PkgFormModal({
           {/* 기본 정보 */}
           <div className="grid grid-cols-2 gap-3">
             <div className="col-span-2">
-              <label className="text-xs font-bold text-slate-500 mb-1 block">패키지 이름 *</label>
+              <label className="text-xs font-bold text-slate-500 mb-1 block">パッケージ名 *</label>
               <input value={form.name} onChange={e => set("name", e.target.value)}
-                placeholder="예: 과자류 3개입 선물세트"
+                placeholder="例: お菓子類 3個入りギフトセット"
                 className="w-full h-9 px-3 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-primary" />
             </div>
             <div className="col-span-2">
-              <label className="text-xs font-bold text-slate-500 mb-1 block">설명</label>
+              <label className="text-xs font-bold text-slate-500 mb-1 block">説明</label>
               <textarea value={form.description} onChange={e => set("description", e.target.value)}
-                placeholder="패키지 간단 설명"
+                placeholder="パッケージの簡単な説明"
                 rows={2}
                 className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-primary resize-none" />
             </div>
             <div>
-              <label className="text-xs font-bold text-slate-500 mb-1 block">카테고리</label>
+              <label className="text-xs font-bold text-slate-500 mb-1 block">カテゴリ</label>
               <select value={form.ca_id} onChange={e => set("ca_id", e.target.value)}
                 className="w-full h-9 px-2 border border-slate-200 rounded-lg text-sm focus:outline-none">
                 {MAIN_TABS.map(t => <option key={t.ca_id} value={t.ca_id}>{t.emoji} {t.label}</option>)}
               </select>
             </div>
             <div>
-              <label className="text-xs font-bold text-slate-500 mb-1 block">개입 수</label>
+              <label className="text-xs font-bold text-slate-500 mb-1 block">入数</label>
               <input type="number" min={1} value={form.item_count} onChange={e => set("item_count", Number(e.target.value))}
                 className="w-full h-9 px-3 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-primary" />
             </div>
             <div>
-              <label className="text-xs font-bold text-slate-500 mb-1 block">판매가 (원)</label>
+              <label className="text-xs font-bold text-slate-500 mb-1 block">販売価格 (円)</label>
               <input type="number" min={0} value={form.price} onChange={e => set("price", Number(e.target.value))}
                 className="w-full h-9 px-3 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-primary" />
             </div>
             <div>
-              <label className="text-xs font-bold text-slate-500 mb-1 block">정렬순서</label>
+              <label className="text-xs font-bold text-slate-500 mb-1 block">表示順</label>
               <input type="number" min={0} value={form.sort_order} onChange={e => set("sort_order", Number(e.target.value))}
                 className="w-full h-9 px-3 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-primary" />
             </div>
             <div className="col-span-2">
-              <label className="text-xs font-bold text-slate-500 mb-1 block">대표 이미지</label>
+              <label className="text-xs font-bold text-slate-500 mb-1 block">代表画像</label>
               {/* 미리보기 */}
               {form.thumb_img ? (
                 <div className="relative w-full h-32 rounded-xl overflow-hidden border border-slate-200 mb-2 bg-slate-50">
                   <img src={form.thumb_img}
-                    alt="미리보기" className="w-full h-full object-cover" />
+                    alt="プレビュー" className="w-full h-full object-cover" />
                   <button type="button" onClick={() => set("thumb_img", "")}
                     className="absolute top-2 right-2 w-6 h-6 rounded-full bg-black/50 text-white flex items-center justify-center text-xs hover:bg-black/70">✕</button>
                 </div>
               ) : (
                 <div className="w-full h-24 rounded-xl border-2 border-dashed border-slate-200 flex items-center justify-center mb-2 bg-slate-50 text-slate-400 text-sm">
-                  이미지를 업로드하거나 URL을 입력하세요
+                  画像をアップロードするかURLを入力してください
                 </div>
               )}
               {/* 파일 업로드 버튼 */}
               <label className="block w-full">
                 <span className="inline-flex items-center gap-2 px-3 py-2 rounded-lg border border-slate-200 bg-white text-sm font-semibold text-slate-600 cursor-pointer hover:bg-slate-50 w-full justify-center">
-                  📁 이미지 파일 업로드
+                  📁 画像ファイルをアップロード
                 </span>
                 <input type="file" accept="image/*" className="hidden"
                   onChange={async (e) => {
@@ -1092,34 +1092,34 @@ function PkgFormModal({
                       });
                       const d = await res.json();
                       if (d.url) set("thumb_img", d.url);
-                      else toast({ title: d.error ?? "업로드 실패", variant: "destructive" });
-                    } catch { toast({ title: "업로드 오류", variant: "destructive" }); }
+                      else toast({ title: d.error ?? "アップロードに失敗しました", variant: "destructive" });
+                    } catch { toast({ title: "アップロードエラー", variant: "destructive" }); }
                   }}
                 />
               </label>
-              <p className="text-xs text-slate-400 mt-1">또는 직접 URL 입력</p>
+              <p className="text-xs text-slate-400 mt-1">またはURLを直接入力</p>
               <input value={form.thumb_img} onChange={e => set("thumb_img", e.target.value)}
-                placeholder="https://... 또는 /uploads/gift-packages/..."
+                placeholder="https://... または /uploads/gift-packages/..."
                 className="w-full h-9 px-3 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-primary mt-1" />
             </div>
             <div>
-              <label className="text-xs font-bold text-slate-500 mb-1 block">상태</label>
+              <label className="text-xs font-bold text-slate-500 mb-1 block">ステータス</label>
               <select value={form.is_active} onChange={e => set("is_active", Number(e.target.value))}
                 className="w-full h-9 px-2 border border-slate-200 rounded-lg text-sm focus:outline-none">
-                <option value={1}>활성</option>
-                <option value={0}>비활성</option>
+                <option value={1}>有効</option>
+                <option value={0}>無効</option>
               </select>
             </div>
           </div>
 
           {/* 구성 상품 */}
           <div>
-            <p className="text-xs font-bold text-slate-500 mb-2">구성 상품 ({pkgItems.length}개)</p>
+            <p className="text-xs font-bold text-slate-500 mb-2">構成商品 ({pkgItems.length}件)</p>
             {/* 상품 검색 */}
             <div className="flex gap-2 mb-2">
               <input value={searchQ} onChange={e => setSearchQ(e.target.value)}
                 onKeyDown={e => e.key === "Enter" && handleSearch()}
-                placeholder="상품명으로 검색..."
+                placeholder="商品名で検索..."
                 className="flex-1 h-8 px-3 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-primary" />
               <button onClick={handleSearch} disabled={searching}
                 className="px-3 h-8 bg-slate-800 text-white rounded-lg text-xs font-bold flex items-center gap-1">
@@ -1146,7 +1146,7 @@ function PkgFormModal({
             {/* 등록된 아이템 */}
             {pkgItems.length === 0 ? (
               <div className="py-6 border-2 border-dashed border-slate-200 rounded-xl text-center text-slate-400 text-sm">
-                구성 상품을 검색해서 추가하세요
+                構成商品を検索して追加してください
               </div>
             ) : (
               <div className="space-y-1.5 max-h-48 overflow-y-auto">
@@ -1173,7 +1173,7 @@ function PkgFormModal({
           <button onClick={handleSave} disabled={saving}
             className="w-full h-10 bg-primary text-white rounded-xl text-sm font-bold flex items-center justify-center gap-2">
             {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
-            {isEdit ? "수정 저장" : "패키지 등록"}
+            {isEdit ? "更新を保存" : "パッケージ登録"}
           </button>
         </div>
       </div>
@@ -1194,9 +1194,9 @@ function PackageManageTab() {
     mutationFn: (id: number) => customFetch(`/api/shop-admin/gift/packages/${id}`, { method: "DELETE" }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin-gift-packages"] });
-      toast({ title: "패키지 삭제 완료" });
+      toast({ title: "パッケージの削除完了" });
     },
-    onError: () => toast({ title: "삭제 실패", variant: "destructive" }),
+    onError: () => toast({ title: "削除に失敗しました", variant: "destructive" }),
   });
 
   const toggleActiveMutation = useMutation({
@@ -1214,11 +1214,11 @@ function PackageManageTab() {
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <p className="text-sm font-bold text-slate-600">
-          총 <span className="text-primary">{pkgList.length}</span>개 패키지
+          合計 <span className="text-primary">{pkgList.length}</span>件のパッケージ
         </p>
         <button onClick={() => setModal("create")}
           className="flex items-center gap-1.5 px-4 py-2 bg-primary text-white rounded-xl text-sm font-bold">
-          <Plus className="w-4 h-4" /> 패키지 등록
+          <Plus className="w-4 h-4" /> パッケージ登録
         </button>
       </div>
 
@@ -1227,16 +1227,16 @@ function PackageManageTab() {
       ) : pkgList.length === 0 ? (
         <div className="py-16 text-center border-2 border-dashed border-slate-200 rounded-2xl">
           <Gift className="w-10 h-10 text-slate-200 mx-auto mb-3" />
-          <p className="text-slate-400 text-sm">등록된 선물 패키지가 없습니다</p>
+          <p className="text-slate-400 text-sm">登録されたギフトパッケージがありません</p>
           <button onClick={() => setModal("create")}
             className="mt-4 px-5 py-2 bg-primary text-white rounded-xl text-sm font-bold">
-            첫 패키지 등록
+            最初のパッケージを登録
           </button>
         </div>
       ) : (
         <div className="grid grid-cols-1 gap-3">
           {pkgList.map((pkg: any) => {
-            const cat = CA_LABEL[pkg.ca_id] ?? { label: "기타", emoji: "🎁" };
+            const cat = CA_LABEL[pkg.ca_id] ?? { label: "その他", emoji: "🎁" };
             return (
               <div key={pkg.id} className="flex items-start gap-3 p-4 bg-white border border-slate-100 rounded-2xl hover:border-primary/30 transition-colors">
                 {/* 썸네일 */}
@@ -1255,17 +1255,17 @@ function PackageManageTab() {
                       "text-xs font-bold px-2 py-0.5 rounded-full flex-shrink-0",
                       pkg.is_active ? "bg-emerald-100 text-emerald-700" : "bg-slate-100 text-slate-400"
                     )}>
-                      {pkg.is_active ? "활성" : "비활성"}
+                      {pkg.is_active ? "有効" : "無効"}
                     </span>
                   </div>
                   <div className="flex items-center gap-2 flex-wrap">
                     <span className="text-xs text-slate-400">{cat.emoji} {cat.label}</span>
                     <span className="text-xs text-slate-400">·</span>
-                    <span className="text-xs text-slate-400">{pkg.item_count}개입</span>
+                    <span className="text-xs text-slate-400">{pkg.item_count}個入り</span>
                     <span className="text-xs text-slate-400">·</span>
                     <span className="text-xs font-bold text-primary">{formatPrice(pkg.price)}</span>
                     <span className="text-xs text-slate-400">·</span>
-                    <span className="text-xs text-slate-400">구성 {pkg.item_count_actual}종</span>
+                    <span className="text-xs text-slate-400">構成 {pkg.item_count_actual}種類</span>
                   </div>
                   {pkg.description && (
                     <p className="text-xs text-slate-400 mt-1 truncate">{pkg.description}</p>
@@ -1275,7 +1275,7 @@ function PackageManageTab() {
                 {/* 액션 */}
                 <div className="flex items-center gap-1.5 flex-shrink-0">
                   <button onClick={() => toggleActiveMutation.mutate({ id: pkg.id, pkg })}
-                    title={pkg.is_active ? "비활성화" : "활성화"}
+                    title={pkg.is_active ? "無効にする" : "有効にする"}
                     className="w-7 h-7 rounded-lg flex items-center justify-center text-slate-400 hover:bg-slate-100">
                     {pkg.is_active ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
                   </button>
@@ -1284,7 +1284,7 @@ function PackageManageTab() {
                     <Pencil className="w-3.5 h-3.5" />
                   </button>
                   <button onClick={() => {
-                    if (confirm(`"${pkg.name}" 패키지를 삭제할까요?`)) deleteMutation.mutate(pkg.id);
+                    if (confirm(`「${pkg.name}」パッケージを削除しますか？`)) deleteMutation.mutate(pkg.id);
                   }}
                     className="w-7 h-7 rounded-lg flex items-center justify-center text-slate-400 hover:bg-red-50 hover:text-red-500">
                     <Trash2 className="w-3.5 h-3.5" />
@@ -1308,12 +1308,12 @@ function PackageManageTab() {
 
 // ── 선물 주문 관리 탭 ────────────────────────────────────────────────────────
 const STATUS_MAP: Record<string, { label: string; color: string; bg: string }> = {
-  pending:        { label: "대기중",      color: "#92400e", bg: "#fef3c7" },
-  address_filled: { label: "배송지입력완료", color: "#1e40af", bg: "#dbeafe" },
-  preparing:      { label: "준비중",      color: "#5b21b6", bg: "#ede9fe" },
-  shipped:        { label: "발송완료",    color: "#065f46", bg: "#d1fae5" },
-  delivered:      { label: "배송완료",    color: "#374151", bg: "#f3f4f6" },
-  cancelled:      { label: "취소",        color: "#991b1b", bg: "#fee2e2" },
+  pending:        { label: "待機中",      color: "#92400e", bg: "#fef3c7" },
+  address_filled: { label: "配送先入力済み", color: "#1e40af", bg: "#dbeafe" },
+  preparing:      { label: "準備中",      color: "#5b21b6", bg: "#ede9fe" },
+  shipped:        { label: "発送済み",    color: "#065f46", bg: "#d1fae5" },
+  delivered:      { label: "配送完了",    color: "#374151", bg: "#f3f4f6" },
+  cancelled:      { label: "キャンセル",  color: "#991b1b", bg: "#fee2e2" },
 };
 
 interface GiftOrderItem { it_id: string; it_name: string; it_img1: string; quantity: number }
@@ -1350,9 +1350,9 @@ function GiftOrderRow({ order, onRefresh }: { order: GiftOrder; onRefresh: () =>
         body: JSON.stringify({ status: newStatus, tracking_number: tracking, memo }),
       });
       const d = await r.json();
-      if (d.ok) { toast({ title: "저장되었습니다" }); onRefresh(); }
-      else toast({ title: d.error || "저장 실패", variant: "destructive" });
-    } catch { toast({ title: "오류가 발생했습니다", variant: "destructive" }); }
+      if (d.ok) { toast({ title: "保存しました" }); onRefresh(); }
+      else toast({ title: d.error || "保存に失敗しました", variant: "destructive" });
+    } catch { toast({ title: "エラーが発生しました", variant: "destructive" }); }
     setSaving(false);
   };
 
@@ -1376,14 +1376,14 @@ function GiftOrderRow({ order, onRefresh }: { order: GiftOrder; onRefresh: () =>
               {st.label}
             </span>
             {order.set_ca_id === "custom" && (
-              <span className="text-xs bg-violet-100 text-violet-700 px-2 py-0.5 rounded-full font-bold">직접구성</span>
+              <span className="text-xs bg-violet-100 text-violet-700 px-2 py-0.5 rounded-full font-bold">オリジナル構成</span>
             )}
           </div>
           <div className="flex items-center gap-3 mt-1 text-xs text-slate-500 flex-wrap">
             <span className="flex items-center gap-1"><User size={11} />{order.sender_mb_id}</span>
-            <span>{order.slot_count}개 구성</span>
+            <span>{order.slot_count}点構成</span>
             <span>{new Date(order.created_at).toLocaleString("ko-KR", { month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit" })}</span>
-            {hasAddress && <span className="flex items-center gap-1 text-blue-600"><MapPin size={11} />배송지 완료</span>}
+            {hasAddress && <span className="flex items-center gap-1 text-blue-600"><MapPin size={11} />配送先入力済み</span>}
           </div>
         </div>
         <div className="flex-shrink-0 flex items-center gap-2">
@@ -1402,7 +1402,7 @@ function GiftOrderRow({ order, onRefresh }: { order: GiftOrder; onRefresh: () =>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* 상품 목록 */}
             <div>
-              <p className="text-xs font-bold text-slate-500 mb-2">📦 구성 상품</p>
+              <p className="text-xs font-bold text-slate-500 mb-2">📦 構成商品</p>
               <div className="flex flex-wrap gap-2">
                 {order.items.map((item, i) => (
                   <div key={i} className="relative group" title={item.it_name}>
@@ -1416,7 +1416,7 @@ function GiftOrderRow({ order, onRefresh }: { order: GiftOrder; onRefresh: () =>
               </div>
               {order.sender_message && (
                 <div className="mt-3 bg-pink-50 border border-pink-100 rounded-lg p-2.5">
-                  <p className="text-xs text-pink-600 font-bold mb-1">💌 선물 메시지</p>
+                  <p className="text-xs text-pink-600 font-bold mb-1">💌 ギフトメッセージ</p>
                   <p className="text-xs text-slate-700">{order.sender_message}</p>
                 </div>
               )}
@@ -1424,7 +1424,7 @@ function GiftOrderRow({ order, onRefresh }: { order: GiftOrder; onRefresh: () =>
 
             {/* 수령인 정보 */}
             <div>
-              <p className="text-xs font-bold text-slate-500 mb-2 flex items-center gap-1"><MapPin size={11} />배송지 정보</p>
+              <p className="text-xs font-bold text-slate-500 mb-2 flex items-center gap-1"><MapPin size={11} />配送先情報</p>
               {hasAddress ? (
                 <div className="bg-white border border-slate-200 rounded-lg p-3 text-sm space-y-1">
                   <p className="font-bold">{order.recipient_name} <span className="text-slate-400 font-normal text-xs">{order.recipient_phone}</span></p>
@@ -1433,11 +1433,11 @@ function GiftOrderRow({ order, onRefresh }: { order: GiftOrder; onRefresh: () =>
                 </div>
               ) : (
                 <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 text-xs text-amber-700">
-                  <p className="font-bold mb-1">배송지 미입력</p>
-                  <p>받는 분이 아직 배송지를 입력하지 않았습니다.</p>
+                  <p className="font-bold mb-1">配送先未入力</p>
+                  <p>受取人がまだ配送先を入力していません。</p>
                   <button onClick={handleCopy} className="mt-2 flex items-center gap-1.5 text-xs bg-white border border-amber-200 rounded-lg px-3 py-1.5 hover:bg-amber-50 transition-colors font-bold">
                     {copied ? <Check size={11} /> : <Copy size={11} />}
-                    {copied ? "복사됨!" : "배송지 입력 링크 복사"}
+                    {copied ? "コピーしました！" : "配送先入力リンクをコピー"}
                   </button>
                 </div>
               )}
@@ -1446,10 +1446,10 @@ function GiftOrderRow({ order, onRefresh }: { order: GiftOrder; onRefresh: () =>
 
           {/* 상태 변경 */}
           <div className="bg-white border border-slate-200 rounded-xl p-4 space-y-3">
-            <p className="text-xs font-bold text-slate-600">🔧 주문 처리</p>
+            <p className="text-xs font-bold text-slate-600">🔧 注文処理</p>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               <div>
-                <label className="text-xs text-slate-500 mb-1 block">상태 변경</label>
+                <label className="text-xs text-slate-500 mb-1 block">ステータス変更</label>
                 <select value={newStatus} onChange={e => setNewStatus(e.target.value)}
                   className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-200 bg-white">
                   {Object.entries(STATUS_MAP).map(([v, s]) => (
@@ -1458,15 +1458,15 @@ function GiftOrderRow({ order, onRefresh }: { order: GiftOrder; onRefresh: () =>
                 </select>
               </div>
               <div>
-                <label className="text-xs text-slate-500 mb-1 block">운송장 번호</label>
+                <label className="text-xs text-slate-500 mb-1 block">送り状番号</label>
                 <input value={tracking} onChange={e => setTracking(e.target.value)}
-                  placeholder="송장번호 입력"
+                  placeholder="送り状番号を入力"
                   className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-200" />
               </div>
               <div>
-                <label className="text-xs text-slate-500 mb-1 block">관리자 메모</label>
+                <label className="text-xs text-slate-500 mb-1 block">管理者メモ</label>
                 <input value={memo} onChange={e => setMemo(e.target.value)}
-                  placeholder="내부 메모"
+                  placeholder="社内メモ"
                   className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-200" />
               </div>
             </div>
@@ -1474,13 +1474,13 @@ function GiftOrderRow({ order, onRefresh }: { order: GiftOrder; onRefresh: () =>
               <button onClick={handleSave} disabled={saving}
                 className="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg text-sm font-bold transition-colors disabled:opacity-50">
                 {saving ? <Loader2 size={14} className="animate-spin" /> : <Save size={14} />}
-                저장
+                保存
               </button>
               {hasAddress && (
                 <button onClick={handleCopy}
                   className="flex items-center gap-2 bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-lg text-sm font-bold transition-colors">
                   {copied ? <Check size={14} /> : <Copy size={14} />}
-                  {copied ? "복사됨" : "링크 복사"}
+                  {copied ? "コピーしました" : "リンクをコピー"}
                 </button>
               )}
             </div>
@@ -1507,20 +1507,20 @@ function GiftOrdersTab() {
         headers: { Authorization: `Bearer ${token}` },
       });
       setData(await r.json());
-    } catch { toast({ title: "데이터를 불러오지 못했습니다", variant: "destructive" }); }
+    } catch { toast({ title: "データを読み込めませんでした", variant: "destructive" }); }
     setLoading(false);
   };
 
   useEffect(() => { fetchOrders(); }, [status, page]);
 
   const STATUS_FILTERS = [
-    { value: "", label: "전체" },
-    { value: "pending", label: "대기중" },
-    { value: "address_filled", label: "배송지입력" },
-    { value: "preparing", label: "준비중" },
-    { value: "shipped", label: "발송완료" },
-    { value: "delivered", label: "배송완료" },
-    { value: "cancelled", label: "취소" },
+    { value: "", label: "すべて" },
+    { value: "pending", label: "待機中" },
+    { value: "address_filled", label: "配送先入力" },
+    { value: "preparing", label: "準備中" },
+    { value: "shipped", label: "発送済み" },
+    { value: "delivered", label: "配送完了" },
+    { value: "cancelled", label: "キャンセル" },
   ];
 
   return (
@@ -1537,7 +1537,7 @@ function GiftOrdersTab() {
         </div>
         <button onClick={fetchOrders} disabled={loading}
           className="flex items-center gap-1.5 text-xs text-slate-600 hover:text-slate-900 transition-colors font-bold">
-          <RefreshCw size={13} className={loading ? "animate-spin" : ""} />새로고침
+          <RefreshCw size={13} className={loading ? "animate-spin" : ""} />更新
         </button>
       </div>
 
@@ -1546,20 +1546,20 @@ function GiftOrdersTab() {
       ) : !data || data.orders.length === 0 ? (
         <div className="text-center py-16 text-slate-400">
           <ShoppingBag size={40} className="mx-auto mb-3 opacity-30" />
-          <p className="font-bold">선물 주문이 없습니다</p>
+          <p className="font-bold">ギフト注文がありません</p>
         </div>
       ) : (
         <>
-          <p className="text-xs text-slate-500 mb-3">총 {data.total}건</p>
+          <p className="text-xs text-slate-500 mb-3">合計 {data.total}件</p>
           {data.orders.map(order => (
             <GiftOrderRow key={order.id} order={order} onRefresh={fetchOrders} />
           ))}
           {/* 페이지네이션 */}
           {data.total > 15 && (
             <div className="flex justify-center gap-2 mt-4">
-              {page > 1 && <button onClick={() => setPage(p => p - 1)} className="px-4 py-2 rounded-lg border border-slate-200 text-sm font-bold hover:bg-slate-50">이전</button>}
+              {page > 1 && <button onClick={() => setPage(p => p - 1)} className="px-4 py-2 rounded-lg border border-slate-200 text-sm font-bold hover:bg-slate-50">前へ</button>}
               <span className="px-4 py-2 text-sm text-slate-500">{page} / {Math.ceil(data.total / 15)}</span>
-              {page * 15 < data.total && <button onClick={() => setPage(p => p + 1)} className="px-4 py-2 rounded-lg border border-slate-200 text-sm font-bold hover:bg-slate-50">다음</button>}
+              {page * 15 < data.total && <button onClick={() => setPage(p => p + 1)} className="px-4 py-2 rounded-lg border border-slate-200 text-sm font-bold hover:bg-slate-50">次へ</button>}
             </div>
           )}
         </>
@@ -1576,30 +1576,30 @@ export default function AdminGifts() {
     <div className="animate-in fade-in duration-300 space-y-5">
       <div className="flex items-start justify-between flex-wrap gap-3">
         <div>
-          <h1 className="text-3xl font-black text-slate-900 tracking-tight">선물하기 관리</h1>
-          <p className="text-slate-500 mt-1 font-medium">선물 패키지 등록·수정·삭제 및 상품·세트 구성을 관리합니다.</p>
+          <h1 className="text-3xl font-black text-slate-900 tracking-tight">ギフト管理</h1>
+          <p className="text-slate-500 mt-1 font-medium">ギフトパッケージの登録・編集・削除、および商品・セット構成を管理します。</p>
         </div>
         {/* 뷰 전환 */}
         <div className="flex gap-1 bg-slate-100 p-1 rounded-xl flex-wrap">
           <button onClick={() => setViewMode("orders")}
             className={cn("flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-bold transition-all",
               viewMode === "orders" ? "bg-emerald-600 text-white shadow-sm" : "text-slate-500 hover:text-slate-700")}>
-            <ShoppingBag className="w-4 h-4" /> 주문 관리
+            <ShoppingBag className="w-4 h-4" /> 注文管理
           </button>
           <button onClick={() => setViewMode("packages")}
             className={cn("flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-bold transition-all",
               viewMode === "packages" ? "bg-white text-slate-900 shadow-sm" : "text-slate-500 hover:text-slate-700")}>
-            <Gift className="w-4 h-4" /> 패키지 관리
+            <Gift className="w-4 h-4" /> パッケージ管理
           </button>
           <button onClick={() => setViewMode("items")}
             className={cn("flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-bold transition-all",
               viewMode === "items" ? "bg-white text-slate-900 shadow-sm" : "text-slate-500 hover:text-slate-700")}>
-            <Package className="w-4 h-4" /> 상품 관리
+            <Package className="w-4 h-4" /> 商品管理
           </button>
           <button onClick={() => setViewMode("sets")}
             className={cn("flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-bold transition-all",
               viewMode === "sets" ? "bg-white text-slate-900 shadow-sm" : "text-slate-500 hover:text-slate-700")}>
-            <Tag className="w-4 h-4" /> 세트 구성
+            <Tag className="w-4 h-4" /> セット構成
           </button>
         </div>
       </div>

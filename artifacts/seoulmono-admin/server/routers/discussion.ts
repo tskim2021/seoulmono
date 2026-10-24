@@ -103,8 +103,8 @@ export const discussionRouter = router({
       await db.createNotification(
         discussion.userId,
         "discussion",
-        "토론에 새 댓글이 달렸습니다",
-        `"${discussion.title}"에 ${ctx.user.name || '익명'}님이 댓글을 달았습니다.`,
+        "ディスカッションに新しいコメントが付きました",
+        `「${discussion.title}」に${ctx.user.name || '匿名'}さんがコメントしました。`,
         `/discussions/${input.discussionId}`
       );
     }
@@ -115,8 +115,8 @@ export const discussionRouter = router({
         await db.createNotification(
           parentComment.userId,
           "discussion",
-          "답글이 달렸습니다",
-          `${ctx.user.name || '익명'}님이 내 댓글에 답글을 달았습니다.`,
+          "返信が付きました",
+          `${ctx.user.name || '匿名'}さんがあなたのコメントに返信しました。`,
           `/discussions/${input.discussionId}`
         );
       }

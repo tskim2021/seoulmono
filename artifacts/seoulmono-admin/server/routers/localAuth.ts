@@ -33,7 +33,7 @@ export const localAuthRouter = router({
         email: z.string().email(),
         password: z.string().min(6),
         name: z.string().min(1),
-        phone: z.string().min(1, "연락처를 입력해주세요"),
+        phone: z.string().min(1, "電話番号を入力してください"),
       })
     )
     .mutation(async ({ input, ctx }) => {
@@ -41,14 +41,14 @@ export const localAuthRouter = router({
       if (existing) {
         throw new TRPCError({
           code: "CONFLICT",
-          message: "이미 가입된 이메일입니다.",
+          message: "すでに登録されているメールアドレスです。",
         });
       }
       const existingPhone = await db.getUserByPhone(input.phone);
       if (existingPhone) {
         throw new TRPCError({
           code: "CONFLICT",
-          message: "이미 가입된 연락처입니다.",
+          message: "すでに登録されている電話番号です。",
         });
       }
 
@@ -66,7 +66,7 @@ export const localAuthRouter = router({
 
       const user = await db.getUserByOpenId(openId);
       if (!user) {
-        throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "회원가입에 실패했습니다." });
+        throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "会員登録に失敗しました。" });
       }
 
       await db.updateUserPassword(user.id, hashedPassword);
@@ -75,7 +75,7 @@ export const localAuthRouter = router({
       const parsed = parseInt(regPoints ?? "2000", 10);
       const bonusPoints = Number.isFinite(parsed) && parsed > 0 ? parsed : 2000;
       if (bonusPoints > 0) {
-        await db.addPoints(user.id, bonusPoints, "admin", "회원가입 축하 포인트");
+        await db.addPoints(user.id, bonusPoints, "admin", "会員登録記念ポイント");
       }
 
       const sessionToken = await sdk.createSessionToken(openId, { name: input.name });
@@ -90,16 +90,16 @@ export const localAuthRouter = router({
 
       (async () => {
         try {
-          const pointsMsg = bonusPoints > 0 ? `\n\n🎁 회원가입 축하 포인트 ${bonusPoints.toLocaleString()}P가 적립되었습니다!` : "";
+          const pointsMsg = bonusPoints > 0 ? `\n\n🎁 会員登録記念ポイント ${bonusPoints.toLocaleString()}ポイントを付与しました！` : "";
           const html = await generateEmailTemplate({
-            title: `${safeName}님, 탈모학교에 오신 것을 환영합니다!`,
-            content: `안녕하세요, ${safeName}님!\n\n탈모학교에 가입해 주셔서 감사합니다.\n\n탈모학교는 인도 의약품 해외직구 전문 쇼핑몰로, 탈모, 성기능, 피부미용, 다이어트 등 다양한 제품을 합리적인 가격에 제공하고 있습니다.${pointsMsg}\n\n지금 바로 쇼핑을 시작해 보세요!`,
+            title: `${safeName}様、ソウルモノへようこそ！`,
+            content: `いつもご利用ありがとうございます。${safeName}様\n\nソウルモノにご登録いただきありがとうございます。\n\nソウルモノはインドの医薬品などを個人輸入でお届けする専門ショップで、薄毛ケア、男性機能、スキンケア、ダイエットなど、さまざまな商品をお手頃な価格でご提供しています。${pointsMsg}\n\nさっそくお買い物を始めましょう！`,
             actionUrl: `${baseUrl}/products`,
-            actionText: "쇼핑 시작하기",
+            actionText: "ショッピングを始める",
           });
           await sendEmail({
             to: input.email,
-            subject: "[탈모학교] 회원가입을 환영합니다!",
+            subject: "[ソウルモノ] ご登録ありがとうございます！",
             html,
             userId: user.id,
           });
@@ -113,13 +113,13 @@ export const localAuthRouter = router({
 
   findAccount: publicProcedure
     .input(z.object({
-      name: z.string().min(1, "이름을 입력해주세요"),
-      phone: z.string().min(1, "연락처를 입력해주세요"),
+      name: z.string().min(1, "お名前を入力してください"),
+      phone: z.string().min(1, "電話番号を入力してください"),
     }))
     .mutation(async ({ input }) => {
       const user = await db.findUserByNameAndPhone(input.name, input.phone);
       if (!user || !user.email) {
-        throw new TRPCError({ code: "NOT_FOUND", message: "입력하신 정보와 일치하는 계정을 찾을 수 없습니다." });
+        throw new TRPCError({ code: "NOT_FOUND", message: "入力された情報に一致するアカウントが見つかりません。" });
       }
       // 이메일 마스킹: ab****@gmail.com
       const [local, domain] = user.email.split("@");
@@ -130,7 +130,7 @@ export const localAuthRouter = router({
 
   requestPasswordReset: publicProcedure
     .input(z.object({
-      email: z.string().email("올바른 이메일을 입력해주세요"),
+      email: z.string().email("正しいメールアドレスを入力してください"),
     }))
     .mutation(async ({ input }) => {
       const user = await db.getUserByEmail(input.email);
@@ -150,20 +150,20 @@ export const localAuthRouter = router({
 
       try {
         const html = await generateEmailTemplate({
-          title: "임시 비밀번호 안내",
-          content: `안녕하세요, ${user.name ?? "회원"}님!\n\n요청하신 임시 비밀번호를 안내해 드립니다.\n\n임시 비밀번호: ${tempPw}\n\n로그인 후 반드시 비밀번호를 변경해주세요.\n\n본인이 요청하지 않으셨다면 즉시 고객센터로 문의해주세요.`,
+          title: "仮パスワードのご案内",
+          content: `いつもご利用ありがとうございます。${user.name ?? "お客様"}様\n\nご依頼いただいた仮パスワードをご案内いたします。\n\n仮パスワード: ${tempPw}\n\nログイン後、必ずパスワードを変更してください。\n\nお心当たりがない場合は、至急カスタマーサポートまでご連絡ください。`,
           actionUrl: `${baseUrl}/login`,
-          actionText: "로그인하러 가기",
+          actionText: "ログインする",
         });
         await sendEmail({
           to: input.email,
-          subject: "[탈모학교] 임시 비밀번호 안내",
+          subject: "[ソウルモノ] 仮パスワードのご案内",
           html,
           userId: user.id,
         });
       } catch (e) {
         console.error("[PasswordReset] Email failed:", e);
-        throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "이메일 발송에 실패했습니다. 잠시 후 다시 시도해주세요." });
+        throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "メールの送信に失敗しました。しばらくしてからもう一度お試しください。" });
       }
       return { success: true };
     }),
@@ -184,7 +184,7 @@ export const localAuthRouter = router({
         console.log("[Login] fail: no user or no password");
         throw new TRPCError({
           code: "UNAUTHORIZED",
-          message: "이메일 또는 비밀번호가 올바르지 않습니다.",
+          message: "メールアドレスまたはパスワードが正しくありません。",
         });
       }
 
@@ -194,7 +194,7 @@ export const localAuthRouter = router({
       if (!isValid) {
         throw new TRPCError({
           code: "UNAUTHORIZED",
-          message: "이메일 또는 비밀번호가 올바르지 않습니다.",
+          message: "メールアドレスまたはパスワードが正しくありません。",
         });
       }
 

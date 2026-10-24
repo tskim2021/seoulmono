@@ -18,14 +18,14 @@ import Paginator from "@/components/Paginator";
 import { useSEO } from "@/hooks/useSEO";
 
 const SORT_OPTIONS = [
-  { value: "newest", label: "최신순", icon: Clock },
-  { value: "popular", label: "인기순", icon: TrendingUp },
-  { value: "most_comments", label: "댓글순", icon: MessageCircle },
-  { value: "views", label: "조회순", icon: BarChart3 },
+  { value: "newest", label: "新着順", icon: Clock },
+  { value: "popular", label: "人気順", icon: TrendingUp },
+  { value: "most_comments", label: "コメント順", icon: MessageCircle },
+  { value: "views", label: "閲覧順", icon: BarChart3 },
 ];
 
 export default function DiscussionList() {
-  useSEO({ title: "토론광장 - 자유 토론 커뮤니티" });
+  useSEO({ title: "ディスカッション広場 - 自由討論コミュニティ" });
   const { user } = useAuth();
   const [, navigate] = useLocation();
   const [search, setSearch] = useState("");
@@ -68,10 +68,10 @@ export default function DiscussionList() {
     const minutes = Math.floor(diff / 60000);
     const hours = Math.floor(diff / 3600000);
     const days = Math.floor(diff / 86400000);
-    if (minutes < 1) return "방금 전";
-    if (minutes < 60) return `${minutes}분 전`;
-    if (hours < 24) return `${hours}시간 전`;
-    if (days < 7) return `${days}일 전`;
+    if (minutes < 1) return "たった今";
+    if (minutes < 60) return `${minutes}分前`;
+    if (hours < 24) return `${hours}時間前`;
+    if (days < 7) return `${days}日前`;
     return d.toLocaleDateString("ko-KR");
   };
 
@@ -87,17 +87,17 @@ export default function DiscussionList() {
                   <MessageSquare className="w-5 h-5 text-primary" />
                 </div>
                 <div>
-                  <h1 className="text-2xl font-bold tracking-tight">토론광장</h1>
-                  <p className="text-sm text-muted-foreground">건강, 제품, 생활에 대해 자유롭게 이야기를 나눠보세요</p>
+                  <h1 className="text-2xl font-bold tracking-tight">ディスカッション広場</h1>
+                  <p className="text-sm text-muted-foreground">健康、製品、暮らしについて自由にお話ししましょう</p>
                 </div>
               </div>
               {user ? (
                 <Button onClick={() => navigate("/discussions/write")} className="gap-2">
-                  <Plus className="h-4 w-4" /> 새 토론 시작
+                  <Plus className="h-4 w-4" /> 新しいディスカッションを始める
                 </Button>
               ) : (
                 <Button asChild>
-                  <a href={getLoginUrl()}>로그인 후 토론 참여</a>
+                  <a href={getLoginUrl()}>ログインして参加</a>
                 </Button>
               )}
             </div>
@@ -113,7 +113,7 @@ export default function DiscussionList() {
               className="rounded-full"
               onClick={() => handleCategoryChange(undefined)}
             >
-              전체 카테고리
+              すべてのカテゴリー
             </Button>
             {categories.map((cat: any) => (
               <Button
@@ -153,11 +153,11 @@ export default function DiscussionList() {
                 <Input
                   value={searchInput}
                   onChange={(e) => setSearchInput(e.target.value)}
-                  placeholder="토론 검색..."
+                  placeholder="ディスカッションを検索..."
                   className="pl-9"
                 />
               </div>
-              <Button type="submit" size="sm">검색</Button>
+              <Button type="submit" size="sm">検索</Button>
             </form>
           </div>
 
@@ -179,11 +179,11 @@ export default function DiscussionList() {
               <Card>
                 <CardContent className="py-16 text-center">
                   <MessageSquare className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-                  <h3 className="text-lg font-medium mb-2">아직 토론이 없습니다</h3>
-                  <p className="text-muted-foreground mb-4">첫 번째 토론을 시작해보세요!</p>
+                  <h3 className="text-lg font-medium mb-2">まだディスカッションがありません</h3>
+                  <p className="text-muted-foreground mb-4">最初のディスカッションを始めてみましょう！</p>
                   {user && (
                     <Button onClick={() => navigate("/discussions/write")} className="gap-2">
-                      <Plus className="h-4 w-4" /> 새 토론 시작
+                      <Plus className="h-4 w-4" /> 新しいディスカッションを始める
                     </Button>
                   )}
                 </CardContent>
@@ -206,12 +206,12 @@ export default function DiscussionList() {
                             <div className="flex items-center gap-2 mb-1 flex-wrap">
                               {discussion.isPinned === 1 && (
                                 <Badge variant="secondary" className="gap-1 text-xs">
-                                  <Pin className="h-3 w-3" /> 고정
+                                  <Pin className="h-3 w-3" /> 固定
                                 </Badge>
                               )}
                               {discussion.isClosed === 1 && (
                                 <Badge variant="outline" className="gap-1 text-xs">
-                                  <Lock className="h-3 w-3" /> 마감
+                                  <Lock className="h-3 w-3" /> 終了
                                 </Badge>
                               )}
                               {discussion.categoryId && (
@@ -229,7 +229,7 @@ export default function DiscussionList() {
                             <div className="flex items-center gap-3 text-xs text-muted-foreground flex-wrap">
                               <span className="flex items-center gap-1">
                                 <User className="h-3 w-3" />
-                                {discussion.userName ?? "익명"}
+                                {discussion.userName ?? "匿名"}
                               </span>
                               <span>{formatDate(discussion.createdAt)}</span>
                               {(discussion.tags as string[] | null)?.slice(0, 3).map((tag) => (
@@ -269,7 +269,7 @@ export default function DiscussionList() {
             {/* 총 게시글 수 */}
             {data && (
               <p className="text-center text-sm text-muted-foreground mt-4">
-                총 {data.total}개의 토론
+                全 {data.total}件のディスカッション
               </p>
             )}
           </div>

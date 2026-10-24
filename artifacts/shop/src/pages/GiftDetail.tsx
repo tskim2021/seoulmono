@@ -18,10 +18,10 @@ const CAT_THEMES: Record<string, { accent: string; grad: string; emoji: string }
 const DEFAULT_THEME = { accent: "#4A2C0A", grad: "linear-gradient(135deg,#0d2b1a 0%,#1a5c35 100%)", emoji: "🎁" };
 
 const CAT_TABS = [
-  { id: "", label: "전체", emoji: "🎁" },
-  { id: "10", label: "과자류", emoji: "🍪" },
-  { id: "20", label: "유지류", emoji: "🫙" },
-  { id: "30", label: "통조림쥌류", emoji: "🥫" },
+  { id: "", label: "すべて", emoji: "🎁" },
+  { id: "10", label: "お菓子類", emoji: "🍪" },
+  { id: "20", label: "油脂類", emoji: "🫙" },
+  { id: "30", label: "缶詰類", emoji: "🥫" },
 ];
 
 interface GiftPackage {
@@ -36,26 +36,26 @@ interface GiftPackage {
 }
 
 const GUIDE_STEPS = [
-  { n: "1", Icon: Gift,     title: "선물 패키지 선택", desc: "마음에 드는 선물 패키지를 선택하세요",        color: "#8B5E3C" },
-  { n: "2", Icon: PenLine,  title: "메시지 작성",     desc: "받는 분께 전할 따뜻한 메시지를 적어주세요", color: "#8B5E3C" },
-  { n: "3", Icon: Share2,   title: "링크 전달",       desc: "카카오톡·문자로 선물 링크를 보내세요",      color: "#8B5E3C" },
-  { n: "4", Icon: Truck,    title: "seoulmono 배송",   desc: "받는 분이 주소를 입력하면 바로 발송합니다",  color: "#8B5E3C" },
+  { n: "1", Icon: Gift,     title: "ギフトパッケージを選ぶ", desc: "お気に入りのギフトパッケージをお選びください",        color: "#8B5E3C" },
+  { n: "2", Icon: PenLine,  title: "メッセージ作成",     desc: "受取人様への温かいメッセージをご記入ください", color: "#8B5E3C" },
+  { n: "3", Icon: Share2,   title: "リンクを送る",       desc: "KakaoTalkやSMSでギフトリンクを送りましょう",      color: "#8B5E3C" },
+  { n: "4", Icon: Truck,    title: "seoulmonoが配送",   desc: "受取人様が住所を入力するとすぐに発送します",  color: "#8B5E3C" },
 ];
 
 const USE_CASES = [
-  { Icon: Cake,          title: "생일 선물", desc: "소중한 사람의 생일을 특별하게",    bg: "#fff0f5", iconColor: "#e11d78" },
-  { Icon: Sun,           title: "명절 선물", desc: "설·추석 고마운 분께 마음 전하기",  bg: "#fff8ed", iconColor: "#d97706" },
-  { Icon: GraduationCap, title: "기념일 선물", desc: "졸업·승진·입학 축하할 때",      bg: "#eff6ff", iconColor: "#2563eb" },
-  { Icon: Heart,         title: "감사 선물", desc: "신세 진 분께 감사의 마음 전달",    bg: "#fdf4ff", iconColor: "#9333ea" },
+  { Icon: Cake,          title: "誕生日ギフト", desc: "大切な人の誕生日を特別に",    bg: "#fff0f5", iconColor: "#e11d78" },
+  { Icon: Sun,           title: "季節のご挨拶ギフト", desc: "旧正月・秋夕に感謝の気持ちを",  bg: "#fff8ed", iconColor: "#d97706" },
+  { Icon: GraduationCap, title: "記念日ギフト", desc: "卒業・昇進・入学のお祝いに",      bg: "#eff6ff", iconColor: "#2563eb" },
+  { Icon: Heart,         title: "感謝ギフト", desc: "お世話になった方へ感謝の気持ちを",    bg: "#fdf4ff", iconColor: "#9333ea" },
 ];
 
 const MSG_TEMPLATES = [
-  { id: "birthday", emoji: "🎂", label: "생일 축하", text: "생일 축하해요! 건강하고 행복한 하루 보내세요 🎉" },
-  { id: "thanks",   emoji: "🙏", label: "감사 인사", text: "항상 감사드려요. 작은 선물로 마음을 전해요 😊" },
-  { id: "holiday",  emoji: "🎊", label: "명절 인사", text: "명절 잘 보내세요! 가족과 함께 행복한 시간 되세요 🌸" },
-  { id: "cheer",    emoji: "💪", label: "응원 메시지", text: "항상 응원하고 있어요. 힘내세요! 화이팅! 🔥" },
-  { id: "congrat",  emoji: "🎓", label: "축하 인사", text: "축하드려요! 앞으로도 빛나는 날들만 가득하길 바랍니다 ✨" },
-  { id: "custom",   emoji: "✏️", label: "직접 입력", text: "" },
+  { id: "birthday", emoji: "🎂", label: "誕生日のお祝い", text: "お誕生日おめでとうございます!健康で幸せな一日をお過ごしください 🎉" },
+  { id: "thanks",   emoji: "🙏", label: "感謝のメッセージ", text: "いつもありがとうございます。ささやかな贈り物で気持ちをお届けします 😊" },
+  { id: "holiday",  emoji: "🎊", label: "季節のご挨拶", text: "良いお正月をお迎えください!ご家族と幸せな時間をお過ごしください 🌸" },
+  { id: "cheer",    emoji: "💪", label: "応援メッセージ", text: "いつも応援しています。頑張ってください!ファイト! 🔥" },
+  { id: "congrat",  emoji: "🎓", label: "お祝いのメッセージ", text: "おめでとうございます!これからも輝く日々が続きますように ✨" },
+  { id: "custom",   emoji: "✏️", label: "自分で入力", text: "" },
 ];
 
 export default function GiftDetailPage() {
@@ -129,8 +129,8 @@ export default function GiftDetailPage() {
 
   const handleSubmit = async () => {
     if (!pkg) return;
-    if (!senderName.trim() || !senderPhone.trim()) { setPayError("보내는 분 이름과 연락처를 입력해주세요."); return; }
-    if (!payMethod) { setPayError("결제수단을 선택해주세요."); return; }
+    if (!senderName.trim() || !senderPhone.trim()) { setPayError("送り主のお名前とご連絡先を入力してください。"); return; }
+    if (!payMethod) { setPayError("お支払い方法を選択してください。"); return; }
     setPayError("");
     setSubmitting(true);
     try {
@@ -159,10 +159,10 @@ export default function GiftDetailPage() {
       if (data.token) {
         setGiftToken(data.token);
       } else {
-        setPayError(data.error || "선물하기 실패");
+        setPayError(data.error || "ギフトの送信に失敗しました");
       }
     } catch {
-      setPayError("오류가 발생했습니다. 다시 시도해주세요.");
+      setPayError("エラーが発生しました。もう一度お試しください。");
     }
     setSubmitting(false);
   };
@@ -179,7 +179,7 @@ export default function GiftDetailPage() {
   };
 
   const shareKakao = async () => {
-    const shareText = `${pkg?.name} 선물이 도착했어요!\n아래 링크에서 주소를 입력해주세요.\n${giftLink}`;
+    const shareText = `${pkg?.name} のギフトが届きました!\n下のリンクから住所を入力してください。\n${giftLink}`;
     if (typeof window !== "undefined" && (window as any).Kakao?.isInitialized?.()) {
       (window as any).Kakao.Share.sendDefault({
         objectType: "text",
@@ -190,12 +190,12 @@ export default function GiftDetailPage() {
     }
     if (navigator.share) {
       try {
-        await navigator.share({ title: `${pkg?.name} 선물이 도착했어요!`, text: shareText, url: giftLink });
+        await navigator.share({ title: `${pkg?.name} のギフトが届きました!`, text: shareText, url: giftLink });
         return;
-      } catch { /* 취소 시 무시 */ }
+      } catch { /* キャンセル時は無視 */ }
     }
     copyLink();
-    alert("카카오 공유를 사용하려면 카카오 JS 키를 설정해주세요.\n링크가 클립보드에 복사됐습니다.");
+    alert("Kakao共有を使用するには、Kakao JSキーを設定してください。\nリンクをクリップボードにコピーしました。");
   };
 
   if (loading) {
@@ -210,10 +210,10 @@ export default function GiftDetailPage() {
     return (
       <div style={{ textAlign: "center", padding: "80px 20px" }}>
         <AlertCircle size={48} color="#ddd" style={{ marginBottom: 12 }} />
-        <p style={{ fontSize: 17, color: "#555" }}>선물 패키지를 찾을 수 없습니다</p>
+        <p style={{ fontSize: 17, color: "#555" }}>ギフトパッケージが見つかりません</p>
         <button onClick={() => navigate(`${BASE}/gift`)}
           style={{ marginTop: 16, padding: "10px 24px", background: "#8B5E3C", color: "#fff", border: "none", borderRadius: 12, cursor: "pointer", fontWeight: 700 }}>
-          목록으로
+          一覧へ
         </button>
       </div>
     );
@@ -239,7 +239,7 @@ export default function GiftDetailPage() {
               marginBottom: 24, backdropFilter: "blur(4px)",
             }}
           >
-            <ArrowLeft size={14} /> 목록으로
+            <ArrowLeft size={14} /> 一覧へ
           </button>
 
           <div style={{ display: "flex", gap: 24, alignItems: "flex-start" }}>
@@ -252,7 +252,7 @@ export default function GiftDetailPage() {
                 marginBottom: 12, backdropFilter: "blur(4px)",
               }}>
                 <span>{theme.emoji}</span>
-                {pkg.item_count}개입 선물세트
+                {pkg.item_count}点入りギフトセット
               </div>
 
               <h1 style={{ margin: "0 0 10px", fontSize: 28, fontWeight: 900, color: "#fff", letterSpacing: "-0.5px", lineHeight: 1.25 }}>
@@ -272,7 +272,7 @@ export default function GiftDetailPage() {
                   padding: "10px 20px",
                 }}>
                   <span style={{ fontSize: 22, fontWeight: 900, color: theme.accent }}>
-                    {pkg.price.toLocaleString()}원
+                    {pkg.price.toLocaleString()}円
                   </span>
                   <span style={{ fontSize: 12, color: "#888", marginLeft: 6 }}>~</span>
                 </div>
@@ -323,7 +323,7 @@ export default function GiftDetailPage() {
             <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 16 }}>
               <Package size={18} color={theme.accent} />
               <h2 style={{ margin: 0, fontSize: 16, fontWeight: 900, color: "#111" }}>
-                구성 상품 <span style={{ color: theme.accent, fontSize: 14 }}>{pkg.items.length}개</span>
+                構成商品 <span style={{ color: theme.accent, fontSize: 14 }}>{pkg.items.length}点</span>
               </h2>
             </div>
 
@@ -367,9 +367,9 @@ export default function GiftDetailPage() {
           {/* 헤더 */}
           <p style={{ margin: "0 0 4px", fontSize: 12, color: "#8B5E3C", fontWeight: 700, textAlign: "center", letterSpacing: "0.08em", textTransform: "uppercase" }}>Gift Guide</p>
           <h2 style={{ margin: "0 0 6px", fontSize: 22, fontWeight: 900, color: "#111", textAlign: "center", letterSpacing: "-0.5px", lineHeight: 1.3 }}>
-            이런 날, seoulmono로
+            こんな日は、seoulmonoで
           </h2>
-          <p style={{ margin: "0 0 26px", fontSize: 13, color: "#999", textAlign: "center" }}>고민은 짧게, 마음은 깊게</p>
+          <p style={{ margin: "0 0 26px", fontSize: 13, color: "#999", textAlign: "center" }}>悩む時間は短く、想いは深く</p>
 
           {/* 사용 상황 카드 2×2 */}
           <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 10, marginBottom: 28 }}>
@@ -400,7 +400,7 @@ export default function GiftDetailPage() {
 
           {/* 이용 방법 */}
           <p style={{ margin: "0 0 18px", fontSize: 13, fontWeight: 800, color: "#111", textAlign: "center", letterSpacing: "-0.2px" }}>
-            선물하는 방법
+            ギフトの贈り方
           </p>
           <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
             {GUIDE_STEPS.map((step, i) => (
@@ -438,12 +438,12 @@ export default function GiftDetailPage() {
 
         {/* ── 유의사항 ── */}
         <div style={{ background: "#fff", borderRadius: 20, padding: "20px", margin: "16px 0 0", boxShadow: "0 2px 12px rgba(0,0,0,.05)" }}>
-          <p style={{ margin: "0 0 10px", fontSize: 13, fontWeight: 800, color: "#555" }}>선물하기 서비스 유의사항</p>
+          <p style={{ margin: "0 0 10px", fontSize: 13, fontWeight: 800, color: "#555" }}>ギフトサービスのご注意</p>
           {[
-            "선물 링크는 수령인에게 전달 후 주소를 입력해야 배송이 시작됩니다.",
-            "구매 후 교환/반품은 상품별 안내에 따라 처리됩니다.",
-            "선물 링크는 1회만 주소 입력이 가능합니다.",
-            "배송 예정 시간은 주문 시 확인 가능하며 상황에 따라 변동될 수 있습니다.",
+            "ギフトリンクを受取人様にお送りし、住所が入力されると配送が始まります。",
+            "ご購入後の交換・返品は、商品ごとのご案内に従って処理されます。",
+            "ギフトリンクでの住所入力は1回のみ可能です。",
+            "配送予定時間はご注文時に確認でき、状況により変更される場合があります。",
           ].map((notice, i) => (
             <p key={i} style={{ margin: "0 0 5px", fontSize: 12, color: "#888", lineHeight: 1.6, paddingLeft: 10, position: "relative" }}>
               <span style={{ position: "absolute", left: 0 }}>·</span>
@@ -475,7 +475,7 @@ export default function GiftDetailPage() {
             }}
           >
             <Gift size={15} />
-            {user ? "이 선물 바로 보내기" : "로그인 후 선물 보내기"}
+            {user ? "このギフトをすぐに贈る" : "ログインしてギフトを贈る"}
           </button>
         </div>
       </div>
@@ -505,7 +505,7 @@ export default function GiftDetailPage() {
                   </button>
                 )}
                 <h3 style={{ margin: 0, fontSize: 17, fontWeight: 900, color: "#111" }}>
-                  {giftToken ? "선물 링크 생성 완료 🎉" : modalStep === "pay" ? "결제하기" : "선물하기"}
+                  {giftToken ? "ギフトリンク作成完了 🎉" : modalStep === "pay" ? "お支払い" : "ギフトを贈る"}
                 </h3>
               </div>
               {!giftToken && modalStep === "form" && (
@@ -529,21 +529,21 @@ export default function GiftDetailPage() {
                     <span style={{ fontSize: 24 }}>{theme.emoji}</span>
                     <div>
                       <p style={{ margin: 0, fontSize: 13.5, fontWeight: 800, color: "#111" }}>{pkg.name}</p>
-                      <p style={{ margin: "2px 0 0", fontSize: 12, color: "#666" }}>{pkg.item_count}개입 · {pkg.price > 0 ? `${pkg.price.toLocaleString()}원` : ""}</p>
+                      <p style={{ margin: "2px 0 0", fontSize: 12, color: "#666" }}>{pkg.item_count}点入り · {pkg.price > 0 ? `${pkg.price.toLocaleString()}円` : ""}</p>
                     </div>
                   </div>
 
                   {/* 받는 분 이름 (선택) */}
                   <div style={{ marginBottom: 14 }}>
                     <label style={{ display: "block", fontSize: 12.5, fontWeight: 700, color: "#555", marginBottom: 6 }}>
-                      받는 분 이름 <span style={{ color: "#aaa", fontWeight: 400 }}>(선택)</span>
+                      お受け取り人のお名前 <span style={{ color: "#aaa", fontWeight: 400 }}>(任意)</span>
                     </label>
                     <div style={{ position: "relative" }}>
                       <User size={15} color="#bbb" style={{ position: "absolute", left: 12, top: "50%", transform: "translateY(-50%)" }} />
                       <input
                         value={recipientName}
                         onChange={e => setRecipientName(e.target.value)}
-                        placeholder="홍길동"
+                        placeholder="山田 太郎"
                         style={{
                           width: "100%", height: 44, paddingLeft: 36, paddingRight: 14,
                           border: "1.5px solid #eee", borderRadius: 12,
@@ -559,7 +559,7 @@ export default function GiftDetailPage() {
                   {/* 연락처 (선택) */}
                   <div style={{ marginBottom: 14 }}>
                     <label style={{ display: "block", fontSize: 12.5, fontWeight: 700, color: "#555", marginBottom: 6 }}>
-                      연락처 <span style={{ color: "#aaa", fontWeight: 400 }}>(선택)</span>
+                      ご連絡先 <span style={{ color: "#aaa", fontWeight: 400 }}>(任意)</span>
                     </label>
                     <div style={{ position: "relative" }}>
                       <Phone size={15} color="#bbb" style={{ position: "absolute", left: 12, top: "50%", transform: "translateY(-50%)" }} />
@@ -583,7 +583,7 @@ export default function GiftDetailPage() {
                   {/* 메시지 */}
                   <div style={{ marginBottom: 22 }}>
                     <label style={{ display: "block", fontSize: 12.5, fontWeight: 700, color: "#555", marginBottom: 10 }}>
-                      선물 메시지 <span style={{ color: "#aaa", fontWeight: 400 }}>(선택)</span>
+                      ギフトメッセージ <span style={{ color: "#aaa", fontWeight: 400 }}>(任意)</span>
                     </label>
 
                     {/* 템플릿 카드 그리드 */}
@@ -627,7 +627,7 @@ export default function GiftDetailPage() {
                           <textarea
                             value={message}
                             onChange={e => setMessage(e.target.value)}
-                            placeholder="따뜻한 마음을 담아 메시지를 직접 적어보세요"
+                            placeholder="温かい気持ちを込めて、メッセージをご記入ください"
                             rows={3}
                             autoFocus
                             style={{
@@ -657,7 +657,7 @@ export default function GiftDetailPage() {
                                 background: "none", border: "none", cursor: "pointer",
                                 fontSize: 11, color: "#999", fontWeight: 600,
                               }}
-                            >편집</button>
+                            >編集</button>
                           </div>
                         )}
                       </div>
@@ -675,32 +675,32 @@ export default function GiftDetailPage() {
                     }}
                   >
                     <CreditCard size={18} />
-                    결제하기
+                    お支払いへ
                   </button>
                 </>
               ) : !giftToken && modalStep === "pay" ? (
                 /* ── 결제 단계 ── */
                 (() => {
                   const payMethods = [
-                    paySettings.bank_enabled && { key: "bank" as const, label: "무통장입금", desc: "주문 후 계좌이체로 입금", icon: <Building2 size={16} /> },
-                    paySettings.card_enabled && { key: "card" as const, label: "신용카드", desc: "토스페이먼츠 카드 결제", icon: <CreditCard size={16} /> },
+                    paySettings.bank_enabled && { key: "bank" as const, label: "銀行振込", desc: "ご注文後に口座へお振り込み", icon: <Building2 size={16} /> },
+                    paySettings.card_enabled && { key: "card" as const, label: "クレジットカード", desc: "TossPaymentsカード決済", icon: <CreditCard size={16} /> },
                   ].filter(Boolean) as { key: "bank"|"card"; label: string; desc: string; icon: React.ReactNode }[];
                   const pkgPrice = pkg?.price || 0;
                   return (
                     <>
                       {/* 보내는 분 정보 */}
                       <div style={{ marginBottom: 14 }}>
-                        <p style={{ fontSize: 13, fontWeight: 800, color: "#111", margin: "0 0 10px" }}>보내는 분 정보</p>
+                        <p style={{ fontSize: 13, fontWeight: 800, color: "#111", margin: "0 0 10px" }}>送り主情報</p>
                         <div style={{ marginBottom: 8 }}>
-                          <label style={{ fontSize: 12, fontWeight: 700, color: "#666", display: "block", marginBottom: 4 }}>이름</label>
+                          <label style={{ fontSize: 12, fontWeight: 700, color: "#666", display: "block", marginBottom: 4 }}>お名前</label>
                           <div style={{ position: "relative" }}>
                             <User size={14} color="#bbb" style={{ position: "absolute", left: 10, top: "50%", transform: "translateY(-50%)" }} />
-                            <input value={senderName} onChange={e => setSenderName(e.target.value)} placeholder="홍길동"
+                            <input value={senderName} onChange={e => setSenderName(e.target.value)} placeholder="山田 太郎"
                               style={{ width: "100%", height: 42, paddingLeft: 32, paddingRight: 12, border: "1.5px solid #e5e7eb", borderRadius: 10, fontSize: 14, outline: "none", boxSizing: "border-box" }} />
                           </div>
                         </div>
                         <div>
-                          <label style={{ fontSize: 12, fontWeight: 700, color: "#666", display: "block", marginBottom: 4 }}>연락처</label>
+                          <label style={{ fontSize: 12, fontWeight: 700, color: "#666", display: "block", marginBottom: 4 }}>ご連絡先</label>
                           <div style={{ position: "relative" }}>
                             <Phone size={14} color="#bbb" style={{ position: "absolute", left: 10, top: "50%", transform: "translateY(-50%)" }} />
                             <input value={senderPhone} onChange={e => setSenderPhone(e.target.value)} placeholder="01012345678" type="tel"
@@ -711,7 +711,7 @@ export default function GiftDetailPage() {
 
                       {/* 결제수단 */}
                       <div style={{ marginBottom: 14 }}>
-                        <p style={{ fontSize: 13, fontWeight: 800, color: "#111", margin: "0 0 10px" }}>결제수단</p>
+                        <p style={{ fontSize: 13, fontWeight: 800, color: "#111", margin: "0 0 10px" }}>お支払い方法</p>
                         <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
                           {payMethods.map(m => (
                             <button key={m.key} onClick={() => setPayMethod(m.key)}
@@ -732,12 +732,12 @@ export default function GiftDetailPage() {
                       {/* 무통장 계좌 안내 */}
                       {payMethod === "bank" && (bankInfo.bank_num || bankInfo.bank_name) && (
                         <div style={{ background: "#f0fdf4", border: "1.5px solid #bbf7d0", borderRadius: 12, padding: "14px 16px", marginBottom: 14 }}>
-                          <p style={{ fontSize: 12.5, fontWeight: 800, color: "#4A2C0A", margin: "0 0 8px" }}>입금 계좌 정보</p>
-                          {bankInfo.bank_name && <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 3 }}><span style={{ fontSize: 12, color: "#555" }}>은행</span><span style={{ fontSize: 12, fontWeight: 700, color: "#111" }}>{bankInfo.bank_name}</span></div>}
-                          {bankInfo.bank_num && <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 3 }}><span style={{ fontSize: 12, color: "#555" }}>계좌번호</span><span style={{ fontSize: 12, fontWeight: 700, color: "#111", fontFamily: "monospace" }}>{bankInfo.bank_num}</span></div>}
-                          {bankInfo.bank_holder && <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 3 }}><span style={{ fontSize: 12, color: "#555" }}>예금주</span><span style={{ fontSize: 12, fontWeight: 700, color: "#111" }}>{bankInfo.bank_holder}</span></div>}
-                          {pkgPrice > 0 && <div style={{ display: "flex", justifyContent: "space-between" }}><span style={{ fontSize: 12, color: "#555" }}>입금금액</span><span style={{ fontSize: 13, fontWeight: 900, color: "#8B5E3C" }}>{pkgPrice.toLocaleString()}원</span></div>}
-                          <p style={{ margin: "8px 0 0", fontSize: 11, color: "#16a34a" }}>입금 확인 후 선물이 발송됩니다.</p>
+                          <p style={{ fontSize: 12.5, fontWeight: 800, color: "#4A2C0A", margin: "0 0 8px" }}>お振込先口座情報</p>
+                          {bankInfo.bank_name && <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 3 }}><span style={{ fontSize: 12, color: "#555" }}>銀行名</span><span style={{ fontSize: 12, fontWeight: 700, color: "#111" }}>{bankInfo.bank_name}</span></div>}
+                          {bankInfo.bank_num && <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 3 }}><span style={{ fontSize: 12, color: "#555" }}>口座番号</span><span style={{ fontSize: 12, fontWeight: 700, color: "#111", fontFamily: "monospace" }}>{bankInfo.bank_num}</span></div>}
+                          {bankInfo.bank_holder && <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 3 }}><span style={{ fontSize: 12, color: "#555" }}>口座名義</span><span style={{ fontSize: 12, fontWeight: 700, color: "#111" }}>{bankInfo.bank_holder}</span></div>}
+                          {pkgPrice > 0 && <div style={{ display: "flex", justifyContent: "space-between" }}><span style={{ fontSize: 12, color: "#555" }}>お振込金額</span><span style={{ fontSize: 13, fontWeight: 900, color: "#8B5E3C" }}>{pkgPrice.toLocaleString()}円</span></div>}
+                          <p style={{ margin: "8px 0 0", fontSize: 11, color: "#16a34a" }}>入金確認後にギフトを発送します。</p>
                         </div>
                       )}
 
@@ -756,7 +756,7 @@ export default function GiftDetailPage() {
                         }}
                       >
                         {submitting ? <Loader2 size={18} className="animate-spin" /> : <Send size={18} />}
-                        {submitting ? "처리 중..." : payMethod === "bank" ? "입금하고 선물 링크 받기" : "결제하고 선물 링크 받기"}
+                        {submitting ? "処理中..." : payMethod === "bank" ? "お振り込みしてギフトリンクを受け取る" : "お支払いしてギフトリンクを受け取る"}
                       </button>
                     </>
                   );
@@ -766,11 +766,11 @@ export default function GiftDetailPage() {
                 <div style={{ textAlign: "center" }}>
                   <div style={{ fontSize: 52, marginBottom: 12 }}>🎉</div>
                   <p style={{ margin: "0 0 6px", fontSize: 18, fontWeight: 900, color: "#111" }}>
-                    선물 링크가 생성됐어요!
+                    ギフトリンクが作成されました!
                   </p>
                   <p style={{ margin: "0 0 22px", fontSize: 13.5, color: "#666", lineHeight: 1.6 }}>
-                    아래 링크를 받는 분께 전달하세요.<br />
-                    받는 분이 주소를 입력하면 바로 배송됩니다.
+                    下のリンクを受取人様にお送りください。<br />
+                    受取人様が住所を入力するとすぐに配送されます。
                   </p>
 
                   {/* 링크 박스 */}
@@ -799,7 +799,7 @@ export default function GiftDetailPage() {
                       }}
                     >
                       {copied ? <Check size={16} /> : <Copy size={16} />}
-                      {copied ? "복사 완료!" : "링크 복사"}
+                      {copied ? "コピーしました!" : "リンクをコピー"}
                     </button>
                     <button
                       onClick={shareKakao}
@@ -811,7 +811,7 @@ export default function GiftDetailPage() {
                         display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
                       }}
                     >
-                      <ExternalLink size={16} /> 카카오 공유
+                      <ExternalLink size={16} /> Kakaoで共有
                     </button>
                   </div>
 
@@ -828,11 +828,11 @@ export default function GiftDetailPage() {
                       }}
                     >
                       <Phone size={16} strokeWidth={2.5} />
-                      문자로 전송하기
+                      SMSで送信する
                     </button>
                   ) : (
                     <div style={{ marginTop: 10, background: "#f0faf8", border: "1.5px solid #00b894", borderRadius: 12, padding: "14px" }}>
-                      <p style={{ margin: "0 0 8px", fontSize: 12, fontWeight: 800, color: "#00856e" }}>받는 분 전화번호</p>
+                      <p style={{ margin: "0 0 8px", fontSize: 12, fontWeight: 800, color: "#00856e" }}>受取人様の電話番号</p>
                       <div style={{ display: "flex", gap: 8 }}>
                         <input
                           type="tel" value={smsPhone}
@@ -855,8 +855,8 @@ export default function GiftDetailPage() {
                               });
                               const d = await r.json();
                               if (d.ok) { setSmsSent(true); setTimeout(() => { setSmsSent(false); setShowSmsInput(false); setSmsPhone(""); }, 2500); }
-                              else alert(d.error || "발송 실패");
-                            } catch { alert("오류가 발생했습니다."); }
+                              else alert(d.error || "送信に失敗しました");
+                            } catch { alert("エラーが発生しました。"); }
                             setSmsSending(false);
                           }}
                           style={{
@@ -866,12 +866,12 @@ export default function GiftDetailPage() {
                             opacity: (smsSending || smsPhone.length < 10) ? 0.6 : 1,
                           }}
                         >
-                          {smsSending ? "발송중..." : smsSent ? "✓ 발송완료" : "전송"}
+                          {smsSending ? "送信中..." : smsSent ? "✓ 送信完了" : "送信"}
                         </button>
                       </div>
                       <button onClick={() => { setShowSmsInput(false); setSmsPhone(""); }}
                         style={{ marginTop: 8, background: "none", border: "none", fontSize: 11, color: "#aaa", cursor: "pointer" }}>
-                        취소
+                        キャンセル
                       </button>
                     </div>
                   )}
@@ -885,7 +885,7 @@ export default function GiftDetailPage() {
                       color: "#888", cursor: "pointer",
                     }}
                   >
-                    목록으로 돌아가기
+                    一覧に戻る
                   </button>
                 </div>
               )}

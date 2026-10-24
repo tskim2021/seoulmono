@@ -12,10 +12,10 @@ const BROWN_BORDER = "#DEC4A8";
 const BROWN_MUTED = "#A07850";
 
 const CAT_TABS = [
-  { id: "", label: "전체", emoji: "🎁" },
-  { id: "10", label: "과자류", emoji: "🍪" },
-  { id: "20", label: "유지류", emoji: "🫙" },
-  { id: "30", label: "통조림캔류", emoji: "🥫" },
+  { id: "", label: "すべて", emoji: "🎁" },
+  { id: "10", label: "お菓子類", emoji: "🍪" },
+  { id: "20", label: "油脂類", emoji: "🫙" },
+  { id: "30", label: "缶詰類", emoji: "🥫" },
 ];
 
 interface GiftPackage {
@@ -84,7 +84,7 @@ function GiftCard({ pkg, onClick }: { pkg: GiftPackage; onClick: () => void }) {
             borderRadius: 20, padding: "3px 10px",
             fontSize: 11, fontWeight: 700,
           }}>
-            {pkg.item_count}종 구성
+            {pkg.item_count}種セット
           </div>
         )}
       </div>
@@ -115,7 +115,7 @@ function GiftCard({ pkg, onClick }: { pkg: GiftPackage; onClick: () => void }) {
 
         {/* 가격 */}
         <p style={{ margin: "8px 0 10px", fontSize: 17, fontWeight: 900, color: BROWN_DARK, letterSpacing: "-0.5px" }}>
-          {pkg.price > 0 ? `${pkg.price.toLocaleString()}원` : "가격 문의"}
+          {pkg.price > 0 ? `${pkg.price.toLocaleString()}円` : "価格はお問い合わせください"}
         </p>
 
         {/* 선물하기 버튼 */}
@@ -132,7 +132,7 @@ function GiftCard({ pkg, onClick }: { pkg: GiftPackage; onClick: () => void }) {
           onMouseEnter={e => (e.currentTarget.style.background = BROWN_DARK)}
           onMouseLeave={e => (e.currentTarget.style.background = BROWN)}
         >
-          🎁 선물하기
+          🎁 ギフトを贈る
         </button>
       </div>
     </div>
@@ -141,16 +141,16 @@ function GiftCard({ pkg, onClick }: { pkg: GiftPackage; onClick: () => void }) {
 
 function HowToSection() {
   const steps = [
-    { emoji: "🎁", title: "선물 선택", desc: "마음에 드는\n선물 고르기" },
-    { emoji: "✍️", title: "메시지 작성", desc: "따뜻한 마음\n카드 메시지" },
-    { emoji: "📨", title: "링크 전달", desc: "카카오·문자로\n링크 전달" },
-    { emoji: "📦", title: "배송지 입력", desc: "받는 분이 직접\n주소 입력" },
+    { emoji: "🎁", title: "ギフトを選ぶ", desc: "お気に入りの\nギフトを選択" },
+    { emoji: "✍️", title: "メッセージ作成", desc: "温かい気持ちを\nカードに添えて" },
+    { emoji: "📨", title: "リンクを送る", desc: "Kakao・SMSで\nリンクを送信" },
+    { emoji: "📦", title: "お届け先入力", desc: "受取人様が直接\n住所を入力" },
   ];
   return (
     <div style={{ background: BROWN_LIGHT, borderBottom: `1px solid ${BROWN_BORDER}`, padding: "28px 0" }}>
       <div className="page-wrap">
         <p style={{ margin: "0 0 20px", fontSize: 13, fontWeight: 700, color: BROWN, textAlign: "center", letterSpacing: "0.05em" }}>
-          🎀 주소 몰라도 선물할 수 있어요
+          🎀 住所を知らなくてもギフトを贈れます
         </p>
         <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "center", gap: 0, maxWidth: 560, margin: "0 auto" }}>
           {steps.map((s, i) => (
@@ -203,7 +203,7 @@ export default function GiftPage() {
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
             <div>
               <p style={{ margin: "0 0 2px", fontSize: 11, fontWeight: 700, color: BROWN, letterSpacing: "0.12em", textTransform: "uppercase" }}>Gift</p>
-              <h1 style={{ margin: 0, fontSize: 26, fontWeight: 900, color: BROWN_DARK, letterSpacing: "-0.5px" }}>선물하기</h1>
+              <h1 style={{ margin: 0, fontSize: 26, fontWeight: 900, color: BROWN_DARK, letterSpacing: "-0.5px" }}>ギフト</h1>
             </div>
             <div style={{ display: "flex", gap: 8 }}>
               <button
@@ -214,7 +214,7 @@ export default function GiftPage() {
                   fontSize: 12, fontWeight: 700, cursor: "pointer",
                 }}
               >
-                받은 선물함
+                受け取ったギフト
               </button>
               <button
                 onClick={() => navigate(`${BASE}/gift/custom`)}
@@ -224,7 +224,7 @@ export default function GiftPage() {
                   fontSize: 12, fontWeight: 700, cursor: "pointer",
                 }}
               >
-                + 직접 구성
+                + 自分で選ぶ
               </button>
             </div>
           </div>
@@ -270,8 +270,8 @@ export default function GiftPage() {
             border: `2px dashed ${BROWN_BORDER}`,
           }}>
             <div style={{ fontSize: 48, marginBottom: 12 }}>🎁</div>
-            <p style={{ fontSize: 16, fontWeight: 800, color: "#333", margin: "0 0 6px" }}>등록된 선물 패키지가 없습니다</p>
-            <p style={{ fontSize: 13, color: "#999" }}>관리자 페이지에서 선물 패키지를 등록해주세요</p>
+            <p style={{ fontSize: 16, fontWeight: 800, color: "#333", margin: "0 0 6px" }}>登録されたギフトパッケージはありません</p>
+            <p style={{ fontSize: 13, color: "#999" }}>管理者ページでギフトパッケージを登録してください</p>
           </div>
         ) : (
           <div className="gift-grid">

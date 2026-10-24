@@ -84,7 +84,7 @@ export default function Checkout() {
   );
   const redeemPromoMut = trpc.promoCode.redeem.useMutation({
     onSuccess: (data) => {
-      toast.success(`"${data.promoCodeName}" 프로모코드가 적용되었습니다`);
+      toast.success(`「${data.promoCodeName}」プロモコードを適用しました`);
     },
     onError: (err) => toast.error(err.message),
   });
@@ -95,11 +95,11 @@ export default function Checkout() {
     try {
       const result = await validatePromo.refetch();
       if (!result.data?.valid) {
-        toast.error(result.data?.message ?? "유효하지 않은 프로모코드입니다");
+        toast.error(result.data?.message ?? "無効なプロモコードです");
         return;
       }
       setAppliedPromo(result.data.promo);
-      toast.success(`"${result.data.promo.name}" 프로모코드 적용됨 (${result.data.discountText})`);
+      toast.success(`「${result.data.promo.name}」プロモコードを適用しました (${result.data.discountText})`);
     } catch (err: any) {
       toast.error(err.message);
     }
@@ -206,7 +206,7 @@ export default function Checkout() {
         depositorName: form.depositorName,
         expiresAt,
       });
-      toast.success("주문이 완료되었습니다");
+      toast.success("ご注文が完了しました");
     },
     onError: (err) => toast.error(err.message),
   });
@@ -292,37 +292,37 @@ export default function Checkout() {
         <div className="container py-16 max-w-lg mx-auto">
           <div className="text-center mb-8">
             <CheckCircle className="w-16 h-16 mx-auto mb-4 text-emerald-500" />
-            <h1 className="text-2xl font-bold mb-2">주문이 완료되었습니다</h1>
-            <p className="text-muted-foreground mb-1">주문번호: <span className="font-mono font-semibold">{formatOrderNumber(orderComplete.orderNumber)}</span></p>
+            <h1 className="text-2xl font-bold mb-2">ご注文が完了しました</h1>
+            <p className="text-muted-foreground mb-1">注文番号: <span className="font-mono font-semibold">{formatOrderNumber(orderComplete.orderNumber)}</span></p>
           </div>
 
           {isBankTransfer && orderComplete.bankAccount && (
             <div className="mb-8 rounded-xl border-2 border-amber-300 bg-amber-50 p-6">
               <h2 className="font-bold text-amber-800 text-lg mb-4 flex items-center gap-2">
-                <span>📌</span> 입금 계좌 안내
+                <span>📌</span> お振込先のご案内
               </h2>
               <table className="w-full text-sm">
                 <tbody className="divide-y divide-amber-200">
-                  <tr><td className="py-2 text-amber-700 font-medium w-24">입금 계좌</td><td className="py-2 font-semibold">{orderComplete.bankAccount.bankName} {orderComplete.bankAccount.accountNumber}</td></tr>
-                  <tr><td className="py-2 text-amber-700 font-medium">예금주</td><td className="py-2">{orderComplete.bankAccount.accountHolder}</td></tr>
-                  <tr><td className="py-2 text-amber-700 font-medium">입금 금액</td><td className="py-2 font-bold text-lg">{(orderComplete.depositAmount ?? 0).toLocaleString()}원</td></tr>
-                  <tr><td className="py-2 text-amber-700 font-medium">입금자명</td><td className="py-2">{orderComplete.depositorName}</td></tr>
+                  <tr><td className="py-2 text-amber-700 font-medium w-24">振込先口座</td><td className="py-2 font-semibold">{orderComplete.bankAccount.bankName} {orderComplete.bankAccount.accountNumber}</td></tr>
+                  <tr><td className="py-2 text-amber-700 font-medium">口座名義</td><td className="py-2">{orderComplete.bankAccount.accountHolder}</td></tr>
+                  <tr><td className="py-2 text-amber-700 font-medium">お振込金額</td><td className="py-2 font-bold text-lg">{(orderComplete.depositAmount ?? 0).toLocaleString()}円</td></tr>
+                  <tr><td className="py-2 text-amber-700 font-medium">振込名義</td><td className="py-2">{orderComplete.depositorName}</td></tr>
                   {orderComplete.expiresAt && (
-                    <tr><td className="py-2 text-amber-700 font-medium">입금 기한</td><td className="py-2 text-red-600 font-semibold">{orderComplete.expiresAt.toLocaleString("ko-KR")}</td></tr>
+                    <tr><td className="py-2 text-amber-700 font-medium">お振込期限</td><td className="py-2 text-red-600 font-semibold">{orderComplete.expiresAt.toLocaleString("ja-JP")}</td></tr>
                   )}
                 </tbody>
               </table>
               <p className="mt-4 text-xs text-amber-700 bg-amber-100 rounded p-3">
-                ⚠️ 입금 기한 내에 입금하지 않으면 주문이 자동으로 취소됩니다.<br />
-                입금자명과 주문자명이 다를 경우 확인이 지연될 수 있습니다.
+                ⚠️ お振込期限内にご入金がない場合、ご注文は自動的にキャンセルされます。<br />
+                振込名義と注文者名が異なる場合、確認が遅れることがあります。
               </p>
             </div>
           )}
 
-          <p className="text-sm text-muted-foreground text-center mb-6">주문 내역은 마이페이지에서 확인하실 수 있습니다.</p>
+          <p className="text-sm text-muted-foreground text-center mb-6">注文履歴はマイページでご確認いただけます。</p>
           <div className="flex gap-3 justify-center">
-            <Button asChild variant="outline"><Link href="/mypage/orders">주문내역 보기</Link></Button>
-            <Button asChild><Link href="/products">쇼핑 계속하기</Link></Button>
+            <Button asChild variant="outline"><Link href="/mypage/orders">注文履歴を見る</Link></Button>
+            <Button asChild><Link href="/products">買い物を続ける</Link></Button>
           </div>
         </div>
       </Layout>
@@ -361,16 +361,16 @@ export default function Checkout() {
     if (effZipCode && effAddress1 && !form.zipCode) {
       setForm(f => ({ ...f, zipCode: effZipCode, address1: effAddress1, addressEn1: effAddressEn1, address2: addressData.address2 || f.address2, addressEn2: addressData.addressEn2 || f.addressEn2 }));
     }
-    if (!form.recipientName) { toast.error("수령인을 입력해주세요"); return; }
-    if (!form.recipientPhone) { toast.error("연락처를 입력해주세요"); return; }
-    if (!effZipCode || !effAddress1) { toast.error("배송지 주소를 검색해주세요"); return; }
-    if (!effAddressEn1) { toast.error("영문 주소를 확인해주세요. 국제배송에 영문 주소가 필요합니다."); return; }
-    if (items.length === 0) { toast.error("장바구니가 비어있습니다"); return; }
-    if (!form.paymentMethod) { toast.error("결제 방식을 선택해주세요"); return; }
+    if (!form.recipientName) { toast.error("受取人を入力してください"); return; }
+    if (!form.recipientPhone) { toast.error("連絡先を入力してください"); return; }
+    if (!effZipCode || !effAddress1) { toast.error("配送先住所を検索してください"); return; }
+    if (!effAddressEn1) { toast.error("英語の住所をご確認ください。国際配送には英語の住所が必要です。"); return; }
+    if (items.length === 0) { toast.error("カートが空です"); return; }
+    if (!form.paymentMethod) { toast.error("お支払い方法を選択してください"); return; }
 
     if (form.paymentMethod === "bank_transfer") {
-      if (!form.depositorName) { toast.error("입금자명을 입력해주세요"); return; }
-      if (!form.bankAccountId) { toast.error("입금 계좌를 선택해주세요"); return; }
+      if (!form.depositorName) { toast.error("振込名義を入力してください"); return; }
+      if (!form.bankAccountId) { toast.error("振込先口座を選択してください"); return; }
       createOrder.mutate(buildOrderData(effZipCode, effAddress1, effAddressEn1));
       return;
     }
@@ -378,7 +378,7 @@ export default function Checkout() {
     // 그누보드 방식: 카드 정보 → 서버에서 직접 결제 → 주문 저장
     if (form.paymentMethod === "stripe") {
       if (!stripeCardRef.current) {
-        toast.error("카드 입력 폼을 불러오는 중입니다. 잠시 후 다시 시도해주세요.");
+        toast.error("カード入力フォームを読み込み中です。しばらくしてからもう一度お試しください。");
         return;
       }
       setIsStripeProcessing(true);
@@ -393,7 +393,7 @@ export default function Checkout() {
         if (result.requiresAction && result.clientSecret) {
           const stripe = await loadStripe(stripeKeyData!.publishableKey);
           const { error } = await stripe!.handleNextAction({ clientSecret: result.clientSecret });
-          if (error) throw new Error(error.message ?? "3D Secure 인증 실패");
+          if (error) throw new Error(error.message ?? "3Dセキュア認証に失敗しました");
         }
 
         // 4. 결제 완료 → 주문 저장 (Stripe와 동일한 주문번호 사용)
@@ -404,12 +404,12 @@ export default function Checkout() {
         createOrder.mutate(orderData, {
           onSuccess: (data) => {
             setOrderComplete({ orderNumber: data.orderNumber, paymentMethod: "stripe" });
-            toast.success("결제 및 주문이 완료되었습니다");
+            toast.success("お支払いとご注文が完了しました");
           },
-          onError: (err) => toast.error("주문 저장 오류: " + err.message),
+          onError: (err) => toast.error("注文保存エラー: " + err.message),
         });
       } catch (err: any) {
-        toast.error(err.message ?? "결제 중 오류가 발생했습니다");
+        toast.error(err.message ?? "お支払い中にエラーが発生しました");
       } finally {
         setIsStripeProcessing(false);
       }
@@ -421,10 +421,10 @@ export default function Checkout() {
 
   const formatCouponLabel = (coupon: { name: string; discountType: string; discountValue: number; maxDiscountAmount: number | null }) => {
     if (coupon.discountType === "percent") {
-      const maxStr = coupon.maxDiscountAmount ? ` (최대 ${formatPrice(coupon.maxDiscountAmount)})` : "";
-      return `${coupon.name} - ${coupon.discountValue}% 할인${maxStr}`;
+      const maxStr = coupon.maxDiscountAmount ? ` (最大 ${formatPrice(coupon.maxDiscountAmount)})` : "";
+      return `${coupon.name} - ${coupon.discountValue}% 割引${maxStr}`;
     }
-    return `${coupon.name} - ${formatPrice(coupon.discountValue)} 할인`;
+    return `${coupon.name} - ${formatPrice(coupon.discountValue)} 割引`;
   };
 
   const defaultAddr = addresses?.find(a => a.isDefault) ?? addresses?.[0];
@@ -432,20 +432,20 @@ export default function Checkout() {
   return (
     <Layout>
       <div className="container py-8 max-w-4xl mx-auto">
-        <h1 className="text-2xl font-bold mb-8">주문서 작성</h1>
+        <h1 className="text-2xl font-bold mb-8">ご注文手続き</h1>
 
         <form onSubmit={handleSubmit} autoComplete="off">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <div className="lg:col-span-2 space-y-8">
               {/* Shipping */}
               <div className="bg-card border rounded-xl p-6">
-                <h2 className="font-semibold mb-4">배송 정보</h2>
+                <h2 className="font-semibold mb-4">配送情報</h2>
 
                 {/* 저장된 배송지 선택 드롭다운 */}
                 {addresses && addresses.length > 0 && (
                   <div className="mb-5 p-3 bg-muted/40 rounded-lg border">
                     <label className="text-xs text-muted-foreground mb-2 flex items-center gap-1">
-                      <MapPin className="w-3 h-3" /> 저장된 배송지에서 선택
+                      <MapPin className="w-3 h-3" /> 保存済みの配送先から選択
                     </label>
                     <select
                       className="w-full text-sm border rounded-md px-3 py-2 bg-background focus:outline-none focus:ring-1 focus:ring-primary mt-1"
@@ -462,7 +462,7 @@ export default function Checkout() {
                         }
                       }}
                     >
-                      <option value="new">✏️ 직접 입력</option>
+                      <option value="new">✏️ 直接入力</option>
                       {addresses.map(addr => (
                         <option key={addr.id} value={String(addr.id)}>
                           {addr.isDefault ? "⭐ " : ""}{addr.name} — {addr.recipient} / {addr.address1}{addr.address2 ? ` ${addr.address2}` : ""}
@@ -475,26 +475,26 @@ export default function Checkout() {
                 {/* 국제배송 무료배송 안내 */}
                 <div className="mb-4 p-3 bg-emerald-50 dark:bg-emerald-950/20 rounded-lg flex items-center gap-2 text-sm text-emerald-700 dark:text-emerald-300">
                   <Truck className="w-4 h-4 shrink-0" />
-                  <span>국제배송 <strong>무료배송</strong> | 예상 배송일: 7~14일</span>
+                  <span>国際配送 <strong>送料無料</strong> | 配送予定日: 7〜14日</span>
                 </div>
 
                 <div className="space-y-4 mb-6">
                   <div>
-                    <Label className="text-sm mb-1.5 block">수령인</Label>
+                    <Label className="text-sm mb-1.5 block">受取人</Label>
                     <Input
                       value={form.recipientName}
                       onChange={handleRecipientNameChange}
-                      placeholder="이름"
+                      placeholder="お名前"
                     />
                   </div>
 
                   <div>
-                    <Label className="text-sm mb-1.5 block">수령인(영문명)</Label>
+                    <Label className="text-sm mb-1.5 block">受取人 (英語名)</Label>
                     <div className="relative">
                       <Input
                         value={form.recipientNameEn}
                         onChange={e => setForm(f => ({ ...f, recipientNameEn: e.target.value }))}
-                        placeholder="영문 이름 (예: Hong Gildong)"
+                        placeholder="英語のお名前 (例: Taro Yamada)"
                         className="text-sm"
                       />
                       {isTranslatingName && (
@@ -503,11 +503,11 @@ export default function Checkout() {
                         </div>
                       )}
                     </div>
-                    <p className="text-xs text-muted-foreground mt-1">국제배송을 위해 영문 이름이 필요합니다. 자동 변환되며 직접 수정도 가능합니다.</p>
+                    <p className="text-xs text-muted-foreground mt-1">国際配送のため英語のお名前が必要です。自動変換されますが、直接修正もできます。</p>
                   </div>
 
                   <div>
-                    <Label className="text-sm mb-1.5 block">연락처</Label>
+                    <Label className="text-sm mb-1.5 block">連絡先</Label>
                     <Input
                       value={form.recipientPhone}
                       onChange={e => setForm(f => ({ ...f, recipientPhone: e.target.value }))}
@@ -518,7 +518,7 @@ export default function Checkout() {
 
                 {/* 한국 주소 검색 + 영문 주소 변환 */}
                 <div className="space-y-2">
-                  <Label className="text-sm font-medium">배송지 주소</Label>
+                  <Label className="text-sm font-medium">配送先住所</Label>
                   <KoreanAddressSearch
                     value={addressData}
                     onChange={handleAddressChange}
@@ -528,15 +528,15 @@ export default function Checkout() {
                 </div>
 
                 <div className="mt-4">
-                  <Label className="text-sm mb-1.5 block">배송 메모</Label>
-                  <Textarea value={form.memo} onChange={e => setForm(f => ({ ...f, memo: e.target.value }))} placeholder="배송시 요청사항" rows={2} />
+                  <Label className="text-sm mb-1.5 block">配送メモ</Label>
+                  <Textarea value={form.memo} onChange={e => setForm(f => ({ ...f, memo: e.target.value }))} placeholder="配送時のご要望" rows={2} />
                 </div>
 
               </div>
 
               {/* Items */}
               <div className="bg-card border rounded-xl p-6">
-                <h2 className="font-semibold mb-4">주문 상품 ({items.length})</h2>
+                <h2 className="font-semibold mb-4">注文商品 ({items.length})</h2>
                 <div className="space-y-3">
                   {items.map(item => {
                     const product = item.product as any;
@@ -551,9 +551,9 @@ export default function Checkout() {
                         </div>
                         <div className="flex-1 min-w-0">
                           <p className="text-sm font-medium line-clamp-1">{product?.name}</p>
-                          <p className="text-xs text-muted-foreground">수량: {item.quantity}</p>
+                          <p className="text-xs text-muted-foreground">数量: {item.quantity}</p>
                           {selectedCoupon && isNoDiscount && (
-                            <span className="inline-block text-[11px] text-orange-500 font-medium bg-orange-50 dark:bg-orange-950/20 px-1.5 py-0.5 rounded mt-0.5">할인 제외 상품</span>
+                            <span className="inline-block text-[11px] text-orange-500 font-medium bg-orange-50 dark:bg-orange-950/20 px-1.5 py-0.5 rounded mt-0.5">割引対象外商品</span>
                           )}
                         </div>
                         <div className="text-right shrink-0">
@@ -575,7 +575,7 @@ export default function Checkout() {
 
               {/* Payment Method */}
               <div className="bg-card border rounded-xl p-6">
-                <h2 className="font-semibold mb-4 flex items-center gap-2"><CreditCard className="w-4 h-4" /> 결제 방식</h2>
+                <h2 className="font-semibold mb-4 flex items-center gap-2"><CreditCard className="w-4 h-4" /> お支払い方法</h2>
                 {enabledMethods && enabledMethods.length > 0 ? (
                   <div className="grid grid-cols-2 gap-3">
                     {enabledMethods.map(method => {
@@ -591,7 +591,7 @@ export default function Checkout() {
                         airwallex: "Airwallex",
                         "2checkout": "2Checkout",
                         payoneer: "Payoneer",
-                        bank_transfer: "무통장 입금",
+                        bank_transfer: "銀行振込",
                       };
                       const Icon = icons[method.methodCode] || CreditCard;
                       const label = labels[method.methodCode] || method.methodName;
@@ -614,7 +614,7 @@ export default function Checkout() {
                     })}
                   </div>
                 ) : (
-                  <p className="text-sm text-muted-foreground">사용 가능한 결제 수단이 없습니다. 관리자에게 문의하세요.</p>
+                  <p className="text-sm text-muted-foreground">ご利用可能な決済手段がありません。管理者にお問い合わせください。</p>
                 )}
 
                 {/* 신용카드 선택 시 카드 입력창 바로 표시 (그누보드 방식) */}
@@ -631,16 +631,16 @@ export default function Checkout() {
                 {form.paymentMethod === "bank_transfer" && (
                   <div className="mt-4 space-y-3 pt-4 border-t">
                     <div>
-                      <Label className="text-sm mb-1.5 block">입금자명 *</Label>
+                      <Label className="text-sm mb-1.5 block">振込名義 *</Label>
                       <Input
                         value={form.depositorName}
                         onChange={e => setForm(f => ({ ...f, depositorName: e.target.value }))}
-                        placeholder="입금하실 분의 성함을 입력해주세요"
+                        placeholder="お振込みされる方のお名前を入力してください"
                       />
-                      <p className="text-xs text-muted-foreground mt-1">입금자명이 주문자명과 다를 경우 입금 확인이 지연될 수 있습니다.</p>
+                      <p className="text-xs text-muted-foreground mt-1">振込名義が注文者名と異なる場合、入金確認が遅れることがあります。</p>
                     </div>
                     <div>
-                      <Label className="text-sm mb-1.5 block">입금 계좌 선택 *</Label>
+                      <Label className="text-sm mb-1.5 block">振込先口座の選択 *</Label>
                       {bankAccounts && bankAccounts.length > 0 ? (
                         <div className="space-y-2">
                           {bankAccounts.map(account => (
@@ -656,18 +656,18 @@ export default function Checkout() {
                             >
                               <p className="font-medium text-sm">{account.bankName}</p>
                               <p className="text-sm text-muted-foreground mt-0.5">{account.accountNumber}</p>
-                              <p className="text-xs text-muted-foreground mt-0.5">예금주: {account.accountHolder}</p>
+                              <p className="text-xs text-muted-foreground mt-0.5">口座名義: {account.accountHolder}</p>
                             </button>
                           ))}
                         </div>
                       ) : (
-                        <p className="text-sm text-muted-foreground">사용 가능한 입금 계좌가 없습니다.</p>
+                        <p className="text-sm text-muted-foreground">ご利用可能な振込先口座がありません。</p>
                       )}
                     </div>
                     <div className="bg-amber-50 border border-amber-200 rounded-lg p-3">
                       <p className="text-xs text-amber-800 leading-relaxed">
-                        ⚠️ 주문 후 48시간 이내에 입금하지 않으시면 주문이 자동으로 취소됩니다.<br />
-                        입금 확인 후 상품 준비를 시작하며, 배송 시작 시 별도로 안내드립니다.
+                        ⚠️ ご注文後48時間以内にご入金がない場合、ご注文は自動的にキャンセルされます。<br />
+                        入金確認後に商品の準備を開始し、発送開始時に別途ご案内いたします。
                       </p>
                     </div>
                   </div>
@@ -676,16 +676,16 @@ export default function Checkout() {
 
               {/* Coupon / Promo Code */}
               <div className="bg-card border rounded-xl p-6">
-                <h2 className="font-semibold mb-4 flex items-center gap-2"><Ticket className="w-4 h-4" /> 쿠폰 / 프로모코드 적용</h2>
+                <h2 className="font-semibold mb-4 flex items-center gap-2"><Ticket className="w-4 h-4" /> クーポン / プロモコードの適用</h2>
 
                 {/* Promo Code 입력 */}
                 <div className="mb-4">
-                  <p className="text-xs text-muted-foreground mb-2 flex items-center gap-1"><Tag className="w-3 h-3" /> 프로모코드 (할인코드)</p>
+                  <p className="text-xs text-muted-foreground mb-2 flex items-center gap-1"><Tag className="w-3 h-3" /> プロモコード (割引コード)</p>
                   {appliedPromo ? (
                     <div className="flex items-center justify-between bg-primary/5 border border-primary/20 rounded-lg p-3">
                       <div>
                         <p className="text-sm font-medium">{appliedPromo.name}</p>
-                        <p className="text-xs text-primary font-semibold">-{formatPrice(promoDiscount)} 할인</p>
+                        <p className="text-xs text-primary font-semibold">-{formatPrice(promoDiscount)} 割引</p>
                       </div>
                       <Button type="button" variant="ghost" size="sm" onClick={() => { setAppliedPromo(null); setPromoCode(""); }}>
                         <X className="w-4 h-4" />
@@ -694,7 +694,7 @@ export default function Checkout() {
                   ) : (
                     <div className="flex gap-2">
                       <Input
-                        placeholder="프로모코드를 입력하세요"
+                        placeholder="プロモコードを入力してください"
                         value={promoCode}
                         onChange={e => setPromoCode(e.target.value)}
                         onKeyDown={e => e.key === "Enter" && (e.preventDefault(), promoCode.trim() && handleApplyPromo())}
@@ -706,7 +706,7 @@ export default function Checkout() {
                         onClick={() => promoCode.trim() && handleApplyPromo()}
                         disabled={!promoCode.trim() || validatePromo.isFetching}
                       >
-                        {validatePromo.isFetching ? <Loader2 className="w-4 h-4 animate-spin" /> : "적용"}
+                        {validatePromo.isFetching ? <Loader2 className="w-4 h-4 animate-spin" /> : "適用"}
                       </Button>
                     </div>
                   )}
@@ -715,12 +715,12 @@ export default function Checkout() {
                 <Separator className="mb-4" />
 
                 {/* 보유 쿠폰 선택 */}
-                <p className="text-xs text-muted-foreground mb-2 flex items-center gap-1"><Ticket className="w-3 h-3" /> 보유 쿠폰</p>
+                <p className="text-xs text-muted-foreground mb-2 flex items-center gap-1"><Ticket className="w-3 h-3" /> 保有クーポン</p>
                 {selectedCoupon ? (
                   <div className="flex items-center justify-between bg-primary/5 border border-primary/20 rounded-lg p-3">
                     <div>
                       <p className="text-sm font-medium">{selectedCoupon.coupon.name}</p>
-                      <p className="text-xs text-primary font-semibold">-{formatPrice(couponDiscount)} 할인</p>
+                      <p className="text-xs text-primary font-semibold">-{formatPrice(couponDiscount)} 割引</p>
                     </div>
                     <Button type="button" variant="ghost" size="sm" onClick={() => { setSelectedCouponId(null); setShowCouponSelect(false); }}>
                       <X className="w-4 h-4" />
@@ -730,7 +730,7 @@ export default function Checkout() {
                   <div>
                     <Button type="button" variant="outline" className="w-full justify-between" onClick={() => setShowCouponSelect(!showCouponSelect)}>
                       <span className="text-muted-foreground">
-                        {availableCoupons && availableCoupons.length > 0 ? `사용 가능한 쿠폰 ${availableCoupons.length}장` : "사용 가능한 쿠폰이 없습니다"}
+                        {availableCoupons && availableCoupons.length > 0 ? `ご利用可能なクーポン ${availableCoupons.length}枚` : "ご利用可能なクーポンがありません"}
                       </span>
                       <ChevronDown className={`w-4 h-4 transition-transform ${showCouponSelect ? "rotate-180" : ""}`} />
                     </Button>
@@ -745,7 +745,7 @@ export default function Checkout() {
                           >
                             <p className="text-sm font-medium">{formatCouponLabel(uc.coupon)}</p>
                             {uc.coupon.minOrderAmount > 0 && (
-                              <p className="text-xs text-muted-foreground">{formatPrice(uc.coupon.minOrderAmount)} 이상 구매 시</p>
+                              <p className="text-xs text-muted-foreground">{formatPrice(uc.coupon.minOrderAmount)} 以上のご購入で</p>
                             )}
                           </button>
                         ))}
@@ -758,11 +758,11 @@ export default function Checkout() {
               {/* Points */}
               {profile && profile.points > 0 && (
                 <div className="bg-card border rounded-xl p-6">
-                  <h2 className="font-semibold mb-4">포인트 사용</h2>
+                  <h2 className="font-semibold mb-4">ポイントの利用</h2>
                   <div className="flex items-center gap-3">
                     <Input type="number" min={0} max={Math.min(profile.points, subtotal)} value={form.pointsUsed} onChange={e => setForm(f => ({ ...f, pointsUsed: Math.min(Number(e.target.value) || 0, profile.points, subtotal) }))} className="w-40" />
-                    <span className="text-sm text-muted-foreground">보유: {profile.points.toLocaleString()}P</span>
-                    <Button type="button" variant="outline" size="sm" onClick={() => setForm(f => ({ ...f, pointsUsed: Math.min(profile.points, subtotal) }))}>전액사용</Button>
+                    <span className="text-sm text-muted-foreground">保有: {profile.points.toLocaleString()}P</span>
+                    <Button type="button" variant="outline" size="sm" onClick={() => setForm(f => ({ ...f, pointsUsed: Math.min(profile.points, subtotal) }))}>全額使用</Button>
                   </div>
                 </div>
               )}
@@ -771,22 +771,22 @@ export default function Checkout() {
             {/* Summary */}
             <div>
               <div className="bg-card border rounded-xl p-6 sticky top-24">
-                <h3 className="font-semibold mb-4">결제 요약</h3>
+                <h3 className="font-semibold mb-4">お支払い内容</h3>
                 <div className="space-y-3 text-sm">
-                  <div className="flex justify-between"><span className="text-muted-foreground">상품금액</span><span className="price-text">{formatPrice(subtotal)}</span></div>
-                  <div className="flex justify-between"><span className="text-muted-foreground">배송비 (국제배송)</span><span className="text-emerald-600 font-medium">무료</span></div>
-                  {promoDiscount > 0 && <div className="flex justify-between"><span className="text-muted-foreground">프로모코드 할인</span><span className="text-destructive price-text">-{formatPrice(promoDiscount)}</span></div>}
-                  {couponDiscount > 0 && <div className="flex justify-between"><span className="text-muted-foreground">쿠폰 할인</span><span className="text-destructive price-text">-{formatPrice(couponDiscount)}</span></div>}
-                  {form.pointsUsed > 0 && <div className="flex justify-between"><span className="text-muted-foreground">포인트 할인</span><span className="text-destructive price-text">-{formatPrice(form.pointsUsed)}</span></div>}
+                  <div className="flex justify-between"><span className="text-muted-foreground">商品金額</span><span className="price-text">{formatPrice(subtotal)}</span></div>
+                  <div className="flex justify-between"><span className="text-muted-foreground">送料 (国際配送)</span><span className="text-emerald-600 font-medium">無料</span></div>
+                  {promoDiscount > 0 && <div className="flex justify-between"><span className="text-muted-foreground">プロモコード割引</span><span className="text-destructive price-text">-{formatPrice(promoDiscount)}</span></div>}
+                  {couponDiscount > 0 && <div className="flex justify-between"><span className="text-muted-foreground">クーポン割引</span><span className="text-destructive price-text">-{formatPrice(couponDiscount)}</span></div>}
+                  {form.pointsUsed > 0 && <div className="flex justify-between"><span className="text-muted-foreground">ポイント割引</span><span className="text-destructive price-text">-{formatPrice(form.pointsUsed)}</span></div>}
                   <Separator />
-                  <div className="flex justify-between font-bold text-lg"><span>총 결제금액</span><span className="text-primary price-text">{formatPrice(total)}</span></div>
+                  <div className="flex justify-between font-bold text-lg"><span>お支払い合計</span><span className="text-primary price-text">{formatPrice(total)}</span></div>
                 </div>
                 <Button type="submit" className="w-full mt-6" size="lg" disabled={createOrder.isPending || isStripeProcessing}>
                   {(createOrder.isPending || isStripeProcessing) ? (
-                    <><Loader2 className="w-4 h-4 mr-2 animate-spin" />{isStripeProcessing ? "카드 결제 처리중..." : "주문 처리중..."}</>
-                  ) : `${formatPrice(total)} 결제하기`}
+                    <><Loader2 className="w-4 h-4 mr-2 animate-spin" />{isStripeProcessing ? "カード決済処理中..." : "注文処理中..."}</>
+                  ) : `${formatPrice(total)} を支払う`}
                 </Button>
-                <p className="text-[11px] text-muted-foreground text-center mt-3">주문 완료 시 이용약관에 동의한 것으로 간주합니다.</p>
+                <p className="text-[11px] text-muted-foreground text-center mt-3">ご注文の完了をもって、利用規約に同意したものとみなします。</p>
               </div>
             </div>
           </div>

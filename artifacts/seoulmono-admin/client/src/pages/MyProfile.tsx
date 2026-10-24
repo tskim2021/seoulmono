@@ -46,26 +46,26 @@ export default function MyProfile() {
   }, [profile]);
 
   const updateProfile = trpc.user.updateProfile.useMutation({
-    onSuccess: () => { toast.success("프로필이 수정되었습니다"); utils.user.profile.invalidate(); },
+    onSuccess: () => { toast.success("プロフィールを更新しました"); utils.user.profile.invalidate(); },
   });
 
   const changePassword = trpc.user.changePassword.useMutation({
     onSuccess: () => {
-      toast.success("비밀번호가 변경되었습니다");
+      toast.success("パスワードを変更しました");
       setPwForm({ currentPassword: "", newPassword: "", confirmPassword: "" });
     },
     onError: (e) => { toast.error(e.message); },
   });
 
   const handleChangePassword = () => {
-    if (!pwForm.currentPassword) return toast.error("현재 비밀번호를 입력해주세요");
-    if (pwForm.newPassword.length < 8) return toast.error("새 비밀번호는 8자 이상이어야 합니다");
-    if (pwForm.newPassword !== pwForm.confirmPassword) return toast.error("새 비밀번호가 일치하지 않습니다");
+    if (!pwForm.currentPassword) return toast.error("現在のパスワードを入力してください");
+    if (pwForm.newPassword.length < 8) return toast.error("新しいパスワードは8文字以上で入力してください");
+    if (pwForm.newPassword !== pwForm.confirmPassword) return toast.error("新しいパスワードが一致しません");
     changePassword.mutate(pwForm);
   };
 
   return (
-    <MyPageLayout title="회원정보 수정">
+    <MyPageLayout title="会員情報の編集">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch">
         {/* 기본 정보 */}
         <div className="bg-card border rounded-xl p-6 flex flex-col">
@@ -74,14 +74,14 @@ export default function MyProfile() {
               <User className="w-8 h-8 text-primary" />
             </div>
             <div>
-              <p className="font-semibold">{profile?.name ?? "회원"}</p>
+              <p className="font-semibold">{profile?.name ?? "会員"}</p>
               <p className="text-sm text-muted-foreground">{profile?.email}</p>
             </div>
           </div>
           <div className="space-y-4 flex-1 flex flex-col justify-between">
-            <div><Label className="text-sm mb-1.5 block">이름</Label><Input value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} /></div>
-            <div><Label className="text-sm mb-1.5 block">연락처</Label><Input value={form.phone} onChange={e => setForm(f => ({ ...f, phone: e.target.value }))} placeholder="010-0000-0000" /></div>
-            <div><Label className="text-sm mb-1.5 block">아이디 (이메일)</Label><Input value={form.email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))} type="email" /></div>
+            <div><Label className="text-sm mb-1.5 block">お名前</Label><Input value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} /></div>
+            <div><Label className="text-sm mb-1.5 block">連絡先</Label><Input value={form.phone} onChange={e => setForm(f => ({ ...f, phone: e.target.value }))} placeholder="090-0000-0000" /></div>
+            <div><Label className="text-sm mb-1.5 block">ID (メールアドレス)</Label><Input value={form.email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))} type="email" /></div>
             <Button className="w-full mt-2" onClick={() => updateProfile.mutate({ 
               ...form, 
               emailNotifications: form.emailNotifications ? 1 : 0,
@@ -91,7 +91,7 @@ export default function MyProfile() {
               emailNotifyComment: form.emailNotifyComment ? 1 : 0,
               emailNotifySystem: form.emailNotifySystem ? 1 : 0,
             })} disabled={updateProfile.isPending}>
-              {updateProfile.isPending ? "저장 중..." : "저장하기"}
+              {updateProfile.isPending ? "保存中..." : "保存する"}
             </Button>
           </div>
         </div>
@@ -103,19 +103,19 @@ export default function MyProfile() {
               <Lock className="w-8 h-8 text-primary" />
             </div>
             <div>
-              <p className="font-semibold">비밀번호 변경</p>
-              <p className="text-sm text-muted-foreground">보안을 위해 주기적으로 변경해주세요</p>
+              <p className="font-semibold">パスワード変更</p>
+              <p className="text-sm text-muted-foreground">セキュリティのため、定期的に変更してください</p>
             </div>
           </div>
           <form onSubmit={e => { e.preventDefault(); handleChangePassword(); }} className="space-y-4 flex-1 flex flex-col justify-between">
             <div>
-              <Label className="text-sm mb-1.5 block">현재 비밀번호</Label>
+              <Label className="text-sm mb-1.5 block">現在のパスワード</Label>
               <div className="relative">
                 <Input
                   type={showCurrent ? "text" : "password"}
                   value={pwForm.currentPassword}
                   onChange={e => setPwForm(f => ({ ...f, currentPassword: e.target.value }))}
-                  placeholder="현재 비밀번호 입력"
+                  placeholder="現在のパスワードを入力"
                   autoComplete="current-password"
                   className="pr-10"
                 />
@@ -125,13 +125,13 @@ export default function MyProfile() {
               </div>
             </div>
             <div>
-              <Label className="text-sm mb-1.5 block">새 비밀번호</Label>
+              <Label className="text-sm mb-1.5 block">新しいパスワード</Label>
               <div className="relative">
                 <Input
                   type={showNew ? "text" : "password"}
                   value={pwForm.newPassword}
                   onChange={e => setPwForm(f => ({ ...f, newPassword: e.target.value }))}
-                  placeholder="8자 이상 입력"
+                  placeholder="8文字以上で入力"
                   autoComplete="new-password"
                   className="pr-10"
                 />
@@ -140,17 +140,17 @@ export default function MyProfile() {
                 </button>
               </div>
               {pwForm.newPassword && pwForm.newPassword.length < 8 && (
-                <p className="text-xs text-destructive mt-1">8자 이상이어야 합니다</p>
+                <p className="text-xs text-destructive mt-1">8文字以上で入力してください</p>
               )}
             </div>
             <div>
-              <Label className="text-sm mb-1.5 block">새 비밀번호 확인</Label>
+              <Label className="text-sm mb-1.5 block">新しいパスワード（確認）</Label>
               <div className="relative">
                 <Input
                   type={showConfirm ? "text" : "password"}
                   value={pwForm.confirmPassword}
                   onChange={e => setPwForm(f => ({ ...f, confirmPassword: e.target.value }))}
-                  placeholder="새 비밀번호 재입력"
+                  placeholder="新しいパスワードを再入力"
                   autoComplete="new-password"
                   className="pr-10"
                 />
@@ -159,10 +159,10 @@ export default function MyProfile() {
                 </button>
               </div>
               {pwForm.confirmPassword && pwForm.newPassword !== pwForm.confirmPassword && (
-                <p className="text-xs text-destructive mt-1">비밀번호가 일치하지 않습니다</p>
+                <p className="text-xs text-destructive mt-1">パスワードが一致しません</p>
               )}
               {pwForm.confirmPassword && pwForm.newPassword === pwForm.confirmPassword && pwForm.newPassword.length >= 8 && (
-                <p className="text-xs text-green-600 mt-1">비밀번호가 일치합니다</p>
+                <p className="text-xs text-green-600 mt-1">パスワードが一致しました</p>
               )}
             </div>
             <Button
@@ -170,7 +170,7 @@ export default function MyProfile() {
               className="w-full"
               disabled={changePassword.isPending}
             >
-              {changePassword.isPending ? "변경 중..." : "비밀번호 변경"}
+              {changePassword.isPending ? "変更中..." : "パスワードを変更"}
             </Button>
           </form>
         </div>
@@ -182,35 +182,35 @@ export default function MyProfile() {
               <Mail className="w-5 h-5 text-primary" />
             </div>
             <div>
-              <p className="font-semibold text-sm">이메일 알림 수신</p>
-              <p className="text-xs text-muted-foreground">주문, 포인트, 리뷰 등의 알림을 이메일로 받습니다</p>
+              <p className="font-semibold text-sm">メール通知の受信</p>
+              <p className="text-xs text-muted-foreground">注文、ポイント、レビューなどの通知をメールで受け取ります</p>
             </div>
           </div>
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <Label className="text-sm font-medium">전체 이메일 알림</Label>
+              <Label className="text-sm font-medium">すべてのメール通知</Label>
               <Switch checked={form.emailNotifications} onCheckedChange={checked => setForm(f => ({ ...f, emailNotifications: checked }))} />
             </div>
             {form.emailNotifications && (
               <div className="space-y-3 pl-2 border-l-2 border-muted ml-1">
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2"><ShoppingCart className="w-4 h-4 text-muted-foreground" /><Label className="text-sm">주문 알림</Label></div>
+                  <div className="flex items-center gap-2"><ShoppingCart className="w-4 h-4 text-muted-foreground" /><Label className="text-sm">注文通知</Label></div>
                   <Switch checked={form.emailNotifyOrder} onCheckedChange={checked => setForm(f => ({ ...f, emailNotifyOrder: checked }))} />
                 </div>
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2"><Star className="w-4 h-4 text-muted-foreground" /><Label className="text-sm">포인트 알림</Label></div>
+                  <div className="flex items-center gap-2"><Star className="w-4 h-4 text-muted-foreground" /><Label className="text-sm">ポイント通知</Label></div>
                   <Switch checked={form.emailNotifyPoint} onCheckedChange={checked => setForm(f => ({ ...f, emailNotifyPoint: checked }))} />
                 </div>
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2"><Bell className="w-4 h-4 text-muted-foreground" /><Label className="text-sm">리뷰 알림</Label></div>
+                  <div className="flex items-center gap-2"><Bell className="w-4 h-4 text-muted-foreground" /><Label className="text-sm">レビュー通知</Label></div>
                   <Switch checked={form.emailNotifyReview} onCheckedChange={checked => setForm(f => ({ ...f, emailNotifyReview: checked }))} />
                 </div>
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2"><MessageCircle className="w-4 h-4 text-muted-foreground" /><Label className="text-sm">댓글 알림</Label></div>
+                  <div className="flex items-center gap-2"><MessageCircle className="w-4 h-4 text-muted-foreground" /><Label className="text-sm">コメント通知</Label></div>
                   <Switch checked={form.emailNotifyComment} onCheckedChange={checked => setForm(f => ({ ...f, emailNotifyComment: checked }))} />
                 </div>
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2"><AlertCircle className="w-4 h-4 text-muted-foreground" /><Label className="text-sm">시스템 알림</Label></div>
+                  <div className="flex items-center gap-2"><AlertCircle className="w-4 h-4 text-muted-foreground" /><Label className="text-sm">システム通知</Label></div>
                   <Switch checked={form.emailNotifySystem} onCheckedChange={checked => setForm(f => ({ ...f, emailNotifySystem: checked }))} />
                 </div>
               </div>
@@ -224,7 +224,7 @@ export default function MyProfile() {
               emailNotifyComment: form.emailNotifyComment ? 1 : 0,
               emailNotifySystem: form.emailNotifySystem ? 1 : 0,
             })} disabled={updateProfile.isPending}>
-              {updateProfile.isPending ? "저장 중..." : "알림 설정 저장"}
+              {updateProfile.isPending ? "保存中..." : "通知設定を保存"}
             </Button>
           </div>
         </div>

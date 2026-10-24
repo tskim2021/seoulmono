@@ -34,7 +34,7 @@ function ProductQnASection({ productId }: { productId: number }) {
 
   const createQnA = trpc.community.createProductQnA.useMutation({
     onSuccess: () => {
-      toast.success("질문이 등록되었습니다");
+      toast.success("質問を登録しました");
       setTitle("");
       setContent("");
       setShowForm(false);
@@ -45,7 +45,7 @@ function ProductQnASection({ productId }: { productId: number }) {
 
   const handleSubmit = () => {
     if (!title.trim() || !content.trim()) {
-      toast.error("제목과 내용을 입력해주세요");
+      toast.error("タイトルと内容を入力してください");
       return;
     }
     createQnA.mutate({ productId, title: title.trim(), content: content.trim() });
@@ -57,16 +57,16 @@ function ProductQnASection({ productId }: { productId: number }) {
     <div>
       <div className="flex items-center justify-between mb-6">
         <h3 className="text-lg font-bold flex items-center gap-2">
-          <HelpCircle className="w-5 h-5" /> 상품 Q&A
+          <HelpCircle className="w-5 h-5" /> 商品Q&A
           <span className="text-sm font-normal text-muted-foreground">({data?.total ?? 0})</span>
         </h3>
         {isAuthenticated ? (
           <Button size="sm" onClick={() => setShowForm(!showForm)}>
-            {showForm ? "취소" : "질문 작성"}
+            {showForm ? "キャンセル" : "質問を書く"}
           </Button>
         ) : (
           <Button size="sm" asChild>
-            <a href={getLoginUrl()}>로그인 후 질문</a>
+            <a href={getLoginUrl()}>ログインして質問する</a>
           </Button>
         )}
       </div>
@@ -76,26 +76,26 @@ function ProductQnASection({ productId }: { productId: number }) {
         <div className="bg-card border rounded-xl p-5 mb-6">
           <div className="space-y-3">
             <div>
-              <label className="text-sm font-medium block mb-1.5">제목</label>
+              <label className="text-sm font-medium block mb-1.5">タイトル</label>
               <Input
                 value={title}
                 onChange={e => setTitle(e.target.value)}
-                placeholder="질문 제목을 입력하세요"
+                placeholder="質問のタイトルを入力してください"
               />
             </div>
             <div>
-              <label className="text-sm font-medium block mb-1.5">내용</label>
+              <label className="text-sm font-medium block mb-1.5">内容</label>
               <Textarea
                 value={content}
                 onChange={e => setContent(e.target.value)}
-                placeholder="궁금한 점을 자세히 작성해주세요"
+                placeholder="気になる点を詳しくお書きください"
                 rows={4}
               />
             </div>
             <div className="flex justify-end gap-2">
-              <Button variant="outline" size="sm" onClick={() => setShowForm(false)}>취소</Button>
+              <Button variant="outline" size="sm" onClick={() => setShowForm(false)}>キャンセル</Button>
               <Button size="sm" onClick={handleSubmit} disabled={createQnA.isPending}>
-                {createQnA.isPending ? "등록 중..." : "질문 등록"}
+                {createQnA.isPending ? "登録中..." : "質問を登録"}
               </Button>
             </div>
           </div>
@@ -116,8 +116,8 @@ function ProductQnASection({ productId }: { productId: number }) {
       ) : (
         <div className="text-center py-12 text-muted-foreground">
           <HelpCircle className="w-10 h-10 mx-auto mb-3 opacity-20" />
-          <p className="text-sm">등록된 Q&A가 없습니다</p>
-          <p className="text-xs mt-1">상품에 대해 궁금한 점을 질문해보세요</p>
+          <p className="text-sm">登録されたQ&Aはありません</p>
+          <p className="text-xs mt-1">商品について気になることを質問してみましょう</p>
         </div>
       )}
 
@@ -150,13 +150,13 @@ function QnAItem({ post }: { post: any }) {
               <h4 className="font-medium text-sm">{post.title}</h4>
               {post.isAnswered === 1 && (
                 <Badge variant="outline" className="text-[10px] text-green-600 border-green-300 bg-green-50 dark:bg-green-950/30 px-1.5 py-0">
-                  <CheckCircle className="w-2.5 h-2.5 mr-0.5" /> 답변완료
+                  <CheckCircle className="w-2.5 h-2.5 mr-0.5" /> 回答済み
                 </Badge>
               )}
             </div>
             <p className="text-sm text-muted-foreground line-clamp-2">{post.content}</p>
             <div className="flex items-center gap-3 mt-2 text-xs text-muted-foreground">
-              <span className="flex items-center gap-1"><User className="w-3 h-3" />{post.displayName || (post.userName ?? "익명")}</span>
+              <span className="flex items-center gap-1"><User className="w-3 h-3" />{post.displayName || (post.userName ?? "匿名")}</span>
               <span>{formatDate(post.createdAt)}</span>
               {post.commentCount > 0 && <span className="flex items-center gap-1"><MessageCircle className="w-3 h-3" />{post.commentCount}</span>}
             </div>
@@ -172,7 +172,7 @@ function QnAItem({ post }: { post: any }) {
               <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-emerald-100 text-emerald-700 text-xs font-bold shrink-0 mt-0.5">A</span>
               <div className="flex-1">
                 <div className="flex items-center gap-2 mb-1">
-                  <span className="text-xs font-medium">{comment.isAdmin ? "관리자" : (comment.userName ?? "익명")}</span>
+                  <span className="text-xs font-medium">{comment.isAdmin ? "管理者" : (comment.userName ?? "匿名")}</span>
                   <span className="text-xs text-muted-foreground">{formatDate(comment.createdAt)}</span>
                 </div>
                 <p className="text-sm">{comment.content}</p>
@@ -183,7 +183,7 @@ function QnAItem({ post }: { post: any }) {
       )}
       {showComments && (!comments || comments.length === 0) && (
         <div className="border-t bg-secondary/10 p-4 text-center text-sm text-muted-foreground">
-          아직 답변이 없습니다
+          まだ回答がありません
         </div>
       )}
     </div>
@@ -194,19 +194,19 @@ function ShareButtons({ productName }: { productName: string }) {
   const [copied, setCopied] = useState(false);
   const pageUrl = window.location.href;
   const url = encodeURIComponent(pageUrl);
-  const text = encodeURIComponent(`[탈모학교] ${productName}`);
+  const text = encodeURIComponent(`[ソウルモノ] ${productName}`);
 
   const handleCopy = async (toastMsg?: string) => {
     try {
       await navigator.clipboard.writeText(pageUrl);
       setCopied(true);
-      toast.success(toastMsg ?? "링크가 복사되었습니다");
+      toast.success(toastMsg ?? "リンクをコピーしました");
       setTimeout(() => setCopied(false), 2000);
     } catch {}
   };
 
   const handleKakao = async () => {
-    const shareText = encodeURIComponent(`[탈모학교] ${productName}\n${pageUrl}`);
+    const shareText = encodeURIComponent(`[ソウルモノ] ${productName}\n${pageUrl}`);
     const ua = navigator.userAgent;
     const isIOS = /iPhone|iPad|iPod/i.test(ua);
     const isAndroid = /Android/i.test(ua);
@@ -217,24 +217,24 @@ function ShareButtons({ productName }: { productName: string }) {
       window.location.href = `intent://send?text=${shareText}#Intent;scheme=kakaotalk;package=com.kakao.talk;end`;
     } else {
       await navigator.clipboard.writeText(pageUrl);
-      toast.info("PC에서는 카카오톡 앱을 통해 공유해주세요. 링크가 복사되었습니다 📋", { duration: 4000 });
+      toast.info("PCではカカオトークのアプリから共有してください。リンクをコピーしました 📋", { duration: 4000 });
     }
   };
 
   const handleInstagram = async () => {
     if (navigator.share) {
       try {
-        await navigator.share({ title: `[탈모학교] ${productName}`, url: pageUrl });
+        await navigator.share({ title: `[ソウルモノ] ${productName}`, url: pageUrl });
       } catch {}
     } else {
       await navigator.clipboard.writeText(pageUrl);
-      toast.success("링크 복사 완료! 인스타그램 앱에서 붙여넣어 공유하세요 📋");
+      toast.success("リンクをコピーしました！Instagramアプリで貼り付けて共有してください 📋");
     }
   };
 
   const sns = [
     {
-      label: "카카오톡",
+      label: "カカオトーク",
       onClick: handleKakao,
       bg: "bg-[#FEE500]",
       icon: (
@@ -244,7 +244,7 @@ function ShareButtons({ productName }: { productName: string }) {
       ),
     },
     {
-      label: "인스타그램",
+      label: "Instagram",
       onClick: handleInstagram,
       bg: "bg-gradient-to-br from-[#f9ce34] via-[#ee2a7b] to-[#6228d7]",
       icon: (
@@ -290,7 +290,7 @@ function ShareButtons({ productName }: { productName: string }) {
       <div className="flex items-center justify-end gap-2 flex-wrap">
         <div className="flex items-center gap-1.5 text-sm text-muted-foreground mr-auto">
           <Share2 className="w-4 h-4" />
-          <span>공유</span>
+          <span>共有</span>
         </div>
         {sns.map(s => (
           s.href ? (
@@ -317,7 +317,7 @@ function ShareButtons({ productName }: { productName: string }) {
         ))}
         <button
           onClick={() => handleCopy()}
-          title="링크 복사"
+          title="リンクをコピー"
           className="w-9 h-9 rounded-full bg-secondary border border-border flex items-center justify-center hover:bg-accent transition-colors"
         >
           {copied ? <Check className="w-4 h-4 text-primary" /> : <Link2 className="w-4 h-4 text-muted-foreground" />}
@@ -341,10 +341,10 @@ export default function ProductDetail() {
 
   useSEO({
     title: product?.name,
-    description: product?.description ? product.description.slice(0, 160) : `${product?.name ?? '상품'} - 탈모학교에서 확인하세요`,
+    description: product?.description ? product.description.slice(0, 160) : `${product?.name ?? '商品'} - ソウルモノでご確認ください`,
     ogImage: product?.thumbnail ?? undefined,
     ogType: "product",
-    keywords: product ? `${product.name}, 온라인쇼핑` : undefined,
+    keywords: product ? `${product.name}, オンラインショップ` : undefined,
   });
 
   const [quantity, setQuantity] = useState(1);
@@ -371,7 +371,7 @@ export default function ProductDetail() {
   const [, navigate] = useLocation();
 
   const addToCart = trpc.cart.add.useMutation({
-    onSuccess: () => { toast.success("장바구니에 추가되었습니다"); utils.cart.list.invalidate(); },
+    onSuccess: () => { toast.success("カートに追加しました"); utils.cart.list.invalidate(); },
     onError: (err) => toast.error(err.message),
   });
 
@@ -384,7 +384,7 @@ export default function ProductDetail() {
     { enabled: isAuthenticated && !!product }
   );
   const toggleWishlist = trpc.wishlist.toggle.useMutation({
-    onSuccess: (data) => { toast.success(data.isAdded ? "위시리스트에 추가" : "위시리스트에서 제거"); refetchWishlist(); },
+    onSuccess: (data) => { toast.success(data.isAdded ? "お気に入りに追加しました" : "お気に入りから削除しました"); refetchWishlist(); },
   });
 
   // Calculate option-based price (MUST be before any conditional returns to follow Rules of Hooks)
@@ -420,11 +420,11 @@ export default function ProductDetail() {
       <Layout>
         <div className="container py-20 text-center">
           <ShoppingBag className="w-16 h-16 mx-auto mb-4 text-muted-foreground opacity-30" />
-          <h2 className="text-xl font-bold mb-2">상품을 찾을 수 없습니다</h2>
-          <p className="text-muted-foreground mb-4">요청하신 상품이 존재하지 않거나 삭제되었습니다.</p>
+          <h2 className="text-xl font-bold mb-2">商品が見つかりません</h2>
+          <p className="text-muted-foreground mb-4">お探しの商品は存在しないか、削除されました。</p>
           <div className="flex gap-3 justify-center">
-            <Button variant="outline" onClick={() => window.history.back()}><ChevronLeft className="w-4 h-4 mr-1" />이전 페이지</Button>
-            <Button asChild><Link href="/products">상품 목록으로</Link></Button>
+            <Button variant="outline" onClick={() => window.history.back()}><ChevronLeft className="w-4 h-4 mr-1" />前のページ</Button>
+            <Button asChild><Link href="/products">商品一覧へ</Link></Button>
           </div>
         </div>
       </Layout>
@@ -440,19 +440,19 @@ export default function ProductDetail() {
   const totalPrice = displayPrice * quantity;
 
   const handleAddToCart = () => {
-    if (!isAuthenticated) { toast.error("로그인이 필요합니다"); return; }
+    if (!isAuthenticated) { toast.error("ログインが必要です"); return; }
     if (product.options && product.options.length > 0) {
       const missing = product.options.filter(o => !selectedOptions[o.name]);
-      if (missing.length > 0) { toast.error(`${missing[0].name}을(를) 선택해주세요`); return; }
+      if (missing.length > 0) { toast.error(`${missing[0].name}を選択してください`); return; }
     }
     addToCart.mutate({ productId: product.id, quantity, options: Object.keys(selectedOptions).length > 0 ? selectedOptions : undefined });
   };
 
   const handleBuyNow = () => {
-    if (!isAuthenticated) { toast.error("로그인이 필요합니다"); return; }
+    if (!isAuthenticated) { toast.error("ログインが必要です"); return; }
     if (product.options && product.options.length > 0) {
       const missing = product.options.filter(o => !selectedOptions[o.name]);
-      if (missing.length > 0) { toast.error(`${missing[0].name}을(를) 선택해주세요`); return; }
+      if (missing.length > 0) { toast.error(`${missing[0].name}を選択してください`); return; }
     }
     addToCartAndBuy.mutate({ productId: product.id, quantity, options: Object.keys(selectedOptions).length > 0 ? selectedOptions : undefined });
   };
@@ -462,9 +462,9 @@ export default function ProductDetail() {
       <div className="container py-8">
         {/* Breadcrumb */}
         <div className="flex items-center gap-2 text-sm text-muted-foreground mb-6">
-          <Link href="/" className="hover:text-foreground">홈</Link>
+          <Link href="/" className="hover:text-foreground">ホーム</Link>
           <span>/</span>
-          <Link href="/products" className="hover:text-foreground">상품</Link>
+          <Link href="/products" className="hover:text-foreground">商品</Link>
           <span>/</span>
           <span className="text-foreground font-medium truncate max-w-[200px]">{product.name}</span>
         </div>
@@ -534,7 +534,7 @@ export default function ProductDetail() {
                 ))}
               </div>
               <span className="text-sm font-medium">{rating.toFixed(1)}</span>
-              <span className="text-sm text-muted-foreground">({product.reviewTotal}개 리뷰)</span>
+              <span className="text-sm text-muted-foreground">({product.reviewTotal}件のレビュー)</span>
             </div>
 
             {/* Price */}
@@ -547,10 +547,10 @@ export default function ProductDetail() {
               {optionPrice && optionPrice !== basePrice && (
                 <p className="text-xs text-muted-foreground mt-1">
                   <span className="line-through price-text">{formatPrice(basePrice)}</span>
-                  <span className="ml-2 text-primary font-medium">옵션 선택 가격</span>
+                  <span className="ml-2 text-primary font-medium">オプション選択価格</span>
                 </p>
               )}
-              <p className="text-xs text-muted-foreground mt-2">적립 포인트: {product.pointRateType === "fixed" ? `${(product.pointRate ?? 0).toLocaleString()}P` : `${Math.floor(displayPrice * ((product.pointRate ?? 0) / 100))}P (${product.pointRate ?? 0}%)`}</p>
+              <p className="text-xs text-muted-foreground mt-2">付与ポイント: {product.pointRateType === "fixed" ? `${(product.pointRate ?? 0).toLocaleString()}P` : `${Math.floor(displayPrice * ((product.pointRate ?? 0) / 100))}P (${product.pointRate ?? 0}%)`}</p>
             </div>
 
             {/* Options */}
@@ -593,12 +593,12 @@ export default function ProductDetail() {
                                   );
                                   return (
                                     <div className="flex items-center gap-2">
-                                      <Badge variant="destructive" className="text-[10px] px-1.5 py-0">품절</Badge>
+                                      <Badge variant="destructive" className="text-[10px] px-1.5 py-0">品切れ</Badge>
                                       {isAuthenticated && (
                                         alreadyRequested ? (
                                           <Button variant="ghost" size="sm" className="h-6 px-2 text-xs" disabled>
                                             <Bell className="w-3 h-3 mr-1" />
-                                            신청 완료
+                                            申込済み
                                           </Button>
                                         ) : (
                                           <Button
@@ -609,7 +609,7 @@ export default function ProductDetail() {
                                               e.preventDefault();
                                               trpc.restockAlert.create.useMutation({
                                                 onSuccess: () => {
-                                                  toast.success("재입고 알림이 신청되었습니다");
+                                                  toast.success("再入荷通知を申し込みました");
                                                   utils.restockAlert.myAlerts.invalidate();
                                                 },
                                                 onError: (err) => toast.error(err.message),
@@ -617,7 +617,7 @@ export default function ProductDetail() {
                                             }}
                                           >
                                             <Bell className="w-3 h-3 mr-1" />
-                                            알림신청
+                                            通知を申し込む
                                           </Button>
                                         )
                                       )}
@@ -640,55 +640,55 @@ export default function ProductDetail() {
 
             {/* Quantity */}
             <div className="flex items-center gap-4 mb-6">
-              <span className="text-sm font-medium">수량</span>
+              <span className="text-sm font-medium">数量</span>
               <div className="flex items-center border rounded-lg">
                 <button onClick={() => setQuantity(q => Math.max(1, q - 1))} className="w-9 h-9 flex items-center justify-center hover:bg-accent transition-colors"><Minus className="w-4 h-4" /></button>
                 <span className="w-12 text-center text-sm font-medium">{quantity}</span>
                 <button onClick={() => setQuantity(q => Math.min(product.stock, q + 1))} className="w-9 h-9 flex items-center justify-center hover:bg-accent transition-colors"><Plus className="w-4 h-4" /></button>
               </div>
-              <span className="text-sm text-muted-foreground">재고: {product.stock}개</span>
+              <span className="text-sm text-muted-foreground">在庫: {product.stock}個</span>
             </div>
 
             {/* Total */}
             <div className="flex items-center justify-between py-4 border-t border-b mb-6">
-              <span className="font-medium">총 상품금액</span>
+              <span className="font-medium">商品金額合計</span>
               <span className="text-xl font-bold text-primary price-text">{formatPrice(totalPrice)}</span>
             </div>
 
             {/* Actions */}
             <div className="flex gap-3">
-              <Button variant="outline" size="lg" className={`flex-1 ${isWishlisted ? "border-rose-400 text-rose-500 hover:bg-rose-50" : ""}`} onClick={() => { if (!isAuthenticated) { toast.error("로그인이 필요합니다"); return; } toggleWishlist.mutate({ productId: product.id }); }}>
-                <Heart className={`w-5 h-5 mr-2 transition-colors ${isWishlisted ? "fill-rose-500 text-rose-500" : ""}`} />위시리스트
+              <Button variant="outline" size="lg" className={`flex-1 ${isWishlisted ? "border-rose-400 text-rose-500 hover:bg-rose-50" : ""}`} onClick={() => { if (!isAuthenticated) { toast.error("ログインが必要です"); return; } toggleWishlist.mutate({ productId: product.id }); }}>
+                <Heart className={`w-5 h-5 mr-2 transition-colors ${isWishlisted ? "fill-rose-500 text-rose-500" : ""}`} />お気に入り
               </Button>
               <Button variant="outline" size="lg" className="flex-1" onClick={handleAddToCart} disabled={product.status === "soldout" || product.stock === 0 || (product as any).canPurchase === false}>
                 <ShoppingCart className="w-5 h-5 mr-2" />
-                {product.status === "soldout" || product.stock === 0 ? "품절" : (product as any).canPurchase === false ? "등급 제한" : "장바구니"}
+                {product.status === "soldout" || product.stock === 0 ? "品切れ" : (product as any).canPurchase === false ? "ランク制限" : "カートに入れる"}
               </Button>
               <Button size="lg" className="flex-1" onClick={handleBuyNow} disabled={product.status === "soldout" || product.stock === 0 || (product as any).canPurchase === false || addToCartAndBuy.isPending}>
-                {addToCartAndBuy.isPending ? "처리 중..." : "바로 구매"}
+                {addToCartAndBuy.isPending ? "処理中..." : "今すぐ購入"}
               </Button>
             </div>
             {(product as any).canPurchase === false && (
-              <p className="text-xs text-destructive mt-1">이 상품은 {product.minGrade === "silver" ? "실버" : product.minGrade === "gold" ? "골드" : product.minGrade === "vip" ? "VIP" : product.minGrade === "vvip" ? "VVIP" : "브론즈"} 등급 이상부터 구매 가능합니다.</p>
+              <p className="text-xs text-destructive mt-1">この商品は{product.minGrade === "silver" ? "シルバー" : product.minGrade === "gold" ? "ゴールド" : product.minGrade === "vip" ? "VIP" : product.minGrade === "vvip" ? "VVIP" : "ブロンズ"}ランク以上の会員様からご購入いただけます。</p>
             )}
             <p className="text-xs text-muted-foreground flex items-center gap-1 mt-2">
               <Heart className="w-3 h-3 text-rose-400 fill-rose-300" />
-              위시리스트에 추가하면 이 상품의 가격이 변동될 때 알림을 받을 수 있습니다
+              商品をお気に入りに追加すると、この商品の価格が変動した際に通知を受け取れます
             </p>
 
             {/* Info badges */}
             <div className="grid grid-cols-3 gap-3 mt-4">
               <div className="text-center p-3 bg-secondary/50 rounded-lg">
                 <Truck className="w-5 h-5 mx-auto mb-1 text-muted-foreground" />
-                <p className="text-[11px] text-muted-foreground">무료배송</p>
+                <p className="text-[11px] text-muted-foreground">送料無料</p>
               </div>
               <div className="text-center p-3 bg-secondary/50 rounded-lg">
                 <Shield className="w-5 h-5 mx-auto mb-1 text-muted-foreground" />
-                <p className="text-[11px] text-muted-foreground">안전결제</p>
+                <p className="text-[11px] text-muted-foreground">安全なお支払い</p>
               </div>
               <div className="text-center p-3 bg-secondary/50 rounded-lg">
                 <RotateCcw className="w-5 h-5 mx-auto mb-1 text-muted-foreground" />
-                <p className="text-[11px] text-muted-foreground">교환/반품</p>
+                <p className="text-[11px] text-muted-foreground">交換・返品</p>
               </div>
             </div>
 
@@ -736,7 +736,7 @@ function BoughtTogetherSection({ productId }: { productId: number }) {
   if (!items || items.length === 0) return null;
   return (
     <div className="mb-10">
-      <h3 className="text-lg font-bold mb-4">이 상품을 구매한 분들이 함께 구매한 상품</h3>
+      <h3 className="text-lg font-bold mb-4">この商品を購入した方が一緒に購入している商品</h3>
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4">
         {items.map((p: any) => (
           <Link key={p.id} href={productHref(p.slug)} className="group">
@@ -790,8 +790,8 @@ function ReviewsSection({ productId }: { productId: number }) {
 
   return (
     <div className="mb-10">
-      <h3 className="text-xl font-bold mb-1">상품리뷰</h3>
-      <p className="text-sm text-muted-foreground mb-6">상품을 구매하신 분들이 작성하신 리뷰입니다.</p>
+      <h3 className="text-xl font-bold mb-1">商品レビュー</h3>
+      <p className="text-sm text-muted-foreground mb-6">商品をご購入いただいた方が投稿したレビューです。</p>
 
       {/* ═══ 리뷰 요약 섹션 ═══ */}
       {totalCount > 0 && (
@@ -799,7 +799,7 @@ function ReviewsSection({ productId }: { productId: number }) {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
             {/* 사용자 총 평점 */}
             <div className="text-center">
-              <p className="text-sm font-medium text-muted-foreground mb-2">사용자 총 평점</p>
+              <p className="text-sm font-medium text-muted-foreground mb-2">ユーザー総合評価</p>
               <div className="flex justify-center mb-1">
                 {[1, 2, 3, 4, 5].map((star) => (
                   <Star
@@ -822,7 +822,7 @@ function ReviewsSection({ productId }: { productId: number }) {
 
             {/* 전체 리뷰수 */}
             <div className="text-center">
-              <p className="text-sm font-medium text-muted-foreground mb-2">전체 리뷰수</p>
+              <p className="text-sm font-medium text-muted-foreground mb-2">レビュー総数</p>
               <div className="flex justify-center mb-1">
                 <MessageCircle className="w-8 h-8 text-muted-foreground/40" />
               </div>
@@ -831,7 +831,7 @@ function ReviewsSection({ productId }: { productId: number }) {
 
             {/* 평점 비율 */}
             <div className="text-center">
-              <p className="text-sm font-medium text-muted-foreground mb-3">평점 비율</p>
+              <p className="text-sm font-medium text-muted-foreground mb-3">評価の割合</p>
               <div className="space-y-1.5 max-w-[200px] mx-auto">
                 {[5, 4, 3, 2, 1].map((rating) => {
                   const count = dist[rating] || 0;
@@ -839,7 +839,7 @@ function ReviewsSection({ productId }: { productId: number }) {
                   const isMax = count === Math.max(...Object.values(dist));
                   return (
                     <div key={rating} className="flex items-center gap-2">
-                      <span className="text-xs w-6 text-right text-muted-foreground">{rating}점</span>
+                      <span className="text-xs w-6 text-right text-muted-foreground">{rating}点</span>
                       <div className="flex-1 h-3 bg-gray-100 dark:bg-gray-800 rounded-full overflow-hidden">
                         <div
                           className={`h-full rounded-full transition-all ${isMax && count > 0 ? "bg-red-500" : "bg-gray-300 dark:bg-gray-600"}`}
@@ -859,7 +859,7 @@ function ReviewsSection({ productId }: { productId: number }) {
       {/* ═══ 포토 & 동영상 갤러리 ═══ */}
       {photoGallery && photoGallery.images.length > 0 && (
         <div className="mb-6">
-          <h4 className="text-base font-bold mb-3">포토 & 동영상 {photoCount}건</h4>
+          <h4 className="text-base font-bold mb-3">フォト & 動画 {photoCount}件</h4>
           <div className="flex gap-2 overflow-x-auto pb-2">
             {photoGallery.images.map((photo, idx) => (
               <button
@@ -867,10 +867,10 @@ function ReviewsSection({ productId }: { productId: number }) {
                 onClick={() => openLightbox(photoGallery.images.map(p => p.imageUrl), idx)}
                 className="relative shrink-0 w-24 h-24 rounded-lg overflow-hidden border bg-secondary/30 hover:opacity-80 transition-opacity group"
               >
-                <img src={photo.imageUrl} alt="리뷰 사진" className="w-full h-full object-cover" />
+                <img src={photo.imageUrl} alt="レビュー写真" className="w-full h-full object-cover" />
                 {idx === photoGallery.images.length - 1 && !showAllPhotos && photoCount > 8 && (
                   <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
-                    <span className="text-white text-sm font-bold">더보기</span>
+                    <span className="text-white text-sm font-bold">もっと見る</span>
                   </div>
                 )}
               </button>
@@ -880,7 +880,7 @@ function ReviewsSection({ productId }: { productId: number }) {
                 onClick={() => setShowAllPhotos(true)}
                 className="shrink-0 w-24 h-24 rounded-lg border border-dashed flex items-center justify-center text-sm text-muted-foreground hover:bg-secondary/30 transition-colors"
               >
-                +{photoCount - 8}건 더
+                +{photoCount - 8}件
               </button>
             )}
           </div>
@@ -891,23 +891,23 @@ function ReviewsSection({ productId }: { productId: number }) {
 
       {/* ═══ 리뷰 목록 ═══ */}
       <div className="flex items-center justify-between mb-4">
-        <h4 className="text-base font-bold">리뷰 {total}건</h4>
+        <h4 className="text-base font-bold">レビュー {total}件</h4>
         <select
           value={sortBy}
           onChange={(e) => setSortBy(e.target.value as any)}
           className="px-3 py-1.5 text-sm border rounded-md bg-background"
         >
-          <option value="latest">최신순</option>
-          <option value="rating_high">별점 높은순</option>
-          <option value="rating_low">별점 낮은순</option>
-          <option value="helpful">추천순</option>
+          <option value="latest">新着順</option>
+          <option value="rating_high">評価の高い順</option>
+          <option value="rating_low">評価の低い順</option>
+          <option value="helpful">参考になった順</option>
         </select>
       </div>
 
       {total === 0 ? (
         <div className="border rounded-lg p-8 text-center">
-          <p className="text-muted-foreground mb-2">아직 작성된 리뷰가 없습니다.</p>
-          <p className="text-sm text-muted-foreground">이 상품을 구매하신 후 첫 리뷰를 남겨보세요!</p>
+          <p className="text-muted-foreground mb-2">まだ投稿されたレビューはありません。</p>
+          <p className="text-sm text-muted-foreground">この商品をご購入後、最初のレビューを投稿してみましょう！</p>
         </div>
       ) : (
         <>
@@ -947,11 +947,11 @@ function ReviewsSection({ productId }: { productId: number }) {
                           />
                         ))}
                       </div>
-                      <span className="text-sm font-medium">{review.displayName || review.userName || "익명"}</span>
+                      <span className="text-sm font-medium">{review.displayName || review.userName || "匿名"}</span>
                       {review.isVerifiedPurchase && (
                         <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 text-xs font-medium border border-emerald-200 dark:border-emerald-800">
                           <BadgeCheck className="w-3 h-3" />
-                          구매인증
+                          購入確認済み
                         </span>
                       )}
                     </div>
@@ -974,7 +974,7 @@ function ReviewsSection({ productId }: { productId: number }) {
                         onClick={() => openLightbox(review.images as string[], idx)}
                         className="relative w-16 h-16 rounded-lg overflow-hidden border bg-secondary/30 hover:opacity-80 transition-opacity"
                       >
-                        <img src={img} alt="리뷰 사진" className="w-full h-full object-cover" />
+                        <img src={img} alt="レビュー写真" className="w-full h-full object-cover" />
                         {idx === 3 && review.images!.length > 4 && (
                           <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
                             <span className="text-white text-xs font-bold">+{review.images!.length - 4}</span>
@@ -997,7 +997,7 @@ function ReviewsSection({ productId }: { productId: number }) {
               href="/shop/itemuselist.php"
               className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-primary transition-colors"
             >
-              고객 리뷰 게시판 전체보기
+              お客様レビュー掲示板をすべて見る
               <ChevronRight className="w-4 h-4" />
             </Link>
           </div>
@@ -1022,7 +1022,7 @@ function SimilarProductsSection({ productId }: { productId: number}) {
   if (!items || items.length === 0) return null;
   return (
     <div className="mb-10">
-      <h3 className="text-lg font-bold mb-4">비슷한 상품 추천</h3>
+      <h3 className="text-lg font-bold mb-4">おすすめの類似商品</h3>
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4">
         {items.map((p: any) => (
           <Link key={p.id} href={productHref(p.slug)} className="group">
@@ -1041,11 +1041,11 @@ function SimilarProductsSection({ productId }: { productId: number}) {
 
 // ─── 상품 정보 섹션 설정 ───
 const SECTION_CONFIG = [
-  { type: "faq", label: "자주 묻는 질문", icon: HelpCircle, color: "text-blue-600 dark:text-blue-400", bgColor: "bg-blue-50 dark:bg-blue-950/30", borderColor: "border-blue-200 dark:border-blue-800" },
-  { type: "usage", label: "사용방법", icon: BookOpen, color: "text-emerald-600 dark:text-emerald-400", bgColor: "bg-emerald-50 dark:bg-emerald-950/30", borderColor: "border-emerald-200 dark:border-emerald-800" },
-  { type: "dosage", label: "용량/용법", icon: Pill, color: "text-purple-600 dark:text-purple-400", bgColor: "bg-purple-50 dark:bg-purple-950/30", borderColor: "border-purple-200 dark:border-purple-800" },
-  { type: "sideEffects", label: "부작용", icon: AlertTriangle, color: "text-amber-600 dark:text-amber-400", bgColor: "bg-amber-50 dark:bg-amber-950/30", borderColor: "border-amber-200 dark:border-amber-800" },
-  { type: "precautions", label: "주의사항", icon: FileText, color: "text-red-600 dark:text-red-400", bgColor: "bg-red-50 dark:bg-red-950/30", borderColor: "border-red-200 dark:border-red-800" },
+  { type: "faq", label: "よくあるご質問", icon: HelpCircle, color: "text-blue-600 dark:text-blue-400", bgColor: "bg-blue-50 dark:bg-blue-950/30", borderColor: "border-blue-200 dark:border-blue-800" },
+  { type: "usage", label: "使用方法", icon: BookOpen, color: "text-emerald-600 dark:text-emerald-400", bgColor: "bg-emerald-50 dark:bg-emerald-950/30", borderColor: "border-emerald-200 dark:border-emerald-800" },
+  { type: "dosage", label: "用量・用法", icon: Pill, color: "text-purple-600 dark:text-purple-400", bgColor: "bg-purple-50 dark:bg-purple-950/30", borderColor: "border-purple-200 dark:border-purple-800" },
+  { type: "sideEffects", label: "副作用", icon: AlertTriangle, color: "text-amber-600 dark:text-amber-400", bgColor: "bg-amber-50 dark:bg-amber-950/30", borderColor: "border-amber-200 dark:border-amber-800" },
+  { type: "precautions", label: "注意事項", icon: FileText, color: "text-red-600 dark:text-red-400", bgColor: "bg-red-50 dark:bg-red-950/30", borderColor: "border-red-200 dark:border-red-800" },
 ] as const;
 
 function markdownToHtml(md: string): string {
@@ -1108,7 +1108,7 @@ function ProductContentBoxSection({ content }: { content?: string | null }) {
     <div className="border rounded-xl overflow-hidden border-stone-200 dark:border-stone-700">
       <div className="flex items-center gap-3 px-5 py-3.5 bg-stone-50 dark:bg-stone-900/30">
         <Info className="w-5 h-5 text-stone-600 dark:text-stone-400" />
-        <h4 className="font-semibold text-sm text-stone-600 dark:text-stone-400">상품 개요</h4>
+        <h4 className="font-semibold text-sm text-stone-600 dark:text-stone-400">商品概要</h4>
       </div>
       <div className="p-5">
         <div className="text-sm text-muted-foreground leading-relaxed [&_h1]:text-base [&_h1]:font-bold [&_h1]:text-foreground [&_h1]:mt-4 [&_h1]:mb-2 [&_h2]:text-[15px] [&_h2]:font-bold [&_h2]:text-foreground [&_h2]:mt-3 [&_h2]:mb-2 [&_h3]:text-sm [&_h3]:font-semibold [&_h3]:text-foreground [&_h3]:mt-3 [&_h3]:mb-1.5 [&_h4]:text-sm [&_h4]:font-semibold [&_h4]:text-amber-800 [&_h4]:dark:text-amber-400 [&_h4]:mt-4 [&_h4]:mb-2 [&_h4]:border-b [&_h4]:border-stone-200 [&_h4]:dark:border-stone-700 [&_h4]:pb-1 [&_p]:text-sm [&_p]:text-muted-foreground [&_p]:leading-relaxed [&_p]:mb-3 [&_p:last-child]:mb-0 [&_strong]:text-foreground [&_strong]:font-medium [&_a]:text-amber-700 [&_a]:dark:text-amber-400 [&_a]:underline first:[&_h4]:mt-0" dangerouslySetInnerHTML={{ __html: htmlContent }} />
@@ -1200,8 +1200,8 @@ function ProductFaqSection({ productId }: { productId: number }) {
     <div className="border rounded-xl overflow-hidden border-blue-200 dark:border-blue-800">
       <div className="flex items-center gap-3 p-5 bg-blue-50 dark:bg-blue-950/30">
         <HelpCircle className="w-5 h-5 text-blue-600 dark:text-blue-400" />
-        <h3 className="font-semibold text-base text-blue-600 dark:text-blue-400">자주 묻는 질문</h3>
-        <Badge variant="secondary" className="text-[10px] px-1.5 py-0">{faqItems.length}건</Badge>
+        <h3 className="font-semibold text-base text-blue-600 dark:text-blue-400">よくあるご質問</h3>
+        <Badge variant="secondary" className="text-[10px] px-1.5 py-0">{faqItems.length}件</Badge>
       </div>
       <div className="p-5 space-y-2">
         {faqItems.map((item: any) => (

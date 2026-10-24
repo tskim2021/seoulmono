@@ -12,6 +12,7 @@ import ProductCard from "@/components/ProductCard";
 import { NOTICE_CATEGORY_MAP, parseNotice } from "@/lib/itemNotice";
 import { addToCart } from "@/lib/cart";
 import { setCheckoutItems } from "@/pages/Checkout";
+import { orderStatusJa } from "@/lib/labels";
 
 function thumbUrl(src: string, w: number): string {
   if (!src) return src;
@@ -75,33 +76,33 @@ function LowestPriceBanner() {
         <span style={{
           background: "#fff", color: "#0d7a4f", fontSize: 11, fontWeight: 900,
           padding: "4px 10px", borderRadius: 20, letterSpacing: 0.5,
-        }}>최저가 도전</span>
+        }}>最安値に挑戦</span>
         <span style={{ color: "rgba(255,255,255,0.9)", fontSize: 13, fontWeight: 600 }}>
-          남은 기간
+          残り期間
         </span>
       </div>
       <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
         <Block val={String(days)} />
-        <span style={{ color: "rgba(255,255,255,0.7)", fontSize: 13 }}>일</span>
+        <span style={{ color: "rgba(255,255,255,0.7)", fontSize: 13 }}>日</span>
         <span style={{ color: "rgba(255,255,255,0.5)", fontSize: 20, fontWeight: 300 }}>:</span>
         <Block val={pad(hours)} />
-        <span style={{ color: "rgba(255,255,255,0.7)", fontSize: 13 }}>시</span>
+        <span style={{ color: "rgba(255,255,255,0.7)", fontSize: 13 }}>時間</span>
         <span style={{ color: "rgba(255,255,255,0.5)", fontSize: 20, fontWeight: 300 }}>:</span>
         <Block val={pad(mins)} />
-        <span style={{ color: "rgba(255,255,255,0.7)", fontSize: 13 }}>분</span>
+        <span style={{ color: "rgba(255,255,255,0.7)", fontSize: 13 }}>分</span>
         <span style={{ color: "rgba(255,255,255,0.5)", fontSize: 20, fontWeight: 300 }}>:</span>
         <Block val={pad(secs)} />
-        <span style={{ color: "rgba(255,255,255,0.7)", fontSize: 13 }}>초</span>
+        <span style={{ color: "rgba(255,255,255,0.7)", fontSize: 13 }}>秒</span>
       </div>
     </div>
   );
 }
 
 const TABS = [
-  { key: "detail",   label: "상품설명" },
-  { key: "notice",   label: "상품정보고시" },
-  { key: "exchange", label: "교환/반품" },
-  { key: "review",   label: "리뷰" },
+  { key: "detail",   label: "商品説明" },
+  { key: "notice",   label: "商品情報表示" },
+  { key: "exchange", label: "交換/返品" },
+  { key: "review",   label: "レビュー" },
   { key: "qna",      label: "Q&A" },
 ] as const;
 type TabKey = typeof TABS[number]["key"];
@@ -151,7 +152,7 @@ export default function Item() {
 
   const toggleWishlist = async () => {
     const token = localStorage.getItem("seoulmono_token");
-    if (!token) { alert("로그인 후 이용하세요"); return; }
+    if (!token) { alert("ログイン後にご利用ください"); return; }
     if (wishLoading) return;
     setWishLoading(true);
     try {
@@ -228,7 +229,7 @@ export default function Item() {
         <div style={{ display: "flex", alignItems: "center", gap: 4, marginBottom: 24, fontSize: 12, color: "#bbb", flexWrap: "wrap" }}>
           <button onClick={() => navigate("/")} style={{ background: "none", border: "none", cursor: "pointer", color: "#bbb", fontSize: 12, padding: 0, transition: "color 0.15s" }}
             onMouseEnter={e => (e.currentTarget.style.color = "#8B5E3C")}
-            onMouseLeave={e => (e.currentTarget.style.color = "#bbb")}>홈</button>
+            onMouseLeave={e => (e.currentTarget.style.color = "#bbb")}>ホーム</button>
           {item.ca_name && (
             <>
               <ChevronRight size={11} strokeWidth={1.5} />
@@ -256,7 +257,7 @@ export default function Item() {
               {item.images[activeImg]
                 ? <img src={thumbUrl(item.images[activeImg], 800)} alt={item.it_name}
                     style={{ width: "100%", height: "100%", objectFit: "contain", transition: "opacity 0.2s" }} />
-                : <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", color: "#ddd", fontSize: 14 }}>이미지 없음</div>
+                : <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", color: "#ddd", fontSize: 14 }}>画像なし</div>
               }
 
               {/* 할인 뱃지 */}
@@ -272,12 +273,12 @@ export default function Item() {
               {isSoldout && (
                 <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.5)", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 8 }}>
                   <span style={{ color: "#fff", fontSize: 22, fontWeight: 800, letterSpacing: 2 }}>SOLD OUT</span>
-                  <span style={{ color: "rgba(255,255,255,0.7)", fontSize: 13 }}>품절된 상품입니다</span>
+                  <span style={{ color: "rgba(255,255,255,0.7)", fontSize: 13 }}>売り切れの商品です</span>
                 </div>
               )}
               {isReady && (
                 <div style={{ position: "absolute", inset: 0, background: "rgba(255,255,255,0.8)", backdropFilter: "blur(4px)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                  <span style={{ color: "#555", fontSize: 17, fontWeight: 700, background: "#fff", padding: "10px 28px", borderRadius: 30, boxShadow: "0 2px 12px rgba(0,0,0,0.1)" }}>판매 준비 중</span>
+                  <span style={{ color: "#555", fontSize: 17, fontWeight: 700, background: "#fff", padding: "10px 28px", borderRadius: 30, boxShadow: "0 2px 12px rgba(0,0,0,0.1)" }}>販売準備中</span>
                 </div>
               )}
 
@@ -319,7 +320,7 @@ export default function Item() {
             {relatedItems.length > 0 && (
               <div style={{ marginTop: 28 }}>
                 <RelatedSlider
-                  title={`${item?.ca_name || "같은 카테고리"} 다른 상품`}
+                  title={`${item?.ca_name || "同じカテゴリー"} の他の商品`}
                   items={relatedItems}
                 />
               </div>
@@ -347,7 +348,7 @@ export default function Item() {
                 ))}
               </div>
               <span style={{ fontSize: 13, color: "#333", fontWeight: 700 }}>{item.it_use_avg.toFixed(1)}</span>
-              <span style={{ fontSize: 12, color: "#bbb" }}>({item.it_use_cnt}건)</span>
+              <span style={{ fontSize: 12, color: "#bbb" }}>({item.it_use_cnt}件)</span>
             </div>
 
             {/* 최저가도전 배너 */}
@@ -363,12 +364,12 @@ export default function Item() {
                 <>
                   <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
                     <span style={{ fontSize: 12, color: "#bbb", textDecoration: "line-through" }}>
-                      정가 {formatPrice(item.it_cust_price)}
+                      定価 {formatPrice(item.it_cust_price)}
                     </span>
                     <span style={{
                       fontSize: 11, fontWeight: 700, color: "#fa622f",
                       background: "#fff3ef", padding: "2px 7px", borderRadius: 4,
-                    }}>{disc}% 할인</span>
+                    }}>{disc}%オフ</span>
                   </div>
                   <div style={{ display: "flex", alignItems: "baseline", gap: 8 }}>
                     <span style={{ fontSize: 32, fontWeight: 900, color: "#111", letterSpacing: -1 }}>
@@ -384,33 +385,33 @@ export default function Item() {
               <div style={{ marginTop: 14, paddingTop: 14, borderTop: "1px solid #f5f5f5", display: "flex", gap: 16, flexWrap: "wrap" }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
                   <Truck size={13} color="#8B5E3C" />
-                  <span style={{ fontSize: 12, color: "#555" }}>일반배송 <strong style={{ color: "#111" }}>4,000원</strong></span>
-                  <span style={{ fontSize: 11, color: "#8B5E3C", background: "#FEF6ED", padding: "1px 6px", borderRadius: 4, fontWeight: 600 }}>4만원 이상 무료</span>
+                  <span style={{ fontSize: 12, color: "#555" }}>通常配送 <strong style={{ color: "#111" }}>4,000円</strong></span>
+                  <span style={{ fontSize: 11, color: "#8B5E3C", background: "#FEF6ED", padding: "1px 6px", borderRadius: 4, fontWeight: 600 }}>40,000円以上で送料無料</span>
                 </div>
               </div>
             </div>
 
             {/* 정보 rows */}
             <div style={{ background: "#fff", borderRadius: 14, overflow: "hidden", marginBottom: 20, boxShadow: "0 2px 16px rgba(0,0,0,0.06)", border: "1px solid #f0f0f0" }}>
-              <InfoRow label="구매포인트">
-                <span style={{ color: "#666", fontSize: 13 }}>로그인 후 적립 혜택이 제공됩니다.</span>
+              <InfoRow label="購入ポイント">
+                <span style={{ color: "#666", fontSize: 13 }}>ログイン後にポイント還元特典をご利用いただけます。</span>
               </InfoRow>
-              <InfoRow label="쿠폰&혜택">
+              <InfoRow label="クーポン&特典">
                 <span style={{ color: "#8B5E3C", cursor: "pointer", display: "inline-flex", alignItems: "center", gap: 3, fontSize: 13, fontWeight: 600 }}>
-                  진행중인 쿠폰&혜택 확인 <ChevronRight size={13} />
+                  開催中のクーポン&特典を確認 <ChevronRight size={13} />
                 </span>
               </InfoRow>
-              {item.it_origin && <InfoRow label="원산지"><span style={{ fontSize: 13, color: "#444" }}>{item.it_origin}</span></InfoRow>}
-              {item.it_maker && <InfoRow label="제조사"><span style={{ fontSize: 13, color: "#444" }}>{item.it_maker}</span></InfoRow>}
-              {item.box_qty > 0 && <InfoRow label="박스입수"><span style={{ fontSize: 13, color: "#444" }}>{item.box_qty}개</span></InfoRow>}
-              {item.it_shelf_life && <InfoRow label="유통기한"><span style={{ fontSize: 13, color: "#444" }}>{item.it_shelf_life}</span></InfoRow>}
-              <InfoRow label="상품번호"><span style={{ fontSize: 12, color: "#aaa", fontFamily: "monospace" }}>{item.it_id}</span></InfoRow>
+              {item.it_origin && <InfoRow label="原産地"><span style={{ fontSize: 13, color: "#444" }}>{item.it_origin}</span></InfoRow>}
+              {item.it_maker && <InfoRow label="メーカー"><span style={{ fontSize: 13, color: "#444" }}>{item.it_maker}</span></InfoRow>}
+              {item.box_qty > 0 && <InfoRow label="ケース入数"><span style={{ fontSize: 13, color: "#444" }}>{item.box_qty}個</span></InfoRow>}
+              {item.it_shelf_life && <InfoRow label="賞味期限"><span style={{ fontSize: 13, color: "#444" }}>{item.it_shelf_life}</span></InfoRow>}
+              <InfoRow label="商品番号"><span style={{ fontSize: 12, color: "#aaa", fontFamily: "monospace" }}>{item.it_id}</span></InfoRow>
             </div>
 
             {/* 선택옵션 */}
             {item.options.length > 0 && (
               <div style={{ background: "#fff", borderRadius: 14, padding: "18px 20px", marginBottom: 16, boxShadow: "0 2px 16px rgba(0,0,0,0.06)", border: "1px solid #f0f0f0" }}>
-                <p style={{ fontSize: 13, fontWeight: 700, color: "#333", margin: "0 0 12px" }}>수량 선택</p>
+                <p style={{ fontSize: 13, fontWeight: 700, color: "#333", margin: "0 0 12px" }}>数量を選択</p>
                 <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
                   {item.options.map(opt => {
                     const finalP = item.it_price + opt.io_price;
@@ -442,7 +443,7 @@ export default function Item() {
             {!isSoldout && (item.options.length === 0 || selectedOption !== "") && (
               <div style={{ background: "#fff", borderRadius: 14, padding: "18px 20px", marginBottom: 20, boxShadow: "0 2px 16px rgba(0,0,0,0.06)", border: "1px solid #f0f0f0" }}>
                 <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
-                  <span style={{ fontSize: 14, color: "#555", fontWeight: 600 }}>수량</span>
+                  <span style={{ fontSize: 14, color: "#555", fontWeight: 600 }}>数量</span>
                   <div style={{ display: "flex", alignItems: "center", border: "1.5px solid #e8e8e8", borderRadius: 10, overflow: "hidden", background: "#f8f8f8" }}>
                     <button onClick={() => setQty(Math.max(1, qty - 1))}
                       style={{ width: 42, height: 42, display: "flex", alignItems: "center", justifyContent: "center", background: "transparent", border: "none", cursor: "pointer", color: "#555" }}>
@@ -457,10 +458,10 @@ export default function Item() {
                 </div>
                 <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", paddingTop: 14, borderTop: "1px solid #f5f5f5" }}>
                   <span style={{ fontSize: 13, color: "#aaa" }}>
-                    {optObj ? optObj.io_id : "기본"} × {qty}개
+                    {optObj ? optObj.io_id : "基本"} × {qty}点
                   </span>
                   <div style={{ display: "flex", alignItems: "baseline", gap: 4 }}>
-                    <span style={{ fontSize: 13, color: "#888" }}>합계</span>
+                    <span style={{ fontSize: 13, color: "#888" }}>合計</span>
                     <span style={{ fontSize: 26, fontWeight: 900, color: "#fa622f", letterSpacing: -0.5 }}>{formatPrice(totalPrice)}</span>
                   </div>
                 </div>
@@ -470,11 +471,11 @@ export default function Item() {
             {/* 액션 버튼 */}
             {isReady ? (
               <div style={{ height: 56, display: "flex", alignItems: "center", justifyContent: "center", background: "#f5f5f5", borderRadius: 14, fontSize: 15, fontWeight: 700, color: "#bbb" }}>
-                판매 준비 중입니다
+                販売準備中です
               </div>
             ) : isSoldout ? (
               <div style={{ height: 56, display: "flex", alignItems: "center", justifyContent: "center", background: "#f0f0f0", borderRadius: 14, fontSize: 15, fontWeight: 700, color: "#bbb" }}>
-                품절된 상품입니다
+                売り切れの商品です
               </div>
             ) : (
               <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
@@ -489,7 +490,7 @@ export default function Item() {
                     transition: "all 0.2s", boxShadow: "0 2px 10px rgba(0,0,0,0.06)",
                   }}>
                   <Heart size={20} fill={wishlisted ? "#e91e63" : "none"} color={wishlisted ? "#e91e63" : "#ccc"} />
-                  <span style={{ fontSize: 9, color: wishlisted ? "#e91e63" : "#ccc", fontWeight: 700, lineHeight: 1 }}>찜</span>
+                  <span style={{ fontSize: 9, color: wishlisted ? "#e91e63" : "#ccc", fontWeight: 700, lineHeight: 1 }}>お気に入り</span>
                 </button>
                 {/* 장바구니 */}
                 <button onClick={handleAddToCart}
@@ -500,7 +501,7 @@ export default function Item() {
                     display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
                     boxShadow: "0 2px 10px rgba(0,0,0,0.06)",
                   }}>
-                  {added ? <><CheckCircle size={16} />담겼어요</> : <><ShoppingCart size={16} />장바구니</>}
+                  {added ? <><CheckCircle size={16} />追加しました</> : <><ShoppingCart size={16} />カート</>}
                 </button>
                 {/* 바로구매 */}
                 <button onClick={handleBuy}
@@ -511,7 +512,7 @@ export default function Item() {
                     boxShadow: "0 4px 16px rgba(29,138,90,0.35)",
                     letterSpacing: 0.3,
                   }}>
-                  바로구매
+                  今すぐ購入
                 </button>
               </div>
             )}
@@ -519,9 +520,9 @@ export default function Item() {
             {/* 신뢰 배지 */}
             <div style={{ display: "flex", gap: 12, marginTop: 18, justifyContent: "center", flexWrap: "wrap" }}>
               {[
-                { icon: <Shield size={13} color="#8B5E3C" />, text: "직접 매입" },
-                { icon: <Truck size={13} color="#8B5E3C" />, text: "당일출고" },
-                { icon: <CheckCircle size={13} color="#8B5E3C" />, text: "정품보장" },
+                { icon: <Shield size={13} color="#8B5E3C" />, text: "直接買い付け" },
+                { icon: <Truck size={13} color="#8B5E3C" />, text: "当日出荷" },
+                { icon: <CheckCircle size={13} color="#8B5E3C" />, text: "正規品保証" },
               ].map((b, i) => (
                 <div key={i} style={{ display: "flex", alignItems: "center", gap: 5, fontSize: 12, color: "#555" }}>
                   {b.icon}<span>{b.text}</span>
@@ -553,27 +554,27 @@ export default function Item() {
           {/* 상품설명 */}
           <div ref={el => { sectionRefs.current.detail = el; }} data-section="detail"
             style={{ paddingTop: 48, paddingBottom: 64, borderBottom: "8px solid #f3f4f6" }}>
-            <SectionTitle>상품설명</SectionTitle>
+            <SectionTitle>商品説明</SectionTitle>
             {item.it_explan
               ? <div className="item-desc-content" dangerouslySetInnerHTML={{ __html: item.it_explan.replace(/https?:\/\/seoulmono\.com\/data\//g, "https://thegaongill17.mycafe24.com/data/") }} />
-              : <EmptyBox text="상품 상세 정보가 없습니다." />}
+              : <EmptyBox text="商品の詳細情報がありません。" />}
           </div>
 
           {/* 상품정보고시 */}
           <div ref={el => { sectionRefs.current.notice = el; }} data-section="notice"
             style={{ paddingTop: 48, paddingBottom: 64, borderBottom: "8px solid #f3f4f6" }}>
-            <SectionTitle>상품정보고시</SectionTitle>
+            <SectionTitle>商品情報表示</SectionTitle>
             {(() => {
               const notice = parseNotice((item as any).it_info || "");
               const cat = notice ? NOTICE_CATEGORY_MAP[notice.category] : null;
               if (!notice || !cat) {
-                return <EmptyBox text="상품정보고시 내용이 없습니다." />;
+                return <EmptyBox text="商品情報表示の内容がありません。" />;
               }
               return (
                 <div style={{ maxWidth: 760, margin: "0 auto" }}>
                   <div style={{ fontSize: 12, color: "#aaa", marginBottom: 16, display: "flex", alignItems: "center", gap: 6 }}>
                     <Shield size={12} color="#bbb" />
-                    전자상거래법 상품 정보고시 — <strong style={{ color: "#888" }}>{cat.title}</strong>
+                    商品情報表示 — <strong style={{ color: "#888" }}>{cat.title}</strong>
                   </div>
                   <div style={{ borderRadius: 12, overflow: "hidden", border: "1px solid #ebebeb" }}>
                     <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
@@ -586,7 +587,7 @@ export default function Item() {
                                 {field.label}
                               </td>
                               <td style={{ padding: "13px 18px", color: "#333", verticalAlign: "top", lineHeight: 1.7 }}>
-                                {val}
+                                {val === "상품상세참조" ? "商品詳細ページをご参照ください" : val}
                               </td>
                             </tr>
                           );
@@ -602,7 +603,7 @@ export default function Item() {
           {/* 교환/반품 안내 */}
           <div ref={el => { sectionRefs.current.exchange = el; }} data-section="exchange"
             style={{ paddingTop: 48, paddingBottom: 64, borderBottom: "8px solid #f3f4f6" }}>
-            <SectionTitle>교환/반품 안내</SectionTitle>
+            <SectionTitle>交換/返品のご案内</SectionTitle>
             <ExchangeSection />
           </div>
 
@@ -618,10 +619,10 @@ export default function Item() {
                 <CheckCircle size={20} color="#fff" />
               </div>
               <div style={{ flex: 1 }}>
-                <p style={{ margin: "0 0 2px", fontSize: 14, fontWeight: 700, color: "#0d7a4f" }}>구매한 상품입니다</p>
+                <p style={{ margin: "0 0 2px", fontSize: 14, fontWeight: 700, color: "#0d7a4f" }}>購入済みの商品です</p>
                 <p style={{ margin: 0, fontSize: 12, color: "#5a9a78" }}>
-                  최근 주문: {new Date(purchaseOrders[0].od_time).toLocaleDateString("ko-KR")} · {purchaseOrders[0].od_status}
-                  {purchaseOrders.length > 1 && ` (총 ${purchaseOrders.length}회)`}
+                  最近の注文: {new Date(purchaseOrders[0].od_time).toLocaleDateString("ja-JP")} · {orderStatusJa(purchaseOrders[0].od_status)}
+                  {purchaseOrders.length > 1 && ` (全${purchaseOrders.length}回)`}
                 </p>
               </div>
               <button onClick={() => {
@@ -629,7 +630,7 @@ export default function Item() {
                 if (el) el.querySelector("button[data-write]")?.dispatchEvent(new MouseEvent("click", { bubbles: true }));
                 else window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
               }} style={{ padding: "8px 16px", background: "#8B5E3C", border: "none", borderRadius: 10, color: "#fff", fontSize: 12, fontWeight: 700, cursor: "pointer", whiteSpace: "nowrap" }}>
-                리뷰 쓰기
+                レビューを書く
               </button>
             </div>
           )}
@@ -638,9 +639,9 @@ export default function Item() {
           <div ref={el => { sectionRefs.current.review = el; }} data-section="review"
             style={{ paddingTop: 48, paddingBottom: 64, borderBottom: "8px solid #f3f4f6" }}>
             <SectionTitle>
-              상품 리뷰
+              商品レビュー
               {item.it_use_cnt > 0 && (
-                <span style={{ fontSize: 14, fontWeight: 400, color: "#aaa", marginLeft: 8 }}>({item.it_use_cnt}건)</span>
+                <span style={{ fontSize: 14, fontWeight: 400, color: "#aaa", marginLeft: 8 }}>({item.it_use_cnt}件)</span>
               )}
             </SectionTitle>
             <ReviewSection avg={item.it_use_avg} count={item.it_use_cnt} itemId={item.it_id} />
@@ -649,14 +650,14 @@ export default function Item() {
           {/* Q&A */}
           <div ref={el => { sectionRefs.current.qna = el; }} data-section="qna"
             style={{ paddingTop: 48, paddingBottom: 64, borderBottom: relatedItems.length > 0 ? "8px solid #f3f4f6" : "none" }}>
-            <SectionTitle>상품 Q&A</SectionTitle>
+            <SectionTitle>商品Q&A</SectionTitle>
             <QnaSection itemId={item.it_id} />
           </div>
 
           {/* 관련 상품 */}
           {relatedItems.length > 0 && (
             <RelatedSlider
-              title={`${item.ca_name || "같은 카테고리"} 다른 상품`}
+              title={`${item.ca_name || "同じカテゴリー"} の他の商品`}
               items={relatedItems}
             />
           )}
@@ -674,23 +675,23 @@ export default function Item() {
             <div style={{ width: 64, height: 64, background: "#FEF6ED", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 18px" }}>
               <Lock size={28} color="#8B5E3C" />
             </div>
-            <h3 style={{ fontSize: 18, fontWeight: 800, color: "#111", margin: "0 0 10px" }}>로그인이 필요한 서비스입니다</h3>
+            <h3 style={{ fontSize: 18, fontWeight: 800, color: "#111", margin: "0 0 10px" }}>ログインが必要なサービスです</h3>
             <p style={{ fontSize: 13.5, color: "#777", margin: "0 0 28px", lineHeight: 1.7 }}>
-              로그인하면 쿠폰·포인트 혜택을 받을 수 있어요.<br />
-              비회원으로도 구매하실 수 있습니다.
+              ログインするとクーポン・ポイント特典をご利用いただけます。<br />
+              ゲストとしてもご購入いただけます。
             </p>
             <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
               <button onClick={() => { setShowBuyModal(false); navigate("/login"); }}
                 style={{ width: "100%", height: 50, background: "linear-gradient(135deg, #8B5E3C, #22a06b)", color: "#fff", border: "none", borderRadius: 12, fontSize: 15, fontWeight: 700, cursor: "pointer", boxShadow: "0 4px 14px rgba(29,138,90,0.3)" }}>
-                로그인하기
+                ログインする
               </button>
               <button onClick={() => { setShowBuyModal(false); prepareCheckout(true); }}
                 style={{ width: "100%", height: 50, background: "#fff", color: "#8B5E3C", border: "2px solid #8B5E3C", borderRadius: 12, fontSize: 15, fontWeight: 700, cursor: "pointer" }}>
-                비회원으로 구매하기
+                ゲストとして購入する
               </button>
               <button onClick={() => setShowBuyModal(false)}
                 style={{ width: "100%", height: 42, background: "#f5f5f5", color: "#999", border: "none", borderRadius: 12, fontSize: 14, cursor: "pointer" }}>
-                취소
+                キャンセル
               </button>
             </div>
           </div>
@@ -700,18 +701,18 @@ export default function Item() {
       {/* 모바일 하단 고정 버튼 */}
       <div className="mobile-buy-bar">
         {isReady ? (
-          <div style={{ flex: 1, height: 50, display: "flex", alignItems: "center", justifyContent: "center", background: "#f5f5f5", borderRadius: 10, fontSize: 15, fontWeight: 700, color: "#bbb" }}>판매준비중</div>
+          <div style={{ flex: 1, height: 50, display: "flex", alignItems: "center", justifyContent: "center", background: "#f5f5f5", borderRadius: 10, fontSize: 15, fontWeight: 700, color: "#bbb" }}>販売準備中</div>
         ) : isSoldout ? (
-          <div style={{ flex: 1, height: 50, display: "flex", alignItems: "center", justifyContent: "center", background: "#eee", borderRadius: 10, fontSize: 15, fontWeight: 700, color: "#bbb" }}>품절</div>
+          <div style={{ flex: 1, height: 50, display: "flex", alignItems: "center", justifyContent: "center", background: "#eee", borderRadius: 10, fontSize: 15, fontWeight: 700, color: "#bbb" }}>売り切れ</div>
         ) : (
           <>
             <button onClick={handleAddToCart}
               style={{ flex: 1, height: 50, border: "2px solid #8B5E3C", borderRadius: 10, background: added ? "#8B5E3C" : "#fff", color: added ? "#fff" : "#8B5E3C", fontSize: 14, fontWeight: 700, cursor: "pointer", transition: "all 0.2s", display: "flex", alignItems: "center", justifyContent: "center", gap: 5 }}>
-              <ShoppingCart size={15} />{added ? "담겼어요" : "장바구니"}
+              <ShoppingCart size={15} />{added ? "追加しました" : "カート"}
             </button>
             <button onClick={handleBuy}
               style={{ flex: 2, height: 50, border: "none", borderRadius: 10, background: "linear-gradient(135deg, #8B5E3C, #22a06b)", color: "#fff", fontSize: 15, fontWeight: 800, cursor: "pointer" }}>
-              주문하기
+              注文する
             </button>
           </>
         )}
@@ -750,12 +751,12 @@ export default function Item() {
 /* ── 교환/반품 안내 ── */
 function ExchangeSection() {
   const benefits = [
-    { icon: <Package size={22} color="#8B5E3C" />, title: "박스 단위 구매시 추가할인", desc: "상품에 나와있는 박스단위별로 할인이 자동으로 적용됩니다." },
-    { icon: <Gift size={22} color="#8B5E3C" />, title: "내가 만드는 선물세트", desc: "추가로 구성하여 선물세트를 만들어 구매를 희망하실 경우 \"DIY 선물세트\"를 이용해주세요." },
-    { icon: <Truck size={22} color="#8B5E3C" />, title: "4만원 이상시 무료배송", desc: "4만원 이상 구매시 무료배송. 그 외 4,000원 배송비가 청구됩니다." },
-    { icon: <Shield size={22} color="#8B5E3C" />, title: "믿고 구매해주세요", desc: "여러 셀러가 모인 플랫폼이 아닌 직접 물류를 운영하며 사입하여 판매하는 seoulmono입니다." },
-    { icon: <Users size={22} color="#8B5E3C" />, title: "대용량 별도 문의", desc: "사업자 또는 단체 구매의 경우 별도 연락 주시면 지정일 출고가 가능합니다." },
-    { icon: <Clock size={22} color="#8B5E3C" />, title: "유통기한 안내", desc: "유통기한 1개월 미만 상품은 \"유통기한 임박\"으로 별도 할인 적용 판매합니다." },
+    { icon: <Package size={22} color="#8B5E3C" />, title: "ケース単位でのご購入で追加割引", desc: "商品に表示されているケース単位ごとに割引が自動で適用されます。" },
+    { icon: <Gift size={22} color="#8B5E3C" />, title: "自分で作るギフトセット", desc: "追加で組み合わせてギフトセットを作りたい場合は「DIYギフトセット」をご利用ください。" },
+    { icon: <Truck size={22} color="#8B5E3C" />, title: "40,000円以上で送料無料", desc: "40,000円以上のご購入で送料無料。それ以外は送料4,000円がかかります。" },
+    { icon: <Shield size={22} color="#8B5E3C" />, title: "安心してご購入ください", desc: "複数のセラーが集まるプラットフォームではなく、自社で物流を運営し、直接仕入れて販売するseoulmonoです。" },
+    { icon: <Users size={22} color="#8B5E3C" />, title: "大容量は別途お問い合わせ", desc: "法人・団体でのご購入の場合は、別途ご連絡いただければ指定日の出荷が可能です。" },
+    { icon: <Clock size={22} color="#8B5E3C" />, title: "賞味期限のご案内", desc: "賞味期限が1か月未満の商品は「賞味期限間近」として別途割引価格で販売します。" },
   ];
 
   return (
@@ -780,14 +781,14 @@ function ExchangeSection() {
       {/* 고객행복센터 */}
       <div style={{ background: "#fff", borderRadius: 16, padding: "36px 28px", marginBottom: 36, border: "1px solid #f0f0f0", boxShadow: "0 2px 16px rgba(0,0,0,0.06)" }}>
         <div style={{ textAlign: "center", marginBottom: 28 }}>
-          <h3 style={{ color: "#111", fontSize: 20, fontWeight: 800, margin: "0 0 8px" }}>고객행복센터</h3>
-          <p style={{ color: "#777", fontSize: 13, margin: 0 }}>서비스 이용에 불편한 점을 남겨주세요</p>
+          <h3 style={{ color: "#111", fontSize: 20, fontWeight: 800, margin: "0 0 8px" }}>お客様サポートセンター</h3>
+          <p style={{ color: "#777", fontSize: 13, margin: 0 }}>ご利用の際にご不便な点がございましたらお知らせください</p>
         </div>
         <div className="cs-contact-grid">
           {[
-            { icon: <Phone size={20} color="#8B5E3C" />, title: "전화 문의", lines: ["월~토요일", "오전 7시 ~ 오후 6시", "1644-1107"] },
-            { icon: <MessageCircle size={20} color="#8B5E3C" />, title: "카카오톡 문의", lines: ["월~토 오전 7시 ~ 오후 6시", "일/공휴일 오전 7시 ~ 오후 1시", "카카오톡 \"seoulmono\" 검색"] },
-            { icon: <Home size={20} color="#8B5E3C" />, title: "홈페이지 문의", lines: ["365일", "로그인 > 마이페이지 > 1:1문의", "운영시간 내 순차 답변"] },
+            { icon: <Phone size={20} color="#8B5E3C" />, title: "お電話でのお問い合わせ", lines: ["月~土曜日", "午前7時 ~ 午後6時", "1644-1107"] },
+            { icon: <MessageCircle size={20} color="#8B5E3C" />, title: "KakaoTalkでのお問い合わせ", lines: ["月~土 午前7時 ~ 午後6時", "日・祝日 午前7時 ~ 午後1時", "KakaoTalkで「seoulmono」を検索"] },
+            { icon: <Home size={20} color="#8B5E3C" />, title: "ウェブサイトからのお問い合わせ", lines: ["365日", "ログイン > マイページ > お問い合わせ", "営業時間内に順次回答"] },
           ].map((c, i) => (
             <div key={i} style={{ background: "#fafafa", borderRadius: 14, padding: "22px 16px", textAlign: "center", border: "1px solid #f0f0f0" }}>
               <div style={{ width: 46, height: 46, borderRadius: 14, background: "#FEF6ED", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 12px" }}>{c.icon}</div>
@@ -807,19 +808,19 @@ function ExchangeSection() {
 
       {/* 배송정보 */}
       <h4 style={{ fontSize: 15, fontWeight: 700, color: "#111", margin: "0 0 14px", display: "flex", alignItems: "center", gap: 8 }}>
-        <Truck size={16} color="#8B5E3C" />배송정보
+        <Truck size={16} color="#8B5E3C" />配送情報
       </h4>
       <div style={{ borderRadius: 14, overflow: "hidden", marginBottom: 32, border: "1px solid #f0f0f0" }}>
         <table className="shipping-table">
           <tbody>
-            <tr><td className="label-cell">배송사</td><td>CJ 대한통운</td><td className="label-cell">기본배송비</td><td>4,000원 (40,000원 이상 무료, 도서산간 추가)</td></tr>
-            <tr><td className="label-cell">송장번호</td><td colSpan={3}>발송 후 개별 안내</td></tr>
-            <tr><td className="label-cell">묶음배송</td><td colSpan={3}>가능</td></tr>
+            <tr><td className="label-cell">配送業者</td><td>CJ大韓通運</td><td className="label-cell">基本送料</td><td>4,000円 (40,000円以上で無料、離島・山間部は追加)</td></tr>
+            <tr><td className="label-cell">送り状番号</td><td colSpan={3}>発送後に個別にご案内</td></tr>
+            <tr><td className="label-cell">同梱配送</td><td colSpan={3}>可能</td></tr>
             <tr>
-              <td className="label-cell">배송기간</td>
+              <td className="label-cell">配送期間</td>
               <td colSpan={3} style={{ lineHeight: 1.9 }}>
-                주문 완료 후 평균 1~3일 이내 발송 (영업일 기준)<br />
-                도서산간 지역은 3~5일 추가 소요될 수 있습니다.
+                ご注文完了後、平均1~3日以内に発送 (営業日基準)<br />
+                離島・山間部は3~5日ほど追加でかかる場合があります。
               </td>
             </tr>
           </tbody>
@@ -828,14 +829,14 @@ function ExchangeSection() {
 
       {/* 교환 및 환불안내 */}
       <h4 style={{ fontSize: 15, fontWeight: 700, color: "#111", margin: "0 0 14px", display: "flex", alignItems: "center", gap: 8 }}>
-        <Shield size={16} color="#8B5E3C" />교환 및 환불안내
+        <Shield size={16} color="#8B5E3C" />交換・返金のご案内
       </h4>
       <div style={{ background: "#fafafa", borderRadius: 14, padding: "20px 22px", fontSize: 13, color: "#555", lineHeight: 2, border: "1px solid #f0f0f0" }}>
         {[
-          "교환/반품에 관한 일반적인 사항은 관계법령이 우선합니다.",
-          "판매자의 제시사항이 관계법령보다 소비자에게 유리한 경우에는 판매자 제시사항이 적용됩니다.",
-          "교환 및 환불이 필요하신 경우 고객행복센터로 문의해주세요.",
-          "단순 변심 등 고객과실로 교환/반품 할 경우 왕복 배송비가 청구됩니다.",
+          "交換・返品に関する一般的な事項は、関係法令が優先されます。",
+          "販売者の提示事項が関係法令よりも消費者に有利な場合は、販売者の提示事項が適用されます。",
+          "交換・返金をご希望の場合は、お客様サポートセンターまでお問い合わせください。",
+          "お客様都合(イメージ違いなど)での交換・返品の場合、往復送料をご負担いただきます。",
         ].map((t, i) => (
           <div key={i} style={{ display: "flex", gap: 10, alignItems: "flex-start" }}>
             <span style={{ color: "#8B5E3C", fontWeight: 700, marginTop: 2, flexShrink: 0 }}>·</span>
@@ -845,11 +846,11 @@ function ExchangeSection() {
         <div style={{ marginTop: 14, padding: "14px 16px", background: "#fff", borderRadius: 10, border: "1px solid #e8e8e8" }}>
           <div style={{ display: "flex", gap: 10, alignItems: "flex-start" }}>
             <span style={{ color: "#8B5E3C", fontWeight: 700, flexShrink: 0 }}>·</span>
-            <span>표시·광고 내용 또는 계약 내용과 다른 경우 교환 및 환불 가능</span>
+            <span>表示・広告内容または契約内容と異なる場合は、交換・返金が可能です</span>
           </div>
           <div style={{ display: "flex", gap: 10, alignItems: "flex-start" }}>
             <span style={{ color: "#8B5E3C", fontWeight: 700, flexShrink: 0 }}>·</span>
-            <span>수령 후 30일 이내, 사실을 알게 된 날로부터 30일 이내 청약철회 가능</span>
+            <span>商品受領後30日以内、または事実を知った日から30日以内であれば申込みの撤回が可能です</span>
           </div>
         </div>
       </div>
@@ -882,8 +883,8 @@ function ReviewSection({ avg, count, itemId }: { avg: number; count: number; ite
 
   const submitReview = async () => {
     const token = localStorage.getItem("seoulmono_token");
-    if (!token) { setSubmitMsg("로그인 후 리뷰를 작성할 수 있습니다."); return; }
-    if (!content.trim()) { setSubmitMsg("내용을 입력해주세요."); return; }
+    if (!token) { setSubmitMsg("ログイン後にレビューを投稿できます。"); return; }
+    if (!content.trim()) { setSubmitMsg("内容を入力してください。"); return; }
     setSubmitting(true);
     try {
       const res = await fetch("/api/shop/reviews", {
@@ -892,12 +893,12 @@ function ReviewSection({ avg, count, itemId }: { avg: number; count: number; ite
         body: JSON.stringify({ it_id: itemId, wr_content: content, wr_rating: rating }),
       });
       const data = await res.json();
-      if (!res.ok) { setSubmitMsg(data.error || "오류가 발생했습니다."); return; }
-      setSubmitMsg("리뷰가 등록되었습니다!");
+      if (!res.ok) { setSubmitMsg(data.error || "エラーが発生しました。"); return; }
+      setSubmitMsg("レビューを登録しました!");
       setContent(""); setShowWrite(false);
       const newRes = await fetch(`/api/shop/reviews?it_id=${itemId}&limit=20`).then(r => r.json());
       setReviews(Array.isArray(newRes) ? newRes : []);
-    } catch { setSubmitMsg("오류가 발생했습니다."); } finally { setSubmitting(false); }
+    } catch { setSubmitMsg("エラーが発生しました。"); } finally { setSubmitting(false); }
   };
 
   return (
@@ -913,7 +914,7 @@ function ReviewSection({ avg, count, itemId }: { avg: number; count: number; ite
           <div style={{ display: "flex", gap: 2, justifyContent: "center", margin: "10px 0 6px" }}>
             {Array.from({ length: 5 }).map((_, i) => <Star key={i} size={16} fill={i < fullStars ? "#FFB800" : "none"} color={i < fullStars ? "#FFB800" : "#e0e0e0"} />)}
           </div>
-          <div style={{ fontSize: 12, color: "#bbb" }}>총 {count}건</div>
+          <div style={{ fontSize: 12, color: "#bbb" }}>全{count}件</div>
         </div>
         <div style={{ flex: 1, minWidth: 140 }}>
           {[5, 4, 3, 2, 1].map(n => {
@@ -938,7 +939,7 @@ function ReviewSection({ avg, count, itemId }: { avg: number; count: number; ite
             fontSize: 13, fontWeight: 700, cursor: "pointer", whiteSpace: "nowrap",
             boxShadow: showWrite ? "none" : "0 4px 12px rgba(29,138,90,0.25)",
           }}>
-          {showWrite ? "닫기" : "리뷰 작성하기"}
+          {showWrite ? "閉じる" : "レビューを書く"}
         </button>
       </div>
 
@@ -948,9 +949,9 @@ function ReviewSection({ avg, count, itemId }: { avg: number; count: number; ite
           background: "#fff", borderRadius: 16, padding: "24px", marginBottom: 24,
           border: "2px solid #8B5E3C", boxShadow: "0 4px 20px rgba(29,138,90,0.1)",
         }}>
-          <p style={{ margin: "0 0 16px", fontSize: 15, fontWeight: 700, color: "#111" }}>리뷰 작성</p>
+          <p style={{ margin: "0 0 16px", fontSize: 15, fontWeight: 700, color: "#111" }}>レビュー投稿</p>
           <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 14 }}>
-            <span style={{ fontSize: 13, color: "#666" }}>별점</span>
+            <span style={{ fontSize: 13, color: "#666" }}>評価</span>
             <div style={{ display: "flex", gap: 4 }}>
               {[1,2,3,4,5].map(s => (
                 <button key={s} type="button" onClick={() => setRating(s)}
@@ -958,14 +959,14 @@ function ReviewSection({ avg, count, itemId }: { avg: number; count: number; ite
               ))}
             </div>
           </div>
-          <textarea value={content} onChange={e => setContent(e.target.value)} placeholder="상품 사용 후기를 남겨주세요..."
+          <textarea value={content} onChange={e => setContent(e.target.value)} placeholder="商品のご感想をお寄せください..."
             style={{ width: "100%", minHeight: 110, border: "1.5px solid #e8e8e8", borderRadius: 10, padding: "12px 14px", fontSize: 14, resize: "vertical", outline: "none", boxSizing: "border-box", fontFamily: "inherit", lineHeight: 1.7 }} />
           {submitMsg && (
-            <p style={{ margin: "8px 0 0", fontSize: 13, color: submitMsg.includes("등록") ? "#8B5E3C" : "#e53935", fontWeight: 600 }}>{submitMsg}</p>
+            <p style={{ margin: "8px 0 0", fontSize: 13, color: submitMsg.includes("登録") ? "#8B5E3C" : "#e53935", fontWeight: 600 }}>{submitMsg}</p>
           )}
           <button onClick={submitReview} disabled={submitting}
             style={{ marginTop: 12, padding: "11px 28px", background: "#8B5E3C", border: "none", borderRadius: 10, color: "#fff", fontSize: 14, fontWeight: 700, cursor: "pointer", boxShadow: "0 4px 12px rgba(29,138,90,0.25)" }}>
-            {submitting ? "등록 중..." : "리뷰 등록"}
+            {submitting ? "登録中..." : "レビューを登録"}
           </button>
         </div>
       )}
@@ -976,13 +977,13 @@ function ReviewSection({ avg, count, itemId }: { avg: number; count: number; ite
           <div style={{ width: 60, height: 60, background: "#f5f5f5", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 16px" }}>
             <Star size={28} color="#ddd" />
           </div>
-          <p style={{ margin: "0 0 6px", fontSize: 14, color: "#bbb" }}>아직 작성된 리뷰가 없습니다.</p>
-          <p style={{ margin: 0, fontSize: 12, color: "#ccc" }}>첫 번째 리뷰를 작성해 보세요!</p>
+          <p style={{ margin: "0 0 6px", fontSize: 14, color: "#bbb" }}>まだレビューがありません。</p>
+          <p style={{ margin: 0, fontSize: 12, color: "#ccc" }}>最初のレビューを書いてみましょう!</p>
         </div>
       ) : (
         <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
           {reviews.map((r: any, i: number) => {
-            const initials = (r.mb_name || r.wr_name || "익명").charAt(0);
+            const initials = (r.mb_name || r.wr_name || "匿名").charAt(0);
             return (
               <div key={r.wr_id || i} style={{
                 background: "#fff", borderRadius: 14, padding: "20px 22px",
@@ -994,10 +995,10 @@ function ReviewSection({ avg, count, itemId }: { avg: number; count: number; ite
                   </div>
                   <div style={{ flex: 1 }}>
                     <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                      <span style={{ fontSize: 13, fontWeight: 700, color: "#333" }}>{r.mb_name || r.wr_name || "익명"}</span>
+                      <span style={{ fontSize: 13, fontWeight: 700, color: "#333" }}>{r.mb_name || r.wr_name || "匿名"}</span>
                       <ReviewStars rating={Math.round(Number(r.wr_rating) || r.rating || 0)} size={12} />
                     </div>
-                    <span style={{ fontSize: 11, color: "#ccc" }}>{r.wr_datetime ? new Date(r.wr_datetime).toLocaleDateString("ko-KR") : ""}</span>
+                    <span style={{ fontSize: 11, color: "#ccc" }}>{r.wr_datetime ? new Date(r.wr_datetime).toLocaleDateString("ja-JP") : ""}</span>
                   </div>
                 </div>
                 <p style={{ margin: 0, fontSize: 14, color: "#444", lineHeight: 1.7 }}>{r.wr_content || r.content}</p>
@@ -1033,7 +1034,7 @@ function QnaSection({ itemId }: { itemId: string }) {
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 24, flexWrap: "wrap", gap: 12 }}>
         <div style={{ display: "flex", gap: 7, alignItems: "center", color: "#bbb", fontSize: 13 }}>
           <AlertCircle size={14} color="#ccc" />
-          <span>로그인 후 상품 문의를 남기실 수 있습니다.</span>
+          <span>ログイン後に商品へのお問い合わせができます。</span>
         </div>
         <button onClick={() => setOpen(!open)}
           style={{
@@ -1043,7 +1044,7 @@ function QnaSection({ itemId }: { itemId: string }) {
             display: "flex", alignItems: "center", gap: 7,
             boxShadow: open ? "none" : "0 4px 12px rgba(29,138,90,0.25)",
           }}>
-          <Send size={13} />문의하기
+          <Send size={13} />お問い合わせ
         </button>
       </div>
 
@@ -1053,24 +1054,24 @@ function QnaSection({ itemId }: { itemId: string }) {
           border: "2px solid #8B5E3C", borderRadius: 16, padding: "24px",
           marginBottom: 24, background: "#fff", boxShadow: "0 4px 20px rgba(29,138,90,0.1)",
         }}>
-          <p style={{ margin: "0 0 16px", fontWeight: 700, fontSize: 15, color: "#111" }}>상품 문의 작성</p>
+          <p style={{ margin: "0 0 16px", fontWeight: 700, fontSize: 15, color: "#111" }}>商品へのお問い合わせ</p>
           <input value={subject} onChange={e => setSubject(e.target.value)}
-            placeholder="문의 제목을 입력해 주세요"
+            placeholder="件名を入力してください"
             style={{ width: "100%", border: "1.5px solid #e8e8e8", borderRadius: 10, padding: "11px 14px", fontSize: 14, marginBottom: 10, boxSizing: "border-box", outline: "none" }} />
           <textarea value={content} onChange={e => setContent(e.target.value)}
-            placeholder="문의 내용을 자세히 입력해 주세요&#10;(상품 관련 문의만 남겨주세요. 개인정보는 포함하지 마세요.)"
+            placeholder="お問い合わせ内容を詳しく入力してください&#10;(商品に関するお問い合わせのみお願いします。個人情報は含めないでください。)"
             rows={5}
             style={{ width: "100%", border: "1.5px solid #e8e8e8", borderRadius: 10, padding: "11px 14px", fontSize: 13, resize: "vertical", boxSizing: "border-box", lineHeight: 1.7, outline: "none" }} />
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: 14, flexWrap: "wrap", gap: 10 }}>
             <label style={{ display: "flex", alignItems: "center", gap: 7, fontSize: 13, color: "#666", cursor: "pointer" }}>
               <input type="checkbox" checked={isSecret} onChange={e => setIsSecret(e.target.checked)} style={{ accentColor: "#8B5E3C", width: 15, height: 15 }} />
-              <Lock size={12} color="#aaa" />비밀글로 등록
+              <Lock size={12} color="#aaa" />非公開で登録
             </label>
             <div style={{ display: "flex", gap: 8 }}>
               <button type="button" onClick={() => setOpen(false)}
-                style={{ padding: "10px 20px", border: "1.5px solid #e8e8e8", borderRadius: 10, background: "#fff", fontSize: 13, cursor: "pointer", color: "#777" }}>취소</button>
+                style={{ padding: "10px 20px", border: "1.5px solid #e8e8e8", borderRadius: 10, background: "#fff", fontSize: 13, cursor: "pointer", color: "#777" }}>キャンセル</button>
               <button type="submit"
-                style={{ padding: "10px 24px", background: "#8B5E3C", color: "#fff", border: "none", borderRadius: 10, fontSize: 13, fontWeight: 700, cursor: "pointer" }}>등록하기</button>
+                style={{ padding: "10px 24px", background: "#8B5E3C", color: "#fff", border: "none", borderRadius: 10, fontSize: 13, fontWeight: 700, cursor: "pointer" }}>登録する</button>
             </div>
           </div>
         </form>
@@ -1078,7 +1079,7 @@ function QnaSection({ itemId }: { itemId: string }) {
 
       {submitted && (
         <div style={{ padding: "16px 20px", background: "#FEF6ED", border: "1px solid #c2e8d5", borderRadius: 12, marginBottom: 20, fontSize: 13, color: "#8B5E3C", fontWeight: 600, display: "flex", alignItems: "center", gap: 8 }}>
-          <CheckCircle size={16} />문의가 정상적으로 접수되었습니다. 영업일 기준 1~2일 내 답변 드리겠습니다.
+          <CheckCircle size={16} />お問い合わせを受け付けました。営業日基準で1~2日以内にご回答いたします。
         </div>
       )}
 
@@ -1087,8 +1088,8 @@ function QnaSection({ itemId }: { itemId: string }) {
         <div style={{ width: 60, height: 60, background: "#f5f5f5", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 16px" }}>
           <MessageCircle size={28} color="#ddd" />
         </div>
-        <p style={{ margin: "0 0 6px", fontSize: 14, color: "#bbb" }}>등록된 상품 문의가 없습니다.</p>
-        <p style={{ margin: 0, fontSize: 12, color: "#ccc" }}>궁금하신 점은 문의하기 버튼을 눌러 남겨주세요.</p>
+        <p style={{ margin: "0 0 6px", fontSize: 14, color: "#bbb" }}>商品へのお問い合わせはまだありません。</p>
+        <p style={{ margin: 0, fontSize: 12, color: "#ccc" }}>ご不明な点はお問い合わせボタンからお寄せください。</p>
       </div>
     </div>
   );
@@ -1139,7 +1140,7 @@ function RelatedSlider({ title, items }: { title: string; items: ShopItem[] }) {
           onClick={() => navigate(`/list?ca_id=${items[0]?.ca_id || ""}`)}
           style={{ background: "none", border: "none", cursor: "pointer", fontSize: 13, color: "#999", display: "flex", alignItems: "center", gap: 2 }}
         >
-          더보기 <span style={{ fontSize: 15 }}>›</span>
+          もっと見る <span style={{ fontSize: 15 }}>›</span>
         </button>
       </div>
       <div
@@ -1167,10 +1168,10 @@ function RelatedSlider({ title, items }: { title: string; items: ShopItem[] }) {
               </div>
               <p style={{ margin: "0 0 3px", fontSize: 12.5, color: "#333", fontWeight: 600, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{p.it_name}</p>
               {p.it_cust_price > 0 && p.it_cust_price < p.it_price && (
-                <p style={{ margin: "0 0 1px", fontSize: 11, color: "#bbb", textDecoration: "line-through" }}>{p.it_price.toLocaleString()}원</p>
+                <p style={{ margin: "0 0 1px", fontSize: 11, color: "#bbb", textDecoration: "line-through" }}>{p.it_price.toLocaleString()}円</p>
               )}
               <p style={{ margin: 0, fontSize: 13.5, fontWeight: 800, color: "#1e9e5e" }}>
-                {(p.it_cust_price > 0 ? p.it_cust_price : p.it_price).toLocaleString()}원
+                {(p.it_cust_price > 0 ? p.it_cust_price : p.it_price).toLocaleString()}円
               </p>
             </div>
           ))}

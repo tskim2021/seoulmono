@@ -4,7 +4,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { Gift, Package, ChevronRight, Loader2 } from "lucide-react";
 
 const BASE = import.meta.env.BASE_URL.replace(/\/$/, "");
-const fmtDate = (s: string) => s ? new Date(s).toLocaleDateString("ko-KR", { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" }) : "";
+const fmtDate = (s: string) => s ? new Date(s).toLocaleDateString("ja-JP", { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" }) : "";
 
 const STATUS_MAP: Record<string, { label: string; color: string }> = {
   pending: { label: "住所入力待ち", color: "bg-amber-100 text-amber-700" },

@@ -79,12 +79,12 @@ export default function Notices() {
       });
       if (!res.ok) {
         const err = await res.json().catch(() => ({}));
-        throw new Error(err.error || "삭제 실패");
+        throw new Error(err.error || "削除に失敗しました");
       }
       return res.json();
     },
     onSuccess: (_, ids) => {
-      toast({ title: `${ids.length}개 공지사항이 삭제되었습니다` });
+      toast({ title: `${ids.length}件のお知らせを削除しました` });
       queryClient.invalidateQueries({ queryKey: getGetNoticesQueryKey() });
       setCheckedIds(new Set());
     },
@@ -94,8 +94,8 @@ export default function Notices() {
   });
 
   const handleBulkDelete = (ids: number[], label: string) => {
-    if (ids.length === 0) { toast({ title: "선택된 항목이 없습니다", variant: "destructive" }); return; }
-    if (!window.confirm(`${label} (${ids.length}개)를 삭제하시겠습니까?`)) return;
+    if (ids.length === 0) { toast({ title: "選択された項目がありません", variant: "destructive" }); return; }
+    if (!window.confirm(`${label} (${ids.length}件)を削除してもよろしいですか？`)) return;
     bulkDeleteMutation.mutate(ids);
   };
 
@@ -104,7 +104,7 @@ export default function Notices() {
   const { mutate: removeNotice, isPending: isDeleting } = useDeleteNotice({
     mutation: {
       onSuccess: () => {
-        toast({ title: "공지사항이 삭제되었습니다" });
+        toast({ title: "お知らせを削除しました" });
         queryClient.invalidateQueries({ queryKey: getGetNoticesQueryKey() });
         setSelectedId(null);
       },
@@ -124,7 +124,7 @@ export default function Notices() {
       <div className="animate-in fade-in duration-300 max-w-3xl mx-auto">
         <button onClick={() => setSelectedId(null)} className="inline-flex items-center text-slate-500 hover:text-slate-900 mb-6 font-medium transition-colors">
           <ArrowLeft className="w-4 h-4 mr-1" />
-          목록으로
+          一覧へ
         </button>
         <Card className="p-8">
           <div className="flex items-start justify-between mb-3">
@@ -136,16 +136,16 @@ export default function Notices() {
                   className="text-blue-600 hover:text-blue-800 hover:bg-blue-50"
                   onClick={() => navigate(`/admin/notices/${selectedId}/edit`)}
                 >
-                  <Pencil className="w-4 h-4 mr-1" /> 수정
+                  <Pencil className="w-4 h-4 mr-1" /> 編集
                 </Button>
                 <Button
                   variant="ghost" size="sm"
                   className="text-red-500 hover:text-red-700 hover:bg-red-50"
                   disabled={isDeleting}
-                  onClick={() => { if (window.confirm("이 공지사항을 삭제하시겠습니까?")) removeNotice({ id: selectedId! }); }}
+                  onClick={() => { if (window.confirm("このお知らせを削除してもよろしいですか？")) removeNotice({ id: selectedId! }); }}
                 >
                   <Trash2 className="w-4 h-4 mr-1" />
-                  {isDeleting ? "삭제 중..." : "삭제"}
+                  {isDeleting ? "削除中..." : "削除"}
                 </Button>
               </div>
             )}
@@ -168,7 +168,7 @@ export default function Notices() {
                 {imageFiles.length > 0 && (
                   <div className="mb-4">
                     <h3 className="text-sm font-bold text-slate-600 mb-3 flex items-center gap-1.5">
-                      <ImageIcon className="w-4 h-4" /> 이미지 ({imageFiles.length})
+                      <ImageIcon className="w-4 h-4" /> 画像 ({imageFiles.length})
                     </h3>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       {imageFiles.map((file: any, idx: number) => (
@@ -190,7 +190,7 @@ export default function Notices() {
                 {otherFiles.length > 0 && (
                   <div>
                     <h3 className="text-sm font-bold text-slate-600 mb-3 flex items-center gap-1.5">
-                      <Paperclip className="w-4 h-4" /> 첨부파일 ({otherFiles.length})
+                      <Paperclip className="w-4 h-4" /> 添付ファイル ({otherFiles.length})
                     </h3>
                     <div className="space-y-2">
                       {otherFiles.map((file: any, idx: number) => (
@@ -224,12 +224,12 @@ export default function Notices() {
     <div className="animate-in fade-in duration-300">
       <div className="flex items-end justify-between mb-8">
         <div>
-          <h1 className="text-3xl font-black text-slate-900 tracking-tight">공지사항</h1>
-          <p className="text-slate-500 mt-2 font-medium">ソウルモノ의 주요 소식과 공지를 확인하세요.</p>
+          <h1 className="text-3xl font-black text-slate-900 tracking-tight">お知らせ</h1>
+          <p className="text-slate-500 mt-2 font-medium">ソウルモノからの主なお知らせをご確認ください。</p>
         </div>
         {user?.is_admin && (
           <Button onClick={() => navigate("/admin/notices/new")}>
-            <Plus className="w-4 h-4 mr-1" /> 공지 작성
+            <Plus className="w-4 h-4 mr-1" /> お知らせを作成
           </Button>
         )}
       </div>
@@ -243,24 +243,24 @@ export default function Notices() {
               onChange={toggleAll}
               className="w-4 h-4 rounded border-slate-300 accent-red-500 cursor-pointer"
             />
-            전체 선택 ({checkedIds.size}/{allIds.length})
+            すべて選択 ({checkedIds.size}/{allIds.length})
           </label>
           <div className="flex-1" />
           <button
-            onClick={() => handleBulkDelete(Array.from(checkedIds), "선택한 공지사항")}
+            onClick={() => handleBulkDelete(Array.from(checkedIds), "選択したお知らせ")}
             disabled={checkedIds.size === 0 || bulkDeleteMutation.isPending}
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-semibold border border-orange-300 text-orange-600 bg-orange-50 hover:bg-orange-100 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
           >
             <Trash2 className="w-3.5 h-3.5" />
-            선택 삭제 {checkedIds.size > 0 && `(${checkedIds.size})`}
+            選択を削除 {checkedIds.size > 0 && `(${checkedIds.size})`}
           </button>
           <button
-            onClick={() => handleBulkDelete(allIds, "전체 공지사항")}
+            onClick={() => handleBulkDelete(allIds, "すべてのお知らせ")}
             disabled={bulkDeleteMutation.isPending}
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-semibold border border-red-300 text-red-600 bg-red-50 hover:bg-red-100 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
           >
             <Trash2 className="w-3.5 h-3.5" />
-            일괄 삭제
+            一括削除
           </button>
         </div>
       )}
@@ -269,7 +269,7 @@ export default function Notices() {
         {!data?.posts?.length ? (
           <div className="py-16 text-center">
             <Bell className="w-12 h-12 text-slate-200 mx-auto mb-4" />
-            <p className="text-slate-500 font-bold">등록된 공지사항이 없습니다.</p>
+            <p className="text-slate-500 font-bold">登録されたお知らせはありません。</p>
           </div>
         ) : (
           <div className="divide-y divide-slate-100">
@@ -314,14 +314,14 @@ export default function Notices() {
                       <button
                         onClick={(e) => { e.stopPropagation(); navigate(`/admin/notices/${post.wr_id}/edit`); }}
                         className="p-1.5 rounded-lg text-slate-400 hover:text-blue-600 hover:bg-blue-50 transition-colors"
-                        title="수정"
+                        title="編集"
                       >
                         <Pencil className="w-4 h-4" />
                       </button>
                       <button
-                        onClick={(e) => { e.stopPropagation(); if (window.confirm("이 공지사항을 삭제하시겠습니까?")) removeNotice({ id: post.wr_id }); }}
+                        onClick={(e) => { e.stopPropagation(); if (window.confirm("このお知らせを削除してもよろしいですか？")) removeNotice({ id: post.wr_id }); }}
                         className="p-1.5 rounded-lg text-slate-400 hover:text-red-600 hover:bg-red-50 transition-colors"
-                        title="삭제"
+                        title="削除"
                       >
                         <Trash2 className="w-4 h-4" />
                       </button>

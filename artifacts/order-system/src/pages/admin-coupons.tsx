@@ -46,11 +46,11 @@ function CouponZoneForm({ initial, onSave, onCancel }: {
 
   const handleSave = async () => {
     if (!form.cz_subject.trim()) {
-      toast({ title: "쿠폰명을 입력해주세요", variant: "destructive" });
+      toast({ title: "クーポン名を入力してください", variant: "destructive" });
       return;
     }
     if (form.cp_price <= 0) {
-      toast({ title: "할인 금액/비율을 입력해주세요", variant: "destructive" });
+      toast({ title: "割引金額・割引率を入力してください", variant: "destructive" });
       return;
     }
     setSaving(true);
@@ -67,22 +67,22 @@ function CouponZoneForm({ initial, onSave, onCancel }: {
   return (
     <div className="space-y-4">
       <div>
-        <label className="block text-sm font-bold text-slate-700 mb-1">쿠폰명 <span className="text-red-500">*</span></label>
-        <input className="w-full px-3 py-2 border rounded-lg text-sm" placeholder="예: 신규가입 축하 쿠폰"
+        <label className="block text-sm font-bold text-slate-700 mb-1">クーポン名 <span className="text-red-500">*</span></label>
+        <input className="w-full px-3 py-2 border rounded-lg text-sm" placeholder="例: 新規登録記念クーポン"
           value={form.cz_subject} onChange={e => setForm(f => ({ ...f, cz_subject: e.target.value }))} />
       </div>
       <div className="grid grid-cols-2 gap-4">
         <div>
-          <label className="block text-sm font-bold text-slate-700 mb-1">할인 유형</label>
+          <label className="block text-sm font-bold text-slate-700 mb-1">割引タイプ</label>
           <select className="w-full px-3 py-2 border rounded-lg text-sm"
             value={form.cp_type} onChange={e => setForm(f => ({ ...f, cp_type: Number(e.target.value) }))}>
-            <option value={0}>정액 할인 (원)</option>
-            <option value={1}>정률 할인 (%)</option>
+            <option value={0}>定額割引 (円)</option>
+            <option value={1}>定率割引 (%)</option>
           </select>
         </div>
         <div>
           <label className="block text-sm font-bold text-slate-700 mb-1">
-            할인 {form.cp_type === 1 ? "비율 (%)" : "금액 (원)"} <span className="text-red-500">*</span>
+            割引{form.cp_type === 1 ? "率 (%)" : "金額 (円)"} <span className="text-red-500">*</span>
           </label>
           <input type="number" min="0" className="w-full px-3 py-2 border rounded-lg text-sm"
             placeholder={form.cp_type === 1 ? "10" : "5000"}
@@ -91,39 +91,39 @@ function CouponZoneForm({ initial, onSave, onCancel }: {
       </div>
       <div className="grid grid-cols-2 gap-4">
         <div>
-          <label className="block text-sm font-bold text-slate-700 mb-1">최소 주문금액 (원)</label>
+          <label className="block text-sm font-bold text-slate-700 mb-1">最低注文金額 (円)</label>
           <input type="number" min="0" step="1000" className="w-full px-3 py-2 border rounded-lg text-sm"
-            placeholder="0 (제한 없음)"
+            placeholder="0 (制限なし)"
             value={form.cp_minimum || ""} onChange={e => setForm(f => ({ ...f, cp_minimum: Number(e.target.value) }))} />
         </div>
         <div>
-          <label className="block text-sm font-bold text-slate-700 mb-1">최대 할인금액 (원)</label>
+          <label className="block text-sm font-bold text-slate-700 mb-1">最大割引金額 (円)</label>
           <input type="number" min="0" step="1000" className="w-full px-3 py-2 border rounded-lg text-sm"
-            placeholder="0 (제한 없음)"
+            placeholder="0 (制限なし)"
             value={form.cp_maximum || ""} onChange={e => setForm(f => ({ ...f, cp_maximum: Number(e.target.value) }))} />
-          <p className="text-xs text-slate-400 mt-1">정률 할인 시에만 적용됩니다.</p>
+          <p className="text-xs text-slate-400 mt-1">定率割引の場合のみ適用されます。</p>
         </div>
       </div>
       <div className="grid grid-cols-2 gap-4">
         <div>
-          <label className="block text-sm font-bold text-slate-700 mb-1">유효 기간 (일)</label>
+          <label className="block text-sm font-bold text-slate-700 mb-1">有効期間 (日)</label>
           <input type="number" min="0" className="w-full px-3 py-2 border rounded-lg text-sm"
-            placeholder="0 (기간 제한 없음)"
+            placeholder="0 (期間制限なし)"
             value={form.cz_period || ""} onChange={e => setForm(f => ({ ...f, cz_period: Number(e.target.value) }))} />
-          <p className="text-xs text-slate-400 mt-1">발급일로부터 N일 후 만료</p>
+          <p className="text-xs text-slate-400 mt-1">発行日からN日後に失効</p>
         </div>
         <div>
-          <label className="block text-sm font-bold text-slate-700 mb-1">만료 날짜 (고정)</label>
+          <label className="block text-sm font-bold text-slate-700 mb-1">失効日 (固定)</label>
           <input type="date" className="w-full px-3 py-2 border rounded-lg text-sm"
             value={form.cz_period_date} onChange={e => setForm(f => ({ ...f, cz_period_date: e.target.value }))} />
-          <p className="text-xs text-slate-400 mt-1">특정 날짜에 만료 (기간보다 우선)</p>
+          <p className="text-xs text-slate-400 mt-1">指定日に失効 (期間より優先)</p>
         </div>
       </div>
       <div className="flex gap-2 justify-end pt-2">
-        <Button variant="outline" onClick={onCancel}>취소</Button>
+        <Button variant="outline" onClick={onCancel}>キャンセル</Button>
         <Button onClick={handleSave} disabled={saving}>
           {saving ? <Loader2 className="w-4 h-4 animate-spin mr-1" /> : null}
-          {initial?.cz_id ? "수정" : "생성"}
+          {initial?.cz_id ? "更新" : "作成"}
         </Button>
       </div>
     </div>
@@ -161,12 +161,12 @@ function IssueModal({ zone, onClose }: { zone: CouponZone; onClose: () => void }
       body: JSON.stringify({ mb_ids: Array.from(selectedIds) }),
     }),
     onSuccess: (data: any) => {
-      toast({ title: `${data.issued}명에게 쿠폰이 발급되었습니다${data.failed > 0 ? ` (${data.failed}명 실패)` : ""}` });
+      toast({ title: `${data.issued}名にクーポンを発行しました${data.failed > 0 ? ` (${data.failed}名失敗)` : ""}` });
       queryClient.invalidateQueries({ queryKey: ["coupon-zones"] });
       queryClient.invalidateQueries({ queryKey: ["admin-coupons"] });
       onClose();
     },
-    onError: () => toast({ title: "발급 실패", variant: "destructive" }),
+    onError: () => toast({ title: "発行に失敗しました", variant: "destructive" }),
   });
 
   return (
@@ -174,7 +174,7 @@ function IssueModal({ zone, onClose }: { zone: CouponZone; onClose: () => void }
       <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[80vh] flex flex-col" onClick={e => e.stopPropagation()}>
         <div className="flex items-center justify-between p-5 border-b">
           <div>
-            <h3 className="font-bold text-slate-900">쿠폰 발급</h3>
+            <h3 className="font-bold text-slate-900">クーポン発行</h3>
             <p className="text-sm text-slate-500 mt-0.5">{zone.cz_subject}</p>
           </div>
           <button onClick={onClose} className="p-1 hover:bg-slate-100 rounded-lg"><X className="w-5 h-5" /></button>
@@ -182,19 +182,19 @@ function IssueModal({ zone, onClose }: { zone: CouponZone; onClose: () => void }
         <div className="p-4 border-b">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-            <input className="w-full pl-9 pr-3 py-2 border rounded-lg text-sm" placeholder="업체명, 담당자명, 아이디 검색"
+            <input className="w-full pl-9 pr-3 py-2 border rounded-lg text-sm" placeholder="取引先名、担当者名、IDで検索"
               value={search} onChange={e => setSearch(e.target.value)} />
           </div>
           <div className="flex items-center justify-between mt-2 text-xs text-slate-500">
-            <span>{selectedIds.size}명 선택됨</span>
+            <span>{selectedIds.size}名選択中</span>
             <div className="flex gap-2">
-              <button onClick={() => setSelectedIds(new Set(filtered.map(p => p.mb_id)))} className="text-primary hover:underline">전체 선택</button>
-              <button onClick={() => setSelectedIds(new Set())} className="text-red-500 hover:underline">선택 해제</button>
+              <button onClick={() => setSelectedIds(new Set(filtered.map(p => p.mb_id)))} className="text-primary hover:underline">すべて選択</button>
+              <button onClick={() => setSelectedIds(new Set())} className="text-red-500 hover:underline">選択解除</button>
             </div>
           </div>
         </div>
         <div className="flex-1 overflow-y-auto p-4 space-y-2">
-          {filtered.length === 0 && <p className="text-center py-6 text-slate-400 text-sm">검색 결과가 없습니다.</p>}
+          {filtered.length === 0 && <p className="text-center py-6 text-slate-400 text-sm">検索結果がありません。</p>}
           {filtered.map(p => (
             <div key={p.mb_id} onClick={() => toggleSelect(p.mb_id)}
               className={`flex items-center gap-3 p-3 rounded-xl border-2 cursor-pointer transition-all ${
@@ -216,7 +216,7 @@ function IssueModal({ zone, onClose }: { zone: CouponZone; onClose: () => void }
           <Button className="w-full" disabled={selectedIds.size === 0 || issueMutation.isPending}
             onClick={() => issueMutation.mutate()}>
             {issueMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Gift className="w-4 h-4 mr-2" />}
-            {selectedIds.size}명에게 발급
+            {selectedIds.size}名に発行
           </Button>
         </div>
       </div>
@@ -255,9 +255,9 @@ export default function AdminCoupons() {
       }),
     onSuccess: (_data, cz_id) => {
       queryClient.invalidateQueries({ queryKey: ["settings-signup-coupon"] });
-      toast({ title: cz_id === 0 ? "신규 가입 쿠폰 설정이 해제되었습니다" : "신규 가입 쿠폰으로 설정되었습니다" });
+      toast({ title: cz_id === 0 ? "新規登録クーポンの設定を解除しました" : "新規登録クーポンに設定しました" });
     },
-    onError: () => toast({ title: "설정 실패", variant: "destructive" }),
+    onError: () => toast({ title: "設定に失敗しました", variant: "destructive" }),
   });
 
   const [mbIdInput, setMbIdInput] = useState("");
@@ -278,10 +278,10 @@ export default function AdminCoupons() {
     }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["coupon-zones"] });
-      toast({ title: "쿠폰 종류가 생성되었습니다" });
+      toast({ title: "クーポン種別を作成しました" });
       setShowForm(false);
     },
-    onError: (err: any) => toast({ title: "생성 실패", description: err?.data?.error || "", variant: "destructive" }),
+    onError: (err: any) => toast({ title: "作成に失敗しました", description: err?.data?.error || "", variant: "destructive" }),
   });
 
   const updateZone = useMutation({
@@ -290,10 +290,10 @@ export default function AdminCoupons() {
     }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["coupon-zones"] });
-      toast({ title: "쿠폰 종류가 수정되었습니다" });
+      toast({ title: "クーポン種別を更新しました" });
       setEditZone(null);
     },
-    onError: (err: any) => toast({ title: "수정 실패", description: err?.data?.error || "", variant: "destructive" }),
+    onError: (err: any) => toast({ title: "更新に失敗しました", description: err?.data?.error || "", variant: "destructive" }),
   });
 
   const deleteZone = useMutation({
@@ -301,9 +301,9 @@ export default function AdminCoupons() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["coupon-zones"] });
       queryClient.invalidateQueries({ queryKey: ["admin-coupons"] });
-      toast({ title: "쿠폰 종류가 삭제되었습니다" });
+      toast({ title: "クーポン種別を削除しました" });
     },
-    onError: (err: any) => toast({ title: "삭제 실패", description: err?.data?.error || "", variant: "destructive" }),
+    onError: (err: any) => toast({ title: "削除に失敗しました", description: err?.data?.error || "", variant: "destructive" }),
   });
 
   const deleteCoupon = useMutation({
@@ -311,18 +311,18 @@ export default function AdminCoupons() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin-coupons"] });
       queryClient.invalidateQueries({ queryKey: ["coupon-zones"] });
-      toast({ title: "쿠폰이 삭제되었습니다" });
+      toast({ title: "クーポンを削除しました" });
     },
-    onError: (err: any) => toast({ title: "삭제 실패", description: err?.data?.error || "", variant: "destructive" }),
+    onError: (err: any) => toast({ title: "削除に失敗しました", description: err?.data?.error || "", variant: "destructive" }),
   });
 
   const handleDeleteZone = (zone: CouponZone) => {
-    if (!confirm(`"${zone.cz_subject}" 쿠폰 종류를 삭제하시겠습니까?\n발급된 미사용 쿠폰도 함께 삭제됩니다.`)) return;
+    if (!confirm(`"${zone.cz_subject}" のクーポン種別を削除してもよろしいですか？\n発行済みの未使用クーポンも一緒に削除されます。`)) return;
     deleteZone.mutate(zone.cz_id);
   };
 
   const handleDeleteCoupon = (cp: any) => {
-    if (!confirm("이 쿠폰을 삭제하시겠습니까?")) return;
+    if (!confirm("このクーポンを削除してもよろしいですか？")) return;
     deleteCoupon.mutate(cp.cp_no);
   };
 
@@ -334,17 +334,17 @@ export default function AdminCoupons() {
     <div className="animate-in fade-in duration-300">
       <div className="mb-8 flex flex-wrap items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-black text-slate-900 tracking-tight">쿠폰 관리</h1>
-          <p className="text-slate-500 mt-2 font-medium">쿠폰 종류를 만들고 파트너사에게 발급합니다.</p>
+          <h1 className="text-3xl font-black text-slate-900 tracking-tight">クーポン管理</h1>
+          <p className="text-slate-500 mt-2 font-medium">クーポン種別を作成し、取引先に発行します。</p>
         </div>
         <Button onClick={() => { setShowForm(true); setEditZone(null); }} className="flex items-center gap-2">
-          <Plus className="w-4 h-4" /> 쿠폰 종류 만들기
+          <Plus className="w-4 h-4" /> クーポン種別を作成
         </Button>
       </div>
 
       {showForm && (
         <Card className="p-6 mb-6">
-          <h2 className="font-bold text-slate-900 mb-4">새 쿠폰 종류 만들기</h2>
+          <h2 className="font-bold text-slate-900 mb-4">新しいクーポン種別を作成</h2>
           <CouponZoneForm
             onSave={data => createZone.mutateAsync(data)}
             onCancel={() => setShowForm(false)}
@@ -353,19 +353,19 @@ export default function AdminCoupons() {
       )}
 
       <div className="space-y-4 mb-10">
-        <h2 className="text-lg font-bold text-slate-800">쿠폰 종류 목록</h2>
+        <h2 className="text-lg font-bold text-slate-800">クーポン種別一覧</h2>
         {zones.length === 0 && (
           <Card className="p-12 text-center">
             <Ticket className="w-12 h-12 text-slate-200 mx-auto mb-4" />
-            <p className="text-slate-400 font-medium">등록된 쿠폰 종류가 없습니다.</p>
-            <p className="text-sm text-slate-400 mt-1">쿠폰 종류 만들기 버튼을 클릭해서 첫 번째 쿠폰을 만들어 보세요.</p>
+            <p className="text-slate-400 font-medium">登録されたクーポン種別がありません。</p>
+            <p className="text-sm text-slate-400 mt-1">「クーポン種別を作成」ボタンから最初のクーポンを作成してください。</p>
           </Card>
         )}
         {zones.map(zone => (
           <Card key={zone.cz_id} className="p-5">
             {editZone?.cz_id === zone.cz_id ? (
               <div>
-                <h3 className="font-bold text-slate-900 mb-4">쿠폰 종류 수정</h3>
+                <h3 className="font-bold text-slate-900 mb-4">クーポン種別の編集</h3>
                 <CouponZoneForm
                   initial={zone}
                   onSave={data => updateZone.mutateAsync({ id: zone.cz_id, data })}
@@ -379,22 +379,22 @@ export default function AdminCoupons() {
                     <div className="flex items-center gap-2 mb-1 flex-wrap">
                       <h3 className="font-bold text-slate-900 text-lg">{zone.cz_subject}</h3>
                       <Badge className={zone.cp_type === 1 ? "bg-purple-100 text-purple-700" : "bg-emerald-100 text-emerald-700"}>
-                        {zone.cp_type === 1 ? `${zone.cp_price}% 할인` : formatCurrency(zone.cp_price) + " 할인"}
+                        {zone.cp_type === 1 ? `${zone.cp_price}%割引` : formatCurrency(zone.cp_price) + " 割引"}
                       </Badge>
                       {signupCouponId === zone.cz_id && (
                         <Badge className="bg-amber-100 text-amber-700 flex items-center gap-1">
-                          <Star className="w-3 h-3" /> 신규가입 쿠폰
+                          <Star className="w-3 h-3" /> 新規登録クーポン
                         </Badge>
                       )}
                     </div>
                     <div className="flex flex-wrap gap-3 text-sm text-slate-500">
-                      {zone.cp_minimum > 0 && <span>최소 주문 {formatCurrency(zone.cp_minimum)}</span>}
-                      {zone.cp_maximum > 0 && zone.cp_type === 1 && <span>최대 {formatCurrency(zone.cp_maximum)} 할인</span>}
-                      {zone.cz_period > 0 && <span>발급일부터 {zone.cz_period}일 유효</span>}
-                      {zone.cz_period_date && zone.cz_period_date !== "0000-00-00" && <span>{zone.cz_period_date} 만료</span>}
+                      {zone.cp_minimum > 0 && <span>最低注文 {formatCurrency(zone.cp_minimum)}</span>}
+                      {zone.cp_maximum > 0 && zone.cp_type === 1 && <span>最大 {formatCurrency(zone.cp_maximum)} 割引</span>}
+                      {zone.cz_period > 0 && <span>発行日から{zone.cz_period}日間有効</span>}
+                      {zone.cz_period_date && zone.cz_period_date !== "0000-00-00" && <span>{zone.cz_period_date} 失効</span>}
                       <span className="text-slate-400">|</span>
-                      <span>발급 {zone.issued_count}건</span>
-                      <span>사용 {zone.used_count}건</span>
+                      <span>発行 {zone.issued_count}件</span>
+                      <span>使用 {zone.used_count}件</span>
                     </div>
                   </div>
                   <div className="flex items-center gap-2 flex-wrap">
@@ -406,7 +406,7 @@ export default function AdminCoupons() {
                         disabled={updateSignupCoupon.isPending}
                         className="flex items-center gap-1 border-amber-300 text-amber-700 hover:bg-amber-50"
                       >
-                        <StarOff className="w-3.5 h-3.5" /> 신규가입 해제
+                        <StarOff className="w-3.5 h-3.5" /> 新規登録を解除
                       </Button>
                     ) : (
                       <Button
@@ -416,13 +416,13 @@ export default function AdminCoupons() {
                         disabled={updateSignupCoupon.isPending}
                         className="flex items-center gap-1 border-amber-300 text-amber-600 hover:bg-amber-50"
                       >
-                        <Star className="w-3.5 h-3.5" /> 신규가입 쿠폰으로 설정
+                        <Star className="w-3.5 h-3.5" /> 新規登録クーポンに設定
                       </Button>
                     )}
                     <Button size="sm" variant="outline" onClick={() => setIssueZone(zone)} className="flex items-center gap-1">
-                      <Users className="w-3.5 h-3.5" /> 발급
+                      <Users className="w-3.5 h-3.5" /> 発行
                     </Button>
-                    <Button size="sm" variant="outline" onClick={() => setEditZone(zone)}>수정</Button>
+                    <Button size="sm" variant="outline" onClick={() => setEditZone(zone)}>編集</Button>
                     <button onClick={() => handleDeleteZone(zone)} className="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors">
                       <Trash2 className="w-4 h-4" />
                     </button>
@@ -434,13 +434,13 @@ export default function AdminCoupons() {
                     className="text-sm text-primary hover:underline flex items-center gap-1"
                   >
                     {expandedZone === zone.cz_id ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
-                    발급 내역 보기 ({zone.issued_count}건)
+                    発行履歴を見る ({zone.issued_count}件)
                   </button>
                   <button
                     onClick={() => { setFilterCzId(zone.cz_id); setCouponPage(1); }}
                     className="text-sm text-slate-500 hover:text-slate-700 hover:underline"
                   >
-                    아래 목록에서 필터
+                    下の一覧で絞り込み
                   </button>
                 </div>
               </div>
@@ -451,32 +451,32 @@ export default function AdminCoupons() {
 
       <div className="mb-4">
         <h2 className="text-lg font-bold text-slate-800 mb-3">
-          발급된 쿠폰 목록
-          {filterCzId && <span className="ml-2 text-sm font-normal text-primary">— {zones.find(z => z.cz_id === filterCzId)?.cz_subject} 필터</span>}
-          {filterMbId && <span className="ml-2 text-sm font-normal text-blue-600">— {filterMbId} 회원 필터</span>}
+          発行済みクーポン一覧
+          {filterCzId && <span className="ml-2 text-sm font-normal text-primary">— {zones.find(z => z.cz_id === filterCzId)?.cz_subject} で絞り込み</span>}
+          {filterMbId && <span className="ml-2 text-sm font-normal text-blue-600">— 会員 {filterMbId} で絞り込み</span>}
         </h2>
         <div className="flex flex-wrap items-center gap-2">
           <form onSubmit={(e) => { e.preventDefault(); setFilterMbId(mbIdInput.trim()); setCouponPage(1); }} className="flex gap-2">
             <input
               className="px-3 py-2 border rounded-lg text-sm w-52"
-              placeholder="아이디로 회원 검색"
+              placeholder="IDで会員検索"
               value={mbIdInput}
               onChange={e => setMbIdInput(e.target.value)}
             />
-            <button type="submit" className="px-3 py-2 bg-primary text-white rounded-lg text-sm font-medium hover:bg-primary/90">검색</button>
+            <button type="submit" className="px-3 py-2 bg-primary text-white rounded-lg text-sm font-medium hover:bg-primary/90">検索</button>
             {filterMbId && (
               <button type="button" onClick={() => { setFilterMbId(""); setMbIdInput(""); setCouponPage(1); }}
-                className="px-3 py-2 border rounded-lg text-sm font-medium text-slate-600 hover:bg-slate-50">초기화</button>
+                className="px-3 py-2 border rounded-lg text-sm font-medium text-slate-600 hover:bg-slate-50">リセット</button>
             )}
           </form>
           <div className="flex items-center gap-2 ml-auto">
             {filterCzId && (
               <button onClick={() => { setFilterCzId(null); setCouponPage(1); }}
                 className="text-sm text-slate-500 hover:text-red-500 flex items-center gap-1">
-                <X className="w-3.5 h-3.5" /> 쿠폰종류 필터 해제
+                <X className="w-3.5 h-3.5" /> クーポン種別の絞り込みを解除
               </button>
             )}
-            <span className="text-sm text-slate-500">총 {couponTotal}건</span>
+            <span className="text-sm text-slate-500">合計 {couponTotal}件</span>
           </div>
         </div>
       </div>
@@ -485,18 +485,18 @@ export default function AdminCoupons() {
         {isLoadingCoupons ? (
           <div className="py-12 flex justify-center"><Loader2 className="w-6 h-6 animate-spin text-primary" /></div>
         ) : coupons.length === 0 ? (
-          <div className="py-12 text-center text-slate-400 text-sm">발급된 쿠폰이 없습니다.</div>
+          <div className="py-12 text-center text-slate-400 text-sm">発行済みのクーポンがありません。</div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead className="bg-slate-50 border-b border-slate-200">
                 <tr>
-                  <th className="text-left py-3 px-4 font-bold text-slate-500">쿠폰명</th>
-                  <th className="text-left py-3 px-4 font-bold text-slate-500">보유 회원</th>
-                  <th className="text-left py-3 px-4 font-bold text-slate-500">할인 내용</th>
-                  <th className="text-left py-3 px-4 font-bold text-slate-500">유효기간</th>
-                  <th className="text-left py-3 px-4 font-bold text-slate-500">상태</th>
-                  <th className="text-left py-3 px-4 font-bold text-slate-500">발급일</th>
+                  <th className="text-left py-3 px-4 font-bold text-slate-500">クーポン名</th>
+                  <th className="text-left py-3 px-4 font-bold text-slate-500">保有会員</th>
+                  <th className="text-left py-3 px-4 font-bold text-slate-500">割引内容</th>
+                  <th className="text-left py-3 px-4 font-bold text-slate-500">有効期間</th>
+                  <th className="text-left py-3 px-4 font-bold text-slate-500">ステータス</th>
+                  <th className="text-left py-3 px-4 font-bold text-slate-500">発行日</th>
                   <th className="py-3 px-4"></th>
                 </tr>
               </thead>
@@ -509,19 +509,19 @@ export default function AdminCoupons() {
                       {c.company_name && <p className="text-xs text-slate-400">{c.mb_id}</p>}
                     </td>
                     <td className="py-3 px-4 text-slate-600">
-                      {c.cp_type === 1 ? `${c.cp_price}% 할인` : formatCurrency(c.cp_price) + " 할인"}
-                      {c.cp_minimum > 0 && <span className="text-xs text-slate-400 block">{formatCurrency(c.cp_minimum)} 이상</span>}
+                      {c.cp_type === 1 ? `${c.cp_price}%割引` : formatCurrency(c.cp_price) + " 割引"}
+                      {c.cp_minimum > 0 && <span className="text-xs text-slate-400 block">{formatCurrency(c.cp_minimum)} 以上</span>}
                     </td>
                     <td className="py-3 px-4 text-slate-500 text-xs">
-                      {c.cp_end && c.cp_end !== "0000-00-00" ? c.cp_end : "제한 없음"}
+                      {c.cp_end && c.cp_end !== "0000-00-00" ? c.cp_end : "制限なし"}
                     </td>
                     <td className="py-3 px-4">
                       {c.od_id ? (
-                        <Badge className="bg-slate-100 text-slate-500">사용됨</Badge>
+                        <Badge className="bg-slate-100 text-slate-500">使用済み</Badge>
                       ) : c.is_expired ? (
-                        <Badge className="bg-red-100 text-red-600">만료</Badge>
+                        <Badge className="bg-red-100 text-red-600">失効</Badge>
                       ) : (
-                        <Badge className="bg-emerald-100 text-emerald-700">사용 가능</Badge>
+                        <Badge className="bg-emerald-100 text-emerald-700">利用可能</Badge>
                       )}
                     </td>
                     <td className="py-3 px-4 text-slate-400 text-xs">{c.cp_datetime?.slice(0, 10)}</td>
@@ -540,9 +540,9 @@ export default function AdminCoupons() {
         )}
         {couponTotalPages > 1 && (
           <div className="p-4 border-t flex items-center justify-center gap-2">
-            <Button variant="outline" size="sm" disabled={couponPage === 1} onClick={() => setCouponPage(p => p - 1)}>이전</Button>
+            <Button variant="outline" size="sm" disabled={couponPage === 1} onClick={() => setCouponPage(p => p - 1)}>前へ</Button>
             <span className="text-sm text-slate-600">{couponPage} / {couponTotalPages}</span>
-            <Button variant="outline" size="sm" disabled={couponPage >= couponTotalPages} onClick={() => setCouponPage(p => p + 1)}>다음</Button>
+            <Button variant="outline" size="sm" disabled={couponPage >= couponTotalPages} onClick={() => setCouponPage(p => p + 1)}>次へ</Button>
           </div>
         )}
       </Card>

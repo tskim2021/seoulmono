@@ -10,11 +10,11 @@ import { toast } from "sonner";
 import { Plus, Trash2, Edit2, Sparkles, HelpCircle, BookOpen, Pill, AlertTriangle, FileText, GripVertical, Eye, EyeOff, Loader2 } from "lucide-react";
 
 const SECTION_TYPES = [
-  { value: "faq", label: "자주 묻는 질문 (FAQ)", icon: HelpCircle, color: "text-blue-600", bg: "bg-blue-50 dark:bg-blue-950/30" },
-  { value: "usage", label: "사용방법", icon: BookOpen, color: "text-emerald-600", bg: "bg-emerald-50 dark:bg-emerald-950/30" },
-  { value: "dosage", label: "용량/용법", icon: Pill, color: "text-purple-600", bg: "bg-purple-50 dark:bg-purple-950/30" },
-  { value: "sideEffects", label: "부작용", icon: AlertTriangle, color: "text-amber-600", bg: "bg-amber-50 dark:bg-amber-950/30" },
-  { value: "precautions", label: "주의사항", icon: FileText, color: "text-red-600", bg: "bg-red-50 dark:bg-red-950/30" },
+  { value: "faq", label: "よくあるご質問 (FAQ)", icon: HelpCircle, color: "text-blue-600", bg: "bg-blue-50 dark:bg-blue-950/30" },
+  { value: "usage", label: "使用方法", icon: BookOpen, color: "text-emerald-600", bg: "bg-emerald-50 dark:bg-emerald-950/30" },
+  { value: "dosage", label: "用量・用法", icon: Pill, color: "text-purple-600", bg: "bg-purple-50 dark:bg-purple-950/30" },
+  { value: "sideEffects", label: "副作用", icon: AlertTriangle, color: "text-amber-600", bg: "bg-amber-50 dark:bg-amber-950/30" },
+  { value: "precautions", label: "注意事項", icon: FileText, color: "text-red-600", bg: "bg-red-50 dark:bg-red-950/30" },
 ] as const;
 
 type SectionType = typeof SECTION_TYPES[number]["value"];
@@ -29,15 +29,15 @@ export default function AdminProductInfo({ productId, productName, productDescri
   const [generatingType, setGeneratingType] = useState<string | null>(null);
 
   const createMut = trpc.productInfo.create.useMutation({
-    onSuccess: () => { utils.productInfo.adminGetByProduct.invalidate({ productId }); utils.productInfo.getByProduct.invalidate({ productId }); setDialogOpen(false); toast.success("정보가 등록되었습니다."); },
+    onSuccess: () => { utils.productInfo.adminGetByProduct.invalidate({ productId }); utils.productInfo.getByProduct.invalidate({ productId }); setDialogOpen(false); toast.success("情報を登録しました。"); },
     onError: (err) => toast.error(err.message),
   });
   const updateMut = trpc.productInfo.update.useMutation({
-    onSuccess: () => { utils.productInfo.adminGetByProduct.invalidate({ productId }); utils.productInfo.getByProduct.invalidate({ productId }); setDialogOpen(false); toast.success("정보가 수정되었습니다."); },
+    onSuccess: () => { utils.productInfo.adminGetByProduct.invalidate({ productId }); utils.productInfo.getByProduct.invalidate({ productId }); setDialogOpen(false); toast.success("情報を更新しました。"); },
     onError: (err) => toast.error(err.message),
   });
   const deleteMut = trpc.productInfo.delete.useMutation({
-    onSuccess: () => { utils.productInfo.adminGetByProduct.invalidate({ productId }); utils.productInfo.getByProduct.invalidate({ productId }); toast.success("삭제되었습니다."); },
+    onSuccess: () => { utils.productInfo.adminGetByProduct.invalidate({ productId }); utils.productInfo.getByProduct.invalidate({ productId }); toast.success("削除しました。"); },
     onError: (err) => toast.error(err.message),
   });
   const toggleActiveMut = trpc.productInfo.update.useMutation({
@@ -49,9 +49,9 @@ export default function AdminProductInfo({ productId, productName, productDescri
       if (result.success) {
         utils.productInfo.adminGetByProduct.invalidate({ productId });
         utils.productInfo.getByProduct.invalidate({ productId });
-        toast.success(`${result.label} ${result.count}건이 AI로 생성되었습니다.`);
+        toast.success(`${result.label} ${result.count}件をAIで生成しました。`);
       } else {
-        toast.error(result.error || "AI 생성에 실패했습니다.");
+        toast.error(result.error || "AI生成に失敗しました。");
       }
     },
     onError: (err) => { setGeneratingType(null); toast.error(err.message); },
@@ -68,7 +68,7 @@ export default function AdminProductInfo({ productId, productName, productDescri
     setDialogOpen(true);
   };
   const handleSave = () => {
-    if (!form.title.trim() || !form.content.trim()) { toast.error("제목과 내용을 입력해주세요."); return; }
+    if (!form.title.trim() || !form.content.trim()) { toast.error("タイトルと内容を入力してください。"); return; }
     if (editItem) {
       updateMut.mutate({ id: editItem.id, title: form.title, content: form.content, sortOrder: form.sortOrder });
     } else {
@@ -76,7 +76,7 @@ export default function AdminProductInfo({ productId, productName, productDescri
     }
   };
   const handleDelete = (id: number) => {
-    if (confirm("정말 삭제하시겠습니까?")) deleteMut.mutate({ id });
+    if (confirm("本当に削除しますか？")) deleteMut.mutate({ id });
   };
   const handleToggleActive = (item: any) => {
     toggleActiveMut.mutate({ id: item.id, isActive: item.isActive === 1 ? 0 : 1 });
@@ -106,8 +106,8 @@ export default function AdminProductInfo({ productId, productName, productDescri
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h3 className="text-base font-semibold">상품 정보 관리</h3>
-        <p className="text-xs text-muted-foreground">FAQ, 사용방법, 부작용 등 상품 상세 정보를 관리합니다</p>
+        <h3 className="text-base font-semibold">商品情報管理</h3>
+        <p className="text-xs text-muted-foreground">FAQ、使用方法、副作用など商品の詳細情報を管理します</p>
       </div>
 
       {grouped.map(group => {
@@ -119,7 +119,7 @@ export default function AdminProductInfo({ productId, productName, productDescri
               <div className="flex items-center gap-2">
                 <Icon className={`w-4 h-4 ${group.color}`} />
                 <span className={`font-medium text-sm ${group.color}`}>{group.label}</span>
-                <Badge variant="secondary" className="text-[10px] px-1.5 py-0">{group.items.length}건</Badge>
+                <Badge variant="secondary" className="text-[10px] px-1.5 py-0">{group.items.length}件</Badge>
               </div>
               <div className="flex items-center gap-2">
                 <Button
@@ -130,13 +130,13 @@ export default function AdminProductInfo({ productId, productName, productDescri
                   disabled={!!generatingType}
                 >
                   {generatingType === group.value ? (
-                    <><Loader2 className="w-3 h-3 mr-1 animate-spin" /> AI 생성 중...</>
+                    <><Loader2 className="w-3 h-3 mr-1 animate-spin" /> AI生成中...</>
                   ) : (
-                    <><Sparkles className="w-3 h-3 mr-1" /> AI 자동 생성</>
+                    <><Sparkles className="w-3 h-3 mr-1" /> AI自動生成</>
                   )}
                 </Button>
                 <Button variant="outline" size="sm" className="h-7 text-xs" onClick={() => openCreate(group.value)}>
-                  <Plus className="w-3 h-3 mr-1" /> 추가
+                  <Plus className="w-3 h-3 mr-1" /> 追加
                 </Button>
               </div>
             </div>
@@ -144,7 +144,7 @@ export default function AdminProductInfo({ productId, productName, productDescri
             {/* 항목 리스트 */}
             {group.items.length === 0 ? (
               <div className="p-6 text-center text-muted-foreground text-sm">
-                등록된 항목이 없습니다. 직접 추가하거나 AI 자동 생성을 이용하세요.
+                登録された項目がありません。直接追加するか、AI自動生成をご利用ください。
               </div>
             ) : (
               <div className="divide-y">
@@ -155,12 +155,12 @@ export default function AdminProductInfo({ productId, productName, productDescri
                       <div className="flex items-center gap-2 mb-1">
                         <span className="font-medium text-sm">{item.title}</span>
                         {item.isAutoGenerated === 1 && <Badge variant="secondary" className="text-[9px] px-1 py-0">AI</Badge>}
-                        {item.isActive === 0 && <Badge variant="outline" className="text-[9px] px-1 py-0 text-muted-foreground">비활성</Badge>}
+                        {item.isActive === 0 && <Badge variant="outline" className="text-[9px] px-1 py-0 text-muted-foreground">無効</Badge>}
                       </div>
                       <p className="text-xs text-muted-foreground line-clamp-2 whitespace-pre-wrap">{item.content}</p>
                     </div>
                     <div className="flex items-center gap-1 shrink-0">
-                      <Button variant="ghost" size="sm" className="h-7 w-7 p-0" onClick={() => handleToggleActive(item)} title={item.isActive === 1 ? "비활성화" : "활성화"}>
+                      <Button variant="ghost" size="sm" className="h-7 w-7 p-0" onClick={() => handleToggleActive(item)} title={item.isActive === 1 ? "無効化" : "有効化"}>
                         {item.isActive === 1 ? <Eye className="w-3.5 h-3.5" /> : <EyeOff className="w-3.5 h-3.5" />}
                       </Button>
                       <Button variant="ghost" size="sm" className="h-7 w-7 p-0" onClick={() => openEdit(item)}>
@@ -182,15 +182,15 @@ export default function AdminProductInfo({ productId, productName, productDescri
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent className="sm:max-w-lg">
           <DialogHeader>
-            <DialogTitle>{editItem ? "정보 수정" : "정보 추가"}</DialogTitle>
+            <DialogTitle>{editItem ? "情報の編集" : "情報の追加"}</DialogTitle>
             <DialogDescription>
-              {SECTION_TYPES.find(s => s.value === form.sectionType)?.label} 항목을 {editItem ? "수정" : "추가"}합니다.
+              {SECTION_TYPES.find(s => s.value === form.sectionType)?.label} の項目を{editItem ? "編集" : "追加"}します。
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
             {!editItem && (
               <div>
-                <label className="text-sm font-medium">섹션 타입</label>
+                <label className="text-sm font-medium">セクションタイプ</label>
                 <select
                   className="w-full border rounded-lg px-3 py-2 text-sm bg-background mt-1"
                   value={form.sectionType}
@@ -204,29 +204,29 @@ export default function AdminProductInfo({ productId, productName, productDescri
             )}
             <div>
               <label className="text-sm font-medium">
-                {form.sectionType === "faq" ? "질문" : "제목"}
+                {form.sectionType === "faq" ? "質問" : "タイトル"}
               </label>
               <Input
                 value={form.title}
                 onChange={e => setForm(f => ({ ...f, title: e.target.value }))}
-                placeholder={form.sectionType === "faq" ? "질문을 입력하세요" : "제목을 입력하세요"}
+                placeholder={form.sectionType === "faq" ? "質問を入力してください" : "タイトルを入力してください"}
                 className="mt-1"
               />
             </div>
             <div>
               <label className="text-sm font-medium">
-                {form.sectionType === "faq" ? "답변" : "내용"}
+                {form.sectionType === "faq" ? "回答" : "内容"}
               </label>
               <Textarea
                 value={form.content}
                 onChange={e => setForm(f => ({ ...f, content: e.target.value }))}
-                placeholder={form.sectionType === "faq" ? "답변을 입력하세요" : "내용을 입력하세요"}
+                placeholder={form.sectionType === "faq" ? "回答を入力してください" : "内容を入力してください"}
                 rows={6}
                 className="mt-1"
               />
             </div>
             <div>
-              <label className="text-sm font-medium">정렬 순서</label>
+              <label className="text-sm font-medium">表示順</label>
               <Input
                 type="number"
                 value={form.sortOrder}
@@ -236,9 +236,9 @@ export default function AdminProductInfo({ productId, productName, productDescri
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setDialogOpen(false)}>취소</Button>
+            <Button variant="outline" onClick={() => setDialogOpen(false)}>キャンセル</Button>
             <Button onClick={handleSave} disabled={createMut.isPending || updateMut.isPending}>
-              {editItem ? "수정" : "등록"}
+              {editItem ? "更新" : "登録"}
             </Button>
           </DialogFooter>
         </DialogContent>

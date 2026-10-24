@@ -1,4 +1,5 @@
 import { useState, useMemo } from "react";
+import { ja } from "../lib/ja";
 import { useQuery } from "@tanstack/react-query";
 import { useGetOrders } from "@workspace/api-client-react";
 import { customFetch } from "@workspace/api-client-react";
@@ -44,8 +45,8 @@ function getDateRange(year: number, month: number | null) {
 }
 
 function getPeriodLabel(year: number, month: number | null) {
-  if (month) return `${year}년 ${month}월`;
-  return `${year}년 전체`;
+  if (month) return `${year}年${month}月`;
+  return `${year}年 全体`;
 }
 
 function RecentProductsSection() {
@@ -57,11 +58,11 @@ function RecentProductsSection() {
       <div className="px-5 py-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
         <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
           <Package className="w-4 h-4 text-primary" />
-          최근 등록 상품
+          最近登録した商品
         </h3>
         <Link href="/admin/products">
           <span className="text-xs font-bold text-primary hover:underline cursor-pointer flex items-center gap-1">
-            전체보기 <ExternalLink className="w-3 h-3" />
+            すべて見る <ExternalLink className="w-3 h-3" />
           </span>
         </Link>
       </div>
@@ -70,7 +71,7 @@ function RecentProductsSection() {
           <Loader2 className="w-6 h-6 animate-spin text-primary" />
         </div>
       ) : products.length === 0 ? (
-        <div className="py-10 text-center text-slate-400 text-sm">등록된 상품이 없습니다.</div>
+        <div className="py-10 text-center text-slate-400 text-sm">登録された商品がありません。</div>
       ) : (
         <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-0 divide-x divide-slate-100">
           {products.map((p: any) => (
@@ -92,7 +93,7 @@ function RecentProductsSection() {
                     "absolute top-1 right-1 text-[9px] font-bold px-1.5 py-0.5 rounded-full",
                     p.it_use === "1" ? "bg-emerald-100 text-emerald-700" : "bg-red-100 text-red-600"
                   )}>
-                    {p.it_use === "1" ? "판매중" : "숨김"}
+                    {p.it_use === "1" ? "販売中" : "非表示"}
                   </span>
                 </div>
                 <p className="text-xs font-bold text-slate-800 truncate leading-tight mb-1" title={p.it_name}>
@@ -108,7 +109,7 @@ function RecentProductsSection() {
                 </p>
                 {p.it_time && (
                   <p className="text-[10px] text-slate-400 mt-0.5">
-                    {format(new Date(p.it_time), "MM.dd")} 등록
+                    {format(new Date(p.it_time), "MM.dd")} 登録
                   </p>
                 )}
               </div>
@@ -218,8 +219,8 @@ export default function AdminSettlement() {
     const BOM = "\uFEFF";
 
     let csv = BOM;
-    csv += `정산기간: ${periodLabel}\n\n`;
-    csv += "파트너사,담당자,주문번호,주문일시,상태,과세금액,면세금액,배송비,총결제금액,상품내역\n";
+    csv += `精算期間: ${periodLabel}\n\n`;
+    csv += "取引先,担当者,注文番号,注文日時,ステータス,課税金額,非課税金額,送料,お支払い合計,商品内訳\n";
 
     for (const partner of targets) {
       for (const order of partner.orders) {
@@ -232,26 +233,26 @@ export default function AdminSettlement() {
           const t = (Number(item.ct_price) || 0) * (Number(item.ct_qty) || 0);
           if (String(item.it_notax) === "1") oTaxFree += t; else oTaxable += t;
         }
-        csv += `"${partner.company_name || partner.mb_name}","${partner.mb_name}","${order.od_id}","${orderTime}","${order.od_status}",${oTaxable},${oTaxFree},${(order as any).od_send_cost || 0},${order.od_receipt_price},"${items}"\n`;
+        csv += `"${partner.company_name || partner.mb_name}","${partner.mb_name}","${order.od_id}","${orderTime}","${ja(order.od_status)}",${oTaxable},${oTaxFree},${(order as any).od_send_cost || 0},${order.od_receipt_price},"${items}"\n`;
       }
     }
 
     if (!partnerData) {
       csv += "\n";
-      csv += "=== 업체별 합계 ===\n";
-      csv += "파트너사,주문건수,과세금액,면세금액,부가세,총금액\n";
+      csv += "=== 取引先別合計 ===\n";
+      csv += "取引先,注文件数,課税金額,非課税金額,消費税,合計金額\n";
       for (const p of targets) {
         csv += `"${p.company_name || p.mb_name}",${p.total_orders},${p.taxable_amount},${p.tax_free_amount},${p.vat_amount},${p.total_amount}\n`;
       }
-      csv += `"전체 합계",${grandOrders},${grandTaxable},${grandTaxFree},${grandVat},${grandTotal}\n`;
+      csv += `"総合計",${grandOrders},${grandTaxable},${grandTaxFree},${grandVat},${grandTotal}\n`;
     }
 
     const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
-    const monthStr = selectedMonth ? String(selectedMonth).padStart(2, "0") : "전체";
-    const partnerName = partnerData ? (partnerData.company_name || partnerData.mb_name) : "전체";
-    const fileName = `정산내역_${partnerName}_${selectedYear}년${monthStr !== "전체" ? monthStr + "월" : monthStr}.csv`;
+    const monthStr = selectedMonth ? String(selectedMonth).padStart(2, "0") : "全体";
+    const partnerName = partnerData ? (partnerData.company_name || partnerData.mb_name) : "全体";
+    const fileName = `精算明細_${partnerName}_${selectedYear}年${monthStr !== "全体" ? monthStr + "月" : monthStr}.csv`;
     a.href = url;
     a.download = fileName;
     a.click();
@@ -268,8 +269,8 @@ export default function AdminSettlement() {
     <div className="animate-in fade-in duration-300 space-y-6">
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-black text-slate-900 tracking-tight">정산 관리</h1>
-          <p className="text-slate-500 mt-1 font-medium">업체별 주문 내역을 조회하고 정산 데이터를 다운로드합니다.</p>
+          <h1 className="text-3xl font-black text-slate-900 tracking-tight">精算管理</h1>
+          <p className="text-slate-500 mt-1 font-medium">取引先別の注文履歴を照会し、精算データをダウンロードします。</p>
         </div>
         <div className="flex items-center gap-3">
           <select
@@ -278,12 +279,12 @@ export default function AdminSettlement() {
             onChange={(e) => setPageSize(Number(e.target.value))}
           >
             {pageSizeOptions.map((size) => (
-              <option key={size} value={size}>{size}개씩 보기</option>
+              <option key={size} value={size}>{size}件ずつ表示</option>
             ))}
           </select>
           <Button onClick={() => downloadExcel()} disabled={partnerSummaries.length === 0} className="h-10">
             <Download className="w-4 h-4 mr-1.5" />
-            전체 엑셀 다운로드
+            全体Excelダウンロード
           </Button>
         </div>
       </div>
@@ -291,9 +292,9 @@ export default function AdminSettlement() {
       <Card className="p-5 space-y-4">
         <div className="flex items-center gap-2 mb-1">
           <Filter className="w-4 h-4 text-slate-500" />
-          <span className="text-sm font-bold text-slate-700">조회 조건</span>
+          <span className="text-sm font-bold text-slate-700">照会条件</span>
           <button onClick={clearFilters} className="ml-auto text-xs text-blue-600 hover:text-blue-800 font-bold flex items-center gap-1">
-            <X className="w-3 h-3" /> 초기화
+            <X className="w-3 h-3" /> リセット
           </button>
         </div>
 
@@ -303,7 +304,7 @@ export default function AdminSettlement() {
             value={partnerFilter}
             onChange={(e) => setPartnerFilter(e.target.value)}
           >
-            <option value="">전체 파트너사</option>
+            <option value="">すべての取引先</option>
             {partnersData?.partners?.map((p: any) => (
               <option key={p.mb_id} value={p.mb_id}>
                 {p.company_name || p.mb_name} ({p.mb_id})
@@ -317,7 +318,7 @@ export default function AdminSettlement() {
             onChange={(e) => setSelectedYear(Number(e.target.value))}
           >
             {years.map((y) => (
-              <option key={y} value={y}>{y}년</option>
+              <option key={y} value={y}>{y}年</option>
             ))}
           </select>
         </div>
@@ -332,7 +333,7 @@ export default function AdminSettlement() {
             )}
             onClick={() => setSelectedMonth(null)}
           >
-            전체
+            すべて
           </button>
           {months.map((m) => (
             <button
@@ -345,7 +346,7 @@ export default function AdminSettlement() {
               )}
               onClick={() => setSelectedMonth(m)}
             >
-              {m}월
+              {m}月
             </button>
           ))}
         </div>
@@ -355,32 +356,32 @@ export default function AdminSettlement() {
 
       <div className="flex items-center gap-2 text-sm text-slate-500">
         <span className="font-bold text-primary text-base">{periodLabel}</span>
-        <span>조회 결과</span>
+        <span>照会結果</span>
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
         <Card className="p-5 text-center">
-          <p className="text-xs text-slate-500 font-medium">파트너사</p>
+          <p className="text-xs text-slate-500 font-medium">取引先</p>
           <p className="text-2xl font-black text-slate-900 mt-1">{partnerSummaries.length}</p>
         </Card>
         <Card className="p-5 text-center">
-          <p className="text-xs text-slate-500 font-medium">주문건수</p>
-          <p className="text-2xl font-black text-slate-900 mt-1">{grandOrders}건</p>
+          <p className="text-xs text-slate-500 font-medium">注文件数</p>
+          <p className="text-2xl font-black text-slate-900 mt-1">{grandOrders}件</p>
         </Card>
         <Card className="p-5 text-center">
-          <p className="text-xs text-slate-500 font-medium">총 정산금액</p>
+          <p className="text-xs text-slate-500 font-medium">精算金額合計</p>
           <p className="text-2xl font-black text-primary mt-1 font-mono">{formatCurrency(grandTotal)}</p>
         </Card>
         <Card className="p-5 text-center">
-          <p className="text-xs text-slate-500 font-medium">과세 금액</p>
+          <p className="text-xs text-slate-500 font-medium">課税金額</p>
           <p className="text-2xl font-black text-slate-900 mt-1 font-mono">{formatCurrency(grandTaxable)}</p>
         </Card>
         <Card className="p-5 text-center">
-          <p className="text-xs text-slate-500 font-medium">면세 금액</p>
+          <p className="text-xs text-slate-500 font-medium">非課税金額</p>
           <p className="text-2xl font-black text-green-600 mt-1 font-mono">{formatCurrency(grandTaxFree)}</p>
         </Card>
         <Card className="p-5 text-center">
-          <p className="text-xs text-slate-500 font-medium">부가세 (VAT)</p>
+          <p className="text-xs text-slate-500 font-medium">消費税 (VAT)</p>
           <p className="text-2xl font-black text-orange-600 mt-1 font-mono">{formatCurrency(grandVat)}</p>
         </Card>
       </div>
@@ -392,8 +393,8 @@ export default function AdminSettlement() {
       ) : partnerSummaries.length === 0 ? (
         <Card className="py-20 text-center">
           <Receipt className="w-16 h-16 text-slate-200 mx-auto mb-4" />
-          <h3 className="text-xl font-bold text-slate-700">정산 내역이 없습니다</h3>
-          <p className="text-slate-500 mt-2">조회 기간이나 파트너를 변경해보세요.</p>
+          <h3 className="text-xl font-bold text-slate-700">精算明細がありません</h3>
+          <p className="text-slate-500 mt-2">照会期間や取引先を変更してお試しください。</p>
         </Card>
       ) : (
         <div className="space-y-3">
@@ -419,23 +420,23 @@ export default function AdminSettlement() {
                   </div>
                   <div className="flex items-center shrink-0">
                     <div className="text-right hidden sm:block w-16">
-                      <p className="text-xs text-slate-500">주문</p>
-                      <p className="font-bold text-slate-900 text-sm">{partner.total_orders}건</p>
+                      <p className="text-xs text-slate-500">注文</p>
+                      <p className="font-bold text-slate-900 text-sm">{partner.total_orders}件</p>
                     </div>
                     <div className="text-right hidden md:block w-24">
-                      <p className="text-xs text-slate-500">과세</p>
+                      <p className="text-xs text-slate-500">課税</p>
                       <p className="font-bold text-slate-900 text-sm font-mono">{formatCurrency(partner.taxable_amount)}</p>
                     </div>
                     <div className="text-right hidden md:block w-24">
-                      <p className="text-xs text-green-600">면세</p>
+                      <p className="text-xs text-green-600">非課税</p>
                       <p className="font-bold text-green-600 text-sm font-mono">{formatCurrency(partner.tax_free_amount)}</p>
                     </div>
                     <div className="text-right hidden lg:block w-24">
-                      <p className="text-xs text-orange-500">부가세</p>
+                      <p className="text-xs text-orange-500">消費税</p>
                       <p className="font-bold text-orange-600 text-sm font-mono">{formatCurrency(partner.vat_amount)}</p>
                     </div>
                     <div className="text-right w-28">
-                      <p className="text-xs text-slate-500">정산금액</p>
+                      <p className="text-xs text-slate-500">精算金額</p>
                       <p className="font-black text-primary text-lg font-mono">{formatCurrency(partner.total_amount)}</p>
                     </div>
                     <Button
@@ -444,7 +445,7 @@ export default function AdminSettlement() {
                       className="h-8 text-xs shrink-0"
                       onClick={(e: any) => { e.stopPropagation(); downloadExcel(partner); }}
                     >
-                      <FileSpreadsheet className="w-3.5 h-3.5 mr-1" /> 엑셀
+                      <FileSpreadsheet className="w-3.5 h-3.5 mr-1" /> Excel
                     </Button>
                   </div>
                 </div>
@@ -452,24 +453,24 @@ export default function AdminSettlement() {
                 {isExpanded && (
                   <div className="border-t border-slate-200">
                     <div className="px-5 py-3 bg-slate-50/80 flex items-center gap-4 text-xs font-bold text-slate-500">
-                      <span>상태별:</span>
+                      <span>ステータス別:</span>
                       {Object.entries(partner.status_counts).map(([st, cnt]) => (
-                        <Badge key={st} className={cn("text-[10px]", getStatusColor(st))}>{st} {cnt}</Badge>
+                        <Badge key={st} className={cn("text-[10px]", getStatusColor(st))}>{ja(st)} {cnt}</Badge>
                       ))}
                     </div>
                     <div className="overflow-x-auto">
                       <table className="w-full text-left border-collapse min-w-[900px]">
                         <thead>
                           <tr className="bg-slate-50 border-b border-slate-100">
-                            <th className="px-4 py-2.5 text-xs font-bold text-slate-500">주문번호</th>
-                            <th className="px-4 py-2.5 text-xs font-bold text-slate-500">주문일시</th>
-                            <th className="px-4 py-2.5 text-xs font-bold text-slate-500">상품내역</th>
-                            <th className="px-4 py-2.5 text-xs font-bold text-slate-500 text-center">과세구분</th>
-                            <th className="px-4 py-2.5 text-xs font-bold text-slate-500 text-right">과세</th>
-                            <th className="px-4 py-2.5 text-xs font-bold text-slate-500 text-right">면세</th>
-                            <th className="px-4 py-2.5 text-xs font-bold text-slate-500 text-right">배송비</th>
-                            <th className="px-4 py-2.5 text-xs font-bold text-slate-500 text-right">총액</th>
-                            <th className="px-4 py-2.5 text-xs font-bold text-slate-500 text-center">상태</th>
+                            <th className="px-4 py-2.5 text-xs font-bold text-slate-500">注文番号</th>
+                            <th className="px-4 py-2.5 text-xs font-bold text-slate-500">注文日時</th>
+                            <th className="px-4 py-2.5 text-xs font-bold text-slate-500">商品内訳</th>
+                            <th className="px-4 py-2.5 text-xs font-bold text-slate-500 text-center">課税区分</th>
+                            <th className="px-4 py-2.5 text-xs font-bold text-slate-500 text-right">課税</th>
+                            <th className="px-4 py-2.5 text-xs font-bold text-slate-500 text-right">非課税</th>
+                            <th className="px-4 py-2.5 text-xs font-bold text-slate-500 text-right">送料</th>
+                            <th className="px-4 py-2.5 text-xs font-bold text-slate-500 text-right">合計</th>
+                            <th className="px-4 py-2.5 text-xs font-bold text-slate-500 text-center">ステータス</th>
                           </tr>
                         </thead>
                         <tbody className="divide-y divide-slate-100">
@@ -495,12 +496,12 @@ export default function AdminSettlement() {
                                 <td className="px-4 py-3">
                                   <p className="text-sm text-slate-700 truncate max-w-[200px]">
                                     {items.length > 0
-                                      ? `${items[0].it_name}${items.length > 1 ? ` 외 ${items.length - 1}건` : ""}`
+                                      ? `${items[0].it_name}${items.length > 1 ? ` 他${items.length - 1}件` : ""}`
                                       : "-"}
                                   </p>
                                 </td>
                                 <td className="px-4 py-3 text-center">
-                                  <Badge className={cn("text-[10px]", taxLabel === "과세" ? "bg-slate-100 text-slate-600" : taxLabel === "면세" ? "bg-green-100 text-green-700" : taxLabel === "혼합" ? "bg-yellow-100 text-yellow-700" : "bg-slate-50 text-slate-400")}>{taxLabel}</Badge>
+                                  <Badge className={cn("text-[10px]", taxLabel === "과세" ? "bg-slate-100 text-slate-600" : taxLabel === "면세" ? "bg-green-100 text-green-700" : taxLabel === "혼합" ? "bg-yellow-100 text-yellow-700" : "bg-slate-50 text-slate-400")}>{ja(taxLabel)}</Badge>
                                 </td>
                                 <td className="px-4 py-3 text-right text-sm font-bold text-slate-900 whitespace-nowrap">
                                   {orderTaxable > 0 ? formatCurrency(orderTaxable) : "-"}
@@ -522,7 +523,7 @@ export default function AdminSettlement() {
                           })}
                           <tr className="bg-slate-50 border-t-2 border-slate-200">
                             <td colSpan={3} className="px-4 py-3 font-bold text-slate-600 text-sm">
-                              소계 ({partner.total_orders}건)
+                              小計 ({partner.total_orders}件)
                             </td>
                             <td></td>
                             <td className="px-4 py-3 text-right font-bold text-slate-900 text-sm whitespace-nowrap">
@@ -541,7 +542,7 @@ export default function AdminSettlement() {
                           </tr>
                           <tr className="bg-orange-50/50">
                             <td colSpan={4} className="px-4 py-2 text-right text-xs font-bold text-orange-600">
-                              부가세 (과세금액의 1/11)
+                              消費税 (課税金額の1/11)
                             </td>
                             <td className="px-4 py-2 text-right text-xs font-bold text-orange-600 whitespace-nowrap">
                               {formatCurrency(partner.vat_amount)}

@@ -44,23 +44,23 @@ function PointHistoryModal({ mb_id, onClose }: { mb_id: string; onClose: () => v
         body: JSON.stringify(body),
       }),
     onSuccess: (res: any) => {
-      toast({ title: `포인트 ${isGain ? "지급" : "차감"} 완료 — 현재 잔액: ${Number(res.new_point).toLocaleString()}P` });
+      toast({ title: `ポイント${isGain ? "付与" : "差引"}完了 — 現在の残高: ${Number(res.new_point).toLocaleString()}P` });
       setPointInput("");
       setContentInput("");
       refetch();
       queryClient.invalidateQueries({ queryKey: ["admin-points"] });
     },
-    onError: (err: any) => toast({ title: err?.message || "처리 실패", variant: "destructive" }),
+    onError: (err: any) => toast({ title: err?.message || "処理に失敗しました", variant: "destructive" }),
   });
 
   const handleGrant = () => {
     const pointNum = Number(pointInput);
     if (!pointNum || pointNum <= 0) {
-      toast({ title: "포인트 금액을 입력해주세요", variant: "destructive" });
+      toast({ title: "ポイント金額を入力してください", variant: "destructive" });
       return;
     }
     if (!contentInput.trim()) {
-      toast({ title: "내용을 입력해주세요", variant: "destructive" });
+      toast({ title: "内容を入力してください", variant: "destructive" });
       return;
     }
     const finalPoint = isGain ? pointNum : -pointNum;
@@ -80,12 +80,12 @@ function PointHistoryModal({ mb_id, onClose }: { mb_id: string; onClose: () => v
         <div className="p-6 border-b flex items-center justify-between">
           <div>
             <h2 className="text-xl font-bold text-slate-900">
-              {member?.company_name || mb_id} 포인트 내역
+              {member?.company_name || mb_id} のポイント履歴
             </h2>
             {member && (
               <p className="text-sm text-slate-500 mt-0.5">
                 {mb_id} ({member.mb_name})
-                <span className="ml-3 text-amber-600 font-bold">현재 {member.mb_point.toLocaleString()}P 보유</span>
+                <span className="ml-3 text-amber-600 font-bold">現在 {member.mb_point.toLocaleString()}P 保有</span>
               </p>
             )}
           </div>
@@ -95,33 +95,33 @@ function PointHistoryModal({ mb_id, onClose }: { mb_id: string; onClose: () => v
         </div>
 
         <div className="p-4 border-b bg-slate-50">
-          <p className="text-sm font-bold text-slate-700 mb-3">포인트 지급/차감</p>
+          <p className="text-sm font-bold text-slate-700 mb-3">ポイント付与/差引</p>
           <div className="flex flex-wrap gap-2 items-end">
             <div className="flex rounded-lg border overflow-hidden">
               <button onClick={() => setIsGain(true)}
                 className={`px-4 py-2 text-sm font-medium transition-colors ${isGain ? "bg-emerald-500 text-white" : "bg-white text-slate-600 hover:bg-slate-50"}`}>
-                지급
+                付与
               </button>
               <button onClick={() => setIsGain(false)}
                 className={`px-4 py-2 text-sm font-medium transition-colors ${!isGain ? "bg-red-500 text-white" : "bg-white text-slate-600 hover:bg-slate-50"}`}>
-                차감
+                差引
               </button>
             </div>
             <input
-              type="number" min="1" placeholder="포인트 금액"
+              type="number" min="1" placeholder="ポイント金額"
               value={pointInput}
               onChange={e => setPointInput(e.target.value)}
               className="px-3 py-2 border rounded-lg text-sm w-32"
             />
             <input
-              type="text" placeholder="내용 (예: 이벤트 지급)"
+              type="text" placeholder="内容 (例: イベント付与)"
               value={contentInput}
               onChange={e => setContentInput(e.target.value)}
               className="px-3 py-2 border rounded-lg text-sm flex-1 min-w-40"
             />
             <button onClick={handleGrant} disabled={grantMutation.isPending}
               className={`px-4 py-2 text-sm font-bold rounded-lg text-white transition-colors disabled:opacity-60 ${isGain ? "bg-emerald-500 hover:bg-emerald-600" : "bg-red-500 hover:bg-red-600"}`}>
-              {grantMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : (isGain ? "지급" : "차감")}
+              {grantMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : (isGain ? "付与" : "差引")}
             </button>
           </div>
         </div>
@@ -130,7 +130,7 @@ function PointHistoryModal({ mb_id, onClose }: { mb_id: string; onClose: () => v
           {isLoading ? (
             <div className="py-12 flex justify-center"><Loader2 className="w-6 h-6 animate-spin text-primary" /></div>
           ) : history.length === 0 ? (
-            <div className="py-12 text-center text-slate-400">포인트 내역이 없습니다.</div>
+            <div className="py-12 text-center text-slate-400">ポイント履歴がありません。</div>
           ) : (
             <div className="space-y-2">
               {history.map(h => {
@@ -161,10 +161,10 @@ function PointHistoryModal({ mb_id, onClose }: { mb_id: string; onClose: () => v
           {totalPages > 1 && (
             <div className="flex justify-center gap-2 mt-4">
               <button onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1}
-                className="px-3 py-1.5 text-sm font-medium rounded-lg border disabled:opacity-40 hover:bg-slate-50">이전</button>
+                className="px-3 py-1.5 text-sm font-medium rounded-lg border disabled:opacity-40 hover:bg-slate-50">前へ</button>
               <span className="px-3 py-1.5 text-sm font-medium">{page} / {totalPages}</span>
               <button onClick={() => setPage(p => Math.min(totalPages, p + 1))} disabled={page === totalPages}
-                className="px-3 py-1.5 text-sm font-medium rounded-lg border disabled:opacity-40 hover:bg-slate-50">다음</button>
+                className="px-3 py-1.5 text-sm font-medium rounded-lg border disabled:opacity-40 hover:bg-slate-50">次へ</button>
             </div>
           )}
         </div>
@@ -200,8 +200,8 @@ export default function AdminPoints() {
   return (
     <div className="animate-in fade-in duration-300 max-w-4xl mx-auto">
       <div className="mb-8">
-        <h1 className="text-3xl font-black text-slate-900 tracking-tight">포인트 관리</h1>
-        <p className="text-slate-500 mt-2 font-medium">회원별 포인트 현황을 확인하고 지급/차감할 수 있습니다.</p>
+        <h1 className="text-3xl font-black text-slate-900 tracking-tight">ポイント管理</h1>
+        <p className="text-slate-500 mt-2 font-medium">会員ごとのポイント状況を確認し、付与・差引ができます。</p>
       </div>
 
       <Card className="p-4 mb-6">
@@ -210,19 +210,19 @@ export default function AdminPoints() {
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
             <input
               className="w-full pl-9 pr-3 py-2.5 border rounded-lg text-sm"
-              placeholder="아이디, 이름, 업체명으로 검색"
+              placeholder="ID、お名前、取引先名で検索"
               value={searchInput}
               onChange={e => setSearchInput(e.target.value)}
             />
           </div>
           <button type="submit"
             className="px-4 py-2.5 bg-primary text-white rounded-lg text-sm font-bold hover:bg-primary/90">
-            검색
+            検索
           </button>
           {search && (
             <button type="button" onClick={() => { setSearch(""); setSearchInput(""); setPage(1); }}
               className="px-4 py-2.5 border rounded-lg text-sm font-medium text-slate-600 hover:bg-slate-50">
-              초기화
+              リセット
             </button>
           )}
         </form>
@@ -234,7 +234,7 @@ export default function AdminPoints() {
         ) : members.length === 0 ? (
           <div className="py-16 text-center">
             <Coins className="w-14 h-14 text-slate-200 mx-auto mb-4" />
-            <p className="text-slate-400 font-medium">검색 결과가 없습니다.</p>
+            <p className="text-slate-400 font-medium">検索結果がありません。</p>
           </div>
         ) : (
           <>
@@ -242,10 +242,10 @@ export default function AdminPoints() {
               <table className="w-full">
                 <thead className="bg-slate-50 border-b">
                   <tr>
-                    <th className="px-4 py-3 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">업체명</th>
-                    <th className="px-4 py-3 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">아이디 / 이름</th>
-                    <th className="px-4 py-3 text-right text-xs font-bold text-slate-500 uppercase tracking-wider">보유 포인트</th>
-                    <th className="px-4 py-3 text-center text-xs font-bold text-slate-500 uppercase tracking-wider">관리</th>
+                    <th className="px-4 py-3 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">取引先名</th>
+                    <th className="px-4 py-3 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">ID / お名前</th>
+                    <th className="px-4 py-3 text-right text-xs font-bold text-slate-500 uppercase tracking-wider">保有ポイント</th>
+                    <th className="px-4 py-3 text-center text-xs font-bold text-slate-500 uppercase tracking-wider">管理</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100">
@@ -266,7 +266,7 @@ export default function AdminPoints() {
                           onClick={() => setSelectedMbId(m.mb_id)}
                           className="px-3 py-1.5 text-sm font-medium border rounded-lg hover:bg-slate-100 transition-colors text-slate-700"
                         >
-                          내역/지급
+                          履歴/付与
                         </button>
                       </td>
                     </tr>
@@ -275,14 +275,14 @@ export default function AdminPoints() {
               </table>
             </div>
             <div className="px-4 py-3 border-t bg-slate-50 flex items-center justify-between">
-              <span className="text-sm text-slate-500">총 {total}명</span>
+              <span className="text-sm text-slate-500">合計 {total}名</span>
               {totalPages > 1 && (
                 <div className="flex gap-2">
                   <button onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1}
-                    className="px-3 py-1.5 text-sm font-medium rounded-lg border disabled:opacity-40 hover:bg-white">이전</button>
+                    className="px-3 py-1.5 text-sm font-medium rounded-lg border disabled:opacity-40 hover:bg-white">前へ</button>
                   <span className="px-3 py-1.5 text-sm font-medium">{page} / {totalPages}</span>
                   <button onClick={() => setPage(p => Math.min(totalPages, p + 1))} disabled={page === totalPages}
-                    className="px-3 py-1.5 text-sm font-medium rounded-lg border disabled:opacity-40 hover:bg-white">다음</button>
+                    className="px-3 py-1.5 text-sm font-medium rounded-lg border disabled:opacity-40 hover:bg-white">次へ</button>
                 </div>
               )}
             </div>

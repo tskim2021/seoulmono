@@ -272,17 +272,17 @@ export async function getTrackingInfo(trackingNumber: string): Promise<TrackingI
  */
 function getStatusText(status: number): string {
   const texts: Record<number, string> = {
-    0: "추적 정보 없음",
-    1: "정보 수신됨",
-    2: "운송 중",
-    3: "픽업 완료",
-    4: "배송 중",
-    5: "배송 실패",
-    6: "배송 완료",
-    7: "예외 발생",
-    8: "만료됨",
+    0: "追跡情報なし",
+    1: "情報受信済み",
+    2: "輸送中",
+    3: "集荷完了",
+    4: "配達中",
+    5: "配達失敗",
+    6: "配達完了",
+    7: "例外発生",
+    8: "期限切れ",
   };
-  return texts[status] || "알 수 없음";
+  return texts[status] || "不明";
 }
 
 /**
@@ -291,20 +291,20 @@ function getStatusText(status: number): string {
 function getSubStatusText(subStatus: number): string {
   const texts: Record<number, string> = {
     0: "",
-    1: "정보 수신",
-    2: "발송 준비",
-    3: "픽업 완료",
-    10: "운송 중",
-    11: "도착",
-    12: "통관 중",
-    13: "통관 완료",
-    20: "배송 중",
-    30: "배송 실패",
-    31: "재배송 예정",
-    35: "배송 완료",
-    36: "서명 완료",
-    40: "예외 발생",
-    50: "만료됨",
+    1: "情報受信",
+    2: "発送準備",
+    3: "集荷完了",
+    10: "輸送中",
+    11: "到着",
+    12: "通関中",
+    13: "通関完了",
+    20: "配達中",
+    30: "配達失敗",
+    31: "再配達予定",
+    35: "配達完了",
+    36: "受領サイン完了",
+    40: "例外発生",
+    50: "期限切れ",
   };
   return texts[subStatus] || "";
 }

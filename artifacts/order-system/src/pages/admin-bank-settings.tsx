@@ -53,10 +53,10 @@ export default function AdminBankSettings() {
       }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["settings-payment"] });
-      toast({ title: "결제수단 설정이 저장되었습니다" });
+      toast({ title: "決済方法の設定を保存しました" });
     },
     onError: () => {
-      toast({ title: "저장 실패", variant: "destructive" });
+      toast({ title: "保存に失敗しました", variant: "destructive" });
     },
   });
 
@@ -100,10 +100,10 @@ export default function AdminBankSettings() {
       }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["shop-admin-settings"] });
-      toast({ title: "카카오 채널 추가 포인트가 저장되었습니다" });
+      toast({ title: "カカオチャンネル追加ポイントを保存しました" });
     },
     onError: () => {
-      toast({ title: "저장 실패", variant: "destructive" });
+      toast({ title: "保存に失敗しました", variant: "destructive" });
     },
   });
 
@@ -130,10 +130,10 @@ export default function AdminBankSettings() {
       }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["settings-signup-coupon"] });
-      toast({ title: "신규 가입 쿠폰이 저장되었습니다" });
+      toast({ title: "新規登録クーポンを保存しました" });
     },
     onError: () => {
-      toast({ title: "저장 실패", variant: "destructive" });
+      toast({ title: "保存に失敗しました", variant: "destructive" });
     },
   });
 
@@ -146,10 +146,10 @@ export default function AdminBankSettings() {
       }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["settings-general"] });
-      toast({ title: "신규 가입 포인트가 저장되었습니다" });
+      toast({ title: "新規登録ポイントを保存しました" });
     },
     onError: () => {
-      toast({ title: "저장 실패", variant: "destructive" });
+      toast({ title: "保存に失敗しました", variant: "destructive" });
     },
   });
 
@@ -168,9 +168,9 @@ export default function AdminBankSettings() {
     try {
       await updateSettings.mutateAsync({ data: form });
       queryClient.invalidateQueries({ queryKey: getGetBankSettingsQueryKey() });
-      toast({ title: "입금계좌 정보가 저장되었습니다" });
+      toast({ title: "振込口座情報を保存しました" });
     } catch {
-      toast({ title: "저장 실패", variant: "destructive" });
+      toast({ title: "保存に失敗しました", variant: "destructive" });
     }
   };
 
@@ -214,10 +214,10 @@ export default function AdminBankSettings() {
       }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["settings-footer-config"] });
-      toast({ title: "사업자 정보가 저장되었습니다" });
+      toast({ title: "事業者情報を保存しました" });
     },
     onError: () => {
-      toast({ title: "저장 실패", variant: "destructive" });
+      toast({ title: "保存に失敗しました", variant: "destructive" });
     },
   });
 
@@ -227,8 +227,8 @@ export default function AdminBankSettings() {
   return (
     <div className="animate-in fade-in duration-300">
       <div className="mb-8">
-        <h1 className="text-3xl font-black text-slate-900 tracking-tight">시스템 설정</h1>
-        <p className="text-slate-500 mt-2 font-medium">입금계좌 및 회원 관련 기본 설정을 관리합니다.</p>
+        <h1 className="text-3xl font-black text-slate-900 tracking-tight">システム設定</h1>
+        <p className="text-slate-500 mt-2 font-medium">振込口座および会員関連の基本設定を管理します。</p>
       </div>
 
       {/* 결제수단 설정 */}
@@ -238,8 +238,8 @@ export default function AdminBankSettings() {
             <CreditCard className="w-6 h-6 text-blue-600" />
           </div>
           <div>
-            <h2 className="text-lg font-bold text-slate-900">결제수단 설정</h2>
-            <p className="text-sm text-slate-500">쇼핑몰 결제 방법을 활성화/비활성화합니다.</p>
+            <h2 className="text-lg font-bold text-slate-900">決済方法の設定</h2>
+            <p className="text-sm text-slate-500">ショップの決済方法を有効化/無効化します。</p>
           </div>
         </div>
 
@@ -251,8 +251,8 @@ export default function AdminBankSettings() {
                 <Building2 className="w-5 h-5 text-emerald-600" />
               </div>
               <div>
-                <p className="font-bold text-slate-800 text-sm">무통장입금</p>
-                <p className="text-xs text-slate-500">주문 후 계좌이체로 입금</p>
+                <p className="font-bold text-slate-800 text-sm">銀行振込</p>
+                <p className="text-xs text-slate-500">注文後に口座振込で入金</p>
               </div>
             </div>
             <button
@@ -264,7 +264,7 @@ export default function AdminBankSettings() {
                 ? <ToggleRight className="w-8 h-8 text-emerald-500" />
                 : <ToggleLeft className="w-8 h-8 text-slate-300" />}
               <span className={payForm.bank_enabled ? "text-emerald-600" : "text-slate-400"}>
-                {payForm.bank_enabled ? "사용" : "미사용"}
+                {payForm.bank_enabled ? "使用" : "未使用"}
               </span>
             </button>
           </div>
@@ -276,8 +276,8 @@ export default function AdminBankSettings() {
                 <CreditCard className="w-5 h-5 text-blue-600" />
               </div>
               <div>
-                <p className="font-bold text-slate-800 text-sm">신용카드 (KG이니시스)</p>
-                <p className="text-xs text-slate-500">이니시스 직접 연동 카드 결제</p>
+                <p className="font-bold text-slate-800 text-sm">クレジットカード (KGイニシス)</p>
+                <p className="text-xs text-slate-500">イニシス直接連携のカード決済</p>
               </div>
             </div>
             <button
@@ -289,7 +289,7 @@ export default function AdminBankSettings() {
                 ? <ToggleRight className="w-8 h-8 text-blue-500" />
                 : <ToggleLeft className="w-8 h-8 text-slate-300" />}
               <span className={payForm.card_enabled ? "text-blue-600" : "text-slate-400"}>
-                {payForm.card_enabled ? "사용" : "미사용"}
+                {payForm.card_enabled ? "使用" : "未使用"}
               </span>
             </button>
           </div>
@@ -297,22 +297,22 @@ export default function AdminBankSettings() {
           {/* 카드 사용 시 이니시스 직접 연동 설정 */}
           {payForm.card_enabled && (
             <div className="mt-2 p-4 bg-blue-50 border border-blue-200 rounded-xl space-y-4">
-              <p className="text-xs font-bold text-blue-700 uppercase tracking-wide">KG이니시스 직접 연동 설정</p>
+              <p className="text-xs font-bold text-blue-700 uppercase tracking-wide">KGイニシス直接連携設定</p>
               <div>
                 <label className="block text-sm font-bold text-slate-700 mb-2">
-                  이니시스 상점아이디 (MID) <span className="text-red-500">*</span>
+                  イニシス店舗ID (MID) <span className="text-red-500">*</span>
                 </label>
                 <input
                   className="w-full px-4 py-3 border-2 rounded-xl text-sm focus:outline-none focus:border-blue-500"
-                  placeholder="INIpayTest (테스트) 또는 실제 상점아이디"
+                  placeholder="INIpayTest (テスト) または実際の店舗ID"
                   value={payForm.inicis_mid}
                   onChange={e => setPayForm(f => ({ ...f, inicis_mid: e.target.value, portone_imp_code: e.target.value }))}
                 />
               </div>
               <p className="text-xs text-blue-600">
-                이니시스에서 발급받은 상점아이디(MID)를 입력하세요.<br />
-                테스트 환경에서는 <strong>INIpayTest</strong>를 사용합니다.<br />
-                운영 전환 시 서버 환경변수 INICIS_MID와 INICIS_SIGN_KEY도 설정해주세요.
+                イニシスから発行された店舗ID(MID)を入力してください。<br />
+                テスト環境では <strong>INIpayTest</strong> を使用します。<br />
+                本番運用への切り替え時は、サーバー環境変数 INICIS_MID と INICIS_SIGN_KEY も設定してください。
               </p>
             </div>
           )}
@@ -325,7 +325,7 @@ export default function AdminBankSettings() {
             className="flex items-center gap-2"
           >
             {updatePaySettings.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
-            저장하기
+            保存する
           </Button>
         </div>
       </Card>
@@ -336,33 +336,33 @@ export default function AdminBankSettings() {
             <Ticket className="w-6 h-6 text-purple-600" />
           </div>
           <div>
-            <h2 className="text-lg font-bold text-slate-900">신규 가입 쿠폰</h2>
-            <p className="text-sm text-slate-500">파트너사 신규 가입 승인 시 자동으로 발급되는 쿠폰</p>
+            <h2 className="text-lg font-bold text-slate-900">新規登録クーポン</h2>
+            <p className="text-sm text-slate-500">取引先の新規登録承認時に自動発行されるクーポン</p>
           </div>
         </div>
         <div>
-          <label className="block text-sm font-bold text-slate-700 mb-2">현재 설정된 쿠폰</label>
+          <label className="block text-sm font-bold text-slate-700 mb-2">現在設定されているクーポン</label>
           {currentCoupon ? (
             <div className="flex items-center gap-3 px-4 py-3 bg-purple-50 border-2 border-purple-200 rounded-xl">
               <Ticket className="w-5 h-5 text-purple-600 flex-shrink-0" />
               <div className="flex-1 min-w-0">
                 <p className="font-bold text-purple-900 text-sm">{currentCoupon.cz_subject}</p>
                 <p className="text-xs text-purple-600 mt-0.5">
-                  {currentCoupon.cp_type === 1 ? `${currentCoupon.cp_price}% 할인` : `${Number(currentCoupon.cp_price).toLocaleString()}원 할인`}
+                  {currentCoupon.cp_type === 1 ? `${currentCoupon.cp_price}%割引` : `${Number(currentCoupon.cp_price).toLocaleString()}円割引`}
                 </p>
               </div>
             </div>
           ) : (
             <div className="flex items-center gap-3 px-4 py-3 bg-slate-50 border-2 border-slate-200 rounded-xl text-sm text-slate-400">
               <Ticket className="w-5 h-5 text-slate-300" />
-              사용 안 함
+              使用しない
             </div>
           )}
           <button
             onClick={() => navigate("/admin/coupons")}
             className="mt-2 flex items-center gap-1 text-xs text-primary hover:underline font-medium"
           >
-            쿠폰 관리 메뉴에서 변경
+            クーポン管理メニューで変更
             <ArrowRight className="w-3 h-3" />
           </button>
         </div>
@@ -374,13 +374,13 @@ export default function AdminBankSettings() {
             <Gift className="w-6 h-6 text-emerald-600" />
           </div>
           <div>
-            <h2 className="text-lg font-bold text-slate-900">신규 가입 포인트</h2>
-            <p className="text-sm text-slate-500">파트너사 신규 가입 승인 시 자동으로 지급되는 포인트</p>
+            <h2 className="text-lg font-bold text-slate-900">新規登録ポイント</h2>
+            <p className="text-sm text-slate-500">取引先の新規登録承認時に自動付与されるポイント</p>
           </div>
         </div>
         <div className="flex items-center gap-4">
           <div className="flex-1">
-            <label className="block text-sm font-bold text-slate-700 mb-2">지급 포인트</label>
+            <label className="block text-sm font-bold text-slate-700 mb-2">付与ポイント</label>
             <div className="relative">
               <input
                 type="text"
@@ -394,7 +394,7 @@ export default function AdminBankSettings() {
               />
               <span className="absolute right-4 top-1/2 -translate-y-1/2 text-sm font-bold text-slate-400">P</span>
             </div>
-            <p className="text-xs text-slate-400 mt-1">0 입력 시 포인트를 지급하지 않습니다.</p>
+            <p className="text-xs text-slate-400 mt-1">0を入力するとポイントを付与しません。</p>
           </div>
           <div className="pt-6">
             <Button
@@ -403,7 +403,7 @@ export default function AdminBankSettings() {
               className="flex items-center gap-2 h-12 px-6"
             >
               {updateGeneral.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
-              저장
+              保存
             </Button>
           </div>
         </div>
@@ -416,13 +416,13 @@ export default function AdminBankSettings() {
             <MessageCircle className="w-6 h-6 text-yellow-500" />
           </div>
           <div>
-            <h2 className="text-lg font-bold text-slate-900">카카오 채널 추가 포인트</h2>
-            <p className="text-sm text-slate-500">쇼핑몰 메인에서 카카오 채널 친구 추가 시 지급되는 포인트</p>
+            <h2 className="text-lg font-bold text-slate-900">カカオチャンネル追加ポイント</h2>
+            <p className="text-sm text-slate-500">ショップのトップでカカオチャンネルを友だち追加した際に付与されるポイント</p>
           </div>
         </div>
         <div className="flex items-center gap-4">
           <div className="flex-1">
-            <label className="block text-sm font-bold text-slate-700 mb-2">지급 포인트</label>
+            <label className="block text-sm font-bold text-slate-700 mb-2">付与ポイント</label>
             <div className="relative">
               <input
                 type="text"
@@ -436,7 +436,7 @@ export default function AdminBankSettings() {
               />
               <span className="absolute right-4 top-1/2 -translate-y-1/2 text-sm font-bold text-slate-400">P</span>
             </div>
-            <p className="text-xs text-slate-400 mt-1">0 입력 시 포인트를 지급하지 않습니다.</p>
+            <p className="text-xs text-slate-400 mt-1">0を入力するとポイントを付与しません。</p>
           </div>
           <div className="pt-6">
             <Button
@@ -445,7 +445,7 @@ export default function AdminBankSettings() {
               className="flex items-center gap-2 h-12 px-6"
             >
               {updateKakaoPoint.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
-              저장
+              保存
             </Button>
           </div>
         </div>
@@ -457,51 +457,51 @@ export default function AdminBankSettings() {
             <Building2 className="w-6 h-6 text-primary" />
           </div>
           <div>
-            <h2 className="text-lg font-bold text-slate-900">입금 계좌 정보</h2>
-            <p className="text-sm text-slate-500">주문 시 파트너사에게 표시됩니다.</p>
+            <h2 className="text-lg font-bold text-slate-900">振込口座情報</h2>
+            <p className="text-sm text-slate-500">注文時に取引先へ表示されます。</p>
           </div>
         </div>
 
         <div className="space-y-6">
           <div>
-            <label className="block text-sm font-bold text-slate-700 mb-2">은행명 <span className="text-red-500">*</span></label>
+            <label className="block text-sm font-bold text-slate-700 mb-2">銀行名 <span className="text-red-500">*</span></label>
             <input
               className="w-full px-4 py-3 border-2 rounded-xl text-sm transition-all focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/10"
-              placeholder="예: 국민은행, 신한은행, 기업은행"
+              placeholder="例: 三菱UFJ銀行、三井住友銀行、みずほ銀行"
               value={form.bank_name}
               onChange={e => setForm(f => ({ ...f, bank_name: e.target.value }))}
             />
           </div>
           <div>
-            <label className="block text-sm font-bold text-slate-700 mb-2">계좌번호 <span className="text-red-500">*</span></label>
+            <label className="block text-sm font-bold text-slate-700 mb-2">口座番号 <span className="text-red-500">*</span></label>
             <input
               className="w-full px-4 py-3 border-2 rounded-xl text-sm transition-all focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/10"
-              placeholder="예: 123-456-789012"
+              placeholder="例: 123-456-789012"
               value={form.account_number}
               onChange={e => setForm(f => ({ ...f, account_number: e.target.value }))}
             />
           </div>
           <div>
-            <label className="block text-sm font-bold text-slate-700 mb-2">예금주 <span className="text-red-500">*</span></label>
+            <label className="block text-sm font-bold text-slate-700 mb-2">口座名義 <span className="text-red-500">*</span></label>
             <input
               className="w-full px-4 py-3 border-2 rounded-xl text-sm transition-all focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/10"
-              placeholder="예: (주)ソウルモノ"
+              placeholder="例: 株式会社ソウルモノ"
               value={form.account_holder}
               onChange={e => setForm(f => ({ ...f, account_holder: e.target.value }))}
             />
           </div>
           <div>
-            <label className="block text-sm font-bold text-slate-700 mb-2">안내 메모</label>
+            <label className="block text-sm font-bold text-slate-700 mb-2">案内メモ</label>
             <RichMemoEditor
               value={form.memo}
               onChange={html => setForm(f => ({ ...f, memo: html }))}
             />
-            <p className="text-xs text-slate-400 mt-1">굵기·기울임·밑줄·글자색 서식 적용 가능. 파트너사 화면에 그대로 표시됩니다.</p>
+            <p className="text-xs text-slate-400 mt-1">太字・斜体・下線・文字色の書式を適用できます。取引先の画面にそのまま表示されます。</p>
           </div>
         </div>
 
         <div className="mt-8 pt-6 border-t border-slate-100 flex items-center justify-between">
-          <p className="text-sm text-slate-400">변경사항은 저장 후 즉시 반영됩니다.</p>
+          <p className="text-sm text-slate-400">変更内容は保存後すぐに反映されます。</p>
           <Button
             size="lg"
             onClick={handleSave}
@@ -509,9 +509,9 @@ export default function AdminBankSettings() {
             className="flex items-center gap-2"
           >
             {updateSettings.isPending ? (
-              <><Loader2 className="w-4 h-4 animate-spin" /> 저장 중...</>
+              <><Loader2 className="w-4 h-4 animate-spin" /> 保存中...</>
             ) : (
-              <><Save className="w-4 h-4" /> 저장하기</>
+              <><Save className="w-4 h-4" /> 保存する</>
             )}
           </Button>
         </div>
@@ -519,16 +519,16 @@ export default function AdminBankSettings() {
 
       {(form.bank_name || form.account_number) && (
         <Card className="max-w-2xl mt-8 p-6">
-          <h3 className="text-sm font-bold text-slate-500 mb-4">미리보기 (파트너사에게 이렇게 표시됩니다)</h3>
+          <h3 className="text-sm font-bold text-slate-500 mb-4">プレビュー (取引先にはこのように表示されます)</h3>
           <div className="bg-blue-50 border border-blue-200 rounded-xl p-5">
             <div className="flex items-center gap-2 mb-3">
               <Building2 className="w-5 h-5 text-blue-600" />
-              <h4 className="font-bold text-blue-900">무통장입금 계좌 안내</h4>
+              <h4 className="font-bold text-blue-900">銀行振込口座のご案内</h4>
             </div>
             <div className="space-y-1.5 text-sm">
-              {form.bank_name && <p className="text-blue-800"><span className="font-semibold">은행:</span> {form.bank_name}</p>}
-              {form.account_number && <p className="text-blue-800"><span className="font-semibold">계좌번호:</span> {form.account_number}</p>}
-              {form.account_holder && <p className="text-blue-800"><span className="font-semibold">예금주:</span> {form.account_holder}</p>}
+              {form.bank_name && <p className="text-blue-800"><span className="font-semibold">銀行:</span> {form.bank_name}</p>}
+              {form.account_number && <p className="text-blue-800"><span className="font-semibold">口座番号:</span> {form.account_number}</p>}
+              {form.account_holder && <p className="text-blue-800"><span className="font-semibold">口座名義:</span> {form.account_holder}</p>}
               {form.memo && (
                 <div className="mt-3 pt-3 border-t border-blue-200">
                   <div className="text-blue-700 text-sm leading-relaxed [&_p]:mb-1 [&_strong]:font-bold [&_em]:italic [&_u]:underline" dangerouslySetInnerHTML={{ __html: form.memo }} />
@@ -539,15 +539,15 @@ export default function AdminBankSettings() {
         </Card>
       )}
 
-      {/* ── 사업자 / 푸터 정보 ── */}
+      {/* ── 事業者 / フッター情報 ── */}
       <Card className="max-w-2xl p-8 mt-6">
         <div className="flex items-center gap-3 mb-6 pb-5 border-b border-slate-100">
           <div className="w-12 h-12 bg-slate-50 rounded-xl flex items-center justify-center">
             <FileText className="w-6 h-6 text-slate-600" />
           </div>
           <div>
-            <h2 className="text-lg font-bold text-slate-900">사업자 / 푸터 정보</h2>
-            <p className="text-sm text-slate-500">쇼핑몰 하단 푸터에 표시되는 사업자 정보입니다.</p>
+            <h2 className="text-lg font-bold text-slate-900">事業者 / フッター情報</h2>
+            <p className="text-sm text-slate-500">ショップ下部のフッターに表示される事業者情報です。</p>
           </div>
         </div>
 
@@ -555,26 +555,26 @@ export default function AdminBankSettings() {
           {/* 법인명 + 대표이사 */}
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-bold text-slate-700 mb-1.5">법인명</label>
+              <label className="block text-sm font-bold text-slate-700 mb-1.5">法人名</label>
               <input className="w-full px-4 py-3 border-2 rounded-xl text-sm focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/10"
-                placeholder="주식회사 와이앤에이치에스" value={footerForm.company} onChange={setF("company")} />
+                placeholder="株式会社ワイエヌエイチエス" value={footerForm.company} onChange={setF("company")} />
             </div>
             <div>
-              <label className="block text-sm font-bold text-slate-700 mb-1.5">대표이사</label>
+              <label className="block text-sm font-bold text-slate-700 mb-1.5">代表取締役</label>
               <input className="w-full px-4 py-3 border-2 rounded-xl text-sm focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/10"
-                placeholder="윤석민" value={footerForm.ceo} onChange={setF("ceo")} />
+                placeholder="代表者名" value={footerForm.ceo} onChange={setF("ceo")} />
             </div>
           </div>
 
           {/* 사업자번호 + 전화 */}
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-bold text-slate-700 mb-1.5">사업자번호</label>
+              <label className="block text-sm font-bold text-slate-700 mb-1.5">事業者番号</label>
               <input className="w-full px-4 py-3 border-2 rounded-xl text-sm focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/10"
                 placeholder="429-81-03401" value={footerForm.business_num} onChange={setF("business_num")} />
             </div>
             <div>
-              <label className="block text-sm font-bold text-slate-700 mb-1.5">전화번호</label>
+              <label className="block text-sm font-bold text-slate-700 mb-1.5">電話番号</label>
               <input className="w-full px-4 py-3 border-2 rounded-xl text-sm focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/10"
                 placeholder="02-0000-0000" value={footerForm.tel} onChange={setF("tel")} />
             </div>
@@ -582,22 +582,22 @@ export default function AdminBankSettings() {
 
           {/* 주소 */}
           <div>
-            <label className="block text-sm font-bold text-slate-700 mb-1.5 flex items-center gap-1"><MapPin className="w-3.5 h-3.5" />주소</label>
+            <label className="block text-sm font-bold text-slate-700 mb-1.5 flex items-center gap-1"><MapPin className="w-3.5 h-3.5" />住所</label>
             <input className="w-full px-4 py-3 border-2 rounded-xl text-sm focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/10"
-              placeholder="서울특별시 중랑구 용마산로 536 (망우동)" value={footerForm.address} onChange={setF("address")} />
+              placeholder="例: 東京都千代田区..." value={footerForm.address} onChange={setF("address")} />
           </div>
 
           {/* 통신판매업 + 개인정보책임자 */}
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-bold text-slate-700 mb-1.5">통신판매업 신고번호</label>
+              <label className="block text-sm font-bold text-slate-700 mb-1.5">通信販売業届出番号</label>
               <input className="w-full px-4 py-3 border-2 rounded-xl text-sm focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/10"
-                placeholder="2024-서울중랑-1470" value={footerForm.online_num} onChange={setF("online_num")} />
+                placeholder="届出番号" value={footerForm.online_num} onChange={setF("online_num")} />
             </div>
             <div>
-              <label className="block text-sm font-bold text-slate-700 mb-1.5">개인정보책임자</label>
+              <label className="block text-sm font-bold text-slate-700 mb-1.5">個人情報保護責任者</label>
               <input className="w-full px-4 py-3 border-2 rounded-xl text-sm focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/10"
-                placeholder="윤석민" value={footerForm.privacy} onChange={setF("privacy")} />
+                placeholder="責任者名" value={footerForm.privacy} onChange={setF("privacy")} />
             </div>
           </div>
 
@@ -605,37 +605,37 @@ export default function AdminBankSettings() {
           <div className="pt-2 border-t border-slate-100">
             <div className="flex items-center gap-2 mb-4">
               <Phone className="w-4 h-4 text-slate-500" />
-              <p className="text-sm font-bold text-slate-600">고객센터 정보</p>
+              <p className="text-sm font-bold text-slate-600">カスタマーセンター情報</p>
             </div>
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-bold text-slate-700 mb-1.5">고객센터 전화번호</label>
+                <label className="block text-sm font-bold text-slate-700 mb-1.5">カスタマーセンター電話番号</label>
                 <input className="w-full px-4 py-3 border-2 rounded-xl text-sm focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/10"
                   placeholder="1588-0000" value={footerForm.cs_tel} onChange={setF("cs_tel")} />
               </div>
               <div>
-                <label className="block text-sm font-bold text-slate-700 mb-1.5">운영시간</label>
+                <label className="block text-sm font-bold text-slate-700 mb-1.5">営業時間</label>
                 <input className="w-full px-4 py-3 border-2 rounded-xl text-sm focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/10"
-                  placeholder="평일 : 10:00 ~ 18:00" value={footerForm.cs_hours} onChange={setF("cs_hours")} />
+                  placeholder="平日 : 10:00 ~ 18:00" value={footerForm.cs_hours} onChange={setF("cs_hours")} />
               </div>
               <div>
-                <label className="block text-sm font-bold text-slate-700 mb-1.5">점심/휴일 안내</label>
+                <label className="block text-sm font-bold text-slate-700 mb-1.5">昼休み・休業日のご案内</label>
                 <input className="w-full px-4 py-3 border-2 rounded-xl text-sm focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/10"
-                  placeholder="점심시간 : 12:00 ~ 13:00  일요일 / 공휴일 휴무" value={footerForm.cs_lunch} onChange={setF("cs_lunch")} />
+                  placeholder="昼休み : 12:00 ~ 13:00  日曜・祝日休業" value={footerForm.cs_lunch} onChange={setF("cs_lunch")} />
               </div>
             </div>
           </div>
         </div>
 
         <div className="mt-8 pt-6 border-t border-slate-100 flex items-center justify-between">
-          <p className="text-sm text-slate-400">저장 즉시 쇼핑몰 하단 푸터에 반영됩니다.</p>
+          <p className="text-sm text-slate-400">保存するとすぐにショップ下部のフッターに反映されます。</p>
           <Button
             size="lg"
             onClick={() => updateFooter.mutate(footerForm)}
             disabled={updateFooter.isPending}
             className="flex items-center gap-2"
           >
-            {updateFooter.isPending ? <><Loader2 className="w-4 h-4 animate-spin" /> 저장 중...</> : <><Save className="w-4 h-4" /> 저장하기</>}
+            {updateFooter.isPending ? <><Loader2 className="w-4 h-4 animate-spin" /> 保存中...</> : <><Save className="w-4 h-4" /> 保存する</>}
           </Button>
         </div>
       </Card>

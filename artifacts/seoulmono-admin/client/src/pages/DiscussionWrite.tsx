@@ -43,21 +43,21 @@ export default function DiscussionWrite() {
 
   const createMutation = trpc.discussion.create.useMutation({
     onSuccess: (data) => {
-      toast.success("토론이 등록되었습니다");
+      toast.success("ディスカッションを登録しました");
       navigate(`/discussions/${data.id}`);
     },
     onError: (err) => {
-      toast.error(err.message || "등록에 실패했습니다");
+      toast.error(err.message || "登録に失敗しました");
     },
   });
 
   const updateMutation = trpc.discussion.update.useMutation({
     onSuccess: () => {
-      toast.success("토론이 수정되었습니다");
+      toast.success("ディスカッションを更新しました");
       navigate(`/discussions/${id}`);
     },
     onError: (err) => {
-      toast.error(err.message || "수정에 실패했습니다");
+      toast.error(err.message || "更新に失敗しました");
     },
   });
 
@@ -83,7 +83,7 @@ export default function DiscussionWrite() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!title.trim() || !content.trim()) {
-      toast.error("제목과 내용을 입력해주세요");
+      toast.error("タイトルと内容を入力してください");
       return;
     }
 
@@ -115,9 +115,9 @@ export default function DiscussionWrite() {
   if (!user) {
     return (
       <Layout><div className="container py-16 text-center">
-        <h2 className="text-xl font-semibold mb-4">로그인이 필요합니다</h2>
+        <h2 className="text-xl font-semibold mb-4">ログインが必要です</h2>
         <Button asChild>
-          <a href={getLoginUrl()}>로그인</a>
+          <a href={getLoginUrl()}>ログイン</a>
         </Button>
       </div></Layout>
     );
@@ -129,24 +129,24 @@ export default function DiscussionWrite() {
     <Layout>
     <div className="container py-8 max-w-3xl">
       <Button variant="ghost" size="sm" className="mb-4 gap-1" onClick={() => navigate(isEdit ? `/discussions/${id}` : "/discussions")}>
-        <ArrowLeft className="h-4 w-4" /> {isEdit ? "토론으로 돌아가기" : "토론 목록"}
+        <ArrowLeft className="h-4 w-4" /> {isEdit ? "ディスカッションに戻る" : "ディスカッション一覧"}
       </Button>
 
       <Card>
         <CardHeader>
-          <CardTitle>{isEdit ? "토론 수정" : "새 토론 시작"}</CardTitle>
+          <CardTitle>{isEdit ? "ディスカッションの編集" : "新しいディスカッションを始める"}</CardTitle>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* 카테고리 */}
             <div className="space-y-2">
-              <Label>카테고리 (선택)</Label>
+              <Label>カテゴリー (任意)</Label>
               <Select value={categoryId} onValueChange={setCategoryId}>
                 <SelectTrigger>
-                  <SelectValue placeholder="카테고리 선택" />
+                  <SelectValue placeholder="カテゴリーを選択" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="none">카테고리 없음</SelectItem>
+                  <SelectItem value="none">カテゴリーなし</SelectItem>
                   {categories?.map((cat) => (
                     <SelectItem key={cat.id} value={String(cat.id)}>{cat.name}</SelectItem>
                   ))}
@@ -156,12 +156,12 @@ export default function DiscussionWrite() {
 
             {/* 제목 */}
             <div className="space-y-2">
-              <Label htmlFor="title">제목 <span className="text-destructive">*</span></Label>
+              <Label htmlFor="title">タイトル <span className="text-destructive">*</span></Label>
               <Input
                 id="title"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                placeholder="토론 제목을 입력해주세요"
+                placeholder="ディスカッションのタイトルを入力してください"
                 maxLength={255}
               />
               <p className="text-xs text-muted-foreground text-right">{title.length}/255</p>
@@ -169,12 +169,12 @@ export default function DiscussionWrite() {
 
             {/* 내용 */}
             <div className="space-y-2">
-              <Label htmlFor="content">내용 <span className="text-destructive">*</span></Label>
+              <Label htmlFor="content">内容 <span className="text-destructive">*</span></Label>
               <Textarea
                 id="content"
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
-                placeholder="자유롭게 의견을 나눠보세요. 건강, 제품 사용 경험, 궁금한 점 등 어떤 주제든 환영합니다."
+                placeholder="自由にご意見をお寄せください。健康、製品の使用体験、気になることなど、どんな話題でも歓迎します。"
                 rows={12}
                 className="resize-y min-h-[200px]"
               />
@@ -182,13 +182,13 @@ export default function DiscussionWrite() {
 
             {/* 태그 */}
             <div className="space-y-2">
-              <Label>태그 (최대 5개)</Label>
+              <Label>タグ (最大5個)</Label>
               <div className="flex gap-2">
                 <Input
                   value={tagInput}
                   onChange={(e) => setTagInput(e.target.value)}
                   onKeyDown={handleTagKeyDown}
-                  placeholder="태그 입력 후 Enter"
+                  placeholder="タグを入力して Enter"
                   maxLength={20}
                   disabled={tags.length >= 5}
                 />
@@ -213,11 +213,11 @@ export default function DiscussionWrite() {
             {/* 제출 */}
             <div className="flex justify-end gap-3 pt-4 border-t">
               <Button type="button" variant="outline" onClick={() => navigate(isEdit ? `/discussions/${id}` : "/discussions")}>
-                취소
+                キャンセル
               </Button>
               <Button type="submit" disabled={isPending || !title.trim() || !content.trim()} className="gap-2">
                 <Send className="h-4 w-4" />
-                {isPending ? "처리 중..." : isEdit ? "수정 완료" : "토론 등록"}
+                {isPending ? "処理中..." : isEdit ? "更新完了" : "ディスカッションを登録"}
               </Button>
             </div>
           </form>

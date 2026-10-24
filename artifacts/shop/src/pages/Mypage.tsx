@@ -7,6 +7,7 @@ import {
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { formatPrice } from "@/lib/api";
+import { orderStatusJa, claimTypeJa, claimStatusJa, settleCaseJa } from "@/lib/labels";
 import { setCheckoutItems } from "@/pages/Checkout";
 
 const TOKEN = () => localStorage.getItem("seoulmono_token") || "";
@@ -16,17 +17,17 @@ const authFetch = (url: string, opts: RequestInit = {}) =>
 type Section = "dashboard" | "orders" | "claims" | "coupon" | "points" | "profile" | "address" | "inquiry" | "review" | "wishlist";
 
 const MY_SHOPPING: { key: Section; label: string; icon: any }[] = [
-  { key: "orders", label: "주문/배송현황", icon: Package },
-  { key: "claims", label: "교환/반품/취소", icon: RotateCcw },
-  { key: "coupon", label: "쿠폰", icon: Tag },
-  { key: "points", label: "포인트", icon: Award },
+  { key: "orders", label: "注文/配送状況", icon: Package },
+  { key: "claims", label: "交換/返品/キャンセル", icon: RotateCcw },
+  { key: "coupon", label: "クーポン", icon: Tag },
+  { key: "points", label: "ポイント", icon: Award },
 ];
 const MY_INFO: { key: Section; label: string; icon: any }[] = [
-  { key: "profile", label: "회원정보수정", icon: User },
-  { key: "address", label: "배송지관리", icon: MapPin },
-  { key: "inquiry", label: "1:1문의내역", icon: MessageSquare },
-  { key: "review", label: "상품리뷰관리", icon: Star },
-  { key: "wishlist", label: "찜리스트", icon: Heart },
+  { key: "profile", label: "会員情報の変更", icon: User },
+  { key: "address", label: "お届け先管理", icon: MapPin },
+  { key: "inquiry", label: "お問い合わせ履歴", icon: MessageSquare },
+  { key: "review", label: "レビュー管理", icon: Star },
+  { key: "wishlist", label: "お気に入りリスト", icon: Heart },
 ];
 
 // ────── 공통 컴포넌트 ──────────────────────────────────────────
@@ -54,15 +55,15 @@ function EmptyBox({ icon: Icon, text }: { icon: any; text: string }) {
 
 function StatusBadge({ status }: { status: string }) {
   const map: Record<string, { label: string; color: string; bg: string }> = {
-    "주문접수": { label: "주문접수", color: "#f5a623", bg: "#fff8e8" },
-    "결제완료": { label: "결제완료", color: "#8B5E3C", bg: "#e8f8f0" },
-    "배송준비": { label: "배송준비", color: "#7B68EE", bg: "#f0eeff" },
-    "배송중": { label: "배송중", color: "#2196f3", bg: "#e3f2fd" },
-    "배송완료": { label: "배송완료", color: "#888", bg: "#f5f5f5" },
-    "주문취소": { label: "주문취소", color: "#f44336", bg: "#fff3f3" },
-    "반품": { label: "반품", color: "#f44336", bg: "#fff3f3" },
+    "주문접수": { label: "注文受付", color: "#f5a623", bg: "#fff8e8" },
+    "결제완료": { label: "お支払い完了", color: "#8B5E3C", bg: "#e8f8f0" },
+    "배송준비": { label: "発送準備中", color: "#7B68EE", bg: "#f0eeff" },
+    "배송중": { label: "配送中", color: "#2196f3", bg: "#e3f2fd" },
+    "배송완료": { label: "配送完了", color: "#888", bg: "#f5f5f5" },
+    "주문취소": { label: "注文キャンセル", color: "#f44336", bg: "#fff3f3" },
+    "반품": { label: "返品", color: "#f44336", bg: "#fff3f3" },
   };
-  const s = map[status] || { label: status || "처리중", color: "#888", bg: "#f5f5f5" };
+  const s = map[status] || { label: status || "処理中", color: "#888", bg: "#f5f5f5" };
   return <span style={{ fontSize: 11, fontWeight: 700, color: s.color, background: s.bg, padding: "4px 10px", borderRadius: 4 }}>{s.label}</span>;
 }
 
@@ -105,34 +106,34 @@ function OrderDetailModal({ odId, onClose, navigate }: { odId: string; onClose: 
       <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.5)" }} onClick={onClose} />
       <div style={{ position: "relative", zIndex: 1, background: "#fff", borderRadius: "20px 20px 0 0", width: "100%", maxWidth: 600, maxHeight: "90vh", display: "flex", flexDirection: "column", boxShadow: "0 -8px 40px rgba(0,0,0,0.2)" }}>
         <div style={{ padding: "16px 20px 12px", borderBottom: "1px solid #f0f0f0", display: "flex", alignItems: "center", justifyContent: "space-between", flexShrink: 0 }}>
-          <h3 style={{ margin: 0, fontSize: 17, fontWeight: 800, color: "#111" }}>주문 상세</h3>
+          <h3 style={{ margin: 0, fontSize: 17, fontWeight: 800, color: "#111" }}>注文詳細</h3>
           <button onClick={onClose} style={{ background: "none", border: "none", cursor: "pointer", fontSize: 24, color: "#aaa", lineHeight: 1, padding: 4 }}>×</button>
         </div>
         <div style={{ overflowY: "auto", flex: 1, padding: "16px 20px 32px" }}>
           {loading ? (
-            <div style={{ padding: 40, textAlign: "center", color: "#aaa" }}>불러오는 중...</div>
+            <div style={{ padding: 40, textAlign: "center", color: "#aaa" }}>読み込み中...</div>
           ) : !detail ? (
-            <div style={{ padding: 40, textAlign: "center", color: "#e53935" }}>주문 정보를 불러올 수 없습니다</div>
+            <div style={{ padding: 40, textAlign: "center", color: "#e53935" }}>注文情報を読み込めません</div>
           ) : (
             <>
               {/* 주문 정보 헤더 */}
               <div style={{ background: "#f8f9fa", borderRadius: 12, padding: "14px 16px", marginBottom: 20 }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
-                  <span style={{ fontSize: 13, color: "#888" }}>주문번호</span>
+                  <span style={{ fontSize: 13, color: "#888" }}>注文番号</span>
                   <span style={{ fontSize: 13, fontWeight: 700, color: "#222", fontFamily: "monospace" }}>{detail.od_id}</span>
                 </div>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
-                  <span style={{ fontSize: 13, color: "#888" }}>주문일시</span>
-                  <span style={{ fontSize: 13, color: "#333" }}>{new Date(detail.od_time).toLocaleString("ko-KR")}</span>
+                  <span style={{ fontSize: 13, color: "#888" }}>注文日時</span>
+                  <span style={{ fontSize: 13, color: "#333" }}>{new Date(detail.od_time).toLocaleString("ja-JP")}</span>
                 </div>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                  <span style={{ fontSize: 13, color: "#888" }}>결제수단</span>
-                  <span style={{ fontSize: 13, color: "#333" }}>{detail.od_settle_case}</span>
+                  <span style={{ fontSize: 13, color: "#888" }}>お支払い方法</span>
+                  <span style={{ fontSize: 13, color: "#333" }}>{settleCaseJa(detail.od_settle_case)}</span>
                 </div>
               </div>
 
               {/* 주문 상품 */}
-              <p style={{ margin: "0 0 12px", fontSize: 14, fontWeight: 700, color: "#111" }}>주문 상품</p>
+              <p style={{ margin: "0 0 12px", fontSize: 14, fontWeight: 700, color: "#111" }}>ご注文商品</p>
               <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 20 }}>
                 {detail.items.map(item => (
                   <div key={item.ct_id} onClick={() => { navigate(`/item/${item.it_id}`); onClose(); }}
@@ -142,9 +143,9 @@ function OrderDetailModal({ odId, onClose, navigate }: { odId: string; onClose: 
                     </div>
                     <div style={{ flex: 1 }}>
                       <p style={{ margin: "0 0 3px", fontSize: 13, fontWeight: 600, color: "#222" }}>{item.it_name}</p>
-                      <p style={{ margin: "0 0 3px", fontSize: 11, color: "#aaa", fontFamily: "monospace" }}>상품번호: {item.it_id}</p>
-                      {item.ct_option && <p style={{ margin: "0 0 3px", fontSize: 11, color: "#aaa" }}>옵션: {item.ct_option}</p>}
-                      <p style={{ margin: 0, fontSize: 13, color: "#555" }}>{formatPrice(item.ct_price)} × {item.ct_qty}개</p>
+                      <p style={{ margin: "0 0 3px", fontSize: 11, color: "#aaa", fontFamily: "monospace" }}>商品番号: {item.it_id}</p>
+                      {item.ct_option && <p style={{ margin: "0 0 3px", fontSize: 11, color: "#aaa" }}>オプション: {item.ct_option}</p>}
+                      <p style={{ margin: 0, fontSize: 13, color: "#555" }}>{formatPrice(item.ct_price)} × {item.ct_qty}点</p>
                     </div>
                     <div style={{ textAlign: "right" }}>
                       <p style={{ margin: 0, fontSize: 14, fontWeight: 700, color: "#8B5E3C" }}>{formatPrice(item.ct_price * item.ct_qty)}</p>
@@ -154,38 +155,38 @@ function OrderDetailModal({ odId, onClose, navigate }: { odId: string; onClose: 
               </div>
 
               {/* 배송지 */}
-              <p style={{ margin: "0 0 12px", fontSize: 14, fontWeight: 700, color: "#111" }}>배송지</p>
+              <p style={{ margin: "0 0 12px", fontSize: 14, fontWeight: 700, color: "#111" }}>お届け先</p>
               <div style={{ background: "#f8f9fa", borderRadius: 12, padding: "14px 16px", marginBottom: 20 }}>
                 <p style={{ margin: "0 0 6px", fontSize: 14, fontWeight: 700, color: "#222" }}>{detail.od_b_name}</p>
                 {detail.od_b_hp && <p style={{ margin: "0 0 6px", fontSize: 13, color: "#666" }}>{detail.od_b_hp}</p>}
                 <p style={{ margin: "0 0 6px", fontSize: 13, color: "#555" }}>
                   {detail.od_b_zip1 && `(${detail.od_b_zip1}) `}{detail.od_b_addr1} {detail.od_b_addr2}
                 </p>
-                {detail.od_memo && <p style={{ margin: 0, fontSize: 12, color: "#aaa" }}>배송 메모: {detail.od_memo}</p>}
+                {detail.od_memo && <p style={{ margin: 0, fontSize: 12, color: "#aaa" }}>配送メモ: {detail.od_memo}</p>}
               </div>
 
               {/* 배송 추적 */}
               {(detail.od_invoice || detail.od_delivery_company) && (
                 <div style={{ background: "#F2E4D0", borderRadius: 12, padding: "12px 16px", marginBottom: 20 }}>
-                  <p style={{ margin: "0 0 6px", fontSize: 13, fontWeight: 700, color: "#8B5E3C" }}>배송 추적</p>
-                  {detail.od_delivery_company && <p style={{ margin: "0 0 4px", fontSize: 13, color: "#333" }}>배송사: {detail.od_delivery_company}</p>}
-                  {detail.od_invoice && <p style={{ margin: 0, fontSize: 13, color: "#333" }}>운송장 번호: <strong>{detail.od_invoice}</strong></p>}
+                  <p style={{ margin: "0 0 6px", fontSize: 13, fontWeight: 700, color: "#8B5E3C" }}>配送状況</p>
+                  {detail.od_delivery_company && <p style={{ margin: "0 0 4px", fontSize: 13, color: "#333" }}>配送業者: {detail.od_delivery_company}</p>}
+                  {detail.od_invoice && <p style={{ margin: 0, fontSize: 13, color: "#333" }}>送り状番号: <strong>{detail.od_invoice}</strong></p>}
                 </div>
               )}
 
               {/* 결제 금액 */}
-              <p style={{ margin: "0 0 12px", fontSize: 14, fontWeight: 700, color: "#111" }}>결제 금액</p>
+              <p style={{ margin: "0 0 12px", fontSize: 14, fontWeight: 700, color: "#111" }}>お支払い金額</p>
               <div style={{ background: "#f8f9fa", borderRadius: 12, padding: "14px 16px" }}>
                 <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 8 }}>
-                  <span style={{ fontSize: 13, color: "#888" }}>상품금액</span>
+                  <span style={{ fontSize: 13, color: "#888" }}>商品金額</span>
                   <span style={{ fontSize: 13 }}>{formatPrice(detail.od_cart_price)}</span>
                 </div>
                 <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 12, paddingBottom: 12, borderBottom: "1px solid #eee" }}>
-                  <span style={{ fontSize: 13, color: "#888" }}>배송비</span>
-                  <span style={{ fontSize: 13 }}>{detail.od_send_cost > 0 ? formatPrice(detail.od_send_cost) : "무료"}</span>
+                  <span style={{ fontSize: 13, color: "#888" }}>送料</span>
+                  <span style={{ fontSize: 13 }}>{detail.od_send_cost > 0 ? formatPrice(detail.od_send_cost) : "無料"}</span>
                 </div>
                 <div style={{ display: "flex", justifyContent: "space-between" }}>
-                  <span style={{ fontSize: 15, fontWeight: 800, color: "#111" }}>총 결제금액</span>
+                  <span style={{ fontSize: 15, fontWeight: 800, color: "#111" }}>お支払い合計</span>
                   <span style={{ fontSize: 16, fontWeight: 900, color: "#8B5E3C" }}>{formatPrice(detail.od_receipt_price)}</span>
                 </div>
               </div>
@@ -215,7 +216,7 @@ function ClaimFormInModal({ odId, odStatus, onCancelled }: { odId: string; odSta
   const isPreShipping = PRE_SHIPPING.includes(odStatus);
 
   const handleSubmit = async () => {
-    if (!reason.trim()) { setError("사유를 입력해주세요"); return; }
+    if (!reason.trim()) { setError("理由を入力してください"); return; }
     setSubmitting(true); setError("");
     try {
       // 배송 전 취소 → 즉시 취소 + 결제 취소
@@ -225,7 +226,7 @@ function ClaimFormInModal({ odId, odStatus, onCancelled }: { odId: string; odSta
           body: JSON.stringify({ reason }),
         });
         const data = await res.json();
-        if (!res.ok) { setError(data.error || "취소 실패"); return; }
+        if (!res.ok) { setError(data.error || "キャンセルに失敗しました"); return; }
         setSubmitted(true);
         onCancelled?.();
         return;
@@ -236,9 +237,9 @@ function ClaimFormInModal({ odId, odStatus, onCancelled }: { odId: string; odSta
         body: JSON.stringify({ od_id: odId, claim_type: claimType, reason }),
       });
       const data = await res.json();
-      if (!res.ok) { setError(data.error || "요청 실패"); return; }
+      if (!res.ok) { setError(data.error || "リクエストに失敗しました"); return; }
       setSubmitted(true);
-    } catch { setError("네트워크 오류가 발생했습니다"); }
+    } catch { setError("ネットワークエラーが発生しました"); }
     finally { setSubmitting(false); }
   };
 
@@ -246,8 +247,8 @@ function ClaimFormInModal({ odId, odStatus, onCancelled }: { odId: string; odSta
     return (
       <div style={{ marginTop: 20, background: "#f0f9f4", borderRadius: 12, padding: "16px 20px", textAlign: "center" }}>
         <CheckCircle size={28} color="#8B5E3C" style={{ marginBottom: 8 }} />
-        <p style={{ margin: 0, fontSize: 14, fontWeight: 700, color: "#8B5E3C" }}>{claimType === "취소" && isPreShipping ? "주문이 취소되었습니다" : "요청이 접수되었습니다"}</p>
-        <p style={{ margin: "4px 0 0", fontSize: 12, color: "#888" }}>{claimType === "취소" && isPreShipping ? "결제가 함께 취소되었습니다." : "마이페이지 > 교환/반품/취소 내역에서 처리 현황을 확인하세요"}</p>
+        <p style={{ margin: 0, fontSize: 14, fontWeight: 700, color: "#8B5E3C" }}>{claimType === "취소" && isPreShipping ? "ご注文がキャンセルされました" : "リクエストを受け付けました"}</p>
+        <p style={{ margin: "4px 0 0", fontSize: 12, color: "#888" }}>{claimType === "취소" && isPreShipping ? "お支払いも同時にキャンセルされました。" : "マイページ > 交換/返品/キャンセル履歴で処理状況をご確認ください"}</p>
       </div>
     );
   }
@@ -257,7 +258,7 @@ function ClaimFormInModal({ odId, odStatus, onCancelled }: { odId: string; odSta
       <div style={{ marginTop: 20, borderTop: "1px solid #f0f0f0", paddingTop: 16 }}>
         <button onClick={() => setShowForm(true)}
           style={{ width: "100%", height: 44, background: "#fff3f3", border: "1.5px solid #ffcdd2", borderRadius: 10, color: "#d32f2f", fontSize: 14, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
-          <RotateCcw size={15} /> 교환 / 반품 / 환불 / 취소 신청
+          <RotateCcw size={15} /> 交換 / 返品 / 返金 / キャンセルのお申し込み
         </button>
       </div>
     );
@@ -265,22 +266,22 @@ function ClaimFormInModal({ odId, odStatus, onCancelled }: { odId: string; odSta
 
   return (
     <div style={{ marginTop: 20, borderTop: "1px solid #f0f0f0", paddingTop: 16 }}>
-      <p style={{ margin: "0 0 14px", fontSize: 14, fontWeight: 800, color: "#111" }}>클레임 신청</p>
+      <p style={{ margin: "0 0 14px", fontSize: 14, fontWeight: 800, color: "#111" }}>交換・返品のお申し込み</p>
       <div style={{ marginBottom: 12 }}>
-        <label style={{ display: "block", fontSize: 12, color: "#888", marginBottom: 6, fontWeight: 600 }}>요청 유형</label>
+        <label style={{ display: "block", fontSize: 12, color: "#888", marginBottom: 6, fontWeight: 600 }}>リクエスト種別</label>
         <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
           {(["교환", "반품", "환불", "취소"] as const).map(t => (
             <button key={t} type="button" onClick={() => setClaimType(t)}
               style={{ padding: "7px 16px", borderRadius: 8, border: `2px solid ${claimType === t ? "#8B5E3C" : "#ddd"}`, background: claimType === t ? "#f0f9f4" : "#fff", color: claimType === t ? "#8B5E3C" : "#555", fontSize: 13, fontWeight: 700, cursor: "pointer" }}>
-              {t}
+              {claimTypeJa(t)}
             </button>
           ))}
         </div>
       </div>
       <div style={{ marginBottom: 12 }}>
-        <label style={{ display: "block", fontSize: 12, color: "#888", marginBottom: 6, fontWeight: 600 }}>사유 *</label>
+        <label style={{ display: "block", fontSize: 12, color: "#888", marginBottom: 6, fontWeight: 600 }}>理由 *</label>
         <textarea value={reason} onChange={e => setReason(e.target.value)}
-          placeholder="교환/반품/환불/취소 사유를 입력해주세요"
+          placeholder="交換/返品/返金/キャンセルの理由を入力してください"
           style={{ width: "100%", minHeight: 80, border: "1.5px solid #e0e0e0", borderRadius: 8, padding: "10px 12px", fontSize: 13, resize: "vertical", outline: "none", boxSizing: "border-box", fontFamily: "inherit" }}
         />
       </div>
@@ -288,11 +289,11 @@ function ClaimFormInModal({ odId, odStatus, onCancelled }: { odId: string; odSta
       <div style={{ display: "flex", gap: 8 }}>
         <button onClick={() => setShowForm(false)}
           style={{ flex: 1, height: 42, background: "#f5f5f5", border: "none", borderRadius: 8, color: "#555", fontSize: 13, fontWeight: 600, cursor: "pointer" }}>
-          취소
+          キャンセル
         </button>
         <button onClick={handleSubmit} disabled={submitting}
           style={{ flex: 2, height: 42, background: "#d32f2f", border: "none", borderRadius: 8, color: "#fff", fontSize: 13, fontWeight: 700, cursor: "pointer", opacity: submitting ? 0.7 : 1 }}>
-          {submitting ? "처리 중..." : "신청하기"}
+          {submitting ? "処理中..." : "申し込む"}
         </button>
       </div>
     </div>
@@ -332,26 +333,26 @@ function OrdersSection({ reorderMode = false }: { reorderMode?: boolean }) {
   return (
     <>
     <SectionBox
-      title={reorderMode ? "재주문하기" : "주문/배송현황"}
+      title={reorderMode ? "再注文" : "注文/配送状況"}
       action={
         <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
           <select value={days} onChange={e => setDays(Number(e.target.value))}
             style={{ border: "1px solid #ddd", borderRadius: 6, padding: "5px 8px", fontSize: 12, background: "#fff" }}>
-            <option value={7}>7일</option><option value={30}>1개월</option>
-            <option value={90}>3개월</option><option value={180}>6개월</option>
+            <option value={7}>7日</option><option value={30}>1か月</option>
+            <option value={90}>3か月</option><option value={180}>6か月</option>
           </select>
         </div>
       }
     >
-      {loading ? <div style={{ padding: 40, textAlign: "center", color: "#aaa", fontSize: 14 }}>불러오는 중...</div>
-        : orders.length === 0 ? <EmptyBox icon={Package} text="주문 내역이 없습니다" />
+      {loading ? <div style={{ padding: 40, textAlign: "center", color: "#aaa", fontSize: 14 }}>読み込み中...</div>
+        : orders.length === 0 ? <EmptyBox icon={Package} text="注文履歴がありません" />
         : (
           <div>
             {orders.map(od => (
               <div key={od.od_id} style={{ borderBottom: "1px solid #f5f5f5" }}>
                 <div style={{ padding: "10px 20px", background: "#f8f9fa", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                   <div style={{ display: "flex", gap: 16, alignItems: "center" }}>
-                    <span style={{ fontSize: 12, color: "#888" }}>주문번호 {od.od_id}</span>
+                    <span style={{ fontSize: 12, color: "#888" }}>注文番号 {od.od_id}</span>
                     <span style={{ fontSize: 12, color: "#aaa" }}>{od.od_time?.slice(0, 10)}</span>
                   </div>
                   <StatusBadge status={od.od_status} />
@@ -365,21 +366,21 @@ function OrdersSection({ reorderMode = false }: { reorderMode?: boolean }) {
                   </div>
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <p style={{ margin: "0 0 3px", fontSize: 14, color: "#222", fontWeight: 500, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                      {od.first_item}{od.item_count > 1 ? ` 외 ${od.item_count - 1}개` : ""}
+                      {od.first_item}{od.item_count > 1 ? ` 他${od.item_count - 1}点` : ""}
                     </p>
                     <p style={{ margin: "0 0 3px", fontSize: 13, color: "#888" }}>{formatPrice(od.od_receipt_price)} · {od.od_settle_case}</p>
-                    {od.od_b_name && <p style={{ margin: 0, fontSize: 12, color: "#bbb" }}>수령인: {od.od_b_name} {od.od_b_hp}</p>}
+                    {od.od_b_name && <p style={{ margin: 0, fontSize: 12, color: "#bbb" }}>お受け取り人: {od.od_b_name} {od.od_b_hp}</p>}
                   </div>
                   <div style={{ flexShrink: 0, display: "flex", flexDirection: "column", gap: 4 }}>
                     {reorderMode ? (
                       <button onClick={() => handleReorder(od)}
                         style={{ fontSize: 12, color: "#fff", background: "#8B5E3C", border: "none", borderRadius: 6, padding: "6px 12px", cursor: "pointer", fontWeight: 600 }}>
-                        재주문
+                        再注文
                       </button>
                     ) : (
                       <button onClick={() => navigate(`/mypage/order/${od.od_id}`)}
                         style={{ fontSize: 11, color: "#8B5E3C", background: "#F2E4D0", border: "1px solid #c5e8d0", borderRadius: 5, padding: "4px 10px", cursor: "pointer", fontWeight: 600 }}>
-                        상세보기
+                        詳細を見る
                       </button>
                     )}
                   </div>
@@ -414,18 +415,18 @@ function CouponSection() {
   const filtered = coupons.filter(c => tab === "unused" ? !c.used : c.used);
 
   return (
-    <SectionBox title="쿠폰">
+    <SectionBox title="クーポン">
       <div style={{ padding: "0 20px", borderBottom: "1px solid #f0f0f0", display: "flex", gap: 0 }}>
         {(["unused", "used"] as const).map(t => (
           <button key={t} onClick={() => setTab(t)}
             style={{ padding: "12px 20px", background: "none", border: "none", cursor: "pointer", fontSize: 13, fontWeight: tab === t ? 700 : 400,
               color: tab === t ? "#8B5E3C" : "#aaa", borderBottom: tab === t ? "2px solid #8B5E3C" : "2px solid transparent" }}>
-            {t === "unused" ? `미사용(${coupons.filter(c => !c.used).length})` : `사용완료(${coupons.filter(c => c.used).length})`}
+            {t === "unused" ? `未使用(${coupons.filter(c => !c.used).length})` : `使用済み(${coupons.filter(c => c.used).length})`}
           </button>
         ))}
       </div>
-      {loading ? <div style={{ padding: 40, textAlign: "center", color: "#aaa" }}>불러오는 중...</div>
-        : filtered.length === 0 ? <EmptyBox icon={Tag} text="쿠폰이 없습니다" />
+      {loading ? <div style={{ padding: 40, textAlign: "center", color: "#aaa" }}>読み込み中...</div>
+        : filtered.length === 0 ? <EmptyBox icon={Tag} text="クーポンがありません" />
         : (
           <div style={{ padding: 20, display: "flex", flexDirection: "column", gap: 12 }}>
             {filtered.map(c => (
@@ -433,13 +434,13 @@ function CouponSection() {
                 <div>
                   <p style={{ margin: "0 0 4px", fontSize: 15, fontWeight: 700, color: "#111" }}>{c.cp_name}</p>
                   <p style={{ margin: "0 0 4px", fontSize: 14, color: "#8B5E3C", fontWeight: 600 }}>
-                    {c.cp_type === 1 ? `${c.cp_price}% 할인` : `${formatPrice(c.cp_price)} 할인`}
-                    {c.cp_minimum > 0 ? ` (${formatPrice(c.cp_minimum)} 이상)` : ""}
+                    {c.cp_type === 1 ? `${c.cp_price}%オフ` : `${formatPrice(c.cp_price)}オフ`}
+                    {c.cp_minimum > 0 ? ` (${formatPrice(c.cp_minimum)}以上)` : ""}
                   </p>
-                  {c.cp_end && <p style={{ margin: 0, fontSize: 12, color: "#aaa" }}>~{c.cp_end?.slice(0, 10)} 까지</p>}
+                  {c.cp_end && <p style={{ margin: 0, fontSize: 12, color: "#aaa" }}>~{c.cp_end?.slice(0, 10)} まで</p>}
                 </div>
                 <div style={{ fontSize: 12, fontWeight: 700, color: c.used ? "#bbb" : "#8B5E3C", background: c.used ? "#f0f0f0" : "#e8f8f0", padding: "6px 14px", borderRadius: 6 }}>
-                  {c.used ? "사용완료" : "사용가능"}
+                  {c.used ? "使用済み" : "使用可能"}
                 </div>
               </div>
             ))}
@@ -465,20 +466,20 @@ function PointsSection() {
   }, []);
 
   return (
-    <SectionBox title="포인트 내역">
+    <SectionBox title="ポイント履歴">
       <div style={{ padding: "20px", background: "#f0f9f4", borderBottom: "1px solid #e0f0e8", display: "flex", alignItems: "center", gap: 14 }}>
         <Award size={32} color="#8B5E3C" />
         <div>
-          <p style={{ margin: "0 0 2px", fontSize: 12, color: "#888" }}>현재 보유 포인트</p>
+          <p style={{ margin: "0 0 2px", fontSize: 12, color: "#888" }}>現在の保有ポイント</p>
           <p style={{ margin: 0, fontSize: 28, fontWeight: 900, color: "#8B5E3C" }}>{balance.toLocaleString()} D</p>
         </div>
       </div>
-      {loading ? <div style={{ padding: 40, textAlign: "center", color: "#aaa" }}>불러오는 중...</div>
-        : history.length === 0 ? <EmptyBox icon={Award} text="포인트 내역이 없습니다" />
+      {loading ? <div style={{ padding: 40, textAlign: "center", color: "#aaa" }}>読み込み中...</div>
+        : history.length === 0 ? <EmptyBox icon={Award} text="ポイント履歴がありません" />
         : (
           <table style={{ width: "100%", borderCollapse: "collapse" }}>
             <thead><tr style={{ background: "#f8f9fa" }}>
-              {["일시", "내용", "포인트", "잔액"].map(h => (
+              {["日時", "内容", "ポイント", "残高"].map(h => (
                 <th key={h} style={{ padding: "10px 16px", fontSize: 12, color: "#888", fontWeight: 600, textAlign: "left", borderBottom: "1px solid #eee" }}>{h}</th>
               ))}
             </tr></thead>
@@ -517,7 +518,7 @@ function ClaimTypeBadge({ type }: { type: string }) {
   };
   const s = map[type] || { color: "#888", bg: "#f5f5f5" };
   return (
-    <span style={{ fontSize: 11, fontWeight: 700, color: s.color, background: s.bg, padding: "3px 9px", borderRadius: 20, border: `1px solid ${s.color}30` }}>{type}</span>
+    <span style={{ fontSize: 11, fontWeight: 700, color: s.color, background: s.bg, padding: "3px 9px", borderRadius: 20, border: `1px solid ${s.color}30` }}>{claimTypeJa(type)}</span>
   );
 }
 
@@ -531,7 +532,7 @@ function ClaimStatusBadge({ status }: { status: string }) {
   };
   const s = map[status] || { color: "#888", bg: "#f5f5f5" };
   return (
-    <span style={{ fontSize: 11, fontWeight: 700, color: s.color, background: s.bg, padding: "3px 9px", borderRadius: 20, border: `1px solid ${s.color}30` }}>{status}</span>
+    <span style={{ fontSize: 11, fontWeight: 700, color: s.color, background: s.bg, padding: "3px 9px", borderRadius: 20, border: `1px solid ${s.color}30` }}>{claimStatusJa(status)}</span>
   );
 }
 
@@ -548,11 +549,11 @@ function ClaimsSection() {
   }, []);
 
   return (
-    <SectionBox title="교환/반품/환불/취소 내역">
+    <SectionBox title="交換/返品/返金/キャンセル履歴">
       {loading ? (
-        <div style={{ padding: 40, textAlign: "center", color: "#aaa" }}>불러오는 중...</div>
+        <div style={{ padding: 40, textAlign: "center", color: "#aaa" }}>読み込み中...</div>
       ) : claims.length === 0 ? (
-        <EmptyBox icon={RotateCcw} text="요청 내역이 없습니다" />
+        <EmptyBox icon={RotateCcw} text="リクエスト履歴がありません" />
       ) : (
         <div>
           {claims.map(c => (
@@ -564,14 +565,14 @@ function ClaimsSection() {
                 </div>
                 <span style={{ fontSize: 12, color: "#bbb", whiteSpace: "nowrap" }}>{c.created_at?.slice(0, 10)}</span>
               </div>
-              <p style={{ margin: "0 0 3px", fontSize: 12, color: "#aaa", fontFamily: "monospace" }}>주문번호: {c.od_id}</p>
+              <p style={{ margin: "0 0 3px", fontSize: 12, color: "#aaa", fontFamily: "monospace" }}>注文番号: {c.od_id}</p>
               {c.first_item && (
                 <p style={{ margin: "0 0 6px", fontSize: 13, fontWeight: 600, color: "#222" }}>{c.first_item}</p>
               )}
-              <p style={{ margin: "0 0 6px", fontSize: 13, color: "#555" }}>사유: {c.reason}</p>
+              <p style={{ margin: "0 0 6px", fontSize: 13, color: "#555" }}>理由: {c.reason}</p>
               {c.admin_memo && (
                 <div style={{ background: "#f0f9f4", borderRadius: 8, padding: "8px 12px", marginTop: 6, borderLeft: "3px solid #8B5E3C" }}>
-                  <p style={{ margin: "0 0 3px", fontSize: 11, fontWeight: 700, color: "#8B5E3C" }}>관리자 메모</p>
+                  <p style={{ margin: "0 0 3px", fontSize: 11, fontWeight: 700, color: "#8B5E3C" }}>管理者メモ</p>
                   <p style={{ margin: 0, fontSize: 13, color: "#333", whiteSpace: "pre-wrap" }}>{c.admin_memo}</p>
                 </div>
               )}
@@ -613,37 +614,37 @@ function ProfileSection({ onInfoUpdate }: { onInfoUpdate: (info: MyInfo) => void
     try {
       const res = await authFetch("/api/shop/my-profile", { method: "PUT", body: JSON.stringify({ ...form, mb_addr3: "" }) });
       const data = await res.json();
-      if (!res.ok) { setToast({ msg: data.error || "저장 실패", type: "error" }); return; }
-      setToast({ msg: "저장되었습니다", type: "success" });
+      if (!res.ok) { setToast({ msg: data.error || "保存に失敗しました", type: "error" }); return; }
+      setToast({ msg: "保存しました", type: "success" });
       if (info) { const updated = { ...info, ...form }; setInfo(updated); onInfoUpdate(updated); }
     } finally { setSaving(false); }
   };
 
   const handleChangePw = async () => {
-    if (pwForm.new_password !== pwForm.confirm_password) { setToast({ msg: "새 비밀번호가 일치하지 않습니다", type: "error" }); return; }
-    if (pwForm.new_password.length < 6) { setToast({ msg: "비밀번호는 6자 이상이어야 합니다", type: "error" }); return; }
+    if (pwForm.new_password !== pwForm.confirm_password) { setToast({ msg: "新しいパスワードが一致しません", type: "error" }); return; }
+    if (pwForm.new_password.length < 6) { setToast({ msg: "パスワードは6文字以上で入力してください", type: "error" }); return; }
     setSavingPw(true);
     try {
       const res = await authFetch("/api/shop/my-profile", { method: "PUT", body: JSON.stringify({ current_password: pwForm.current_password, new_password: pwForm.new_password }) });
       const data = await res.json();
-      if (!res.ok) { setToast({ msg: data.error || "변경 실패", type: "error" }); return; }
-      setToast({ msg: "비밀번호가 변경되었습니다", type: "success" });
+      if (!res.ok) { setToast({ msg: data.error || "変更に失敗しました", type: "error" }); return; }
+      setToast({ msg: "パスワードを変更しました", type: "success" });
       setPwForm({ current_password: "", new_password: "", confirm_password: "" });
     } finally { setSavingPw(false); }
   };
 
   const f = (k: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => setForm(prev => ({ ...prev, [k]: e.target.value }));
 
-  if (loading) return <div style={{ padding: 40, textAlign: "center", color: "#aaa" }}>불러오는 중...</div>;
+  if (loading) return <div style={{ padding: 40, textAlign: "center", color: "#aaa" }}>読み込み中...</div>;
 
   return (
-    <SectionBox title="회원정보수정">
+    <SectionBox title="会員情報の変更">
       {/* 탭 */}
       <div style={{ display: "flex", borderBottom: "1px solid #f0f0f0" }}>
         {(["info", "password"] as const).map(t => (
           <button key={t} onClick={() => setTab(t)}
             style={{ padding: "12px 24px", background: "none", border: "none", cursor: "pointer", fontSize: 13, fontWeight: tab === t ? 700 : 400, color: tab === t ? "#8B5E3C" : "#aaa", borderBottom: tab === t ? "2px solid #8B5E3C" : "2px solid transparent" }}>
-            {t === "info" ? "기본정보" : "비밀번호 변경"}
+            {t === "info" ? "基本情報" : "パスワード変更"}
           </button>
         ))}
       </div>
@@ -653,24 +654,24 @@ function ProfileSection({ onInfoUpdate }: { onInfoUpdate: (info: MyInfo) => void
           <>
             <div style={{ marginBottom: 16, padding: "12px 16px", background: "#f8f9fa", borderRadius: 8, display: "flex", alignItems: "center", gap: 10 }}>
               <User size={14} color="#aaa" />
-              <span style={{ fontSize: 13, color: "#666" }}>아이디: <strong>{info?.mb_id}</strong></span>
+              <span style={{ fontSize: 13, color: "#666" }}>ID: <strong>{info?.mb_id}</strong></span>
             </div>
-            <PField label="이름" value={form.mb_name} onChange={f("mb_name")} />
-            <PField label="이메일" type="email" value={form.mb_email} onChange={f("mb_email")} />
-            <PField label="휴대폰" type="tel" value={form.mb_hp} onChange={f("mb_hp")} placeholder="010-0000-0000" />
+            <PField label="お名前" value={form.mb_name} onChange={f("mb_name")} />
+            <PField label="メールアドレス" type="email" value={form.mb_email} onChange={f("mb_email")} />
+            <PField label="携帯電話" type="tel" value={form.mb_hp} onChange={f("mb_hp")} placeholder="090-0000-0000" />
             <button onClick={handleSave} disabled={saving}
               style={{ width: "100%", height: 48, background: saving ? "#aaa" : "#8B5E3C", border: "none", borderRadius: 8, color: "#fff", fontSize: 15, fontWeight: 700, cursor: saving ? "not-allowed" : "pointer", marginTop: 8 }}>
-              {saving ? "저장 중..." : "저장하기"}
+              {saving ? "保存中..." : "保存する"}
             </button>
           </>
         ) : (
           <>
-            <PField label="현재 비밀번호" type="password" value={pwForm.current_password} onChange={e => setPwForm(p => ({ ...p, current_password: e.target.value }))} />
-            <PField label="새 비밀번호" type="password" value={pwForm.new_password} onChange={e => setPwForm(p => ({ ...p, new_password: e.target.value }))} />
-            <PField label="새 비밀번호 확인" type="password" value={pwForm.confirm_password} onChange={e => setPwForm(p => ({ ...p, confirm_password: e.target.value }))} />
+            <PField label="現在のパスワード" type="password" value={pwForm.current_password} onChange={e => setPwForm(p => ({ ...p, current_password: e.target.value }))} />
+            <PField label="新しいパスワード" type="password" value={pwForm.new_password} onChange={e => setPwForm(p => ({ ...p, new_password: e.target.value }))} />
+            <PField label="新しいパスワード(確認)" type="password" value={pwForm.confirm_password} onChange={e => setPwForm(p => ({ ...p, confirm_password: e.target.value }))} />
             <button onClick={handleChangePw} disabled={savingPw}
               style={{ width: "100%", height: 48, background: savingPw ? "#aaa" : "#8B5E3C", border: "none", borderRadius: 8, color: "#fff", fontSize: 15, fontWeight: 700, cursor: savingPw ? "not-allowed" : "pointer", marginTop: 8 }}>
-              {savingPw ? "변경 중..." : "비밀번호 변경"}
+              {savingPw ? "変更中..." : "パスワードを変更"}
             </button>
           </>
         )}
@@ -768,23 +769,23 @@ function AddressSection() {
   };
 
   const handleSave = async () => {
-    if (!editing?.ma_name || !editing?.ma_addr1) { setToast({ msg: "수령인과 주소를 입력해주세요", type: "error" }); return; }
+    if (!editing?.ma_name || !editing?.ma_addr1) { setToast({ msg: "お受け取り人とご住所を入力してください", type: "error" }); return; }
     setSaving(true);
     try {
       const url = isNew ? "/api/shop/addresses" : `/api/shop/addresses/${editing.ma_id}`;
       const method = isNew ? "POST" : "PUT";
       const res = await authFetch(url, { method, body: JSON.stringify(editing) });
       const data = await res.json();
-      if (!res.ok) { setToast({ msg: data.error || "저장 실패", type: "error" }); return; }
-      setToast({ msg: isNew ? "배송지가 추가되었습니다" : "수정되었습니다", type: "success" });
+      if (!res.ok) { setToast({ msg: data.error || "保存に失敗しました", type: "error" }); return; }
+      setToast({ msg: isNew ? "お届け先を追加しました" : "更新しました", type: "success" });
       setEditing(null); setIsNew(false); setShowPostcode(false); load();
     } finally { setSaving(false); }
   };
 
   const handleDelete = async (ma_id: number) => {
-    if (!confirm("배송지를 삭제하시겠습니까?")) return;
+    if (!confirm("お届け先を削除してもよろしいですか?")) return;
     await authFetch(`/api/shop/addresses/${ma_id}`, { method: "DELETE" });
-    setToast({ msg: "삭제되었습니다", type: "success" }); load();
+    setToast({ msg: "削除しました", type: "success" }); load();
   };
 
   const handleDefault = async (addr: Address) => {
@@ -802,24 +803,24 @@ function AddressSection() {
   const ef = (k: keyof Address) => (e: React.ChangeEvent<HTMLInputElement>) => setEditing(prev => ({ ...prev, [k]: e.target.value } as any));
 
   return (
-    <SectionBox title="배송지관리" action={
+    <SectionBox title="お届け先管理" action={
       <button onClick={startNew} style={{ display: "flex", alignItems: "center", gap: 4, background: "#8B5E3C", border: "none", borderRadius: 6, color: "#fff", padding: "6px 12px", fontSize: 12, fontWeight: 600, cursor: "pointer" }}>
-        <Plus size={13} /> 새 배송지 추가
+        <Plus size={13} /> お届け先を追加
       </button>
     }>
       {editing && (
         <div style={{ padding: 20, borderBottom: "2px solid #8B5E3C", background: "#FDF6EE" }}>
-          <h3 style={{ margin: "0 0 16px", fontSize: 14, fontWeight: 700, color: "#8B5E3C" }}>{isNew ? "새 배송지 추가" : "배송지 수정"}</h3>
-          <PField label="수령인 *" value={editing.ma_name || ""} onChange={ef("ma_name")} />
-          <PField label="휴대폰" type="tel" value={editing.ma_hp || ""} onChange={ef("ma_hp")} placeholder="010-0000-0000" />
+          <h3 style={{ margin: "0 0 16px", fontSize: 14, fontWeight: 700, color: "#8B5E3C" }}>{isNew ? "お届け先を追加" : "お届け先を編集"}</h3>
+          <PField label="お受け取り人 *" value={editing.ma_name || ""} onChange={ef("ma_name")} />
+          <PField label="携帯電話" type="tel" value={editing.ma_hp || ""} onChange={ef("ma_hp")} placeholder="090-0000-0000" />
 
           {/* 우편번호 + 주소 검색 embed */}
           <div style={{ marginBottom: 12 }}>
-            <label style={{ display: "block", fontSize: 12, color: "#555", marginBottom: 6, fontWeight: 600 }}>우편번호 / 주소 *</label>
+            <label style={{ display: "block", fontSize: 12, color: "#555", marginBottom: 6, fontWeight: 600 }}>郵便番号 / ご住所 *</label>
             <div style={{ display: "flex", gap: 8, marginBottom: 8 }}>
               <input
                 type="text" readOnly value={editing.ma_zip1 || ""}
-                placeholder="우편번호"
+                placeholder="郵便番号"
                 style={{ flex: "0 0 120px", border: "1.5px solid #e0e0e0", borderRadius: 8, padding: "9px 12px", fontSize: 13, background: "#fafafa", boxSizing: "border-box" }}
               />
               <button
@@ -828,7 +829,7 @@ function AddressSection() {
                 style={{ flex: 1, height: 40, background: "#8B5E3C", border: "none", borderRadius: 8, color: "#fff", fontSize: 13, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}
               >
                 <MapPin size={14} />
-                {showPostcode ? "닫기" : "주소 검색"}
+                {showPostcode ? "閉じる" : "住所検索"}
               </button>
             </div>
 
@@ -836,7 +837,7 @@ function AddressSection() {
             {showPostcode && (
               <div style={{ border: "2px solid #8B5E3C", borderRadius: 10, overflow: "hidden", marginBottom: 8 }}>
                 <div style={{ background: "#8B5E3C", padding: "8px 14px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                  <span style={{ fontSize: 13, fontWeight: 700, color: "#fff" }}>주소 검색</span>
+                  <span style={{ fontSize: 13, fontWeight: 700, color: "#fff" }}>住所検索</span>
                   <button type="button" onClick={() => { setShowPostcode(false); postcodeInitRef.current = false; }} style={{ background: "none", border: "none", color: "#fff", cursor: "pointer", fontSize: 18, lineHeight: 1 }}>×</button>
                 </div>
                 <div ref={postcodeRef} style={{ width: "100%", height: 400 }} />
@@ -847,30 +848,30 @@ function AddressSection() {
               type="text"
               value={editing.ma_addr1 || ""}
               onChange={ef("ma_addr1")}
-              placeholder="도로명 주소"
+              placeholder="住所"
               style={{ width: "100%", border: "1.5px solid #e0e0e0", borderRadius: 8, padding: "9px 12px", fontSize: 14, boxSizing: "border-box", background: "#fafafa" }}
             />
           </div>
 
-          <PField label="상세주소" value={editing.ma_addr2 || ""} onChange={ef("ma_addr2")} placeholder="상세주소 (동, 호수 등)" />
+          <PField label="建物名・部屋番号" value={editing.ma_addr2 || ""} onChange={ef("ma_addr2")} placeholder="建物名・部屋番号など" />
           <label style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 13, marginBottom: 16, cursor: "pointer" }}>
             <input type="checkbox" checked={!!editing.ma_default} onChange={e => setEditing(prev => ({ ...prev, ma_default: e.target.checked } as any))} />
-            기본 배송지로 설정
+            基本のお届け先に設定
           </label>
           <div style={{ display: "flex", gap: 8 }}>
             <button onClick={handleSave} disabled={saving}
               style={{ flex: 1, height: 42, background: "#8B5E3C", border: "none", borderRadius: 8, color: "#fff", fontSize: 14, fontWeight: 700, cursor: "pointer" }}>
-              {saving ? "저장 중..." : "저장"}
+              {saving ? "保存中..." : "保存"}
             </button>
             <button onClick={() => { setEditing(null); setIsNew(false); setShowPostcode(false); postcodeInitRef.current = false; }}
               style={{ height: 42, background: "#fff", border: "1px solid #ddd", borderRadius: 8, color: "#888", fontSize: 14, padding: "0 16px", cursor: "pointer" }}>
-              취소
+              キャンセル
             </button>
           </div>
         </div>
       )}
-      {loading ? <div style={{ padding: 40, textAlign: "center", color: "#aaa" }}>불러오는 중...</div>
-        : addresses.length === 0 ? <EmptyBox icon={MapPin} text="저장된 배송지가 없습니다" />
+      {loading ? <div style={{ padding: 40, textAlign: "center", color: "#aaa" }}>読み込み中...</div>
+        : addresses.length === 0 ? <EmptyBox icon={MapPin} text="保存されたお届け先がありません" />
         : (
           <div>
             {addresses.map(addr => (
@@ -879,7 +880,7 @@ function AddressSection() {
                   <div style={{ flex: 1 }}>
                     <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
                       <span style={{ fontSize: 14, fontWeight: 700, color: "#222" }}>{addr.ma_name}</span>
-                      {addr.ma_default && <span style={{ fontSize: 11, fontWeight: 700, color: "#8B5E3C", background: "#e8f8f0", padding: "2px 8px", borderRadius: 4 }}>기본</span>}
+                      {addr.ma_default && <span style={{ fontSize: 11, fontWeight: 700, color: "#8B5E3C", background: "#e8f8f0", padding: "2px 8px", borderRadius: 4 }}>基本</span>}
                     </div>
                     {addr.ma_hp && <p style={{ margin: "0 0 2px", fontSize: 13, color: "#666" }}>{addr.ma_hp}</p>}
                     <p style={{ margin: 0, fontSize: 13, color: "#666" }}>{addr.ma_addr1} {addr.ma_addr2} {addr.ma_zip1 && `(${addr.ma_zip1})`}</p>
@@ -888,16 +889,16 @@ function AddressSection() {
                     {!addr.ma_default && (
                       <button onClick={() => handleDefault(addr)}
                         style={{ fontSize: 11, color: "#8B5E3C", background: "#e8f8f0", border: "1px solid #b8e6cc", borderRadius: 5, padding: "4px 8px", cursor: "pointer" }}>
-                        기본설정
+                        基本に設定
                       </button>
                     )}
                     <button onClick={() => { setEditing({ ...addr }); setIsNew(false); }}
                       style={{ fontSize: 11, color: "#666", background: "#f5f5f5", border: "1px solid #ddd", borderRadius: 5, padding: "4px 8px", cursor: "pointer", display: "flex", alignItems: "center", gap: 3 }}>
-                      <Pencil size={10} /> 수정
+                      <Pencil size={10} /> 編集
                     </button>
                     <button onClick={() => handleDelete(addr.ma_id)}
                       style={{ fontSize: 11, color: "#f44336", background: "#fff3f3", border: "1px solid #ffcdd2", borderRadius: 5, padding: "4px 8px", cursor: "pointer", display: "flex", alignItems: "center", gap: 3 }}>
-                      <Trash2 size={10} /> 삭제
+                      <Trash2 size={10} /> 削除
                     </button>
                   </div>
                 </div>
@@ -933,41 +934,41 @@ function InquirySection() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!form.subject.trim() || !form.content.trim()) { setToast({ msg: "제목과 내용을 입력해주세요", type: "error" }); return; }
+    if (!form.subject.trim() || !form.content.trim()) { setToast({ msg: "タイトルと内容を入力してください", type: "error" }); return; }
     setSubmitting(true);
     try {
       const res = await authFetch("/api/shop/inquiries", { method: "POST", body: JSON.stringify(form) });
       const data = await res.json();
-      if (!res.ok) { setToast({ msg: data.error || "등록 실패", type: "error" }); return; }
-      setToast({ msg: "문의가 등록되었습니다", type: "success" });
+      if (!res.ok) { setToast({ msg: data.error || "登録に失敗しました", type: "error" }); return; }
+      setToast({ msg: "お問い合わせを送信しました", type: "success" });
       setForm({ subject: "", content: "" }); setWriting(false); load();
     } finally { setSubmitting(false); }
   };
 
   return (
-    <SectionBox title="1:1 문의내역" action={
+    <SectionBox title="お問い合わせ履歴" action={
       <button onClick={() => setWriting(!writing)}
         style={{ display: "flex", alignItems: "center", gap: 4, background: "#8B5E3C", border: "none", borderRadius: 6, color: "#fff", padding: "6px 12px", fontSize: 12, fontWeight: 600, cursor: "pointer" }}>
-        {writing ? <><X size={13} /> 취소</> : <><Plus size={13} /> 문의 작성</>}
+        {writing ? <><X size={13} /> キャンセル</> : <><Plus size={13} /> お問い合わせ作成</>}
       </button>
     }>
       {writing && (
         <form onSubmit={handleSubmit} style={{ padding: 20, borderBottom: "2px solid #8B5E3C", background: "#FDF6EE" }}>
-          <h3 style={{ margin: "0 0 16px", fontSize: 14, fontWeight: 700, color: "#8B5E3C" }}>1:1 문의 작성</h3>
-          <PField label="제목 *" value={form.subject} onChange={e => setForm(p => ({ ...p, subject: e.target.value }))} placeholder="문의 제목을 입력해주세요" />
+          <h3 style={{ margin: "0 0 16px", fontSize: 14, fontWeight: 700, color: "#8B5E3C" }}>お問い合わせ作成</h3>
+          <PField label="件名 *" value={form.subject} onChange={e => setForm(p => ({ ...p, subject: e.target.value }))} placeholder="件名を入力してください" />
           <div style={{ marginBottom: 14 }}>
-            <label style={{ display: "block", fontSize: 12, color: "#888", marginBottom: 5, fontWeight: 600 }}>내용 *</label>
-            <textarea value={form.content} onChange={e => setForm(p => ({ ...p, content: e.target.value }))} placeholder="문의 내용을 상세히 입력해주세요"
+            <label style={{ display: "block", fontSize: 12, color: "#888", marginBottom: 5, fontWeight: 600 }}>内容 *</label>
+            <textarea value={form.content} onChange={e => setForm(p => ({ ...p, content: e.target.value }))} placeholder="お問い合わせ内容を詳しく入力してください"
               style={{ width: "100%", minHeight: 120, border: "1.5px solid #e0e0e0", borderRadius: 8, padding: "10px 12px", fontSize: 14, resize: "vertical", outline: "none", boxSizing: "border-box", fontFamily: "inherit" }} />
           </div>
           <button type="submit" disabled={submitting}
             style={{ height: 42, background: "#8B5E3C", border: "none", borderRadius: 8, color: "#fff", fontSize: 14, fontWeight: 700, padding: "0 28px", cursor: "pointer" }}>
-            {submitting ? "등록 중..." : "문의 등록"}
+            {submitting ? "送信中..." : "お問い合わせを送信"}
           </button>
         </form>
       )}
-      {loading ? <div style={{ padding: 40, textAlign: "center", color: "#aaa" }}>불러오는 중...</div>
-        : inquiries.length === 0 ? <EmptyBox icon={MessageSquare} text="1:1 문의 내역이 없습니다" />
+      {loading ? <div style={{ padding: 40, textAlign: "center", color: "#aaa" }}>読み込み中...</div>
+        : inquiries.length === 0 ? <EmptyBox icon={MessageSquare} text="お問い合わせ履歴がありません" />
         : (
           <div>
             {inquiries.map(inq => (
@@ -980,7 +981,7 @@ function InquirySection() {
                   </div>
                   <div style={{ display: "flex", alignItems: "center", gap: 10, flexShrink: 0, marginLeft: 12 }}>
                     <span style={{ fontSize: 11, fontWeight: 700, color: inq.has_reply ? "#8B5E3C" : "#f5a623", background: inq.has_reply ? "#e8f8f0" : "#fff8e8", padding: "3px 10px", borderRadius: 4 }}>
-                      {inq.has_reply ? "답변완료" : "답변대기"}
+                      {inq.has_reply ? "回答済み" : "回答待ち"}
                     </span>
                     <ChevronRight size={14} color="#bbb" style={{ transform: expanded === inq.wr_id ? "rotate(90deg)" : "none", transition: "transform 0.2s" }} />
                   </div>
@@ -990,7 +991,7 @@ function InquirySection() {
                     <div style={{ background: "#fff", border: "1px solid #eee", borderRadius: 8, padding: "14px 16px", fontSize: 13, color: "#444", lineHeight: 1.7, whiteSpace: "pre-wrap" }}>
                       {inq.wr_content}
                     </div>
-                    {!inq.has_reply && <p style={{ margin: "10px 0 0", fontSize: 12, color: "#aaa" }}>답변 대기 중입니다. 영업일 기준 1~2일 내에 답변드립니다.</p>}
+                    {!inq.has_reply && <p style={{ margin: "10px 0 0", fontSize: 12, color: "#aaa" }}>回答待ちです。営業日基準で1~2日以内にご回答いたします。</p>}
                   </div>
                 )}
               </div>
@@ -1026,17 +1027,17 @@ function ReviewSection() {
   useEffect(() => { load(); }, []);
 
   const del = async (wr_id: number) => {
-    if (!confirm("리뷰를 삭제하시겠습니까?")) return;
+    if (!confirm("レビューを削除してもよろしいですか?")) return;
     await authFetch(`/api/shop/reviews/${wr_id}`, { method: "DELETE" });
     setReviews(prev => prev.filter(r => r.wr_id !== wr_id));
   };
 
   return (
-    <SectionBox title="상품리뷰관리">
+    <SectionBox title="レビュー管理">
       {loading ? (
-        <div style={{ padding: 24, textAlign: "center", color: "#aaa", fontSize: 14 }}>불러오는 중...</div>
+        <div style={{ padding: 24, textAlign: "center", color: "#aaa", fontSize: 14 }}>読み込み中...</div>
       ) : reviews.length === 0 ? (
-        <EmptyBox icon={Star} text="작성한 리뷰가 없습니다" />
+        <EmptyBox icon={Star} text="投稿したレビューがありません" />
       ) : (
         <div style={{ padding: 16, display: "flex", flexDirection: "column", gap: 12 }}>
           {reviews.map(r => (
@@ -1055,7 +1056,7 @@ function ReviewSection() {
                 </button>
               </div>
               <p style={{ margin: 0, fontSize: 13, color: "#555", lineHeight: 1.6 }}>{r.wr_content}</p>
-              <p style={{ margin: "6px 0 0", fontSize: 11, color: "#bbb" }}>{new Date(r.wr_datetime).toLocaleDateString("ko-KR")}</p>
+              <p style={{ margin: "6px 0 0", fontSize: 11, color: "#bbb" }}>{new Date(r.wr_datetime).toLocaleDateString("ja-JP")}</p>
             </div>
           ))}
         </div>
@@ -1080,10 +1081,10 @@ function WishlistSection() {
     setItems(prev => prev.filter(i => i.it_id !== it_id));
   };
 
-  if (loading) return <SectionBox title="찜리스트"><div style={{ padding: 24, textAlign: "center", color: "#aaa" }}>불러오는 중...</div></SectionBox>;
-  if (items.length === 0) return <SectionBox title="찜리스트"><EmptyBox icon={Heart} text="찜한 상품이 없습니다" /></SectionBox>;
+  if (loading) return <SectionBox title="お気に入りリスト"><div style={{ padding: 24, textAlign: "center", color: "#aaa" }}>読み込み中...</div></SectionBox>;
+  if (items.length === 0) return <SectionBox title="お気に入りリスト"><EmptyBox icon={Heart} text="お気に入りの商品がありません" /></SectionBox>;
   return (
-    <SectionBox title="찜리스트">
+    <SectionBox title="お気に入りリスト">
       <div style={{ padding: 16, display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(140px, 1fr))", gap: 12 }}>
         {items.map(item => (
           <div key={item.it_id} style={{ border: "1px solid #eee", borderRadius: 8, overflow: "hidden", position: "relative" }}>
@@ -1100,7 +1101,7 @@ function WishlistSection() {
               <div style={{ padding: "8px 10px" }}>
                 <p style={{ margin: "0 0 4px", fontSize: 12, color: "#333", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{item.it_name}</p>
                 <p style={{ margin: 0, fontSize: 13, fontWeight: 700, color: "#8B5E3C" }}>{formatPrice(item.it_price)}</p>
-                {item.it_soldout === "1" && <p style={{ margin: "2px 0 0", fontSize: 11, color: "#e53935" }}>품절</p>}
+                {item.it_soldout === "1" && <p style={{ margin: "2px 0 0", fontSize: 11, color: "#e53935" }}>売り切れ</p>}
               </div>
             </div>
           </div>
@@ -1132,22 +1133,22 @@ function DashboardSection({ onNavigate }: { onNavigate: (s: Section) => void }) 
   }, []);
 
   const orderStatusFlow = [
-    { key: "주문접수",  label: "주문접수",  icon: Package,  color: "#f5a623", bg: "#fff8e8" },
-    { key: "처리중",    label: "결제/입금", icon: Award,    color: "#7B68EE", bg: "#f0eeff" },
-    { key: "배송준비",  label: "배송준비",  icon: RotateCcw,color: "#2196f3", bg: "#e3f2fd" },
-    { key: "배송중",    label: "배송중",    icon: Truck,    color: "#009688", bg: "#e0f2f1" },
-    { key: "배송완료",  label: "배송완료",  icon: CheckCircle, color: "#8B5E3C", bg: "#e8f8f0" },
+    { key: "주문접수",  label: "注文受付",  icon: Package,  color: "#f5a623", bg: "#fff8e8" },
+    { key: "처리중",    label: "お支払い/入金", icon: Award,    color: "#7B68EE", bg: "#f0eeff" },
+    { key: "배송준비",  label: "発送準備中",  icon: RotateCcw,color: "#2196f3", bg: "#e3f2fd" },
+    { key: "배송중",    label: "配送中",    icon: Truck,    color: "#009688", bg: "#e0f2f1" },
+    { key: "배송완료",  label: "配送完了",  icon: CheckCircle, color: "#8B5E3C", bg: "#e8f8f0" },
   ];
 
   const activityCards = [
-    { label: "사용가능 쿠폰", value: data ? `${data.coupon_unused}장` : "-", sub: data ? `전체 ${data.coupon_total}장` : "", color: "#e91e63", bg: "#fce4ec", icon: Tag, onClick: () => onNavigate("coupon") },
-    { label: "보유 포인트",   value: data ? `${data.member.mb_point.toLocaleString()} D` : "-", sub: "쇼핑에 사용하세요", color: "#ff9800", bg: "#fff3e0", icon: Award, onClick: () => onNavigate("points") },
-    { label: "1:1 문의",     value: data ? `${data.inquiry_total}건` : "-", sub: data && data.inquiry_unanswered > 0 ? `답변대기 ${data.inquiry_unanswered}건` : "모두 답변됨", color: "#2196f3", bg: "#e3f2fd", icon: MessageSquare, onClick: () => onNavigate("inquiry") },
-    { label: "작성 리뷰",     value: data ? `${data.review_count}개` : "-", sub: "상품 리뷰 내역", color: "#9c27b0", bg: "#f3e5f5", icon: Star, onClick: () => onNavigate("review") },
+    { label: "使用可能クーポン", value: data ? `${data.coupon_unused}枚` : "-", sub: data ? `全${data.coupon_total}枚` : "", color: "#e91e63", bg: "#fce4ec", icon: Tag, onClick: () => onNavigate("coupon") },
+    { label: "保有ポイント",   value: data ? `${data.member.mb_point.toLocaleString()} pt` : "-", sub: "お買い物にご利用ください", color: "#ff9800", bg: "#fff3e0", icon: Award, onClick: () => onNavigate("points") },
+    { label: "お問い合わせ",     value: data ? `${data.inquiry_total}件` : "-", sub: data && data.inquiry_unanswered > 0 ? `回答待ち ${data.inquiry_unanswered}件` : "すべて回答済み", color: "#2196f3", bg: "#e3f2fd", icon: MessageSquare, onClick: () => onNavigate("inquiry") },
+    { label: "投稿レビュー",     value: data ? `${data.review_count}件` : "-", sub: "レビュー履歴", color: "#9c27b0", bg: "#f3e5f5", icon: Star, onClick: () => onNavigate("review") },
   ];
 
   if (loading) {
-    return <div style={{ padding: "60px 0", textAlign: "center", color: "#aaa", fontSize: 14 }}>불러오는 중...</div>;
+    return <div style={{ padding: "60px 0", textAlign: "center", color: "#aaa", fontSize: 14 }}>読み込み中...</div>;
   }
 
   return (
@@ -1155,9 +1156,9 @@ function DashboardSection({ onNavigate }: { onNavigate: (s: Section) => void }) 
       {/* 주문 배송 현황 */}
       <div style={{ background: "#fff", border: "1px solid #eee", borderRadius: 12, marginBottom: 16, overflow: "hidden" }}>
         <div style={{ padding: "14px 20px", borderBottom: "1px solid #f0f0f0", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-          <h2 style={{ margin: 0, fontSize: 15, fontWeight: 800, color: "#111" }}>주문 / 배송 현황</h2>
+          <h2 style={{ margin: 0, fontSize: 15, fontWeight: 800, color: "#111" }}>注文 / 配送状況</h2>
           <button onClick={() => onNavigate("orders")} style={{ fontSize: 12, color: "#8B5E3C", background: "none", border: "none", cursor: "pointer", fontWeight: 600 }}>
-            전체보기 →
+            すべて見る →
           </button>
         </div>
         <div style={{ display: "flex" }}>
@@ -1201,15 +1202,15 @@ function DashboardSection({ onNavigate }: { onNavigate: (s: Section) => void }) 
       {/* 최근 주문 */}
       <div style={{ background: "#fff", border: "1px solid #eee", borderRadius: 12, overflow: "hidden", marginBottom: 16 }}>
         <div style={{ padding: "14px 20px", borderBottom: "1px solid #f0f0f0", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-          <h2 style={{ margin: 0, fontSize: 15, fontWeight: 800, color: "#111" }}>최근 주문</h2>
+          <h2 style={{ margin: 0, fontSize: 15, fontWeight: 800, color: "#111" }}>最近の注文</h2>
           <button onClick={() => onNavigate("orders")} style={{ fontSize: 12, color: "#8B5E3C", background: "none", border: "none", cursor: "pointer", fontWeight: 600 }}>
-            전체보기 →
+            すべて見る →
           </button>
         </div>
         {!data?.recent_orders?.length ? (
           <div style={{ padding: "40px 0", textAlign: "center", color: "#bbb" }}>
             <Package size={32} color="#ddd" style={{ marginBottom: 10 }} />
-            <p style={{ margin: 0, fontSize: 14 }}>최근 주문 내역이 없습니다</p>
+            <p style={{ margin: 0, fontSize: 14 }}>最近の注文履歴はありません</p>
           </div>
         ) : (
           <div>
@@ -1223,12 +1224,12 @@ function DashboardSection({ onNavigate }: { onNavigate: (s: Section) => void }) 
                 </div>
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <p style={{ margin: "0 0 3px", fontSize: 14, color: "#222", fontWeight: 600, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                    {od.first_item}{od.item_count > 1 ? ` 외 ${od.item_count - 1}개` : ""}
+                    {od.first_item}{od.item_count > 1 ? ` 他${od.item_count - 1}点` : ""}
                   </p>
                   <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                     <p style={{ margin: 0, fontSize: 12, color: "#999" }}>{od.od_time?.slice(0, 10)}</p>
                     <span style={{ fontSize: 12, color: "#aaa" }}>·</span>
-                    <p style={{ margin: 0, fontSize: 12, color: "#888", fontWeight: 600 }}>{od.od_receipt_price.toLocaleString()}원</p>
+                    <p style={{ margin: 0, fontSize: 12, color: "#888", fontWeight: 600 }}>{od.od_receipt_price.toLocaleString()}円</p>
                   </div>
                 </div>
                 <StatusBadge status={od.od_status} />
@@ -1251,10 +1252,10 @@ function DashboardSection({ onNavigate }: { onNavigate: (s: Section) => void }) 
 }
 
 const GIFT_STATUS: Record<string, { label: string; color: string; bg: string }> = {
-  pending:        { label: "주소 대기중",    color: "#d97706", bg: "#fef3c7" },
-  address_filled: { label: "배송지 입력완료", color: "#8B5E3C", bg: "#d1fae5" },
-  shipped:        { label: "배송중",         color: "#2196f3", bg: "#e3f2fd" },
-  delivered:      { label: "배송완료",       color: "#888",    bg: "#f5f5f5" },
+  pending:        { label: "住所入力待ち",    color: "#d97706", bg: "#fef3c7" },
+  address_filled: { label: "お届け先入力完了", color: "#8B5E3C", bg: "#d1fae5" },
+  shipped:        { label: "配送中",         color: "#2196f3", bg: "#e3f2fd" },
+  delivered:      { label: "配送完了",       color: "#888",    bg: "#f5f5f5" },
 };
 
 function GiftSummarySection() {
@@ -1284,16 +1285,16 @@ function GiftSummarySection() {
     <div style={{ background: "#fff", border: "1px solid #eee", borderRadius: 12, overflow: "hidden" }}>
       <div style={{ padding: "14px 20px", borderBottom: "1px solid #f0f0f0", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
         <h2 style={{ margin: 0, fontSize: 15, fontWeight: 800, color: "#111", display: "flex", alignItems: "center", gap: 6 }}>
-          <Gift size={15} color="#8B5E3C" /> 보낸 선물
+          <Gift size={15} color="#8B5E3C" /> 送ったギフト
         </h2>
-        <a href="/gift/my" style={{ fontSize: 12, color: "#8B5E3C", textDecoration: "none", fontWeight: 600 }}>전체보기 →</a>
+        <a href="/gift/my" style={{ fontSize: 12, color: "#8B5E3C", textDecoration: "none", fontWeight: 600 }}>すべて見る →</a>
       </div>
       {loading ? (
-        <div style={{ padding: "30px 0", textAlign: "center", color: "#bbb", fontSize: 13 }}>불러오는 중...</div>
+        <div style={{ padding: "30px 0", textAlign: "center", color: "#bbb", fontSize: 13 }}>読み込み中...</div>
       ) : gifts.length === 0 ? (
         <div style={{ padding: "40px 0", textAlign: "center", color: "#bbb" }}>
           <Gift size={32} color="#ddd" style={{ marginBottom: 10 }} />
-          <p style={{ margin: 0, fontSize: 14 }}>보낸 선물 내역이 없습니다</p>
+          <p style={{ margin: 0, fontSize: 14 }}>送ったギフトの履歴はありません</p>
         </div>
       ) : (
         <div>
@@ -1353,7 +1354,7 @@ export default function Mypage() {
 
   if (!user) return null;
 
-  const allMenus = [{ key: "dashboard" as Section, label: "나의 현황" }, ...MY_SHOPPING, ...MY_INFO];
+  const allMenus = [{ key: "dashboard" as Section, label: "マイ状況" }, ...MY_SHOPPING, ...MY_INFO];
   const currentLabel = allMenus.find(m => m.key === section)?.label || "";
 
   const handleNav = (s: Section) => { setSection(s); setMobileSidebarOpen(false); };
@@ -1361,27 +1362,27 @@ export default function Mypage() {
   const sidebarContent = (
     <>
       <div style={{ background: "#8B5E3C", borderRadius: "10px 10px 0 0", padding: "18px 16px" }}>
-        <p style={{ margin: 0, fontSize: 16, fontWeight: 800, color: "#fff" }}>마이페이지</p>
-        <p style={{ margin: "4px 0 0", fontSize: 12, color: "rgba(255,255,255,0.85)" }}>{user.mb_name}님 환영합니다</p>
+        <p style={{ margin: 0, fontSize: 16, fontWeight: 800, color: "#fff" }}>マイページ</p>
+        <p style={{ margin: "4px 0 0", fontSize: 12, color: "rgba(255,255,255,0.85)" }}>{user.mb_name}様、ようこそ</p>
         {myInfo && (
           <div style={{ marginTop: 10 }}>
-            <p style={{ margin: "0 0 2px", fontSize: 11, color: "rgba(255,255,255,0.7)" }}>보유 포인트</p>
+            <p style={{ margin: "0 0 2px", fontSize: 11, color: "rgba(255,255,255,0.7)" }}>保有ポイント</p>
             <p style={{ margin: 0, fontSize: 15, fontWeight: 800, color: "#fff" }}>{myInfo.mb_point.toLocaleString()} D</p>
           </div>
         )}
       </div>
 
       <div style={{ background: "#fff", border: "1px solid #eee", borderTop: "none", borderRadius: "0 0 10px 10px", overflow: "hidden" }}>
-        <SideBtn label="나의 현황" icon={<LayoutDashboard size={13} />} active={section === "dashboard"}
+        <SideBtn label="マイ状況" icon={<LayoutDashboard size={13} />} active={section === "dashboard"}
           onClick={() => handleNav("dashboard")} />
 
-        <div style={{ padding: "10px 16px 4px", fontSize: 11, fontWeight: 700, color: "#8B5E3C", letterSpacing: 0.5, borderTop: "1px solid #f5f5f5" }}>MY 쇼핑</div>
+        <div style={{ padding: "10px 16px 4px", fontSize: 11, fontWeight: 700, color: "#8B5E3C", letterSpacing: 0.5, borderTop: "1px solid #f5f5f5" }}>MYショッピング</div>
         {MY_SHOPPING.map(({ key, label, icon: Icon }) => (
           <SideBtn key={key} label={label} icon={<Icon size={13} />} active={section === key}
             onClick={() => handleNav(key)} />
         ))}
 
-        <div style={{ padding: "10px 16px 4px", fontSize: 11, fontWeight: 700, color: "#8B5E3C", letterSpacing: 0.5, marginTop: 4, borderTop: "1px solid #f5f5f5" }}>MY 정보</div>
+        <div style={{ padding: "10px 16px 4px", fontSize: 11, fontWeight: 700, color: "#8B5E3C", letterSpacing: 0.5, marginTop: 4, borderTop: "1px solid #f5f5f5" }}>MY情報</div>
         {MY_INFO.map(({ key, label, icon: Icon }) => (
           <SideBtn key={key} label={label} icon={<Icon size={13} />} active={section === key}
             onClick={() => handleNav(key)} />
@@ -1389,7 +1390,7 @@ export default function Mypage() {
 
         <div style={{ padding: "10px 16px", borderTop: "1px solid #f5f5f5", marginTop: 4, display: "flex", flexDirection: "column", gap: 4 }}>
           <button onClick={handleLogout} style={{ display: "flex", alignItems: "center", gap: 6, background: "none", border: "none", cursor: "pointer", fontSize: 12, color: "#aaa", padding: "4px 0" }}>
-            <LogOut size={12} /> 로그아웃
+            <LogOut size={12} /> ログアウト
           </button>
         </div>
       </div>
@@ -1401,15 +1402,15 @@ export default function Mypage() {
       {/* 모바일 상단 탭 바 */}
       <div className="mypage-mobile-header" style={{ display: "none", background: "#8B5E3C", padding: "12px 16px", color: "#fff" }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
-          <p style={{ margin: 0, fontSize: 15, fontWeight: 800 }}>마이페이지 · {currentLabel}</p>
+          <p style={{ margin: 0, fontSize: 15, fontWeight: 800 }}>マイページ · {currentLabel}</p>
           <button onClick={() => setMobileSidebarOpen(!mobileSidebarOpen)}
             style={{ background: "rgba(255,255,255,0.2)", border: "none", borderRadius: 6, padding: "4px 10px", color: "#fff", fontSize: 12, cursor: "pointer" }}>
-            메뉴
+            メニュー
           </button>
         </div>
         {myInfo && (
           <span style={{ fontSize: 12, color: "rgba(255,255,255,0.85)", fontWeight: 700 }}>
-            포인트 {myInfo.mb_point.toLocaleString()} D
+            ポイント {myInfo.mb_point.toLocaleString()} pt
           </span>
         )}
       </div>
@@ -1419,7 +1420,7 @@ export default function Mypage() {
         <div className="mypage-mobile-menu" style={{ background: "#fff", border: "1px solid #eee", padding: "8px 0" }}>
           <button onClick={() => handleNav("dashboard")}
             style={{ width: "100%", padding: "12px 20px", background: section === "dashboard" ? "#FDF6EE" : "none", border: "none", borderLeft: section === "dashboard" ? "3px solid #8B5E3C" : "3px solid transparent", cursor: "pointer", fontSize: 14, color: section === "dashboard" ? "#8B5E3C" : "#555", fontWeight: section === "dashboard" ? 700 : 400, textAlign: "left", display: "flex", alignItems: "center", gap: 8 }}>
-            <LayoutDashboard size={14} /> 나의 현황
+            <LayoutDashboard size={14} /> マイ状況
           </button>
           {[...MY_SHOPPING, ...MY_INFO].map(({ key, label, icon: Icon }) => (
             <button key={key} onClick={() => handleNav(key)}

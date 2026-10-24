@@ -35,28 +35,28 @@ export default function MyReviews() {
 
   const deleteReview = trpc.reviews.delete.useMutation({
     onSuccess: () => {
-      toast.success("리뷰가 삭제되었습니다.");
+      toast.success("レビューを削除しました。");
       utils.reviews.getMyReviews.invalidate();
     },
     onError: (err) => toast.error(err.message),
   });
 
   const handleDelete = (reviewId: number) => {
-    if (confirm("정말 이 리뷰를 삭제하시겠습니까?")) {
+    if (confirm("本当にこのレビューを削除しますか？")) {
       deleteReview.mutate({ reviewId });
     }
   };
 
   if (isLoading) {
     return (
-      <MyPageLayout title="내 리뷰">
-        <p className="text-center text-muted-foreground py-12">로딩 중...</p>
+      <MyPageLayout title="マイレビュー">
+        <p className="text-center text-muted-foreground py-12">読み込み中...</p>
       </MyPageLayout>
     );
   }
 
   return (
-    <MyPageLayout title="내 리뷰">
+    <MyPageLayout title="マイレビュー">
 
       {/* 리뷰 작성 대기 */}
       {(reviewPending ?? []).length > 0 && (
@@ -67,16 +67,16 @@ export default function MyReviews() {
                 <Pencil className="w-4 h-4 text-amber-600 dark:text-amber-400" />
               </div>
               <div>
-                <h3 className="font-bold text-amber-900 dark:text-amber-200">리뷰 작성 대기</h3>
+                <h3 className="font-bold text-amber-900 dark:text-amber-200">レビュー投稿待ち</h3>
                 <p className="text-xs text-amber-700 dark:text-amber-400">
                   {isPointEnabled ? (
-                    <>리뷰 작성 시 최대 <strong>{totalPossiblePoints.toLocaleString()}P</strong> 적립!</>
-                  ) : "구매하신 상품의 리뷰를 남겨주세요"}
+                    <>レビュー投稿で最大 <strong>{totalPossiblePoints.toLocaleString()}P</strong> 獲得！</>
+                  ) : "ご購入商品のレビューをお寄せください"}
                 </p>
               </div>
             </div>
             <Badge variant="secondary" className="bg-amber-500/20 text-amber-700 dark:text-amber-300 border-amber-300">
-              {reviewPending!.length}건
+              {reviewPending!.length}件
             </Badge>
           </div>
           <div className="space-y-2">
@@ -86,18 +86,18 @@ export default function MyReviews() {
                   <Package className="w-5 h-5 text-white" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="font-medium text-sm">주문번호: {formatOrderNumber(order.orderNumber)}</p>
+                  <p className="font-medium text-sm">注文番号: {formatOrderNumber(order.orderNumber)}</p>
                   <p className="text-xs text-muted-foreground">{formatDate(order.createdAt)} · {formatPrice(order.totalAmount)}</p>
                   {isPointEnabled && (
                     <div className="flex items-center gap-1 mt-0.5">
                       <Gift className="w-3 h-3 text-amber-500" />
-                      <span className="text-xs text-amber-600 dark:text-amber-400 font-medium">텍스트 {textPoints}P + 포토 {photoPoints}P</span>
+                      <span className="text-xs text-amber-600 dark:text-amber-400 font-medium">テキスト {textPoints}P + フォト {photoPoints}P</span>
                     </div>
                   )}
                 </div>
                 <Link href={`/mypage/orders/${order.orderId}`}>
                   <Button size="sm" className="text-xs h-7 gap-1 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white border-0 flex-shrink-0">
-                    <Star className="w-3 h-3" />리뷰작성
+                    <Star className="w-3 h-3" />レビューを書く
                   </Button>
                 </Link>
               </div>
@@ -107,15 +107,15 @@ export default function MyReviews() {
       )}
 
       <div className="flex items-center justify-between mb-4">
-        <h3 className="font-semibold text-lg">리뷰 목록</h3>
-        <span className="text-sm text-muted-foreground">총 {reviewData?.total ?? 0}건</span>
+        <h3 className="font-semibold text-lg">レビュー一覧</h3>
+        <span className="text-sm text-muted-foreground">合計 {reviewData?.total ?? 0}件</span>
       </div>
 
         {!reviewData || reviewData.total === 0 ? (
           <div className="text-center py-12">
-            <p className="text-muted-foreground mb-4">작성한 리뷰가 없습니다.</p>
+            <p className="text-muted-foreground mb-4">投稿したレビューはありません。</p>
             <Link href="/mypage/orders">
-              <Button>주문 내역 보기</Button>
+              <Button>注文履歴を見る</Button>
             </Link>
           </div>
         ) : (
@@ -170,7 +170,7 @@ export default function MyReviews() {
                           <img
                             key={idx}
                             src={img}
-                            alt="리뷰 사진"
+                            alt="レビュー写真"
                             className="w-20 h-20 rounded-lg object-cover"
                           />
                         ))}
@@ -186,7 +186,7 @@ export default function MyReviews() {
                       onClick={() => setEditingReview(review)}
                     >
                       <Pencil className="w-3 h-3 mr-1" />
-                      수정
+                      編集
                     </Button>
                     <Button
                       size="sm"
@@ -195,7 +195,7 @@ export default function MyReviews() {
                       disabled={deleteReview.isPending}
                     >
                       <Trash2 className="w-3 h-3 mr-1" />
-                      삭제
+                      削除
                     </Button>
                   </div>
                 </div>

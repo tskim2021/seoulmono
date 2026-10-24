@@ -11,9 +11,9 @@ import { Settings, CreditCard, DollarSign, Banknote, Trash2, Eye, EyeOff, CheckC
 
 const STRIPE_FIELDS = ["publishableKey", "secretKey", "webhookSecret"] as const;
 const STRIPE_LABELS: Record<string, string> = {
-  publishableKey: "Publishable Key (공개키, pk_live_...)",
-  secretKey: "Secret Key (비밀키, sk_live_...)",
-  webhookSecret: "Webhook Secret (선택, whsec_...)",
+  publishableKey: "Publishable Key (公開キー, pk_live_...)",
+  secretKey: "Secret Key (シークレットキー, sk_live_...)",
+  webhookSecret: "Webhook Secret (任意, whsec_...)",
 };
 
 function maskKey(key: string) {
@@ -35,18 +35,18 @@ export function AdminPaymentSettings() {
   const { data: methods, refetch } = trpc.paymentSettings.adminGetAllMethods.useQuery();
 
   const toggleMethod = trpc.paymentSettings.adminToggleMethod.useMutation({
-    onSuccess: () => { toast.success("결제 수단 설정이 업데이트되었습니다."); refetch(); },
+    onSuccess: () => { toast.success("決済手段の設定を更新しました。"); refetch(); },
     onError: (e) => toast.error(e.message),
   });
 
   const updateApiConfig = trpc.paymentSettings.adminUpdateApiConfig.useMutation({
-    onSuccess: () => { toast.success("API 설정이 저장되었습니다."); setEditingId(null); refetch(); },
+    onSuccess: () => { toast.success("API設定を保存しました。"); setEditingId(null); refetch(); },
     onError: (e) => toast.error(e.message),
   });
 
   const deleteKeys = trpc.stripe.adminDeleteKeys.useMutation({
-    onSuccess: () => { toast.success("Stripe 키가 삭제되었습니다."); refetch(); },
-    onError: (e) => toast.error("삭제 실패: " + e.message),
+    onSuccess: () => { toast.success("Stripeキーを削除しました。"); refetch(); },
+    onError: (e) => toast.error("削除に失敗しました: " + e.message),
   });
 
   const handleToggle = (id: number, currentStatus: number) => {
@@ -95,9 +95,9 @@ export function AdminPaymentSettings() {
   return (
     <div className="p-6">
       <div className="mb-8">
-        <h1 className="text-2xl font-bold mb-1">결제 설정</h1>
+        <h1 className="text-2xl font-bold mb-1">決済設定</h1>
         <p className="text-muted-foreground text-sm">
-          사용할 결제 수단을 활성화하고 API 설정을 관리합니다. 활성화된 결제 수단만 고객에게 표시됩니다.
+          利用する決済手段を有効化し、API設定を管理します。有効化された決済手段のみがお客様に表示されます。
         </p>
       </div>
 
@@ -121,7 +121,7 @@ export function AdminPaymentSettings() {
                         <CardTitle>{method.methodName}</CardTitle>
                         {method.methodCode === "stripe" && hasKeys && (
                           <Badge variant={liveMode ? "default" : "secondary"} className={liveMode ? "bg-green-600" : ""}>
-                            {liveMode ? "라이브" : "테스트"}
+                            {liveMode ? "本番" : "テスト"}
                           </Badge>
                         )}
                         {method.methodCode === "stripe" && (
@@ -130,7 +130,7 @@ export function AdminPaymentSettings() {
                             : <XCircle className="h-4 w-4 text-red-400" />
                         )}
                       </div>
-                      <CardDescription>{method.description || (method.methodCode === "stripe" ? "Stripe 글로벌 카드 결제" : "")}</CardDescription>
+                      <CardDescription>{method.description || (method.methodCode === "stripe" ? "Stripe グローバルカード決済" : "")}</CardDescription>
                     </div>
                   </div>
                   <Switch
@@ -154,7 +154,7 @@ export function AdminPaymentSettings() {
                                   type={showSecrets[field] ? "text" : "password"}
                                   value={stripeFields[field] || ""}
                                   onChange={(e) => setStripeFields(prev => ({ ...prev, [field]: e.target.value }))}
-                                  placeholder={`${STRIPE_LABELS[field]}를 입력하세요`}
+                                  placeholder={`${STRIPE_LABELS[field]}を入力してください`}
                                   className="font-mono text-sm"
                                 />
                                 <Button
@@ -169,13 +169,13 @@ export function AdminPaymentSettings() {
                             </div>
                           ))}
                           <p className="text-xs text-muted-foreground">
-                            Stripe 대시보드 → Developers → API keys에서 발급받은 키를 입력하세요.
-                            Webhook Secret은 Stripe Dashboard → Webhooks에서 확인하세요.
+                            Stripeダッシュボード → Developers → API keys で発行したキーを入力してください。
+                            Webhook Secret は Stripe Dashboard → Webhooks で確認してください。
                           </p>
                         </div>
                       ) : (
                         <div>
-                          <label className="text-sm font-medium mb-2 block">API 설정 (JSON)</label>
+                          <label className="text-sm font-medium mb-2 block">API設定 (JSON)</label>
                           <Textarea
                             value={apiConfig}
                             onChange={(e) => setApiConfig(e.target.value)}
@@ -186,18 +186,18 @@ export function AdminPaymentSettings() {
                       )}
 
                       <div>
-                        <label className="text-sm font-medium mb-2 block">설명</label>
+                        <label className="text-sm font-medium mb-2 block">説明</label>
                         <Textarea
                           value={description}
                           onChange={(e) => setDescription(e.target.value)}
-                          placeholder="관리자용 설명을 입력하세요"
+                          placeholder="管理者用の説明を入力してください"
                           rows={2}
                         />
                       </div>
 
                       <div className="flex gap-2">
-                        <Button onClick={() => handleSave(method.id, method.methodCode)}>저장</Button>
-                        <Button variant="outline" onClick={() => setEditingId(null)}>취소</Button>
+                        <Button onClick={() => handleSave(method.id, method.methodCode)}>保存</Button>
+                        <Button variant="outline" onClick={() => setEditingId(null)}>キャンセル</Button>
                       </div>
                     </div>
                   ) : (
@@ -221,19 +221,19 @@ export function AdminPaymentSettings() {
                                 </div>
                               )}
                               <div className="flex justify-between items-center">
-                                <span className="text-muted-foreground">통화</span>
+                                <span className="text-muted-foreground">通貨</span>
                                 <span className="uppercase">{parsedConfig.currency || "krw"}</span>
                               </div>
                             </div>
                           ) : (
                             <p className="text-sm text-amber-600 mb-2">
-                              Stripe 키가 설정되지 않았습니다. 키를 등록해주세요.
+                              Stripeキーが設定されていません。キーを登録してください。
                             </p>
                           )}
 
                           <div className="flex flex-wrap gap-2">
                             <Button variant="outline" size="sm" onClick={() => handleEdit(method)}>
-                              {hasKeys ? "키 수정" : "키 등록"}
+                              {hasKeys ? "キーを編集" : "キーを登録"}
                             </Button>
                             {hasKeys && (
                               <Button
@@ -248,7 +248,7 @@ export function AdminPaymentSettings() {
                                 disabled={deleteKeys.isPending}
                               >
                                 <Trash2 className="h-4 w-4 mr-1" />
-                                키 삭제
+                                キーを削除
                               </Button>
                             )}
                           </div>
@@ -257,13 +257,13 @@ export function AdminPaymentSettings() {
                         <div>
                           {method.apiConfig ? (
                             <div className="space-y-2">
-                              <p className="text-sm text-muted-foreground">API 설정이 저장되어 있습니다.</p>
-                              <Button variant="outline" size="sm" onClick={() => handleEdit(method)}>설정 수정</Button>
+                              <p className="text-sm text-muted-foreground">API設定が保存されています。</p>
+                              <Button variant="outline" size="sm" onClick={() => handleEdit(method)}>設定を編集</Button>
                             </div>
                           ) : (
                             <div>
-                              <p className="text-sm text-muted-foreground mb-2">API 설정이 필요합니다.</p>
-                              <Button variant="outline" size="sm" onClick={() => handleEdit(method)}>API 설정 추가</Button>
+                              <p className="text-sm text-muted-foreground mb-2">API設定が必要です。</p>
+                              <Button variant="outline" size="sm" onClick={() => handleEdit(method)}>API設定を追加</Button>
                             </div>
                           )}
                         </div>
@@ -279,21 +279,21 @@ export function AdminPaymentSettings() {
 
       <Card className="mt-8">
         <CardHeader>
-          <CardTitle>결제 수단 가이드</CardTitle>
+          <CardTitle>決済手段ガイド</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div>
-            <h3 className="font-semibold mb-1">Stripe (신용카드)</h3>
+            <h3 className="font-semibold mb-1">Stripe (クレジットカード)</h3>
             <p className="text-sm text-muted-foreground">
-              전 세계 신용카드 결제 지원. <a href="https://stripe.com" target="_blank" rel="noopener noreferrer" className="text-primary underline">stripe.com</a>에서 가입 후 API 키를 발급받으세요.
-              Webhook은 <a href="https://dashboard.stripe.com/webhooks" target="_blank" rel="noopener noreferrer" className="text-primary underline">Stripe 대시보드 → Webhooks</a>에서 설정합니다.
-              엔드포인트 URL: <code className="text-xs bg-muted px-1 rounded">/api/stripe/webhook</code>
+              世界中のクレジットカード決済に対応。<a href="https://stripe.com" target="_blank" rel="noopener noreferrer" className="text-primary underline">stripe.com</a>で登録後、APIキーを発行してください。
+              Webhookは<a href="https://dashboard.stripe.com/webhooks" target="_blank" rel="noopener noreferrer" className="text-primary underline">Stripeダッシュボード → Webhooks</a>で設定します。
+              エンドポイントURL: <code className="text-xs bg-muted px-1 rounded">/api/stripe/webhook</code>
             </p>
           </div>
           <div>
-            <h3 className="font-semibold mb-1">무통장 입금</h3>
+            <h3 className="font-semibold mb-1">銀行振込</h3>
             <p className="text-sm text-muted-foreground">
-              국내 은행 계좌 이체. 별도 API 설정이 필요하지 않습니다. 입금 계좌는 "결제 관리" 메뉴에서 설정하세요.
+              国内銀行口座への振込。別途API設定は不要です。振込先口座は「決済管理」メニューで設定してください。
             </p>
           </div>
         </CardContent>

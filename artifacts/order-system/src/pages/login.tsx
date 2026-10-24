@@ -16,14 +16,14 @@ export default function Login() {
     login({ data: { mb_id, mb_password } }, {
       onSuccess: (res) => {
         if (!res.user?.is_admin) {
-          setErrorMsg("관리자 계정만 접근할 수 있습니다.");
+          setErrorMsg("管理者アカウントのみアクセスできます。");
           return;
         }
         localStorage.setItem("token", res.token);
         window.location.href = import.meta.env.BASE_URL;
       },
       onError: (err: any) => {
-        setErrorMsg(err?.data?.error || err?.message || "로그인에 실패했습니다. 아이디와 비밀번호를 확인해주세요.");
+        setErrorMsg(err?.data?.error || err?.message || "ログインに失敗しました。IDとパスワードをご確認ください。");
       }
     });
   };
@@ -32,9 +32,9 @@ export default function Login() {
     <div className="min-h-screen flex items-center justify-center bg-slate-50">
       <div className="w-full max-w-md px-8 py-12 bg-white rounded-2xl shadow-lg">
         <div className="mb-8 flex flex-col items-center">
-          <img src={`${import.meta.env.BASE_URL}logo.png`} alt="ソウルモノ 로고" style={{ height: 64, marginBottom: 16, objectFit: "contain" }} />
-          <h2 className="text-3xl font-bold text-slate-900 mb-2 tracking-tight">관리자 로그인</h2>
-          <p className="text-slate-500">관리자 계정으로 로그인해 주세요.</p>
+          <img src={`${import.meta.env.BASE_URL}logo.png`} alt="ソウルモノ ロゴ" style={{ height: 64, marginBottom: 16, objectFit: "contain" }} />
+          <h2 className="text-3xl font-bold text-slate-900 mb-2 tracking-tight">管理者ログイン</h2>
+          <p className="text-slate-500">管理者アカウントでログインしてください。</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-5">
@@ -45,10 +45,10 @@ export default function Login() {
           )}
 
           <div>
-            <Label>아이디</Label>
+            <Label>ID</Label>
             <Input
               type="text"
-              placeholder="아이디를 입력하세요"
+              placeholder="IDを入力してください"
               value={mb_id}
               onChange={(e: any) => setId(e.target.value)}
               required
@@ -56,10 +56,10 @@ export default function Login() {
           </div>
 
           <div>
-            <Label>비밀번호</Label>
+            <Label>パスワード</Label>
             <Input
               type="password"
-              placeholder="비밀번호를 입력하세요"
+              placeholder="パスワードを入力してください"
               value={mb_password}
               onChange={(e: any) => setPassword(e.target.value)}
               required
@@ -73,7 +73,7 @@ export default function Login() {
             style={{ background: "#1D8A5A", borderColor: "#1D8A5A" }}
             disabled={isPending}
           >
-            {isPending ? "로그인 중..." : "로그인"}
+            {isPending ? "ログイン中..." : "ログイン"}
             {!isPending && <ArrowRight className="w-5 h-5 ml-2" />}
           </Button>
         </form>

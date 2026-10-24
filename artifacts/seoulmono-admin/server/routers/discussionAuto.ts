@@ -23,9 +23,9 @@ export const discussionAutoRouter = router({
   createSetting: adminProcedure
     .input(
       z.object({
-        topic: z.string().min(1, "주제를 입력해주세요"),
+        topic: z.string().min(1, "テーマを入力してください"),
         categoryId: z.number().nullable().optional(),
-        generateTime: z.string().regex(/^\d{2}:\d{2}$/, "HH:mm 형식이어야 합니다").default("09:00"),
+        generateTime: z.string().regex(/^\d{2}:\d{2}$/, "HH:mm形式で入力してください").default("09:00"),
         keywords: z.string().optional(),
         keywordsEn: z.string().optional(),
         promptTemplate: z.string().optional(),
@@ -99,7 +99,7 @@ export const discussionAutoRouter = router({
     .input(z.object({ settingId: z.number() }))
     .mutation(async ({ ctx, input }) => {
       const setting = await db.getDiscussionAutoSettingById(input.settingId);
-      if (!setting) throw new Error("설정을 찾을 수 없습니다");
+      if (!setting) throw new Error("設定が見つかりません");
 
       const result = await generateDiscussionPost(setting, ctx.user.id, "manual");
       return result;
