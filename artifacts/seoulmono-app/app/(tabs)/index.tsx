@@ -202,8 +202,8 @@ function BannerCarousel({ banners }: { banners: any[] }) {
               {imgUrl ? (
                 <Image source={{ uri: imgUrl }} style={{ width: W, height: 200 }} contentFit="cover" />
               ) : (
-                <LinearGradient colors={["#0758E8", "#003EAC"]} style={{ width: W, height: 200, alignItems: "center", justifyContent: "center" }}>
-                  <Text style={{ color: "#fff", fontSize: 24, fontWeight: "700" }}>ソウルモノ</Text>
+                <LinearGradient colors={["#EAF5FB", "#CCE5F3"]} style={{ width: W, height: 200, alignItems: "center", justifyContent: "center" }}>
+                  <Text style={{ color: "#294E66", fontSize: 24, fontWeight: "700" }}>ソウルモノ</Text>
                 </LinearGradient>
               )}
             </View>
@@ -266,10 +266,10 @@ export default function HomeScreen() {
 
   return (
     <View style={[styles.root, { backgroundColor: colors.background }]}>
-      <View style={[styles.header, { paddingTop: insets.top + 10, backgroundColor: "#0758E8" }]}>
+      <View style={[styles.header, { paddingTop: insets.top + 10, backgroundColor: "#DEEFF8" }]}>
         <Image source={require("@/assets/images/seoulmono-puppy.png")} style={{ width: 44, height: 44 }} contentFit="contain" /><Text style={styles.logo}>ソウルモノ</Text>
         <Pressable onPress={() => router.push("/(tabs)/products")} style={styles.searchBtn}>
-          <Feather name="search" size={16} color="rgba(255,255,255,0.7)" />
+          <Feather name="search" size={16} color="#47667C" />
           <Text style={styles.searchPlaceholder}>商品を検索...</Text>
         </Pressable>
       </View>
@@ -308,7 +308,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: 10,
   },
-  logo: { fontSize: 20, fontWeight: "700", color: "#fff", flexShrink: 0 },
+  logo: { fontSize: 20, fontWeight: "700", color: "#294E66", flexShrink: 0 },
   searchBtn: {
     flex: 1,
     flexDirection: "row",
@@ -317,9 +317,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 8,
     borderRadius: 20,
-    backgroundColor: "rgba(255,255,255,0.15)",
+    backgroundColor: "#FFFFFF",
   },
-  searchPlaceholder: { fontSize: 14, flex: 1, color: "rgba(255,255,255,0.7)" },
+  searchPlaceholder: { fontSize: 14, flex: 1, color: "#47667C" },
   bannerWrap: { position: "relative" },
   dots: { position: "absolute", bottom: 10, alignSelf: "center", flexDirection: "row", gap: 6 },
   dot: { width: 6, height: 6, borderRadius: 3 },

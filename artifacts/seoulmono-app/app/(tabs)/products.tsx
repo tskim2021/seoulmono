@@ -160,13 +160,13 @@ export default function ProductsScreen() {
 
   return (
     <View style={[styles.root, { backgroundColor: colors.background }]}>
-      <View style={[styles.header, { paddingTop: insets.top + 10, backgroundColor: "#0758E8" }]}>
+      <View style={[styles.header, { paddingTop: insets.top + 10, backgroundColor: "#DEEFF8" }]}>
         <View style={styles.searchRow}>
-          <Feather name="search" size={16} color="rgba(255,255,255,0.7)" />
+          <Feather name="search" size={16} color="#47667C" />
           <TextInput
             style={styles.input}
             placeholder="商品を検索..."
-            placeholderTextColor="rgba(255,255,255,0.5)"
+            placeholderTextColor="#47667C"
             value={search}
             onChangeText={setSearch}
             onSubmitEditing={() => setQuery(search)}
@@ -174,7 +174,7 @@ export default function ProductsScreen() {
           />
           {search.length > 0 && (
             <Pressable onPress={() => { setSearch(""); setQuery(""); }}>
-              <Feather name="x" size={16} color="rgba(255,255,255,0.7)" />
+              <Feather name="x" size={16} color="#47667C" />
             </Pressable>
           )}
         </View>
@@ -192,8 +192,8 @@ export default function ProductsScreen() {
             return (
               <Pressable
                 style={[styles.catChip, {
-                  backgroundColor: active ? "#0758E8" : colors.secondary,
-                  borderColor: active ? "#0758E8" : colors.border,
+                  backgroundColor: active ? "#397AA3" : colors.secondary,
+                  borderColor: active ? "#397AA3" : colors.border,
                 }]}
                 onPress={() => setSelCat(item.ca_id)}
               >
@@ -242,9 +242,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 10,
     borderRadius: 10,
-    backgroundColor: "rgba(255,255,255,0.15)",
+    backgroundColor: "#FFFFFF",
   },
-  input: { flex: 1, fontSize: 14, padding: 0, color: "#fff" },
+  input: { flex: 1, fontSize: 14, padding: 0, color: "#294E66" },
   catChip: { paddingHorizontal: 14, paddingVertical: 5, borderRadius: 20, borderWidth: 1 },
   catText: { fontSize: 13, fontWeight: "500" },
 
