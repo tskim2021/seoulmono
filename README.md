@@ -4,7 +4,7 @@
 
 ## 運用ファイル
 
-- `artifacts/shop-live`: `shop-dist-snapshot` の実稼働Web。レイアウト、バナー、マスコット、検索・ログイン処理を保持。ブランド名・ドメインのみ変更。
+- `artifacts/shop-live`: 元の `shop-dist-snapshot` を基にした実稼働Web。既存の検索・商品詳細・ログイン処理を保持し、ホーム画面は `seoulmono-home.js` / `seoulmono-home.css` で再構成。1段のメインナビ、大きな写真バナー、特価一覧、ランキング、企画展タブを既存APIの商品データに接続しています。青いテーマと新しいキャラクターも適用済みです。
 - `artifacts/api-server-live/index.mjs`: `api-server-compiled-snapshot` の実稼働API。DB構造と処理を保持。新ドメインとローカル待受を適用し、秘密情報は環境変数から取得。
 - `artifacts/seoulmono-admin`: `sorosoro-admin2-live-snapshot` の管理システム。`/admin/`、ポート8090。既存管理者のID・パスワードハッシュを非公開のDB移行で維持。新規管理者は生成しません。
 - `artifacts/seoulmono-app`: Gitの `artifacts/allddaom-app` を複製。名前「ソウルモノ」、ID `com.seoulmono.app`、API `https://seoulmono.com/api`。既存アプリの画面を維持します。

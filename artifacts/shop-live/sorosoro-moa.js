@@ -346,6 +346,14 @@
           '</div><div class="moa-catall"><a href="/list" data-moa><b>すべての商品を見る</b><small>全カテゴリーの商品一覧</small></a></div></div>' +
         '</div></nav>' +
       '</div>';
+    // A compact masthead: logo, primary navigation, search and account in one row.
+    root.classList.add("sm-masthead");
+    var brandRow = qs(".moa-brand-in", root);
+    brandRow.insertBefore(qs(".moa-nav", root), qs(".moa-search", root));
+    qs(".moa-announce", root).hidden = true;
+    qs(".moa-util-in>span", root).innerHTML = '<b class="sm-top-label">ソウル発。</b> 今日のいいものを、日本へ。';
+    qs(".moa-search input", root).placeholder = "何をお探しですか？";
+    root.querySelectorAll(".moa-ic").forEach(function(a) { a.setAttribute("aria-label", a.querySelector("span").textContent); });
     anchor.parentNode.insertBefore(root, anchor);
 
     var xbtn = qs(".moa-x", root);
@@ -801,13 +809,14 @@
     ensureMobileLogo();
     tryShrink();
     syncHeader();
-    ensureHero();
-    tagHomeSections();
-    ensureReviews();
-    ensureExhibitions();
+    if (!window.__smNewHome) {
+      ensureHero();
+      tagHomeSections();
+      ensureReviews();
+      ensureExhibitions();
+    }
     ensureExhPage();
-    tagRank();
-    layoutWide();
+    if (!window.__smNewHome) { tagRank(); layoutWide(); }
   }
   function schedule() { if (pending) return; pending = true; setTimeout(ensure, 30); }
 
@@ -827,7 +836,7 @@
     ensure();
     setTimeout(function () {
       if (!document.getElementById("moa-header")) document.body.classList.add("moa-fail");
-      if (isHome() && !document.getElementById("moa-hero")) { window.__moaHeroFail = true; document.body.classList.remove("moa-home"); }
+      if (!window.__smNewHome && isHome() && !document.getElementById("moa-hero")) { window.__moaHeroFail = true; document.body.classList.remove("moa-home"); }
     }, 8000);
     new MutationObserver(schedule).observe(document.body, { childList: true, subtree: true });
     window.addEventListener("popstate", schedule);
