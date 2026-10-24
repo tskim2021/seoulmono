@@ -12,7 +12,7 @@ export async function sendPointExpirationEmail(
 ): Promise<boolean> {
   try {
     const userName = name || "お客様";
-    const expirationDate = earliestExpiration.toLocaleDateString("ko-KR", {
+    const expirationDate = earliestExpiration.toLocaleDateString("ja-JP", {
       year: "numeric",
       month: "long",
       day: "numeric",
@@ -90,7 +90,7 @@ export async function sendPointExpirationPush(
   earliestExpiration: Date
 ): Promise<boolean> {
   try {
-    const expirationDate = earliestExpiration.toLocaleDateString("ko-KR", {
+    const expirationDate = earliestExpiration.toLocaleDateString("ja-JP", {
       month: "long",
       day: "numeric",
     });

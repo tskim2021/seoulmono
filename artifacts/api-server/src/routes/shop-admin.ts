@@ -20,7 +20,7 @@ const bannerStorage = multer.diskStorage({
 const bannerUpload = multer({ storage: bannerStorage, limits: { fileSize: 15 * 1024 * 1024 },
   fileFilter: (_req, file, cb) => {
     if (file.mimetype.startsWith("image/")) cb(null, true);
-    else cb(new Error("이미지만 업로드 가능합니다"));
+    else cb(new Error("画像のみアップロードできます"));
   },
 });
 
@@ -98,7 +98,7 @@ router.get("/shop-main-banners", async (_req, res) => {
     );
     res.json({ banners: rows.map(parseBanner) });
   } catch (_err) {
-    res.status(500).json({ error: "서버 오류" });
+    res.status(500).json({ error: "サーバーエラー" });
   }
 });
 
@@ -109,7 +109,7 @@ router.get("/admin/shop-main-banners", authMiddleware, adminMiddleware, async (_
     );
     res.json({ banners: rows.map(parseBanner) });
   } catch (_err) {
-    res.status(500).json({ error: "서버 오류" });
+    res.status(500).json({ error: "サーバーエラー" });
   }
 });
 
@@ -125,7 +125,7 @@ router.put("/admin/shop-main-banners/:id", authMiddleware, adminMiddleware, asyn
     const [rows] = await pool.query<RowDataPacket[]>("SELECT * FROM shop_main_banners WHERE id=?", [id]);
     res.json({ banner: parseBanner(rows[0]) });
   } catch (_err) {
-    res.status(500).json({ error: "서버 오류" });
+    res.status(500).json({ error: "サーバーエラー" });
   }
 });
 
@@ -259,7 +259,7 @@ router.post(
   authMiddleware, adminMiddleware,
   bannerUpload.single("image"),
   (req, res) => {
-    if (!req.file) return res.status(400).json({ error: "이미지 파일이 없습니다" });
+    if (!req.file) return res.status(400).json({ error: "画像ファイルがありません" });
     res.json({ image_url: `/api/editor-image/${req.file.filename}` });
   }
 );
@@ -313,9 +313,9 @@ async function initShopPromoBanners() {
       ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci
     `);
     const defaultSlots = [
-      { slot: "bnr01", slot_name: "카카오 채널 배너 (좌측)", link_url: "" },
-      { slot: "bnr02", slot_name: "첫구매 100원 배너 (우측 이미지)", link_url: "/list?type=4" },
-      { slot: "bnr03", slot_name: "선물세트 DIY 풀배너 (하단)", link_url: "/gift" },
+      { slot: "bnr01", slot_name: "カカオチャンネルバナー (左)", link_url: "" },
+      { slot: "bnr02", slot_name: "初回購入100円バナー (右画像)", link_url: "/list?type=4" },
+      { slot: "bnr03", slot_name: "ギフトセットDIYフルバナー (下部)", link_url: "/gift" },
     ];
     for (const s of defaultSlots) {
       await pool.query(
@@ -349,7 +349,7 @@ router.post(
   authMiddleware, adminMiddleware,
   bannerUpload.single("image"),
   (req, res) => {
-    if (!req.file) return res.status(400).json({ error: "이미지 파일이 없습니다" });
+    if (!req.file) return res.status(400).json({ error: "画像ファイルがありません" });
     res.json({ image_url: `/api/editor-image/${req.file.filename}` });
   }
 );
@@ -373,7 +373,7 @@ const ALLOWED_SECTIONS = ["best", "sale", "diygift", "new", "exclusive", "first_
 router.get("/shop-admin/sections/:type", authMiddleware, adminMiddleware, async (req, res) => {
   const { type } = req.params;
   if (!ALLOWED_SECTIONS.includes(type) && type !== "lowest") {
-    return res.status(400).json({ error: "잘못된 섹션 타입" });
+    return res.status(400).json({ error: "セクションタイプが正しくありません" });
   }
 
   if (type === "lowest") {
@@ -433,12 +433,12 @@ router.post("/shop-admin/sections/:type/:it_id", authMiddleware, adminMiddleware
       const [items] = await pool.query<RowDataPacket[]>(
         "SELECT it_id, it_name, it_price, it_img1 FROM g5_shop_item WHERE it_id = ?", [it_id]
       );
-      if (!items[0]) return res.status(404).json({ error: "상품 없음" });
+      if (!items[0]) return res.status(404).json({ error: "商品がありません" });
     }
     return res.json({ ok: true });
   }
 
-  if (!ALLOWED_SECTIONS.includes(type)) return res.status(400).json({ error: "잘못된 섹션" });
+  if (!ALLOWED_SECTIONS.includes(type)) return res.status(400).json({ error: "セクションが正しくありません" });
   await pool.query(
     "INSERT IGNORE INTO seoulmono_section_items (section_type, it_id, sort_order) VALUES (?, ?, 0)",
     [type, it_id]
@@ -478,7 +478,7 @@ router.get("/shop-admin/gift-categories", authMiddleware, adminMiddleware, async
 
 router.post("/shop-admin/gift-categories", authMiddleware, adminMiddleware, async (req, res) => {
   const { name, icon = "", sort_order = 0 } = req.body;
-  if (!name) return res.status(400).json({ error: "name 필수" });
+  if (!name) return res.status(400).json({ error: "name は必須です" });
   const [result] = await pool.query<ResultSetHeader>(
     "INSERT INTO seoulmono_gift_categories (name, icon, sort_order) VALUES (?,?,?)",
     [name, icon, sort_order]
@@ -568,14 +568,14 @@ router.delete("/shop-admin/reviews/batch-delete", authMiddleware, adminMiddlewar
   try {
     const { review_ids } = req.body;
     if (!Array.isArray(review_ids) || review_ids.length === 0) {
-      res.status(400).json({ error: "삭제할 리뷰를 선택해주세요" });
+      res.status(400).json({ error: "削除するレビューを選択してください" });
       return;
     }
     const ph = review_ids.map(() => "?").join(",");
     await pool.query(`DELETE FROM seoulmono_reviews WHERE id IN (${ph})`, review_ids);
     res.json({ success: true, deleted: review_ids.length });
   } catch (err: any) {
-    res.status(500).json({ error: "서버 오류가 발생했습니다" });
+    res.status(500).json({ error: "サーバーエラーが発生しました" });
   }
 });
 
@@ -591,13 +591,13 @@ router.get("/admin/items/search", authMiddleware, adminMiddleware, async (req, r
 // ─── 메인샵 관리 ─────────────────────────────────────────────────────────────
 
 const MAIN_SECTIONS = [
-  { key: "new",           label: "신상품",           filter1: "2" },
-  { key: "brand",         label: "지구쇼핑몰 브랜드",     filter1: "3" },
-  { key: "expire",        label: "유통기한 임박특가", filter1: "8" },
-  { key: "time",          label: "타임특가",          filter1: "9" },
-  { key: "limited",       label: "한정특가",          filter1: "10" },
-  { key: "brand_special", label: "브랜드특가",        filter1: "11" },
-  { key: "lowest",        label: "최저가 도전",       filter1: "12" },
+  { key: "new",           label: "新商品",           filter1: "2" },
+  { key: "brand",         label: "ソウルモノブランド",     filter1: "3" },
+  { key: "expire",        label: "賞味期限間近特価", filter1: "8" },
+  { key: "time",          label: "タイムセール",          filter1: "9" },
+  { key: "limited",       label: "限定特価",          filter1: "10" },
+  { key: "brand_special", label: "ブランド特価",        filter1: "11" },
+  { key: "lowest",        label: "最安値チャレンジ",       filter1: "12" },
 ];
 
 // 섹션별 상품 목록
@@ -642,7 +642,7 @@ router.get("/admin/main-shop/section-products", authMiddleware, adminMiddleware,
     );
     res.json({ items: (fallback as any[]).map(mapRow), is_fallback: true });
   } catch (err: any) {
-    res.status(500).json({ error: "서버 오류" });
+    res.status(500).json({ error: "サーバーエラー" });
   }
 });
 
@@ -666,15 +666,15 @@ router.get("/admin/main-shop/summary", authMiddleware, adminMiddleware, async (r
       sections: MAIN_SECTIONS,
       counts,
       titles: {
-        best: t.de_type1_title || "히트상품",
-        recommended: t.de_type2_title || "추천상품",
-        newest: t.de_type3_title || "최신상품",
-        popular: t.de_type4_title || "인기상품",
-        sale: t.de_type5_title || "할인상품",
+        best: t.de_type1_title || "ヒット商品",
+        recommended: t.de_type2_title || "おすすめ商品",
+        newest: t.de_type3_title || "新着商品",
+        popular: t.de_type4_title || "人気商品",
+        sale: t.de_type5_title || "セール商品",
       },
     });
   } catch (err: any) {
-    res.status(500).json({ error: "서버 오류" });
+    res.status(500).json({ error: "サーバーエラー" });
   }
 });
 
@@ -696,7 +696,7 @@ router.put("/admin/main-shop/titles", authMiddleware, adminMiddleware, async (re
     }
     res.json({ ok: true });
   } catch (err: any) {
-    res.status(500).json({ error: "서버 오류" });
+    res.status(500).json({ error: "サーバーエラー" });
   }
 });
 
@@ -704,11 +704,11 @@ router.put("/admin/main-shop/titles", authMiddleware, adminMiddleware, async (re
 router.post("/admin/main-shop/assign", authMiddleware, adminMiddleware, async (req, res) => {
   try {
     const { it_id, filter1 } = req.body;
-    if (!it_id || !filter1) return res.status(400).json({ error: "필수 파라미터 누락" });
+    if (!it_id || !filter1) return res.status(400).json({ error: "必須パラメータがありません" });
     await pool.query("UPDATE g5_shop_item SET filter1=? WHERE it_id=?", [filter1, it_id]);
     res.json({ ok: true });
   } catch (err: any) {
-    res.status(500).json({ error: "서버 오류" });
+    res.status(500).json({ error: "サーバーエラー" });
   }
 });
 
@@ -719,7 +719,7 @@ router.delete("/admin/main-shop/assign/:it_id", authMiddleware, adminMiddleware,
     await pool.query("UPDATE g5_shop_item SET filter1='' WHERE it_id=?", [it_id]);
     res.json({ ok: true });
   } catch (err: any) {
-    res.status(500).json({ error: "서버 오류" });
+    res.status(500).json({ error: "サーバーエラー" });
   }
 });
 
@@ -731,7 +731,7 @@ router.patch("/admin/main-shop/assign/:it_id/visibility", authMiddleware, adminM
     const [rows] = await pool.query<RowDataPacket[]>("SELECT it_use FROM g5_shop_item WHERE it_id=?", [it_id]);
     res.json({ it_use: (rows as any[])[0]?.it_use ?? "1" });
   } catch (err: any) {
-    res.status(500).json({ error: "서버 오류" });
+    res.status(500).json({ error: "サーバーエラー" });
   }
 });
 
@@ -764,7 +764,7 @@ router.get("/admin/main-shop/search", authMiddleware, adminMiddleware, async (re
       })),
     });
   } catch (err: any) {
-    res.status(500).json({ error: "서버 오류" });
+    res.status(500).json({ error: "サーバーエラー" });
   }
 });
 
@@ -826,22 +826,22 @@ router.get("/admin/first-purchase/items", authMiddleware, adminMiddleware, async
         ca_name: r.ca_name || "",
       })),
     });
-  } catch { res.status(500).json({ error: "서버 오류" }); }
+  } catch { res.status(500).json({ error: "サーバーエラー" }); }
 });
 
 // 상품 추가
 router.post("/admin/first-purchase/items", authMiddleware, adminMiddleware, async (req, res) => {
   try {
     const { it_id } = req.body;
-    if (!it_id) return res.status(400).json({ error: "it_id 필수" });
+    if (!it_id) return res.status(400).json({ error: "it_id は必須です" });
     const [exist] = await pool.query<RowDataPacket[]>("SELECT it_id FROM g5_shop_item WHERE it_id=? AND it_use='1'", [it_id]);
-    if (!(exist as any[])[0]) return res.status(404).json({ error: "상품 없음" });
+    if (!(exist as any[])[0]) return res.status(404).json({ error: "商品がありません" });
     await pool.query(
       "INSERT IGNORE INTO seoulmono_first_purchase_items (it_id, custom_price, is_visible, sort_order) VALUES (?, 100, 1, 0)",
       [it_id]
     );
     res.json({ ok: true });
-  } catch { res.status(500).json({ error: "서버 오류" }); }
+  } catch { res.status(500).json({ error: "サーバーエラー" }); }
 });
 
 // 상품 제거
@@ -849,7 +849,7 @@ router.delete("/admin/first-purchase/items/:id", authMiddleware, adminMiddleware
   try {
     await pool.query("DELETE FROM seoulmono_first_purchase_items WHERE id=?", [req.params.id]);
     res.json({ ok: true });
-  } catch { res.status(500).json({ error: "서버 오류" }); }
+  } catch { res.status(500).json({ error: "サーバーエラー" }); }
 });
 
 // 노출/비노출 토글
@@ -858,7 +858,7 @@ router.patch("/admin/first-purchase/items/:id/visibility", authMiddleware, admin
     await pool.query("UPDATE seoulmono_first_purchase_items SET is_visible = 1 - is_visible WHERE id=?", [req.params.id]);
     const [rows] = await pool.query<RowDataPacket[]>("SELECT is_visible FROM seoulmono_first_purchase_items WHERE id=?", [req.params.id]);
     res.json({ is_visible: (rows as any[])[0]?.is_visible });
-  } catch { res.status(500).json({ error: "서버 오류" }); }
+  } catch { res.status(500).json({ error: "サーバーエラー" }); }
 });
 
 // 상품 수정 (커스텀 이름/가격/이미지/정렬)
@@ -870,7 +870,7 @@ router.put("/admin/first-purchase/items/:id", authMiddleware, adminMiddleware, a
       [custom_name || null, custom_price ?? 100, custom_img || null, sort_order ?? 0, is_visible ?? 1, req.params.id]
     );
     res.json({ ok: true });
-  } catch { res.status(500).json({ error: "서버 오류" }); }
+  } catch { res.status(500).json({ error: "サーバーエラー" }); }
 });
 
 // 검색 (추가용)
@@ -899,7 +899,7 @@ router.get("/admin/first-purchase/search", authMiddleware, adminMiddleware, asyn
           ca_name: r.ca_name || "",
         })),
     });
-  } catch { res.status(500).json({ error: "서버 오류" }); }
+  } catch { res.status(500).json({ error: "サーバーエラー" }); }
 });
 
 // ─── 푸터 사업자 정보 관리 ─────────────────────────────────────
@@ -936,7 +936,7 @@ router.put("/shop-admin/footer-config", authMiddleware, adminMiddleware, async (
       );
     }
     res.json({ ok: true });
-  } catch { res.status(500).json({ error: "저장 실패" }); }
+  } catch { res.status(500).json({ error: "保存に失敗しました" }); }
 });
 
 // ─── 기본 설정 관리 ────────────────────────────────────────────
@@ -962,7 +962,7 @@ router.put("/shop-admin/settings", authMiddleware, adminMiddleware, async (req, 
       );
     }
     res.json({ ok: true });
-  } catch { res.status(500).json({ error: "설정 저장 실패" }); }
+  } catch { res.status(500).json({ error: "設定の保存に失敗しました" }); }
 });
 
 // ─── 이벤트 관리 ─────────────────────────────────────────────────────────────
@@ -990,7 +990,7 @@ router.get("/shop-events", async (_req, res) => {
       "SELECT id, title, thumbnail, start_date, end_date, is_active, sort_order, created_at FROM shop_events ORDER BY sort_order ASC, id DESC"
     );
     res.json({ events: rows });
-  } catch { res.status(500).json({ error: "서버 오류" }); }
+  } catch { res.status(500).json({ error: "サーバーエラー" }); }
 });
 
 router.get("/shop-events/public", async (_req, res) => {
@@ -999,15 +999,15 @@ router.get("/shop-events/public", async (_req, res) => {
       "SELECT id, title, thumbnail, start_date, end_date, created_at FROM shop_events WHERE is_active=1 ORDER BY sort_order ASC, id DESC"
     );
     res.json({ events: rows });
-  } catch { res.status(500).json({ error: "서버 오류" }); }
+  } catch { res.status(500).json({ error: "サーバーエラー" }); }
 });
 
 router.get("/shop-events/:id", async (req, res) => {
   try {
     const [rows] = await pool.query<RowDataPacket[]>("SELECT * FROM shop_events WHERE id=?", [req.params.id]);
-    if (!(rows as any[]).length) return res.status(404).json({ error: "없음" });
+    if (!(rows as any[]).length) return res.status(404).json({ error: "見つかりません" });
     res.json((rows as any[])[0]);
-  } catch { res.status(500).json({ error: "서버 오류" }); }
+  } catch { res.status(500).json({ error: "サーバーエラー" }); }
 });
 
 router.post("/shop-events", authMiddleware, adminMiddleware, async (req, res) => {
@@ -1018,7 +1018,7 @@ router.post("/shop-events", authMiddleware, adminMiddleware, async (req, res) =>
       [title || "", thumbnail || "", content || "", start_date || null, end_date || null, is_active ?? 1, sort_order ?? 0]
     );
     res.json({ id: result.insertId, ok: true });
-  } catch { res.status(500).json({ error: "등록 실패" }); }
+  } catch { res.status(500).json({ error: "登録に失敗しました" }); }
 });
 
 router.put("/shop-events/:id", authMiddleware, adminMiddleware, async (req, res) => {
@@ -1029,14 +1029,14 @@ router.put("/shop-events/:id", authMiddleware, adminMiddleware, async (req, res)
       [title || "", thumbnail || "", content || "", start_date || null, end_date || null, is_active ?? 1, sort_order ?? 0, req.params.id]
     );
     res.json({ ok: true });
-  } catch { res.status(500).json({ error: "수정 실패" }); }
+  } catch { res.status(500).json({ error: "更新に失敗しました" }); }
 });
 
 router.delete("/shop-events/:id", authMiddleware, adminMiddleware, async (req, res) => {
   try {
     await pool.query("DELETE FROM shop_events WHERE id=?", [req.params.id]);
     res.json({ ok: true });
-  } catch { res.status(500).json({ error: "삭제 실패" }); }
+  } catch { res.status(500).json({ error: "削除に失敗しました" }); }
 });
 
 // ─── Image Banner ─────────────────────────────────────────────────────────────
@@ -1102,7 +1102,7 @@ router.get("/image-banners", async (_req, res) => {
       [today, today]
     );
     res.json({ banners: rows });
-  } catch { res.status(500).json({ error: "서버 오류" }); }
+  } catch { res.status(500).json({ error: "サーバーエラー" }); }
 });
 
 router.get("/admin/image-banners", authMiddleware, adminMiddleware, async (_req, res) => {
@@ -1111,7 +1111,7 @@ router.get("/admin/image-banners", authMiddleware, adminMiddleware, async (_req,
       "SELECT * FROM seoulmono_image_banners ORDER BY sort_order ASC, id ASC"
     );
     res.json({ banners: rows });
-  } catch { res.status(500).json({ error: "서버 오류" }); }
+  } catch { res.status(500).json({ error: "サーバーエラー" }); }
 });
 
 router.post("/admin/image-banners", authMiddleware, adminMiddleware,
@@ -1131,7 +1131,7 @@ router.post("/admin/image-banners", authMiddleware, adminMiddleware,
       );
       const [rows] = await pool.query<RowDataPacket[]>("SELECT * FROM seoulmono_image_banners WHERE id=?", [(result[0] as ResultSetHeader).insertId]);
       res.json({ banner: rows[0] });
-    } catch (e) { console.error(e); res.status(500).json({ error: "서버 오류" }); }
+    } catch (e) { console.error(e); res.status(500).json({ error: "サーバーエラー" }); }
   }
 );
 
@@ -1153,7 +1153,7 @@ router.put("/admin/image-banners/:id", authMiddleware, adminMiddleware,
       );
       const [rows] = await pool.query<RowDataPacket[]>("SELECT * FROM seoulmono_image_banners WHERE id=?", [req.params.id]);
       res.json({ banner: rows[0] });
-    } catch (e) { console.error(e); res.status(500).json({ error: "서버 오류" }); }
+    } catch (e) { console.error(e); res.status(500).json({ error: "サーバーエラー" }); }
   }
 );
 
@@ -1161,7 +1161,7 @@ router.delete("/admin/image-banners/:id", authMiddleware, adminMiddleware, async
   try {
     await pool.query("DELETE FROM seoulmono_image_banners WHERE id=?", [req.params.id]);
     res.json({ ok: true });
-  } catch { res.status(500).json({ error: "서버 오류" }); }
+  } catch { res.status(500).json({ error: "サーバーエラー" }); }
 });
 
 // ─── B2B Banner (발주시스템 배너) ──────────────────────────────────────────────
@@ -1220,7 +1220,7 @@ router.get("/admin/b2b-banners", authMiddleware, adminMiddleware, async (_req, r
       "SELECT * FROM seoulmono_b2b_banners ORDER BY sort_order ASC, id ASC"
     );
     res.json({ banners: rows });
-  } catch { res.status(500).json({ error: "서버 오류" }); }
+  } catch { res.status(500).json({ error: "サーバーエラー" }); }
 });
 
 router.post("/admin/b2b-banners", authMiddleware, adminMiddleware,
@@ -1241,7 +1241,7 @@ router.post("/admin/b2b-banners", authMiddleware, adminMiddleware,
       );
       const [rows] = await pool.query<RowDataPacket[]>("SELECT * FROM seoulmono_b2b_banners WHERE id=?", [(result[0] as ResultSetHeader).insertId]);
       res.json({ banner: rows[0] });
-    } catch (e) { console.error(e); res.status(500).json({ error: "서버 오류" }); }
+    } catch (e) { console.error(e); res.status(500).json({ error: "サーバーエラー" }); }
   }
 );
 
@@ -1264,7 +1264,7 @@ router.put("/admin/b2b-banners/:id", authMiddleware, adminMiddleware,
       );
       const [rows] = await pool.query<RowDataPacket[]>("SELECT * FROM seoulmono_b2b_banners WHERE id=?", [req.params.id]);
       res.json({ banner: rows[0] });
-    } catch (e) { console.error(e); res.status(500).json({ error: "서버 오류" }); }
+    } catch (e) { console.error(e); res.status(500).json({ error: "サーバーエラー" }); }
   }
 );
 
@@ -1272,7 +1272,7 @@ router.delete("/admin/b2b-banners/:id", authMiddleware, adminMiddleware, async (
   try {
     await pool.query("DELETE FROM seoulmono_b2b_banners WHERE id=?", [req.params.id]);
     res.json({ ok: true });
-  } catch { res.status(500).json({ error: "서버 오류" }); }
+  } catch { res.status(500).json({ error: "サーバーエラー" }); }
 });
 
 export default router;

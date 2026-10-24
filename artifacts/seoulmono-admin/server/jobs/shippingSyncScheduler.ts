@@ -69,7 +69,7 @@ export function startShippingSyncScheduler(config: ShippingSyncSchedulerConfig) 
       isRunning = false;
     }
   }, {
-    timezone: "Asia/Seoul",
+    timezone: "Asia/Tokyo",
   });
 
   console.log(`[Scheduler] Shipping sync scheduler started (every ${config.intervalHours}h, cron: ${cronExpr})`);

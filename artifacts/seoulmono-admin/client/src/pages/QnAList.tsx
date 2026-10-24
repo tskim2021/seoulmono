@@ -17,7 +17,7 @@ export default function QnAList() {
   const [selectedProductId, setSelectedProductId] = useState<number | undefined>(undefined);
   const [onlyUnanswered, setOnlyUnanswered] = useState(false);
 
-  useSEO({ title: "상품 Q&A", description: "탈모학교 상품 Q&A 게시판" });
+  useSEO({ title: "商品Q&A", description: "ソウルモノ 商品Q&A掲示板" });
 
   const queryInput = useMemo(() => ({
     page,
@@ -58,12 +58,12 @@ export default function QnAList() {
       <div className="container py-8">
         {/* 브레드크럼 */}
         <div className="flex items-center gap-1.5 text-sm text-muted-foreground mb-4">
-          <Link href="/" className="hover:text-foreground">홈</Link>
+          <Link href="/" className="hover:text-foreground">ホーム</Link>
           <span>/</span>
-          <span className="text-foreground font-medium">상품 Q&amp;A</span>
+          <span className="text-foreground font-medium">商品Q&amp;A</span>
         </div>
 
-        <h1 className="text-2xl font-bold mb-5">상품 Q&amp;A</h1>
+        <h1 className="text-2xl font-bold mb-5">商品Q&amp;A</h1>
 
         {/* 필터 영역 */}
         <div className="border rounded-lg bg-secondary/30 p-4 mb-4">
@@ -73,7 +73,7 @@ export default function QnAList() {
               value={selectedProductId ?? ""}
               onChange={e => setSelectedProductId(e.target.value ? Number(e.target.value) : undefined)}
             >
-              <option value="">전체 상품</option>
+              <option value="">すべての商品</option>
               {qnaProducts.map(p => (
                 <option key={p.id} value={p.id}>{p.name}</option>
               ))}
@@ -86,12 +86,12 @@ export default function QnAList() {
                 onChange={e => setOnlyUnanswered(e.target.checked)}
                 className="w-4 h-4 accent-stone-700"
               />
-              미답변만 보기
+              未回答のみ表示
             </label>
 
             <input
               className="border rounded px-3 py-2 text-sm bg-background flex-1 min-w-[160px]"
-              placeholder="검색어"
+              placeholder="検索キーワード"
               value={searchInput}
               onChange={e => setSearchInput(e.target.value)}
             />
@@ -100,14 +100,14 @@ export default function QnAList() {
               type="submit"
               className="flex items-center gap-2 px-5 py-2 rounded text-sm font-semibold bg-stone-700 text-white hover:bg-stone-800 transition-colors"
             >
-              <Search className="w-3.5 h-3.5" />검색하기
+              <Search className="w-3.5 h-3.5" />検索
             </button>
           </form>
         </div>
 
         {/* 총 개수 */}
         <div className="border-l-4 border-stone-600 bg-stone-50 dark:bg-stone-900/30 px-4 py-2.5 mb-4 text-sm text-stone-700 dark:text-stone-300">
-          총 <strong>{(data?.total ?? 0).toLocaleString()}</strong>개의 Q&amp;A가 등록되어 있습니다.
+          全 <strong>{(data?.total ?? 0).toLocaleString()}</strong>件のQ&amp;Aが登録されています。
         </div>
 
         {/* 테이블 */}
@@ -115,12 +115,12 @@ export default function QnAList() {
           <table className="w-full">
             <thead>
               <tr className="bg-stone-100 dark:bg-stone-800 text-xs text-stone-600 dark:text-stone-400 border-b">
-                <th className="py-3 px-3 text-center font-semibold w-14 hidden sm:table-cell">번호</th>
-                <th className="py-3 px-3 text-center font-semibold w-20 hidden md:table-cell">상품</th>
-                <th className="py-3 px-4 text-left font-semibold">제목</th>
-                <th className="py-3 px-3 text-center font-semibold w-24 hidden md:table-cell">작성자</th>
-                <th className="py-3 px-3 text-center font-semibold w-24 hidden sm:table-cell">날짜</th>
-                <th className="py-3 px-3 text-center font-semibold w-24 hidden sm:table-cell">답변</th>
+                <th className="py-3 px-3 text-center font-semibold w-14 hidden sm:table-cell">番号</th>
+                <th className="py-3 px-3 text-center font-semibold w-20 hidden md:table-cell">商品</th>
+                <th className="py-3 px-4 text-left font-semibold">タイトル</th>
+                <th className="py-3 px-3 text-center font-semibold w-24 hidden md:table-cell">投稿者</th>
+                <th className="py-3 px-3 text-center font-semibold w-24 hidden sm:table-cell">日付</th>
+                <th className="py-3 px-3 text-center font-semibold w-24 hidden sm:table-cell">回答</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-border/60">
@@ -139,7 +139,7 @@ export default function QnAList() {
                 <tr>
                   <td colSpan={6} className="py-16 text-center">
                     <HelpCircle className="w-10 h-10 mx-auto mb-3 text-muted-foreground/40" />
-                    <p className="text-sm text-muted-foreground">등록된 Q&amp;A가 없습니다.</p>
+                    <p className="text-sm text-muted-foreground">登録されたQ&amp;Aはありません。</p>
                   </td>
                 </tr>
               ) : (
@@ -174,7 +174,7 @@ export default function QnAList() {
                         )}
                       </td>
                       <td className="py-3 px-3 text-center text-sm text-muted-foreground hidden md:table-cell truncate max-w-[90px]">
-                        {post.isSecret ? "비밀글" : (post.displayName || (post.userName ?? "익명"))}
+                        {post.isSecret ? "非公開" : (post.displayName || (post.userName ?? "匿名"))}
                       </td>
                       <td className="py-3 px-3 text-center text-xs text-muted-foreground hidden sm:table-cell whitespace-nowrap">
                         {dateStr}
@@ -182,11 +182,11 @@ export default function QnAList() {
                       <td className="py-3 px-3 text-center hidden sm:table-cell" onClick={e => e.stopPropagation()}>
                         {post.isAnswered ? (
                           <span className="inline-flex items-center gap-1 text-xs font-medium text-green-600">
-                            <CheckCircle2 className="w-3.5 h-3.5" />답변완료
+                            <CheckCircle2 className="w-3.5 h-3.5" />回答済み
                           </span>
                         ) : (
                           <span className="inline-flex items-center gap-1 text-xs font-medium text-orange-500">
-                            <MessageCircle className="w-3.5 h-3.5" />대기중
+                            <MessageCircle className="w-3.5 h-3.5" />待機中
                           </span>
                         )}
                       </td>

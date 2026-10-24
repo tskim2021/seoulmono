@@ -29,8 +29,8 @@ interface BankTransferConfirmationParams {
 export function generateBankTransferNotificationEmail(params: BankTransferNotificationParams): string {
   const { orderNumber, amount, depositorName, bankAccount, expiresAt, autoCancelHours } = params;
   
-  const formattedAmount = amount.toLocaleString("ko-KR");
-  const formattedExpires = expiresAt.toLocaleString("ko-KR", {
+  const formattedAmount = amount.toLocaleString("ja-JP");
+  const formattedExpires = expiresAt.toLocaleString("ja-JP", {
     year: "numeric",
     month: "long",
     day: "numeric",
@@ -40,7 +40,7 @@ export function generateBankTransferNotificationEmail(params: BankTransferNotifi
 
   return `
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ja">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -178,8 +178,8 @@ export function generateBankTransferNotificationEmail(params: BankTransferNotifi
 export function generateBankTransferConfirmationEmail(params: BankTransferConfirmationParams): string {
   const { orderNumber, amount, confirmedAt } = params;
   
-  const formattedAmount = amount.toLocaleString("ko-KR");
-  const formattedConfirmed = confirmedAt.toLocaleString("ko-KR", {
+  const formattedAmount = amount.toLocaleString("ja-JP");
+  const formattedConfirmed = confirmedAt.toLocaleString("ja-JP", {
     year: "numeric",
     month: "long",
     day: "numeric",
@@ -189,7 +189,7 @@ export function generateBankTransferConfirmationEmail(params: BankTransferConfir
 
   return `
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ja">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">

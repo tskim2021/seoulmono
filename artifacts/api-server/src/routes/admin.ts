@@ -44,7 +44,7 @@ router.get("/admin/pending-members", authMiddleware, adminMiddleware, async (req
     });
   } catch (err: any) {
     req.log?.error({ err }, "GetPendingMembers error");
-    res.status(500).json({ error: "서버 오류가 발생했습니다" });
+    res.status(500).json({ error: "サーバーエラーが発生しました" });
   }
 });
 
@@ -93,7 +93,7 @@ router.get("/admin/members", authMiddleware, adminMiddleware, async (req, res) =
     });
   } catch (err: any) {
     req.log?.error({ err }, "GetMembers error");
-    res.status(500).json({ error: "서버 오류가 발생했습니다" });
+    res.status(500).json({ error: "サーバーエラーが発生しました" });
   }
 });
 
@@ -110,10 +110,10 @@ router.post("/admin/members/:id/approve", authMiddleware, adminMiddleware, async
       }
     } catch {}
 
-    res.json({ message: "회원이 승인되었습니다" });
+    res.json({ message: "会員を承認しました" });
   } catch (err: any) {
     req.log?.error({ err }, "ApproveMember error");
-    res.status(500).json({ error: "서버 오류가 발생했습니다" });
+    res.status(500).json({ error: "サーバーエラーが発生しました" });
   }
 });
 
@@ -121,10 +121,10 @@ router.post("/admin/members/:id/reject", authMiddleware, adminMiddleware, async 
   try {
     const { id } = RejectMemberParams.parse(req.params);
     await pool.query("UPDATE g5_member SET mb_level = 0 WHERE mb_id = ?", [id]);
-    res.json({ message: "회원 가입이 거절되었습니다" });
+    res.json({ message: "会員登録を却下しました" });
   } catch (err: any) {
     req.log?.error({ err }, "RejectMember error");
-    res.status(500).json({ error: "서버 오류가 발생했습니다" });
+    res.status(500).json({ error: "サーバーエラーが発生しました" });
   }
 });
 
@@ -166,7 +166,7 @@ router.patch("/orders/:id/status", authMiddleware, adminMiddleware, async (req, 
     );
 
     if (rows.length === 0) {
-      res.status(404).json({ error: "주문을 찾을 수 없습니다" });
+      res.status(404).json({ error: "注文が見つかりません" });
       return;
     }
     const r = rows[0];
@@ -183,7 +183,7 @@ router.patch("/orders/:id/status", authMiddleware, adminMiddleware, async (req, 
     });
   } catch (err: any) {
     req.log?.error({ err }, "UpdateOrderStatus error");
-    res.status(500).json({ error: "서버 오류가 발생했습니다" });
+    res.status(500).json({ error: "サーバーエラーが発生しました" });
   }
 });
 
@@ -366,7 +366,7 @@ router.get("/admin/dashboard", authMiddleware, adminMiddleware, async (req, res)
         wr_datetime: r.wr_datetime || "",
         wr_comment: Number(r.wr_comment) || 0,
       })),
-      settlement_month: `${now.getFullYear()}년 ${now.getMonth() + 1}월`,
+      settlement_month: `${now.getFullYear()}年${now.getMonth() + 1}月`,
       partner_settlement: partnerSettlement.map((r: any) => ({
         mb_id: r.mb_id,
         mb_name: r.mb_name || "",
@@ -377,7 +377,7 @@ router.get("/admin/dashboard", authMiddleware, adminMiddleware, async (req, res)
       })),
       top_buyers: topBuyers.map((r: any) => ({
         mb_id: r.mb_id,
-        mb_name: r.mb_name || r.mb_id || "탈퇴회원",
+        mb_name: r.mb_name || r.mb_id || "退会会員",
         company_name: r.company_name || "",
         order_count: Number(r.order_count) || 0,
         total_amount: Number(r.total_amount) || 0,
@@ -385,7 +385,7 @@ router.get("/admin/dashboard", authMiddleware, adminMiddleware, async (req, res)
       })),
       top_buyers_all_time: topBuyersAllTime.map((r: any) => ({
         mb_id: r.mb_id,
-        mb_name: r.mb_name || r.mb_id || "탈퇴회원",
+        mb_name: r.mb_name || r.mb_id || "退会会員",
         company_name: r.company_name || "",
         order_count: Number(r.order_count) || 0,
         total_amount: Number(r.total_amount) || 0,
@@ -394,7 +394,7 @@ router.get("/admin/dashboard", authMiddleware, adminMiddleware, async (req, res)
     });
   } catch (err: any) {
     req.log?.error({ err }, "GetDashboard error");
-    res.status(500).json({ error: "서버 오류가 발생했습니다" });
+    res.status(500).json({ error: "サーバーエラーが発生しました" });
   }
 });
 
@@ -404,7 +404,7 @@ router.get("/admin/sales-stats", authMiddleware, adminMiddleware, async (req, re
     const start = (req.query.start as string) || "";
     const end = (req.query.end as string) || "";
     if (!start || !end) {
-      res.status(400).json({ error: "start, end 날짜를 입력하세요" });
+      res.status(400).json({ error: "start、end の日付を入力してください" });
       return;
     }
 
@@ -449,7 +449,7 @@ router.get("/admin/sales-stats", authMiddleware, adminMiddleware, async (req, re
     });
   } catch (err: any) {
     req.log?.error({ err }, "GetSalesStats error");
-    res.status(500).json({ error: "서버 오류가 발생했습니다" });
+    res.status(500).json({ error: "サーバーエラーが発生しました" });
   }
 });
 
@@ -458,25 +458,25 @@ router.delete("/admin/members/:id", authMiddleware, adminMiddleware, async (req,
     const memberId = req.params.id;
     const adminId = (req as any).user?.mb_id;
     if (memberId === adminId) {
-      res.status(400).json({ error: "자기 자신은 삭제할 수 없습니다" });
+      res.status(400).json({ error: "ご自身は削除できません" });
       return;
     }
     const [result] = await pool.query<RowDataPacket[]>(
       `SELECT mb_level FROM g5_member WHERE mb_id = ?`, [memberId]
     );
     if (!result.length) {
-      res.status(404).json({ error: "회원을 찾을 수 없습니다" });
+      res.status(404).json({ error: "会員が見つかりません" });
       return;
     }
     if (Number(result[0].mb_level) >= 10) {
-      res.status(400).json({ error: "관리자 계정은 삭제할 수 없습니다" });
+      res.status(400).json({ error: "管理者アカウントは削除できません" });
       return;
     }
     await pool.query(`DELETE FROM g5_member WHERE mb_id = ?`, [memberId]);
     res.json({ success: true });
   } catch (err: any) {
     req.log?.error({ err }, "DeleteMember error");
-    res.status(500).json({ error: "서버 오류가 발생했습니다" });
+    res.status(500).json({ error: "サーバーエラーが発生しました" });
   }
 });
 
@@ -484,13 +484,13 @@ router.post("/admin/members/batch-delete", authMiddleware, adminMiddleware, asyn
   try {
     const { member_ids } = req.body;
     if (!Array.isArray(member_ids) || member_ids.length === 0) {
-      res.status(400).json({ error: "삭제할 회원을 선택해주세요" });
+      res.status(400).json({ error: "削除する会員を選択してください" });
       return;
     }
     const adminId = (req as any).user?.mb_id;
     const filtered = member_ids.filter((id: string) => id !== adminId);
     if (filtered.length === 0) {
-      res.status(400).json({ error: "삭제할 수 있는 회원이 없습니다" });
+      res.status(400).json({ error: "削除可能な会員がありません" });
       return;
     }
     const placeholders = filtered.map(() => "?").join(",");
@@ -501,7 +501,7 @@ router.post("/admin/members/batch-delete", authMiddleware, adminMiddleware, asyn
     res.json({ success: true, deleted: filtered.length });
   } catch (err: any) {
     req.log?.error({ err }, "BatchDeleteMembers error");
-    res.status(500).json({ error: "서버 오류가 발생했습니다" });
+    res.status(500).json({ error: "サーバーエラーが発生しました" });
   }
 });
 
@@ -543,7 +543,7 @@ router.get("/admin/points", authMiddleware, adminMiddleware, async (req, res) =>
       limit,
     });
   } catch (err: any) {
-    res.status(500).json({ error: "서버 오류가 발생했습니다" });
+    res.status(500).json({ error: "サーバーエラーが発生しました" });
   }
 });
 
@@ -589,7 +589,7 @@ router.get("/admin/members/:mb_id/points", authMiddleware, adminMiddleware, asyn
       limit,
     });
   } catch (err: any) {
-    res.status(500).json({ error: "서버 오류가 발생했습니다" });
+    res.status(500).json({ error: "サーバーエラーが発生しました" });
   }
 });
 
@@ -599,7 +599,7 @@ router.post("/admin/members/:mb_id/points", authMiddleware, adminMiddleware, asy
     const { point, content } = req.body;
     const pointNum = Number(point);
     if (!pointNum || !content) {
-      res.status(400).json({ error: "포인트와 내용을 입력해주세요" });
+      res.status(400).json({ error: "ポイントと内容を入力してください" });
       return;
     }
 
@@ -607,13 +607,13 @@ router.post("/admin/members/:mb_id/points", authMiddleware, adminMiddleware, asy
       "SELECT mb_point FROM g5_member WHERE mb_id = ?", [mb_id]
     );
     if (!memberRows[0]) {
-      res.status(404).json({ error: "회원을 찾을 수 없습니다" });
+      res.status(404).json({ error: "会員が見つかりません" });
       return;
     }
     const currentPoint = Number(memberRows[0].mb_point || 0);
     const newPoint = currentPoint + pointNum;
     if (newPoint < 0) {
-      res.status(400).json({ error: `차감 포인트가 보유 포인트(${currentPoint}P)를 초과합니다` });
+      res.status(400).json({ error: `差引ポイントが保有ポイント(${currentPoint}P)を超えています` });
       return;
     }
 
@@ -627,7 +627,7 @@ router.post("/admin/members/:mb_id/points", authMiddleware, adminMiddleware, asy
 
     res.json({ success: true, new_point: newPoint });
   } catch (err: any) {
-    res.status(500).json({ error: "서버 오류가 발생했습니다" });
+    res.status(500).json({ error: "サーバーエラーが発生しました" });
   }
 });
 
@@ -637,14 +637,14 @@ router.get("/admin/business-license/:filename", authMiddleware, adminMiddleware,
     const filePath = path.join(uploadDir, filename);
 
     if (!fs.existsSync(filePath)) {
-      res.status(404).json({ error: "파일을 찾을 수 없습니다" });
+      res.status(404).json({ error: "ファイルが見つかりません" });
       return;
     }
 
     res.sendFile(filePath);
   } catch (err: any) {
     req.log?.error({ err }, "GetBusinessLicense error");
-    res.status(500).json({ error: "서버 오류가 발생했습니다" });
+    res.status(500).json({ error: "サーバーエラーが発生しました" });
   }
 });
 
@@ -658,7 +658,7 @@ router.get("/admin/lowest-items", authMiddleware, adminMiddleware, async (req, r
     res.json({ items: rows });
   } catch (err: any) {
     req.log?.error({ err }, "AdminLowestItems error");
-    res.status(500).json({ error: "서버 오류가 발생했습니다" });
+    res.status(500).json({ error: "サーバーエラーが発生しました" });
   }
 });
 
@@ -676,7 +676,7 @@ router.get("/admin/items/search", authMiddleware, adminMiddleware, async (req, r
     res.json({ items: rows });
   } catch (err: any) {
     req.log?.error({ err }, "AdminItemSearch error");
-    res.status(500).json({ error: "서버 오류가 발생했습니다" });
+    res.status(500).json({ error: "サーバーエラーが発生しました" });
   }
 });
 
@@ -688,7 +688,7 @@ router.post("/admin/lowest-items/:it_id", authMiddleware, adminMiddleware, async
     res.json({ success: true });
   } catch (err: any) {
     req.log?.error({ err }, "AdminAddLowest error");
-    res.status(500).json({ error: "서버 오류가 발생했습니다" });
+    res.status(500).json({ error: "サーバーエラーが発生しました" });
   }
 });
 
@@ -700,7 +700,7 @@ router.delete("/admin/lowest-items/:it_id", authMiddleware, adminMiddleware, asy
     res.json({ success: true });
   } catch (err: any) {
     req.log?.error({ err }, "AdminRemoveLowest error");
-    res.status(500).json({ error: "서버 오류가 발생했습니다" });
+    res.status(500).json({ error: "サーバーエラーが発生しました" });
   }
 });
 

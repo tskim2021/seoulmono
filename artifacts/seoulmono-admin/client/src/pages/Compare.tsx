@@ -9,7 +9,7 @@ import { useSEO } from "@/hooks/useSEO";
 import { useState, useEffect } from "react";
 
 export default function Compare() {
-  useSEO({ title: "상품 비교", description: "선택한 상품들을 비교합니다" });
+  useSEO({ title: "商品比較", description: "選択した商品を比較します" });
   const [, navigate] = useLocation();
   const [productIds, setProductIds] = useState<number[]>([]);
   
@@ -41,10 +41,10 @@ export default function Compare() {
       <Layout>
         <div className="container py-20 text-center">
           <GitCompare className="w-16 h-16 mx-auto mb-4 text-muted-foreground opacity-30" />
-          <h2 className="text-xl font-bold mb-2">비교할 상품이 없습니다</h2>
-          <p className="text-muted-foreground mb-6">상품 목록에서 비교할 상품을 선택해주세요</p>
+          <h2 className="text-xl font-bold mb-2">比較する商品がありません</h2>
+          <p className="text-muted-foreground mb-6">商品一覧から比較する商品を選択してください</p>
           <Link href="/products">
-            <Button>상품 목록 보기</Button>
+            <Button>商品一覧を見る</Button>
           </Link>
         </div>
       </Layout>
@@ -52,15 +52,15 @@ export default function Compare() {
   }
 
   const compareFields = [
-    { label: "상품 이미지", key: "thumbnail" },
-    { label: "상품명", key: "name" },
-    { label: "가격", key: "price" },
-    { label: "할인가", key: "salePrice" },
-    { label: "카테고리", key: "category" },
-    { label: "재고", key: "stock" },
-    { label: "평점", key: "rating" },
-    { label: "리뷰 수", key: "reviewCount" },
-    { label: "설명", key: "description" },
+    { label: "商品画像", key: "thumbnail" },
+    { label: "商品名", key: "name" },
+    { label: "価格", key: "price" },
+    { label: "割引価格", key: "salePrice" },
+    { label: "カテゴリー", key: "category" },
+    { label: "在庫", key: "stock" },
+    { label: "評価", key: "rating" },
+    { label: "レビュー数", key: "reviewCount" },
+    { label: "説明", key: "description" },
   ];
 
   return (
@@ -68,15 +68,15 @@ export default function Compare() {
       <div className="container py-8">
         <div className="flex items-center gap-3 mb-6">
           <GitCompare className="w-8 h-8 text-primary" />
-          <h1 className="text-2xl font-bold">상품 비교</h1>
-          <Badge variant="secondary">{products.length}개 상품</Badge>
+          <h1 className="text-2xl font-bold">商品比較</h1>
+          <Badge variant="secondary">{products.length}点</Badge>
         </div>
 
         <div className="overflow-x-auto">
           <table className="w-full border-collapse bg-card rounded-xl overflow-hidden">
             <thead>
               <tr className="bg-muted/50">
-                <th className="p-4 text-left font-semibold sticky left-0 bg-muted/50 z-10 min-w-[150px]">비교 항목</th>
+                <th className="p-4 text-left font-semibold sticky left-0 bg-muted/50 z-10 min-w-[150px]">比較項目</th>
                 {products.map((product: any) => (
                   <th key={product.id} className="p-4 text-center min-w-[250px] relative">
                     <Button
@@ -121,7 +121,7 @@ export default function Compare() {
                           <div>
                             <span className="text-lg font-bold text-destructive">{formatPrice(product.salePrice)}</span>
                             <div className="text-xs text-muted-foreground mt-1">
-                              {Math.round(((product.price - product.salePrice) / product.price) * 100)}% 할인
+                              {Math.round(((product.price - product.salePrice) / product.price) * 100)}% OFF
                             </div>
                           </div>
                         ) : (
@@ -133,7 +133,7 @@ export default function Compare() {
                       )}
                       {field.key === "stock" && (
                         <span className={product.stock > 0 ? "text-green-600 dark:text-green-400" : "text-destructive"}>
-                          {product.stock > 0 ? `${product.stock}개` : "품절"}
+                          {product.stock > 0 ? `${product.stock}個` : "在庫切れ"}
                         </span>
                       )}
                       {field.key === "rating" && (
@@ -143,7 +143,7 @@ export default function Compare() {
                         </div>
                       )}
                       {field.key === "reviewCount" && (
-                        <span className="text-sm">{product.reviewCount || 0}개</span>
+                        <span className="text-sm">{product.reviewCount || 0}件</span>
                       )}
                       {field.key === "description" && (
                         <p className="text-sm text-muted-foreground line-clamp-3 text-left px-2">
@@ -155,19 +155,19 @@ export default function Compare() {
                 </tr>
               ))}
               <tr>
-                <td className="p-4 font-medium sticky left-0 bg-card z-10 border-r">액션</td>
+                <td className="p-4 font-medium sticky left-0 bg-card z-10 border-r">アクション</td>
                 {products.map((product: any) => (
                   <td key={product.id} className="p-4">
                     <div className="flex flex-col gap-2">
                       <Link href={productHref(product.slug)}>
                         <Button className="w-full">
                           <ShoppingCart className="w-4 h-4 mr-2" />
-                          상세보기
+                          詳細を見る
                         </Button>
                       </Link>
                       <Button variant="outline" className="w-full">
                         <Heart className="w-4 h-4 mr-2" />
-                        위시리스트
+                        お気に入り
                       </Button>
                     </div>
                   </td>

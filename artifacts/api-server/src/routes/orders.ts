@@ -171,7 +171,7 @@ router.get("/orders", authMiddleware, async (req, res) => {
     });
   } catch (err: any) {
     req.log?.error({ err }, "GetOrders error");
-    res.status(500).json({ error: "서버 오류가 발생했습니다" });
+    res.status(500).json({ error: "サーバーエラーが発生しました" });
   }
 });
 
@@ -185,7 +185,7 @@ router.post("/orders", authMiddleware, async (req, res) => {
       [user.mb_id]
     );
     if (memberRows.length === 0 || memberRows[0].mb_level < 2) {
-      res.status(403).json({ error: "승인된 회원만 발주할 수 있습니다" });
+      res.status(403).json({ error: "承認済みの会員のみ発注できます" });
       return;
     }
 
@@ -201,17 +201,17 @@ router.post("/orders", authMiddleware, async (req, res) => {
     const usePoint = Number(body.use_point) || 0;
 
     if (!Array.isArray(items) || items.length === 0) {
-      res.status(400).json({ error: "주문 상품을 선택해주세요" });
+      res.status(400).json({ error: "注文商品を選択してください" });
       return;
     }
 
     for (const item of items) {
       if (!item.it_id || typeof item.it_id !== "string") {
-        res.status(400).json({ error: "잘못된 상품 정보입니다" });
+        res.status(400).json({ error: "商品情報が正しくありません" });
         return;
       }
       if (!item.qty || typeof item.qty !== "number" || item.qty < 1) {
-        res.status(400).json({ error: "수량은 1 이상이어야 합니다" });
+        res.status(400).json({ error: "数量は1以上である必要があります" });
         return;
       }
     }
@@ -229,7 +229,7 @@ router.post("/orders", authMiddleware, async (req, res) => {
       );
       if (prodRows.length === 0) {
         await connection.rollback();
-        res.status(400).json({ error: `상품 ${item.it_id}을(를) 찾을 수 없습니다` });
+        res.status(400).json({ error: `商品 ${item.it_id} が見つかりません` });
         return;
       }
       const prod = prodRows[0];
@@ -296,18 +296,18 @@ router.post("/orders", authMiddleware, async (req, res) => {
       );
       if (!couponRows.length) {
         await connection.rollback();
-        res.status(400).json({ error: "사용할 수 없는 쿠폰입니다" });
+        res.status(400).json({ error: "利用できないクーポンです" });
         return;
       }
       couponRow = couponRows[0];
       if (couponRow.cp_end && couponRow.cp_end !== "0000-00-00" && couponRow.cp_end < today) {
         await connection.rollback();
-        res.status(400).json({ error: "만료된 쿠폰입니다" });
+        res.status(400).json({ error: "有効期限切れのクーポンです" });
         return;
       }
       if (Number(couponRow.cp_minimum) > 0 && totalPrice < Number(couponRow.cp_minimum)) {
         await connection.rollback();
-        res.status(400).json({ error: `최소 주문금액 ${Number(couponRow.cp_minimum).toLocaleString()}원 이상일 때 쿠폰을 사용할 수 있습니다` });
+        res.status(400).json({ error: `最低注文金額 ${Number(couponRow.cp_minimum).toLocaleString()}円以上の場合にクーポンを利用できます` });
         return;
       }
       if (Number(couponRow.cp_type) === 1) {
@@ -391,11 +391,11 @@ router.post("/orders", authMiddleware, async (req, res) => {
 
     const companyName = String(member.mb_6 || member.mb_name || user.mb_id);
     const partnerPhone = String(member.mb_hp || "");
-    const adminText = `[다온마켓] 신규 주문 접수 ${orderId} / ${companyName} / ${receiptPrice.toLocaleString()}원`;
-    const partnerText = `[다온마켓] ${companyName}님 주문이 접수되었습니다. 주문번호 ${orderId}, 금액 ${receiptPrice.toLocaleString()}원입니다. 무통장입금 후 처리 부탁드립니다.`;
+    const adminText = `[ソウルモノ] 新規注文受付 ${orderId} / ${companyName} / ${receiptPrice.toLocaleString()}円`;
+    const partnerText = `[ソウルモノ] ${companyName}様のご注文を受け付けました。注文番号 ${orderId}、金額 ${receiptPrice.toLocaleString()}円です。銀行振込のご入金後に処理いたします。`;
     await Promise.allSettled([
-      partnerPhone ? sendSms([partnerPhone], partnerText, "주문 안내") : Promise.resolve(null),
-      SMS_ADMIN_TO.length ? sendSms(SMS_ADMIN_TO, adminText, "신규 주문") : Promise.resolve(null),
+      partnerPhone ? sendSms([partnerPhone], partnerText, "ご注文のご案内") : Promise.resolve(null),
+      SMS_ADMIN_TO.length ? sendSms(SMS_ADMIN_TO, adminText, "新規注文") : Promise.resolve(null),
     ]);
 
     res.status(201).json({
@@ -413,7 +413,7 @@ router.post("/orders", authMiddleware, async (req, res) => {
   } catch (err: any) {
     await connection.rollback();
     req.log?.error({ err }, "CreateOrder error");
-    res.status(500).json({ error: "서버 오류가 발생했습니다" });
+    res.status(500).json({ error: "サーバーエラーが発生しました" });
   } finally {
     connection.release();
   }
@@ -423,7 +423,7 @@ router.get("/orders/partners", authMiddleware, async (req, res) => {
   try {
     const user = (req as any).user;
     if (user.mb_level < 10) {
-      res.status(403).json({ error: "관리자 권한이 필요합니다" });
+      res.status(403).json({ error: "管理者権限が必要です" });
       return;
     }
     const [rows] = await pool.query<RowDataPacket[]>(
@@ -442,7 +442,7 @@ router.get("/orders/partners", authMiddleware, async (req, res) => {
     });
   } catch (err: any) {
     req.log?.error({ err }, "GetOrderPartners error");
-    res.status(500).json({ error: "서버 오류가 발생했습니다" });
+    res.status(500).json({ error: "サーバーエラーが発生しました" });
   }
 });
 
@@ -450,7 +450,7 @@ router.get("/orders/export-shipping", authMiddleware, async (req, res) => {
   try {
     const user = (req as any).user;
     if (user.mb_level < 10) {
-      res.status(403).json({ error: "관리자 권한이 필요합니다" });
+      res.status(403).json({ error: "管理者権限が必要です" });
       return;
     }
 
@@ -516,7 +516,7 @@ router.get("/orders/export-shipping", authMiddleware, async (req, res) => {
 
     const MAX_EXPORT_ROWS = 5000;
     if (rows.length > MAX_EXPORT_ROWS) {
-      res.status(400).json({ error: `내보내기 가능한 최대 주문 수(${MAX_EXPORT_ROWS}건)를 초과했습니다. 날짜 범위를 좁혀주세요.` });
+      res.status(400).json({ error: `エクスポート可能な最大注文数(${MAX_EXPORT_ROWS}件)を超えています。日付範囲を絞り込んでください。` });
       return;
     }
 
@@ -610,14 +610,14 @@ router.get("/orders/export-shipping", authMiddleware, async (req, res) => {
     const buf = XLSX.write(wb, { type: "buffer", bookType: "xlsx" });
 
     const today = new Date().toISOString().slice(0, 10).replace(/-/g, "");
-    const filename = `배송요청_${today}.xlsx`;
+    const filename = `配送依頼_${today}.xlsx`;
 
     res.setHeader("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.document");
     res.setHeader("Content-Disposition", `attachment; filename*=UTF-8''${encodeURIComponent(filename)}`);
     res.send(Buffer.from(buf));
   } catch (err: any) {
     req.log?.error({ err }, "ExportShipping error");
-    res.status(500).json({ error: "엑셀 생성 중 오류가 발생했습니다" });
+    res.status(500).json({ error: "Excel作成中にエラーが発生しました" });
   }
 });
 
@@ -627,12 +627,12 @@ router.post("/orders/import-shipping", authMiddleware, shippingUpload.single("fi
   try {
     const user = (req as any).user;
     if (user.mb_level < 10) {
-      res.status(403).json({ error: "관리자 권한이 필요합니다" });
+      res.status(403).json({ error: "管理者権限が必要です" });
       return;
     }
 
     if (!req.file) {
-      res.status(400).json({ error: "파일을 선택해주세요" });
+      res.status(400).json({ error: "ファイルを選択してください" });
       return;
     }
 
@@ -641,7 +641,7 @@ router.post("/orders/import-shipping", authMiddleware, shippingUpload.single("fi
     const rows: any[][] = XLSX.utils.sheet_to_json(ws, { header: 1 });
 
     if (rows.length < 2) {
-      res.status(400).json({ error: "데이터가 없습니다" });
+      res.status(400).json({ error: "データがありません" });
       return;
     }
 
@@ -651,11 +651,11 @@ router.post("/orders/import-shipping", authMiddleware, shippingUpload.single("fi
     const invoiceIdx = headers.indexOf("송장번호");
 
     if (orderNoIdx === -1) {
-      res.status(400).json({ error: "엑셀에 '주문번호' 열이 없습니다" });
+      res.status(400).json({ error: "Excelに「注文番号」列がありません" });
       return;
     }
     if (invoiceIdx === -1) {
-      res.status(400).json({ error: "엑셀에 '송장번호' 열이 없습니다" });
+      res.status(400).json({ error: "Excelに「送り状番号」列がありません" });
       return;
     }
 
@@ -683,7 +683,7 @@ router.post("/orders/import-shipping", authMiddleware, shippingUpload.single("fi
           [odId]
         );
         if (existing.length === 0) {
-          errors.push(`주문번호 ${odId}: 존재하지 않음`);
+          errors.push(`注文番号 ${odId}: 存在しません`);
           continue;
         }
 
@@ -702,14 +702,14 @@ router.post("/orders/import-shipping", authMiddleware, shippingUpload.single("fi
     }
 
     res.json({
-      message: `${updated}건 배송처리 완료${skipped > 0 ? `, ${skipped}건 송장번호 없어 건너뜀` : ""}`,
+      message: `${updated}件の配送処理が完了しました${skipped > 0 ? `、${skipped}件は送り状番号がないためスキップしました` : ""}`,
       updated,
       skipped,
       errors: errors.length > 0 ? errors : undefined,
     });
   } catch (err: any) {
     req.log?.error({ err }, "ImportShipping error");
-    res.status(500).json({ error: "엑셀 처리 중 오류가 발생했습니다" });
+    res.status(500).json({ error: "Excel処理中にエラーが発生しました" });
   }
 });
 
@@ -717,17 +717,17 @@ router.patch("/orders/batch-status", authMiddleware, async (req, res) => {
   try {
     const user = (req as any).user;
     if (user.mb_level < 10) {
-      res.status(403).json({ error: "관리자 권한이 필요합니다" });
+      res.status(403).json({ error: "管理者権限が必要です" });
       return;
     }
 
     const { order_ids, status, delivery_company, invoice_numbers } = req.body;
     if (!Array.isArray(order_ids) || order_ids.length === 0) {
-      res.status(400).json({ error: "주문을 선택해주세요" });
+      res.status(400).json({ error: "注文を選択してください" });
       return;
     }
     if (!status) {
-      res.status(400).json({ error: "상태를 선택해주세요" });
+      res.status(400).json({ error: "ステータスを選択してください" });
       return;
     }
 
@@ -759,10 +759,10 @@ router.patch("/orders/batch-status", authMiddleware, async (req, res) => {
       updated++;
     }
 
-    res.json({ message: `${updated}건의 주문이 처리되었습니다`, updated });
+    res.json({ message: `${updated}件の注文を処理しました`, updated });
   } catch (err: any) {
     req.log?.error({ err }, "BatchUpdateOrderStatus error");
-    res.status(500).json({ error: "서버 오류가 발생했습니다" });
+    res.status(500).json({ error: "サーバーエラーが発生しました" });
   }
 });
 
@@ -784,7 +784,7 @@ router.get("/orders/:id", authMiddleware, async (req, res) => {
 
     const [rows] = await pool.query<RowDataPacket[]>(query, params);
     if (rows.length === 0) {
-      res.status(404).json({ error: "주문을 찾을 수 없습니다" });
+      res.status(404).json({ error: "注文が見つかりません" });
       return;
     }
 
@@ -831,7 +831,7 @@ router.get("/orders/:id", authMiddleware, async (req, res) => {
     });
   } catch (err: any) {
     req.log?.error({ err }, "GetOrder error");
-    res.status(500).json({ error: "서버 오류가 발생했습니다" });
+    res.status(500).json({ error: "サーバーエラーが発生しました" });
   }
 });
 
@@ -839,20 +839,20 @@ router.patch("/orders/:id/status", authMiddleware, async (req, res) => {
   try {
     const user = (req as any).user;
     if (user.mb_level < 10) {
-      res.status(403).json({ error: "관리자 권한이 필요합니다" });
+      res.status(403).json({ error: "管理者権限が必要です" });
       return;
     }
 
     const paramsParsed = UpdateOrderStatusParams.safeParse(req.params);
     if (!paramsParsed.success) {
-      res.status(400).json({ error: "올바른 주문번호를 입력해주세요" });
+      res.status(400).json({ error: "正しい注文番号を入力してください" });
       return;
     }
     const { id } = paramsParsed.data;
 
     const bodyParsed = UpdateOrderStatusBody.safeParse(req.body);
     if (!bodyParsed.success) {
-      res.status(400).json({ error: "올바른 상태 정보를 입력해주세요" });
+      res.status(400).json({ error: "正しいステータス情報を入力してください" });
       return;
     }
     const body = bodyParsed.data;
@@ -862,7 +862,7 @@ router.patch("/orders/:id/status", authMiddleware, async (req, res) => {
       [id]
     );
     if (rows.length === 0) {
-      res.status(404).json({ error: "주문을 찾을 수 없습니다" });
+      res.status(404).json({ error: "注文が見つかりません" });
       return;
     }
 
@@ -968,7 +968,7 @@ router.patch("/orders/:id/status", authMiddleware, async (req, res) => {
     });
   } catch (err: any) {
     req.log?.error({ err }, "UpdateOrderStatus error");
-    res.status(500).json({ error: "서버 오류가 발생했습니다" });
+    res.status(500).json({ error: "サーバーエラーが発生しました" });
   }
 });
 
@@ -977,7 +977,7 @@ router.delete("/orders/batch-delete", authMiddleware, adminMiddleware, async (re
   try {
     const { order_ids } = req.body;
     if (!Array.isArray(order_ids) || order_ids.length === 0) {
-      res.status(400).json({ error: "삭제할 주문을 선택해주세요" });
+      res.status(400).json({ error: "削除する注文を選択してください" });
       return;
     }
     const ph = order_ids.map(() => "?").join(",");
@@ -986,7 +986,7 @@ router.delete("/orders/batch-delete", authMiddleware, adminMiddleware, async (re
     res.json({ success: true, deleted: order_ids.length });
   } catch (err: any) {
     req.log?.error({ err }, "BatchDeleteOrders error");
-    res.status(500).json({ error: "서버 오류가 발생했습니다" });
+    res.status(500).json({ error: "サーバーエラーが発生しました" });
   }
 });
 

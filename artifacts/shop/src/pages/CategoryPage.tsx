@@ -5,17 +5,17 @@ import { getCartCount } from "@/lib/cart";
 import { useAuth } from "@/contexts/AuthContext";
 
 const CATEGORY_ICONS = [
-  { ca_id: "190", name: "비타민", img: "/cat_10.png" },
-  { ca_id: "200", name: "영양제", img: "/cat_20.png" },
-  { ca_id: "210", name: "유산균", img: "/cat_30.png" },
-  { ca_id: "220", name: "슬리밍/이너뷰티", img: "/cat_40.png" },
+  { ca_id: "190", name: "ビタミン", img: "/cat_10.png" },
+  { ca_id: "200", name: "サプリメント", img: "/cat_20.png" },
+  { ca_id: "210", name: "乳酸菌", img: "/cat_30.png" },
+  { ca_id: "220", name: "スリミング/インナービューティー", img: "/cat_40.png" },
 ];
 
 const MAIN_CATEGORIES = [
-  { ca_id: "190", name: "비타민", isNew: false },
-  { ca_id: "200", name: "영양제", isNew: false },
-  { ca_id: "210", name: "유산균", isNew: false },
-  { ca_id: "220", name: "슬리밍/이너뷰티", isNew: false },
+  { ca_id: "190", name: "ビタミン", isNew: false },
+  { ca_id: "200", name: "サプリメント", isNew: false },
+  { ca_id: "210", name: "乳酸菌", isNew: false },
+  { ca_id: "220", name: "スリミング/インナービューティー", isNew: false },
 ];
 
 const SUB_CATEGORIES: Record<string, string[]> = {};
@@ -45,7 +45,7 @@ export default function CategoryPage() {
         top: 0,
         zIndex: 50,
       }}>
-        <span style={{ fontSize: 16, fontWeight: 700, color: "#222" }}>카테고리</span>
+        <span style={{ fontSize: 16, fontWeight: 700, color: "#222" }}>カテゴリー</span>
         <div style={{ display: "flex", gap: 14, alignItems: "center" }}>
           <button onClick={() => navigate("/search")} style={{ background: "none", border: "none", cursor: "pointer", padding: 4 }}>
             <Search size={20} color="#333" />
@@ -75,19 +75,19 @@ export default function CategoryPage() {
           alignItems: "center",
           justifyContent: "space-between",
         }}>
-          <span style={{ fontSize: 13, color: "#555" }}>로그인하고 다양한 혜택을 받아보세요.</span>
+          <span style={{ fontSize: 13, color: "#555" }}>ログインしてさまざまな特典をご利用ください。</span>
           <div style={{ display: "flex", gap: 6 }}>
             <button
               onClick={() => navigate("/login")}
               style={{ padding: "5px 12px", background: "#8B5E3C", color: "#fff", border: "none", borderRadius: 4, fontSize: 12, fontWeight: 600, cursor: "pointer" }}
             >
-              로그인
+              ログイン
             </button>
             <button
               onClick={() => navigate("/register")}
               style={{ padding: "5px 12px", background: "#fff", color: "#8B5E3C", border: "1px solid #8B5E3C", borderRadius: 4, fontSize: 12, fontWeight: 600, cursor: "pointer" }}
             >
-              회원가입
+              会員登録
             </button>
           </div>
         </div>
@@ -98,10 +98,10 @@ export default function CategoryPage() {
         <div style={{ display: "flex", overflowX: "auto", padding: "0 4px" }} className="no-scrollbar">
           {[
             { label: "HOME", href: "/" },
-            { label: "마이페이지", href: "/mypage" },
-            { label: "주문/배송", href: "/mypage" },
-            { label: "고객센터", href: "#" },
-            { label: "쿠폰/혜택", href: "#" },
+            { label: "マイページ", href: "/mypage" },
+            { label: "注文/配送", href: "/mypage" },
+            { label: "お客様センター", href: "#" },
+            { label: "クーポン/特典", href: "#" },
           ].map(tab => (
             <button
               key={tab.label}
@@ -228,13 +228,13 @@ export default function CategoryPage() {
           }}>
             <div>
               <p style={{ margin: "0 0 4px", fontSize: 10, color: "#8B5E3C", fontWeight: 600 }}>
-                seoulmono에서 상품을 구매하시고 리뷰를 작성하면
+                seoulmonoで商品をご購入後、レビューを投稿すると
               </p>
               <p style={{ margin: 0, fontSize: 16, fontWeight: 800, color: "#8B5E3C" }}>
-                리뷰 1000p 적립
+                レビューで1000ポイント進呈
               </p>
               <p style={{ margin: "4px 0 0", fontSize: 10, color: "#5a9a7a" }}>
-                이벤트 기간: 2024.71 – 이벤트 종료 후 까지
+                イベント期間: 2024.71 ~ イベント終了まで
               </p>
             </div>
             <div style={{

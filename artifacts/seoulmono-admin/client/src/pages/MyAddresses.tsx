@@ -41,13 +41,13 @@ export default function MyAddresses() {
   const [addressData, setAddressData] = useState<Partial<AddressData>>({});
 
   const createAddr = trpc.user.createAddress.useMutation({
-    onSuccess: () => { toast.success("배송지가 추가되었습니다"); utils.user.addresses.invalidate(); closeDialog(); },
+    onSuccess: () => { toast.success("配送先を追加しました"); utils.user.addresses.invalidate(); closeDialog(); },
   });
   const updateAddr = trpc.user.updateAddress.useMutation({
-    onSuccess: () => { toast.success("배송지가 수정되었습니다"); utils.user.addresses.invalidate(); closeDialog(); },
+    onSuccess: () => { toast.success("配送先を更新しました"); utils.user.addresses.invalidate(); closeDialog(); },
   });
   const deleteAddr = trpc.user.deleteAddress.useMutation({
-    onSuccess: () => { toast.success("배송지가 삭제되었습니다"); utils.user.addresses.invalidate(); },
+    onSuccess: () => { toast.success("配送先を削除しました"); utils.user.addresses.invalidate(); },
   });
 
   const closeDialog = () => {
@@ -95,7 +95,7 @@ export default function MyAddresses() {
 
   const handleSubmit = () => {
     if (!form.name || !form.recipient || !form.phone || !form.zipCode || !form.address1) {
-      toast.error("필수 정보를 모두 입력해주세요");
+      toast.error("必須項目をすべて入力してください");
       return;
     }
     if (editId) {
@@ -121,26 +121,26 @@ export default function MyAddresses() {
   };
 
   return (
-    <MyPageLayout title="배송지 관리">
+    <MyPageLayout title="配送先管理">
         <div className="flex items-center justify-between mb-6">
           <Dialog open={open} onOpenChange={(v) => { if (!v) closeDialog(); else setOpen(true); }}>
-            <DialogTrigger asChild><Button size="sm" onClick={() => { setEditId(null); setForm({ ...emptyForm }); setAddressData({}); }}><Plus className="w-4 h-4 mr-1" />배송지 추가</Button></DialogTrigger>
+            <DialogTrigger asChild><Button size="sm" onClick={() => { setEditId(null); setForm({ ...emptyForm }); setAddressData({}); }}><Plus className="w-4 h-4 mr-1" />配送先を追加</Button></DialogTrigger>
             <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
-              <DialogHeader><DialogTitle>{editId ? "배송지 수정" : "새 배송지 추가"}</DialogTitle></DialogHeader>
+              <DialogHeader><DialogTitle>{editId ? "配送先の編集" : "新しい配送先の追加"}</DialogTitle></DialogHeader>
               <div className="space-y-4 mt-4">
-                <div><Label className="text-sm mb-1.5 block">배송지명</Label><Input value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} placeholder="예: 집, 회사" /></div>
+                <div><Label className="text-sm mb-1.5 block">配送先名</Label><Input value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} placeholder="例: 自宅、会社" /></div>
                 <div className="grid grid-cols-2 gap-3">
-                  <div><Label className="text-sm mb-1.5 block">수령인</Label><Input value={form.recipient} onChange={e => setForm(f => ({ ...f, recipient: e.target.value }))} /></div>
-                  <div><Label className="text-sm mb-1.5 block">연락처</Label><Input value={form.phone} onChange={e => setForm(f => ({ ...f, phone: e.target.value }))} /></div>
+                  <div><Label className="text-sm mb-1.5 block">受取人</Label><Input value={form.recipient} onChange={e => setForm(f => ({ ...f, recipient: e.target.value }))} /></div>
+                  <div><Label className="text-sm mb-1.5 block">連絡先</Label><Input value={form.phone} onChange={e => setForm(f => ({ ...f, phone: e.target.value }))} /></div>
                 </div>
                 <div>
-                  <Label className="text-sm mb-1.5 block">수령인 영문명 <span className="text-muted-foreground font-normal">(국제배송용)</span></Label>
-                  <Input value={form.recipientNameEn} onChange={e => setForm(f => ({ ...f, recipientNameEn: e.target.value }))} placeholder="예: Hong Gildong" />
+                  <Label className="text-sm mb-1.5 block">受取人 英語名 <span className="text-muted-foreground font-normal">(国際配送用)</span></Label>
+                  <Input value={form.recipientNameEn} onChange={e => setForm(f => ({ ...f, recipientNameEn: e.target.value }))} placeholder="例: Taro Yamada" />
                 </div>
 
                 {/* 한국 주소 검색 */}
                 <div>
-                  <Label className="text-sm mb-1.5 block">주소</Label>
+                  <Label className="text-sm mb-1.5 block">住所</Label>
                   <KoreanAddressSearch
                     value={addressData}
                     onChange={handleAddressChange}
@@ -150,10 +150,10 @@ export default function MyAddresses() {
 
                 <div className="flex items-center gap-2">
                   <Checkbox checked={form.isDefault} onCheckedChange={c => setForm(f => ({ ...f, isDefault: !!c }))} id="default" />
-                  <label htmlFor="default" className="text-sm">기본 배송지로 설정</label>
+                  <label htmlFor="default" className="text-sm">既定の配送先に設定</label>
                 </div>
                 <Button className="w-full" onClick={handleSubmit} disabled={!form.name || !form.recipient || !form.phone || !form.zipCode || !form.address1 || createAddr.isPending || updateAddr.isPending}>
-                  {(createAddr.isPending || updateAddr.isPending) ? "처리중..." : editId ? "수정하기" : "추가하기"}
+                  {(createAddr.isPending || updateAddr.isPending) ? "処理中..." : editId ? "更新する" : "追加する"}
                 </Button>
               </div>
             </DialogContent>
@@ -163,7 +163,7 @@ export default function MyAddresses() {
         {(addresses ?? []).length === 0 ? (
           <div className="text-center py-20 text-muted-foreground">
             <MapPin className="w-12 h-12 mx-auto mb-3 opacity-20" />
-            <p className="text-sm">등록된 배송지가 없습니다</p>
+            <p className="text-sm">登録された配送先はありません</p>
           </div>
         ) : (
           <div className="space-y-3">
@@ -172,14 +172,14 @@ export default function MyAddresses() {
                 <div className="flex items-center justify-between mb-2">
                   <div className="flex items-center gap-2">
                     <span className="font-semibold text-sm">{addr.name}</span>
-                    {addr.isDefault === 1 && <Badge variant="secondary" className="text-[10px]">기본</Badge>}
+                    {addr.isDefault === 1 && <Badge variant="secondary" className="text-[10px]">既定</Badge>}
                   </div>
                   <div className="flex items-center gap-2">
                     {addr.isDefault !== 1 && (
-                      <Button variant="ghost" size="sm" className="text-xs" onClick={() => updateAddr.mutate({ id: addr.id, isDefault: 1 })}>기본으로 설정</Button>
+                      <Button variant="ghost" size="sm" className="text-xs" onClick={() => updateAddr.mutate({ id: addr.id, isDefault: 1 })}>既定に設定</Button>
                     )}
-                    <Button variant="ghost" size="sm" className="text-xs" onClick={() => openEdit(addr)}>수정</Button>
-                    <button onClick={() => { if (confirm("삭제하시겠습니까?")) deleteAddr.mutate({ id: addr.id }); }} className="text-muted-foreground hover:text-destructive"><Trash2 className="w-4 h-4" /></button>
+                    <Button variant="ghost" size="sm" className="text-xs" onClick={() => openEdit(addr)}>編集</Button>
+                    <button onClick={() => { if (confirm("削除しますか？")) deleteAddr.mutate({ id: addr.id }); }} className="text-muted-foreground hover:text-destructive"><Trash2 className="w-4 h-4" /></button>
                   </div>
                 </div>
                 <p className="text-sm">{addr.recipient} / {addr.phone}</p>

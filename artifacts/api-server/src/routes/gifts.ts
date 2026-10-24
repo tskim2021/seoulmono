@@ -14,7 +14,7 @@ const SITE_URL   = (process.env.SITE_URL   || "https://seoulmono.com").trim();
 
 async function sendGiftSms(to: string, senderName: string, giftLink: string, setName: string): Promise<void> {
   if (!SMS_SECRET || !SMS_FROM) return;
-  const text = `[지구쇼핑몰] ${senderName}님이 선물을 보냈어요!\n${setName}\n아래 링크에서 배송지를 입력해주세요.\n${giftLink}`;
+  const text = `[ソウルモノ] ${senderName}様からギフトが届きました。\n${setName}\n下記のリンクから配送先をご入力ください。\n${giftLink}`;
   try {
     await fetch(SMS_API_URL, {
       method: "POST",
@@ -33,7 +33,7 @@ const giftImgUpload = multer({
   fileFilter: (_req, file, cb) => {
     const allowed = [".jpg", ".jpeg", ".png", ".gif", ".webp"];
     if (allowed.includes(path.extname(file.originalname).toLowerCase())) cb(null, true);
-    else cb(new Error("이미지 파일만 업로드 가능합니다 (jpg, png, gif, webp)"));
+    else cb(new Error("画像ファイルのみアップロードできます (jpg, png, gif, webp)"));
   },
 });
 
@@ -411,7 +411,7 @@ router.post("/shop/gift/orders", authMiddleware, async (req, res) => {
     const user = (req as any).user;
     const { set_ca_id, set_name, slot_count, items, recipient_name, recipient_phone, sender_message } = req.body;
     if (!set_ca_id || !items || !Array.isArray(items) || items.length === 0) {
-      res.status(400).json({ error: "필수 정보가 누락되었습니다" });
+      res.status(400).json({ error: "必須情報が不足しています" });
       return;
     }
     const token = crypto.randomBytes(24).toString("hex");
@@ -431,8 +431,8 @@ router.post("/shop/gift/orders", authMiddleware, async (req, res) => {
     }
     if (recipient_phone) {
       const giftLink = `${SITE_URL}/gift/recipient/${token}`;
-      const senderDisplay = user.mb_name || user.mb_nick || "보내는 분";
-      sendGiftSms(recipient_phone, senderDisplay, giftLink, set_name || "선물").catch(() => {});
+      const senderDisplay = user.mb_name || user.mb_nick || "送り主";
+      sendGiftSms(recipient_phone, senderDisplay, giftLink, set_name || "ギフト").catch(() => {});
     }
     res.json({ ok: true, token, order_id: orderId });
   } catch (e: any) {
@@ -462,21 +462,21 @@ router.get("/shop/gift/orders/my", authMiddleware, async (req, res) => {
 router.post("/shop/gift/send-sms", authMiddleware, async (req, res) => {
   try {
     if (!SMS_SECRET || !SMS_FROM) {
-      res.status(500).json({ error: "SMS 설정이 되어 있지 않습니다" }); return;
+      res.status(500).json({ error: "SMSが設定されていません" }); return;
     }
     const user = (req as any).user;
     const { phone, giftLink, setName } = req.body as { phone: string; giftLink: string; setName: string };
-    if (!phone || !giftLink) { res.status(400).json({ error: "전화번호와 링크가 필요합니다" }); return; }
+    if (!phone || !giftLink) { res.status(400).json({ error: "電話番号とリンクが必要です" }); return; }
     const to = phone.replace(/[^0-9]/g, "");
-    const senderName = user.mb_name || user.mb_id || "보내는 분";
-    const text = `[지구쇼핑몰] ${senderName}님이 선물을 보냈어요!\n${setName || "선물세트"}\n아래 링크에서 배송지를 입력해주세요.\n${giftLink}`;
+    const senderName = user.mb_name || user.mb_id || "送り主";
+    const text = `[ソウルモノ] ${senderName}様からギフトが届きました。\n${setName || "ギフトセット"}\n下記のリンクから配送先をご入力ください。\n${giftLink}`;
     const resp = await fetch(SMS_API_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json;charset=UTF-8", secret: SMS_SECRET },
       body: JSON.stringify({ version: "1.0", from: SMS_FROM, to: [to], text, date: null }),
     });
     const result = await resp.json().catch(() => ({}));
-    if (!resp.ok) { res.status(500).json({ error: "SMS 발송 실패", detail: result }); return; }
+    if (!resp.ok) { res.status(500).json({ error: "SMS送信に失敗しました", detail: result }); return; }
     res.json({ ok: true });
   } catch (e: any) {
     res.status(500).json({ error: e.message });
@@ -490,7 +490,7 @@ router.get("/shop/gift/orders/:id", authMiddleware, async (req, res) => {
     const [rows] = await pool.query<RowDataPacket[]>(
       "SELECT * FROM seoulmono_gift_orders WHERE id=? AND sender_mb_id=?", [id, user.mb_id]
     );
-    if (!rows[0]) { res.status(404).json({ error: "주문을 찾을 수 없습니다" }); return; }
+    if (!rows[0]) { res.status(404).json({ error: "注文が見つかりません" }); return; }
     const order = rows[0];
     const [items] = await pool.query<RowDataPacket[]>(
       "SELECT * FROM seoulmono_gift_order_items WHERE order_id=?", [order.id]
@@ -507,7 +507,7 @@ router.get("/shop/gift/recipient/:token", async (req, res) => {
     const [rows] = await pool.query<RowDataPacket[]>(
       "SELECT * FROM seoulmono_gift_orders WHERE token=?", [token]
     );
-    if (!rows[0]) { res.status(404).json({ error: "선물을 찾을 수 없습니다" }); return; }
+    if (!rows[0]) { res.status(404).json({ error: "ギフトが見つかりません" }); return; }
     const order = rows[0];
     const [items] = await pool.query<RowDataPacket[]>(
       "SELECT * FROM seoulmono_gift_order_items WHERE order_id=?", [order.id]
@@ -531,15 +531,15 @@ router.put("/shop/gift/recipient/:token/address", async (req, res) => {
     const { token } = req.params as { token: string };
     const { recipient_name, recipient_phone, recipient_postcode, recipient_address, recipient_address_detail } = req.body;
     if (!recipient_name || !recipient_phone || !recipient_address) {
-      res.status(400).json({ error: "받는 분 정보를 모두 입력해주세요" });
+      res.status(400).json({ error: "お届け先の情報をすべて入力してください" });
       return;
     }
     const [rows] = await pool.query<RowDataPacket[]>(
       "SELECT id, status FROM seoulmono_gift_orders WHERE token=?", [token]
     );
-    if (!rows[0]) { res.status(404).json({ error: "선물을 찾을 수 없습니다" }); return; }
+    if (!rows[0]) { res.status(404).json({ error: "ギフトが見つかりません" }); return; }
     if (rows[0].status === "address_filled") {
-      res.status(400).json({ error: "이미 주소가 입력된 선물입니다" }); return;
+      res.status(400).json({ error: "すでに住所が入力されているギフトです" }); return;
     }
     await pool.query(
       `UPDATE seoulmono_gift_orders SET
@@ -634,11 +634,11 @@ router.post("/shop/gift/orders/custom", authMiddleware, async (req, res) => {
     const user = (req as any).user;
     const { items, sender_message, set_name } = req.body;
     if (!items || !Array.isArray(items) || items.length === 0) {
-      res.status(400).json({ error: "상품을 1개 이상 선택해주세요" });
+      res.status(400).json({ error: "商品を1点以上選択してください" });
       return;
     }
     const token = crypto.randomBytes(24).toString("hex");
-    const finalName = set_name || "직접 구성 선물세트";
+    const finalName = set_name || "オリジナルギフトセット";
     const [result] = await pool.query<ResultSetHeader>(
       `INSERT INTO seoulmono_gift_orders
        (token, sender_mb_id, set_ca_id, set_name, slot_count, sender_message, status)
@@ -669,7 +669,7 @@ router.post("/shop/gift/orders/package", authMiddleware, async (req, res) => {
     const [pkgs] = await pool.query<RowDataPacket[]>(
       "SELECT * FROM seoulmono_gift_packages WHERE id=? AND is_active=1", [package_id]
     );
-    if (!pkgs[0]) { res.status(404).json({ error: "패키지를 찾을 수 없습니다" }); return; }
+    if (!pkgs[0]) { res.status(404).json({ error: "パッケージが見つかりません" }); return; }
     const pkg = pkgs[0];
 
     const [pkgItems] = await pool.query<RowDataPacket[]>(
@@ -769,7 +769,7 @@ router.post("/shop-admin/gift/set-products/:caid", authMiddleware, adminMiddlewa
   try {
     const { caid } = req.params as { caid: string };
     const { it_id, sort_order } = req.body;
-    if (!it_id) { res.status(400).json({ error: "상품 ID 필요" }); return; }
+    if (!it_id) { res.status(400).json({ error: "商品IDが必要です" }); return; }
     await pool.query(
       `INSERT IGNORE INTO seoulmono_gift_set_products (set_ca_id, it_id, sort_order) VALUES (?,?,?)`,
       [caid, it_id, sort_order ?? 0]
@@ -822,7 +822,7 @@ router.get("/shop-admin/gift/orders/:id", authMiddleware, adminMiddleware, async
   try {
     const { id } = req.params as { id: string };
     const [rows] = await pool.query<RowDataPacket[]>("SELECT * FROM seoulmono_gift_orders WHERE id=?", [id]);
-    if (!rows[0]) { res.status(404).json({ error: "주문을 찾을 수 없습니다" }); return; }
+    if (!rows[0]) { res.status(404).json({ error: "注文が見つかりません" }); return; }
     const [items] = await pool.query<RowDataPacket[]>("SELECT * FROM seoulmono_gift_order_items WHERE order_id=?", [id]);
     res.json({ ...rows[0], items: items.map(i => ({ ...i, it_img1: imgUrl(i.it_img1) })) });
   } catch (e: any) {
@@ -835,7 +835,7 @@ router.put("/shop-admin/gift/orders/:id/status", authMiddleware, adminMiddleware
     const { id } = req.params as { id: string };
     const { status, tracking_number, memo } = req.body;
     const allowed = ["pending", "address_filled", "preparing", "shipped", "delivered", "cancelled"];
-    if (!allowed.includes(status)) { res.status(400).json({ error: "올바르지 않은 상태값입니다" }); return; }
+    if (!allowed.includes(status)) { res.status(400).json({ error: "ステータス値が正しくありません" }); return; }
     await pool.query(
       `UPDATE seoulmono_gift_orders SET status=?, tracking_number=COALESCE(?,tracking_number), admin_memo=COALESCE(?,admin_memo) WHERE id=?`,
       [status, tracking_number || null, memo || null, id]
@@ -891,7 +891,7 @@ router.get("/shop-admin/gift/items/:it_id", authMiddleware, adminMiddleware, asy
        FROM g5_shop_item2 WHERE it_id=?`,
       [it_id]
     );
-    if (!rows[0]) { res.status(404).json({ error: "상품 없음" }); return; }
+    if (!rows[0]) { res.status(404).json({ error: "商品がありません" }); return; }
     const [opts] = await pool.query<RowDataPacket[]>(
       `SELECT io_no, io_id, io_type, io_price, io_stock_qty, io_use
        FROM g5_shop_item_option WHERE it_id=? ORDER BY io_no ASC`,
@@ -910,7 +910,7 @@ router.post("/shop-admin/gift/items", authMiddleware, adminMiddleware, async (re
       it_use = 1, it_soldout = 0, it_basic = "", it_option_subject = "",
       options = [],
     } = req.body;
-    if (!ca_id || !it_name) { res.status(400).json({ error: "카테고리와 상품명 필수" }); return; }
+    if (!ca_id || !it_name) { res.status(400).json({ error: "カテゴリと商品名は必須です" }); return; }
     const it_id = String(Math.floor(Date.now() / 1000));
     // 이미지 URL이 full URL이면 저장, 아니면 그대로
     const rawImg = (it_img1 || "").replace(CAFE24_IMG_BASE + "/", "");
@@ -1048,7 +1048,7 @@ router.get("/shop/gift/packages/:id", async (req, res) => {
     const [rows] = await pool.query<RowDataPacket[]>(
       "SELECT * FROM seoulmono_gift_packages WHERE id=? AND is_active=1", [id]
     );
-    if (!rows[0]) { res.status(404).json({ error: "패키지 없음" }); return; }
+    if (!rows[0]) { res.status(404).json({ error: "パッケージがありません" }); return; }
     const [items] = await pool.query<RowDataPacket[]>(
       `SELECT id, it_id, it_name, it_img1, quantity, sort_order
        FROM seoulmono_gift_package_items WHERE package_id=? ORDER BY sort_order ASC, id ASC`,
@@ -1082,7 +1082,7 @@ router.get("/shop-admin/gift/packages", authMiddleware, adminMiddleware, async (
 
 // Admin: 패키지 이미지 업로드
 router.post("/shop-admin/gift/packages/upload-image", authMiddleware, adminMiddleware, giftImgUpload.single("image"), async (req, res) => {
-  if (!req.file) { res.status(400).json({ error: "이미지 파일이 없습니다" }); return; }
+  if (!req.file) { res.status(400).json({ error: "画像ファイルがありません" }); return; }
   const ext = path.extname(req.file.originalname).toLowerCase() || ".jpg";
   const filename = `gift_${Date.now()}_${crypto.randomBytes(6).toString("hex")}${ext}`;
   const buffer = req.file.buffer;
@@ -1109,7 +1109,7 @@ router.post("/shop-admin/gift/packages/upload-image", authMiddleware, adminMiddl
 router.post("/shop-admin/gift/packages", authMiddleware, adminMiddleware, async (req, res) => {
   try {
     const { name, description = "", price = 0, thumb_img = "", ca_id, item_count = 1, sort_order = 0, is_active = 1 } = req.body;
-    if (!name || !ca_id) { res.status(400).json({ error: "name, ca_id 필수" }); return; }
+    if (!name || !ca_id) { res.status(400).json({ error: "name、ca_id は必須です" }); return; }
     const [result] = await pool.query<ResultSetHeader>(
       `INSERT INTO seoulmono_gift_packages (name, description, price, thumb_img, ca_id, item_count, sort_order, is_active)
        VALUES (?,?,?,?,?,?,?,?)`,
@@ -1153,7 +1153,7 @@ router.post("/shop-admin/gift/packages/:id/items", authMiddleware, adminMiddlewa
   try {
     const { id } = req.params as { id: string };
     const { it_id, it_name, it_img1 = "", quantity = 1, sort_order = 0 } = req.body;
-    if (!it_id || !it_name) { res.status(400).json({ error: "it_id, it_name 필수" }); return; }
+    if (!it_id || !it_name) { res.status(400).json({ error: "it_id、it_name は必須です" }); return; }
     const [result] = await pool.query<ResultSetHeader>(
       `INSERT INTO seoulmono_gift_package_items (package_id, it_id, it_name, it_img1, quantity, sort_order)
        VALUES (?,?,?,?,?,?)`,
@@ -1198,8 +1198,8 @@ router.get("/shop-admin/gift/packages/search-items", authMiddleware, adminMiddle
 router.post("/shop-admin/gift/categories", authMiddleware, adminMiddleware, async (req, res) => {
   try {
     const { parent_ca_id, ca_name } = req.body;
-    if (!parent_ca_id || !ca_name) return res.status(400).json({ error: "parent_ca_id, ca_name 필수" });
-    if (String(parent_ca_id).length !== 2) return res.status(400).json({ error: "parent_ca_id는 2자리여야 합니다" });
+    if (!parent_ca_id || !ca_name) return res.status(400).json({ error: "parent_ca_id、ca_name は必須です" });
+    if (String(parent_ca_id).length !== 2) return res.status(400).json({ error: "parent_ca_id は2桁である必要があります" });
     const [rows] = await pool.query<RowDataPacket[]>(
       "SELECT ca_id FROM g5_shop_category2 WHERE ca_id LIKE ? AND LENGTH(ca_id)=4 ORDER BY ca_id DESC LIMIT 1",
       [`${parent_ca_id}%`]
@@ -1221,7 +1221,7 @@ router.put("/shop-admin/gift/categories/:ca_id", authMiddleware, adminMiddleware
   try {
     const { ca_id } = req.params as { ca_id: string };
     const { ca_name } = req.body;
-    if (!ca_name) return res.status(400).json({ error: "ca_name 필수" });
+    if (!ca_name) return res.status(400).json({ error: "ca_name は必須です" });
     await pool.query("UPDATE g5_shop_category2 SET ca_name=? WHERE ca_id=?", [ca_name, ca_id]);
     res.json({ ok: true });
   } catch (e: any) {
@@ -1232,7 +1232,7 @@ router.put("/shop-admin/gift/categories/:ca_id", authMiddleware, adminMiddleware
 router.delete("/shop-admin/gift/categories/:ca_id", authMiddleware, adminMiddleware, async (req, res) => {
   try {
     const { ca_id } = req.params as { ca_id: string };
-    if (ca_id.length !== 4) return res.status(400).json({ error: "서브카테고리(4자리 ca_id)만 삭제 가능합니다" });
+    if (ca_id.length !== 4) return res.status(400).json({ error: "サブカテゴリ(4桁の ca_id)のみ削除できます" });
     await pool.query("DELETE FROM g5_shop_category2 WHERE ca_id=?", [ca_id]);
     await pool.query("DELETE FROM seoulmono_gift_set_config WHERE ca_id=?", [ca_id]);
     await pool.query("DELETE FROM seoulmono_gift_set_products WHERE set_ca_id=?", [ca_id]);

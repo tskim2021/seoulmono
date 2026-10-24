@@ -28,7 +28,7 @@ export default function ReviewList() {
   const [selectedCategoryId, setSelectedCategoryId] = useState<number | undefined>(undefined);
   const [selectedProductId, setSelectedProductId] = useState<number | undefined>(undefined);
 
-  useSEO({ title: "고객 리뷰", description: "탈모학교 고객 리뷰 게시판" });
+  useSEO({ title: "お客様レビュー", description: "ソウルモノ お客様レビュー掲示板" });
 
   const { data: board } = trpc.community.boardBySlug.useQuery({ slug: "review" });
 
@@ -78,12 +78,12 @@ export default function ReviewList() {
       <div className="container py-8">
         {/* 브레드크럼 */}
         <div className="flex items-center gap-1.5 text-sm text-muted-foreground mb-4">
-          <Link href="/" className="hover:text-foreground">홈</Link>
+          <Link href="/" className="hover:text-foreground">ホーム</Link>
           <span>/</span>
-          <span className="text-foreground font-medium">고객 리뷰</span>
+          <span className="text-foreground font-medium">お客様レビュー</span>
         </div>
 
-        <h1 className="text-2xl font-bold mb-5">고객 리뷰</h1>
+        <h1 className="text-2xl font-bold mb-5">お客様レビュー</h1>
 
         {/* 필터 영역 */}
         <div className="border rounded-lg bg-secondary/30 p-4 mb-4">
@@ -96,7 +96,7 @@ export default function ReviewList() {
                 setSelectedProductId(undefined);
               }}
             >
-              <option value="">카테고리</option>
+              <option value="">カテゴリー</option>
               {parentCats.map((c: any) => (
                 <option key={c.id} value={c.id}>{c.name}</option>
               ))}
@@ -107,7 +107,7 @@ export default function ReviewList() {
               value={selectedProductId ?? ""}
               onChange={e => setSelectedProductId(e.target.value ? Number(e.target.value) : undefined)}
             >
-              <option value="">상품명</option>
+              <option value="">商品名</option>
               {filteredProducts.map((p: any) => (
                 <option key={p.id} value={p.id}>{p.name}</option>
               ))}
@@ -115,7 +115,7 @@ export default function ReviewList() {
 
             <input
               className="border rounded px-3 py-2 text-sm bg-background flex-1 min-w-[160px]"
-              placeholder="검색어"
+              placeholder="検索キーワード"
               value={searchInput}
               onChange={e => setSearchInput(e.target.value)}
             />
@@ -124,14 +124,14 @@ export default function ReviewList() {
               type="submit"
               className="flex items-center gap-2 px-5 py-2 rounded text-sm font-semibold bg-stone-700 text-white hover:bg-stone-800 transition-colors"
             >
-              <Search className="w-3.5 h-3.5" />검색하기
+              <Search className="w-3.5 h-3.5" />検索
             </button>
           </form>
         </div>
 
         {/* 총 개수 */}
         <div className="border-l-4 border-stone-600 bg-stone-50 dark:bg-stone-900/30 px-4 py-2.5 mb-4 text-sm text-stone-700 dark:text-stone-300">
-          총 <strong>{(data?.total ?? 0).toLocaleString()}</strong>개의 후기가 등록되어 있습니다.
+          全 <strong>{(data?.total ?? 0).toLocaleString()}</strong>件のレビューが登録されています。
         </div>
 
         {/* 테이블 */}
@@ -139,12 +139,12 @@ export default function ReviewList() {
           <table className="w-full">
             <thead>
               <tr className="bg-stone-100 dark:bg-stone-800 text-xs text-stone-600 dark:text-stone-400 border-b">
-                <th className="py-3 px-3 text-center font-semibold w-14 hidden sm:table-cell">번호</th>
-                <th className="py-3 px-3 text-center font-semibold w-20 hidden md:table-cell">포토</th>
-                <th className="py-3 px-4 text-left font-semibold">작성자</th>
-                <th className="py-3 px-3 text-center font-semibold w-24 hidden md:table-cell">이름</th>
-                <th className="py-3 px-3 text-center font-semibold w-24 hidden sm:table-cell">날짜</th>
-                <th className="py-3 px-3 text-center font-semibold w-28 hidden sm:table-cell">별점</th>
+                <th className="py-3 px-3 text-center font-semibold w-14 hidden sm:table-cell">番号</th>
+                <th className="py-3 px-3 text-center font-semibold w-20 hidden md:table-cell">写真</th>
+                <th className="py-3 px-4 text-left font-semibold">投稿者</th>
+                <th className="py-3 px-3 text-center font-semibold w-24 hidden md:table-cell">名前</th>
+                <th className="py-3 px-3 text-center font-semibold w-24 hidden sm:table-cell">日付</th>
+                <th className="py-3 px-3 text-center font-semibold w-28 hidden sm:table-cell">評価</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-border/60">
@@ -161,7 +161,7 @@ export default function ReviewList() {
                 ))
               ) : posts.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="py-16 text-center text-sm text-muted-foreground">등록된 후기가 없습니다.</td>
+                  <td colSpan={6} className="py-16 text-center text-sm text-muted-foreground">登録されたレビューはありません。</td>
                 </tr>
               ) : (
                 posts.map((post: any, idx: number) => {
@@ -186,7 +186,7 @@ export default function ReviewList() {
                             className="w-14 h-14 object-cover rounded border mx-auto"
                           />
                         ) : (
-                          <div className="w-14 h-14 bg-muted rounded border mx-auto flex items-center justify-center text-[10px] text-muted-foreground">없음</div>
+                          <div className="w-14 h-14 bg-muted rounded border mx-auto flex items-center justify-center text-[10px] text-muted-foreground">なし</div>
                         )}
                       </td>
                       <td className="py-3 px-4">
@@ -201,7 +201,7 @@ export default function ReviewList() {
                         </Link>
                       </td>
                       <td className="py-3 px-3 text-center text-sm text-muted-foreground hidden md:table-cell truncate max-w-[90px]">
-                        {post.displayName || (post.userName ?? "익명")}
+                        {post.displayName || (post.userName ?? "匿名")}
                       </td>
                       <td className="py-3 px-3 text-center text-xs text-muted-foreground hidden sm:table-cell whitespace-nowrap">
                         {dateStr}

@@ -60,7 +60,7 @@ function TodayDealCard({ item, snsAccess, onCartAdd, onItemClick }: TodayDealCar
         )}
         {item.it_soldout === "1" && (
           <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.45)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-            <span style={{ background: "#333", color: "#fff", fontSize: 12, fontWeight: 700, padding: "4px 10px", borderRadius: 4 }}>품절</span>
+            <span style={{ background: "#333", color: "#fff", fontSize: 12, fontWeight: 700, padding: "4px 10px", borderRadius: 4 }}>売り切れ</span>
           </div>
         )}
       </div>
@@ -90,7 +90,7 @@ function TodayDealCard({ item, snsAccess, onCartAdd, onItemClick }: TodayDealCar
             }}
           >
             <ShoppingBasket size={13} />
-            {cartAdded ? "담았습니다!" : item.it_soldout === "1" ? "품절" : "장바구니"}
+            {cartAdded ? "追加しました!" : item.it_soldout === "1" ? "売り切れ" : "カート"}
           </button>
         ) : (
           <div style={{
@@ -98,7 +98,7 @@ function TodayDealCard({ item, snsAccess, onCartAdd, onItemClick }: TodayDealCar
             background: "#f5f5f5", color: "#aaa", display: "flex", alignItems: "center",
             justifyContent: "center", gap: 4,
           }}>
-            <Lock size={11} /> SNS 접속 시 구매 가능
+            <Lock size={11} /> SNS経由でのアクセス時のみ購入可能
           </div>
         )}
       </div>
@@ -128,7 +128,7 @@ export default function TodayDeal() {
     setTimeout(() => setCartMsg(false), 1400);
   };
 
-  const SNS_URL = ""; // URL은 추후 설정
+  const SNS_URL = ""; // URLは後日設定
 
   return (
     <div style={{ minHeight: "100vh", background: "#f9f9f9" }}>
@@ -142,24 +142,24 @@ export default function TodayDeal() {
             onClick={() => navigate("/")}
             style={{ background: "none", border: "none", color: "rgba(255,255,255,0.75)", cursor: "pointer", display: "flex", alignItems: "center", gap: 4, fontSize: 14, marginBottom: 16, padding: 0 }}
           >
-            <ChevronLeft size={18} /> 홈으로
+            <ChevronLeft size={18} /> ホームへ
           </button>
           <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8, flexWrap: "wrap" }}>
             <div style={{ background: "rgba(255,255,255,0.2)", borderRadius: 12, padding: "6px 14px", display: "flex", alignItems: "center", gap: 6 }}>
               <Share2 size={16} />
-              <span style={{ fontSize: 13, fontWeight: 700 }}>SNS 한정</span>
+              <span style={{ fontSize: 13, fontWeight: 700 }}>SNS限定</span>
             </div>
             {snsAccess && (
               <div style={{ background: "rgba(255,255,255,0.3)", borderRadius: 12, padding: "6px 14px", fontSize: 12, fontWeight: 700 }}>
-                ✓ 구매 가능 상태
+                ✓ 購入可能
               </div>
             )}
           </div>
           <h1 style={{ margin: "0 0 6px", fontSize: 28, fontWeight: 900, letterSpacing: -0.5 }}>
-            오늘만 이 가격!
+            今日だけのこの価格!
           </h1>
           <p style={{ margin: "0 0 18px", fontSize: 14, color: "rgba(255,255,255,0.85)" }}>
-            SNS를 통해 접속하면 특별가로 구매할 수 있어요
+            SNSからアクセスすると特別価格で購入できます
           </p>
           {/* SNS 바로가기 버튼 */}
           {!snsAccess && SNS_URL && (
@@ -174,7 +174,7 @@ export default function TodayDeal() {
                 boxShadow: "0 2px 12px rgba(0,0,0,0.15)",
               }}
             >
-              <ExternalLink size={15} /> SNS에서 구매하기
+              <ExternalLink size={15} /> SNSで購入する
             </a>
           )}
           {!snsAccess && !SNS_URL && (
@@ -184,7 +184,7 @@ export default function TodayDeal() {
               display: "flex", alignItems: "center", gap: 8,
             }}>
               <Lock size={15} />
-              <span>SNS 링크를 통해 접속하면 구매 버튼이 활성화됩니다</span>
+              <span>SNSのリンクからアクセスすると購入ボタンが有効になります</span>
             </div>
           )}
         </div>
@@ -199,8 +199,8 @@ export default function TodayDeal() {
           }}>
             <Lock size={18} color="#e74c3c" style={{ flexShrink: 0, marginTop: 2 }} />
             <div>
-              <p style={{ margin: "0 0 3px", fontSize: 14, fontWeight: 700, color: "#c0392b" }}>구매하려면 SNS 링크로 접속하세요</p>
-              <p style={{ margin: 0, fontSize: 12, color: "#888" }}>상품 구경은 자유롭게 가능합니다. SNS 공유 링크를 통해 접속하시면 특가 구매 버튼이 활성화됩니다.</p>
+              <p style={{ margin: "0 0 3px", fontSize: 14, fontWeight: 700, color: "#c0392b" }}>購入するにはSNSのリンクからアクセスしてください</p>
+              <p style={{ margin: 0, fontSize: 12, color: "#888" }}>商品はご自由にご覧いただけます。SNSの共有リンクからアクセスすると、特価購入ボタンが有効になります。</p>
             </div>
           </div>
         )}
@@ -212,12 +212,12 @@ export default function TodayDeal() {
         ) : items.length === 0 ? (
           <div style={{ textAlign: "center", padding: "80px 20px", color: "#aaa" }}>
             <Share2 size={48} style={{ opacity: 0.3, marginBottom: 16 }} />
-            <p style={{ fontSize: 16, fontWeight: 600 }}>준비 중인 특가 상품입니다</p>
-            <p style={{ fontSize: 13, marginTop: 8 }}>곧 업데이트될 예정입니다!</p>
+            <p style={{ fontSize: 16, fontWeight: 600 }}>準備中の特価商品です</p>
+            <p style={{ fontSize: 13, marginTop: 8 }}>まもなく更新予定です!</p>
           </div>
         ) : (
           <>
-            <p style={{ fontSize: 13, color: "#888", marginBottom: 16 }}>총 {items.length}개 특가 상품</p>
+            <p style={{ fontSize: 13, color: "#888", marginBottom: 16 }}>特価商品 全{items.length}点</p>
             <div className="product-grid">
               {items.map(item => (
                 <TodayDealCard
@@ -240,7 +240,7 @@ export default function TodayDeal() {
           padding: "12px 24px", borderRadius: 24, fontSize: 14, fontWeight: 700,
           boxShadow: "0 4px 20px rgba(0,0,0,0.22)", zIndex: 9999, whiteSpace: "nowrap",
         }}>
-          장바구니에 담았습니다
+          カートに追加しました
         </div>
       )}
     </div>

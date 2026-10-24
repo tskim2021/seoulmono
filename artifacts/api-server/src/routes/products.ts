@@ -151,7 +151,7 @@ function serveLocalOrFetch(
         const dir = path.dirname(localFile);
         if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
         fs.writeFileSync(localFile, buf);
-      } catch { /* 저장 실패해도 서빙은 계속 */ }
+      } catch { /* 保存に失敗しても配信は継続 */ }
       res.set("Content-Type", ct);
       res.set("Cache-Control", "public, max-age=604800");
       res.send(buf);
@@ -172,7 +172,7 @@ const editorUpload = multer({
   limits: { fileSize: 10 * 1024 * 1024 },
   fileFilter: (_req, file, cb) => {
     if (file.mimetype.startsWith("image/")) cb(null, true);
-    else cb(new Error("이미지 파일만 업로드 가능합니다"));
+    else cb(new Error("画像ファイルのみアップロードできます"));
   },
 });
 
@@ -211,7 +211,7 @@ async function downloadFromGCS(filename: string): Promise<{ buffer: Buffer; mime
 // 저장: GCS(영구) + 로컬 파일 캐시. DB 저장 없음.
 router.post("/editor-upload", authMiddleware, editorUpload.single("image"), async (req, res) => {
   if (!req.file) {
-    res.status(400).json({ error: "이미지 파일이 필요합니다" });
+    res.status(400).json({ error: "画像ファイルが必要です" });
     return;
   }
   const filename = makeEditorFilename(req.file.originalname);
@@ -225,7 +225,7 @@ router.post("/editor-upload", authMiddleware, editorUpload.single("image"), asyn
   }
 
   if (!localSaved) {
-    res.status(500).json({ error: "이미지 저장에 실패했습니다. 다시 시도해주세요." });
+    res.status(500).json({ error: "画像の保存に失敗しました。もう一度お試しください。" });
     return;
   }
 
@@ -296,7 +296,7 @@ router.get("/editor-uploaded/:filename", async (req, res) => {
   } catch {}
 
   res.set("Cache-Control", "no-store");
-  res.status(404).json({ error: "이미지를 찾을 수 없습니다. 다시 업로드해 주세요." });
+  res.status(404).json({ error: "画像が見つかりません。もう一度アップロードしてください。" });
 });
 
 const imageCache = new Map<string, { data: Buffer; contentType: string; timestamp: number }>();
@@ -344,7 +344,7 @@ router.get("/product-image/:folder/:filename", async (req, res) => {
           const dir = path.dirname(localFile);
           if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
           fs.writeFileSync(localFile, srcBuffer);
-        } catch { /* 저장 실패해도 계속 */ }
+        } catch { /* 保存に失敗しても継続 */ }
       } catch {
         res.status(404).end();
         return;
@@ -503,7 +503,7 @@ router.get("/products", async (req, res) => {
     });
   } catch (err: any) {
     req.log?.error({ err }, "GetProducts error");
-    res.status(500).json({ error: "서버 오류가 발생했습니다" });
+    res.status(500).json({ error: "サーバーエラーが発生しました" });
   }
 });
 
@@ -518,7 +518,7 @@ router.get("/products/:id", async (req, res) => {
       [id]
     );
     if (rows.length === 0) {
-      res.status(404).json({ error: "상품을 찾을 수 없습니다" });
+      res.status(404).json({ error: "商品が見つかりません" });
       return;
     }
     const r = rows[0];
@@ -570,7 +570,7 @@ router.get("/products/:id", async (req, res) => {
     });
   } catch (err: any) {
     req.log?.error({ err }, "GetProduct error");
-    res.status(500).json({ error: "서버 오류가 발생했습니다" });
+    res.status(500).json({ error: "サーバーエラーが発生しました" });
   }
 });
 
@@ -619,7 +619,7 @@ router.get("/categories", async (req, res) => {
     });
   } catch (err: any) {
     req.log?.error({ err }, "GetCategories error");
-    res.status(500).json({ error: "서버 오류가 발생했습니다" });
+    res.status(500).json({ error: "サーバーエラーが発生しました" });
   }
 });
 
@@ -730,7 +730,7 @@ router.get("/admin/products", authMiddleware, adminMiddleware, async (req, res) 
     });
   } catch (err: any) {
     req.log?.error({ err }, "AdminGetProducts error");
-    res.status(500).json({ error: "서버 오류가 발생했습니다" });
+    res.status(500).json({ error: "サーバーエラーが発生しました" });
   }
 });
 
@@ -768,7 +768,7 @@ router.get("/admin/products/category-stats", authMiddleware, adminMiddleware, as
     res.json({ summary: summary[0], categories: catStats });
   } catch (err: any) {
     req.log?.error({ err }, "CategoryStats error");
-    res.status(500).json({ error: "서버 오류가 발생했습니다" });
+    res.status(500).json({ error: "サーバーエラーが発生しました" });
   }
 });
 
@@ -782,7 +782,7 @@ router.get("/admin/products/:id", authMiddleware, adminMiddleware, async (req, r
        WHERE i.it_id = ?`, [productId]
     );
     if (rows.length === 0) {
-      res.status(404).json({ error: "상품을 찾을 수 없습니다" });
+      res.status(404).json({ error: "商品が見つかりません" });
       return;
     }
     const r = rows[0];
@@ -834,7 +834,7 @@ router.get("/admin/products/:id", authMiddleware, adminMiddleware, async (req, r
     });
   } catch (err: any) {
     req.log?.error({ err }, "AdminGetProductDetail error");
-    res.status(500).json({ error: "서버 오류가 발생했습니다" });
+    res.status(500).json({ error: "サーバーエラーが発生しました" });
   }
 });
 
@@ -872,7 +872,7 @@ router.post("/admin/products/fix-broken-images", authMiddleware, adminMiddleware
     res.json({ success: true, fixedProducts: fixedCount, totalChecked: rows.length });
   } catch (err: any) {
     req.log?.error({ err }, "FixBrokenImages error");
-    res.status(500).json({ error: "서버 오류가 발생했습니다" });
+    res.status(500).json({ error: "サーバーエラーが発生しました" });
   }
 });
 
@@ -881,7 +881,7 @@ router.post("/admin/products/:id/copy", authMiddleware, adminMiddleware, async (
     const sourceId = req.params.id;
     const [rows] = await pool.query<RowDataPacket[]>(`SELECT * FROM g5_shop_item WHERE it_id = ?`, [sourceId]);
     if (rows.length === 0) {
-      res.status(404).json({ error: "원본 상품을 찾을 수 없습니다" });
+      res.status(404).json({ error: "元の商品が見つかりません" });
       return;
     }
     const src = rows[0];
@@ -900,7 +900,7 @@ router.post("/admin/products/:id/copy", authMiddleware, adminMiddleware, async (
       newId,
       // it_order는 원본 그대로 복사, it_time=NOW()가 가장 최신이므로 맨 위에 표시
       ...srcKeys.map(col => {
-        if (col === "it_name") return `${src.it_name} (복사)`;
+        if (col === "it_name") return `${src.it_name} (コピー)`;
         const v = src[col];
         return v === null || v === undefined ? null : v;
       }),
@@ -926,7 +926,7 @@ router.post("/admin/products/:id/copy", authMiddleware, adminMiddleware, async (
     res.json({ success: true, it_id: newId });
   } catch (err: any) {
     req.log?.error({ err, message: err?.message, sqlMessage: (err as any)?.sqlMessage }, "AdminCopyProduct error");
-    res.status(500).json({ error: `상품 복사에 실패했습니다: ${(err as any)?.sqlMessage || err?.message || "알 수 없는 오류"}` });
+    res.status(500).json({ error: `商品のコピーに失敗しました: ${(err as any)?.sqlMessage || err?.message || "不明なエラー"}` });
   }
 });
 
@@ -935,7 +935,7 @@ router.post("/admin/products/:id/options", authMiddleware, adminMiddleware, asyn
     const productId = req.params.id;
     const { options } = req.body;
     if (!Array.isArray(options)) {
-      res.status(400).json({ error: "옵션 데이터가 올바르지 않습니다" });
+      res.status(400).json({ error: "オプションデータが正しくありません" });
       return;
     }
 
@@ -953,7 +953,7 @@ router.post("/admin/products/:id/options", authMiddleware, adminMiddleware, asyn
     res.json({ success: true, count: options.length });
   } catch (err: any) {
     req.log?.error({ err }, "AdminSaveProductOptions error");
-    res.status(500).json({ error: "서버 오류가 발생했습니다" });
+    res.status(500).json({ error: "サーバーエラーが発生しました" });
   }
 });
 
@@ -961,12 +961,12 @@ router.post("/admin/products", authMiddleware, adminMiddleware, async (req, res)
   try {
     const { it_id, it_name, it_price, it_cust_price, it_stock_qty, ca_id, it_maker, it_origin, it_use, it_notax, it_shelf_life, it_order, it_explan, it_sell_email, box_qty } = req.body;
     if (!it_id || !it_name) {
-      res.status(400).json({ error: "상품코드와 상품명은 필수입니다" });
+      res.status(400).json({ error: "商品コードと商品名は必須です" });
       return;
     }
     const [existing] = await pool.query<RowDataPacket[]>(`SELECT it_id FROM g5_shop_item WHERE it_id = ?`, [it_id]);
     if (existing.length > 0) {
-      res.status(400).json({ error: "이미 존재하는 상품코드입니다" });
+      res.status(400).json({ error: "すでに存在する商品コードです" });
       return;
     }
     const imgCols: string[] = [];
@@ -988,7 +988,7 @@ router.post("/admin/products", authMiddleware, adminMiddleware, async (req, res)
     res.json({ success: true, it_id });
   } catch (err: any) {
     req.log?.error({ err }, "AdminCreateProduct error");
-    res.status(500).json({ error: "서버 오류가 발생했습니다" });
+    res.status(500).json({ error: "サーバーエラーが発生しました" });
   }
 });
 
@@ -1027,7 +1027,7 @@ router.put("/admin/products/:id", authMiddleware, adminMiddleware, async (req, r
     res.json({ success: true });
   } catch (err: any) {
     req.log?.error({ err }, "AdminUpdateProduct error");
-    res.status(500).json({ error: "서버 오류가 발생했습니다" });
+    res.status(500).json({ error: "サーバーエラーが発生しました" });
   }
 });
 
@@ -1039,7 +1039,7 @@ router.delete("/admin/products/:id", authMiddleware, adminMiddleware, async (req
     res.json({ success: true });
   } catch (err: any) {
     req.log?.error({ err }, "AdminDeleteProduct error");
-    res.status(500).json({ error: "서버 오류가 발생했습니다" });
+    res.status(500).json({ error: "サーバーエラーが発生しました" });
   }
 });
 
@@ -1047,11 +1047,11 @@ router.post("/admin/products/batch-price", authMiddleware, adminMiddleware, asyn
   try {
     const { product_ids, action, value } = req.body;
     if (!Array.isArray(product_ids) || product_ids.length === 0) {
-      res.status(400).json({ error: "상품을 선택해주세요" });
+      res.status(400).json({ error: "商品を選択してください" });
       return;
     }
     if (!action || value === undefined) {
-      res.status(400).json({ error: "수정 방식과 값을 입력해주세요" });
+      res.status(400).json({ error: "変更方法と値を入力してください" });
       return;
     }
     const placeholders = product_ids.map(() => "?").join(",");
@@ -1064,13 +1064,13 @@ router.post("/admin/products/batch-price", authMiddleware, adminMiddleware, asyn
     } else if (action === "adjust_price_amount") {
       await pool.query(`UPDATE g5_shop_item SET it_price = it_price + ? WHERE it_id IN (${placeholders})`, [Number(value), ...product_ids]);
     } else {
-      res.status(400).json({ error: "잘못된 수정 방식입니다" });
+      res.status(400).json({ error: "変更方法が正しくありません" });
       return;
     }
     res.json({ success: true, updated: product_ids.length });
   } catch (err: any) {
     req.log?.error({ err }, "AdminBatchPrice error");
-    res.status(500).json({ error: "서버 오류가 발생했습니다" });
+    res.status(500).json({ error: "サーバーエラーが発生しました" });
   }
 });
 
@@ -1078,11 +1078,11 @@ router.post("/admin/products/batch-shelf-life", authMiddleware, adminMiddleware,
   try {
     const { product_ids, shelf_life } = req.body;
     if (!Array.isArray(product_ids) || product_ids.length === 0) {
-      res.status(400).json({ error: "상품을 선택해주세요" });
+      res.status(400).json({ error: "商品を選択してください" });
       return;
     }
     if (shelf_life === undefined || shelf_life === null) {
-      res.status(400).json({ error: "유통기한 값을 입력해주세요" });
+      res.status(400).json({ error: "賞味期限の値を入力してください" });
       return;
     }
     const placeholders = product_ids.map(() => "?").join(",");
@@ -1090,7 +1090,7 @@ router.post("/admin/products/batch-shelf-life", authMiddleware, adminMiddleware,
     res.json({ success: true, updated: product_ids.length });
   } catch (err: any) {
     req.log?.error({ err }, "AdminBatchShelfLife error");
-    res.status(500).json({ error: "서버 오류가 발생했습니다" });
+    res.status(500).json({ error: "サーバーエラーが発生しました" });
   }
 });
 
@@ -1098,11 +1098,11 @@ router.post("/admin/products/batch-status", authMiddleware, adminMiddleware, asy
   try {
     const { product_ids, it_use } = req.body;
     if (!Array.isArray(product_ids) || product_ids.length === 0) {
-      res.status(400).json({ error: "상품을 선택해주세요" });
+      res.status(400).json({ error: "商品を選択してください" });
       return;
     }
     if (it_use !== "0" && it_use !== "1") {
-      res.status(400).json({ error: "올바르지 않은 상태값입니다" });
+      res.status(400).json({ error: "ステータス値が正しくありません" });
       return;
     }
     const placeholders = product_ids.map(() => "?").join(",");
@@ -1110,7 +1110,7 @@ router.post("/admin/products/batch-status", authMiddleware, adminMiddleware, asy
     res.json({ success: true, updated: product_ids.length });
   } catch (err: any) {
     req.log?.error({ err }, "AdminBatchStatus error");
-    res.status(500).json({ error: "서버 오류가 발생했습니다" });
+    res.status(500).json({ error: "サーバーエラーが発生しました" });
   }
 });
 
@@ -1120,14 +1120,14 @@ router.patch("/admin/products/:id/notice", authMiddleware, adminMiddleware, asyn
     const productId = req.params.id;
     const { it_info } = req.body;
     if (typeof it_info !== "string") {
-      res.status(400).json({ error: "it_info 값이 필요합니다" });
+      res.status(400).json({ error: "it_info の値が必要です" });
       return;
     }
     await pool.query(`UPDATE g5_shop_item SET it_info=? WHERE it_id=?`, [it_info, productId]);
     res.json({ success: true });
   } catch (err: any) {
     req.log?.error({ err }, "AdminUpdateNotice error");
-    res.status(500).json({ error: "서버 오류가 발생했습니다" });
+    res.status(500).json({ error: "サーバーエラーが発生しました" });
   }
 });
 
@@ -1140,21 +1140,21 @@ router.patch("/admin/products/:id/status", authMiddleware, adminMiddleware, asyn
     const vals: any[] = [];
 
     if (it_use !== undefined) {
-      if (it_use !== "0" && it_use !== "1") return res.status(400).json({ error: "it_use는 '0' 또는 '1'" });
+      if (it_use !== "0" && it_use !== "1") return res.status(400).json({ error: "it_use は '0' または '1' です" });
       sets.push("it_use=?"); vals.push(it_use);
     }
     if (it_soldout !== undefined) {
-      if (!["0", "1", "2"].includes(it_soldout)) return res.status(400).json({ error: "it_soldout는 '0','1','2'" });
+      if (!["0", "1", "2"].includes(it_soldout)) return res.status(400).json({ error: "it_soldout は '0'、'1'、'2' のいずれかです" });
       sets.push("it_soldout=?"); vals.push(it_soldout);
     }
-    if (sets.length === 0) return res.status(400).json({ error: "변경할 항목 없음" });
+    if (sets.length === 0) return res.status(400).json({ error: "変更する項目がありません" });
 
     vals.push(productId);
     await pool.query(`UPDATE g5_shop_item SET ${sets.join(",")} WHERE it_id=?`, vals);
     res.json({ success: true });
   } catch (err: any) {
     req.log?.error({ err }, "AdminPatchProductStatus error");
-    res.status(500).json({ error: "서버 오류가 발생했습니다" });
+    res.status(500).json({ error: "サーバーエラーが発生しました" });
   }
 });
 
@@ -1162,7 +1162,7 @@ router.post("/admin/products/batch-delete", authMiddleware, adminMiddleware, asy
   try {
     const { product_ids } = req.body;
     if (!Array.isArray(product_ids) || product_ids.length === 0) {
-      res.status(400).json({ error: "삭제할 상품을 선택해주세요" });
+      res.status(400).json({ error: "削除する商品を選択してください" });
       return;
     }
     const placeholders = product_ids.map(() => "?").join(",");
@@ -1171,7 +1171,7 @@ router.post("/admin/products/batch-delete", authMiddleware, adminMiddleware, asy
     res.json({ success: true, deleted: product_ids.length });
   } catch (err: any) {
     req.log?.error({ err }, "AdminBatchDeleteProducts error");
-    res.status(500).json({ error: "서버 오류가 발생했습니다" });
+    res.status(500).json({ error: "サーバーエラーが発生しました" });
   }
 });
 
@@ -1191,7 +1191,7 @@ router.post("/admin/products/batch-delete", authMiddleware, adminMiddleware, asy
 // ─── Category Image Upload ────────────────────────────────────────────────────
 router.post("/admin/categories/upload-image", authMiddleware, adminMiddleware, editorUpload.single("image"), async (req, res) => {
   if (!req.file) {
-    res.status(400).json({ error: "이미지 파일이 필요합니다" });
+    res.status(400).json({ error: "画像ファイルが必要です" });
     return;
   }
   const filename = makeEditorFilename(req.file.originalname);
@@ -1204,7 +1204,7 @@ router.post("/admin/categories/upload-image", authMiddleware, adminMiddleware, e
     req.log?.error({ filename, err: e }, "카테고리 이미지 로컬 저장 실패");
   }
   if (!localSaved) {
-    res.status(500).json({ error: "이미지 저장에 실패했습니다. 다시 시도해주세요." });
+    res.status(500).json({ error: "画像の保存に失敗しました。もう一度お試しください。" });
     return;
   }
 
@@ -1236,7 +1236,7 @@ router.get("/admin/categories", authMiddleware, adminMiddleware, async (req, res
     });
   } catch (err: any) {
     req.log?.error({ err }, "AdminGetCategories error");
-    res.status(500).json({ error: "서버 오류가 발생했습니다" });
+    res.status(500).json({ error: "サーバーエラーが発生しました" });
   }
 });
 
@@ -1244,12 +1244,12 @@ router.post("/admin/categories", authMiddleware, adminMiddleware, async (req, re
   try {
     const { ca_id, ca_name, ca_use, ca_order } = req.body;
     if (!ca_id || !ca_name) {
-      res.status(400).json({ error: "카테고리 코드와 이름은 필수입니다" });
+      res.status(400).json({ error: "カテゴリコードと名前は必須です" });
       return;
     }
     const [existing] = await pool.query<RowDataPacket[]>(`SELECT ca_id FROM g5_shop_category WHERE ca_id = ?`, [ca_id]);
     if (existing.length > 0) {
-      res.status(400).json({ error: "이미 존재하는 카테고리 코드입니다" });
+      res.status(400).json({ error: "すでに存在するカテゴリコードです" });
       return;
     }
 
@@ -1297,7 +1297,7 @@ router.post("/admin/categories", authMiddleware, adminMiddleware, async (req, re
     res.json({ success: true });
   } catch (err: any) {
     req.log?.error({ err }, "AdminCreateCategory error");
-    res.status(500).json({ error: "서버 오류가 발생했습니다" });
+    res.status(500).json({ error: "サーバーエラーが発生しました" });
   }
 });
 
@@ -1305,7 +1305,7 @@ router.post("/admin/categories/reorder", authMiddleware, adminMiddleware, async 
   try {
     const { items } = req.body as { items: { ca_id: string; ca_order: number }[] };
     if (!Array.isArray(items) || items.length === 0) {
-      res.status(400).json({ error: "items 배열이 필요합니다" });
+      res.status(400).json({ error: "items 配列が必要です" });
       return;
     }
     for (const item of items) {
@@ -1314,7 +1314,7 @@ router.post("/admin/categories/reorder", authMiddleware, adminMiddleware, async 
     res.json({ success: true });
   } catch (err: any) {
     req.log?.error({ err }, "AdminReorderCategory error");
-    res.status(500).json({ error: "서버 오류가 발생했습니다" });
+    res.status(500).json({ error: "サーバーエラーが発生しました" });
   }
 });
 
@@ -1339,7 +1339,7 @@ router.put("/admin/categories/:id", authMiddleware, adminMiddleware, async (req,
     res.json({ success: true });
   } catch (err: any) {
     req.log?.error({ err }, "AdminUpdateCategory error");
-    res.status(500).json({ error: "서버 오류가 발생했습니다" });
+    res.status(500).json({ error: "サーバーエラーが発生しました" });
   }
 });
 
@@ -1368,7 +1368,7 @@ router.post("/admin/cache-all-images", authMiddleware, adminMiddleware, async (r
     }
 
     // 즉시 응답 후 백그라운드에서 다운로드
-    res.json({ message: `총 ${tasks.length}개 이미지 다운로드 시작`, total: tasks.length });
+    res.json({ message: `合計 ${tasks.length} 件の画像のダウンロードを開始しました`, total: tasks.length });
 
     // 동시 5개씩 처리
     const concurrency = 5;
@@ -1396,7 +1396,7 @@ router.post("/admin/cache-all-images", authMiddleware, adminMiddleware, async (r
     console.log(`[image-cache] 완료: ${done}/${tasks.length}`);
   } catch (err: any) {
     req.log?.error({ err }, "CacheAllImages error");
-    if (!res.headersSent) res.status(500).json({ error: "서버 오류" });
+    if (!res.headersSent) res.status(500).json({ error: "サーバーエラー" });
   }
 });
 
@@ -1407,14 +1407,14 @@ router.delete("/admin/categories/:id", authMiddleware, adminMiddleware, async (r
       `SELECT COUNT(*) as cnt FROM g5_shop_item WHERE ca_id LIKE ?`, [`${caId}%`]
     );
     if (Number(products[0].cnt) > 0) {
-      res.status(400).json({ error: `해당 카테고리에 ${products[0].cnt}개의 상품이 있어 삭제할 수 없습니다` });
+      res.status(400).json({ error: `このカテゴリには ${products[0].cnt} 件の商品があるため削除できません` });
       return;
     }
     await pool.query(`DELETE FROM g5_shop_category WHERE ca_id = ?`, [caId]);
     res.json({ success: true });
   } catch (err: any) {
     req.log?.error({ err }, "AdminDeleteCategory error");
-    res.status(500).json({ error: "서버 오류가 발생했습니다" });
+    res.status(500).json({ error: "サーバーエラーが発生しました" });
   }
 });
 

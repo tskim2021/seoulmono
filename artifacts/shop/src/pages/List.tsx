@@ -7,25 +7,25 @@ import ProductCard from "@/components/ProductCard";
 
 const TYPE_LABELS: Record<string, string> = {
   "3": "MD PICK",
-  "4": "첫구매 100원",
-  "5": "대용량 식자재",
-  "13": "공동구매",
+  "4": "初回購入100円",
+  "5": "大容量業務用食材",
+  "13": "共同購入",
 };
 
 const TYPE_BANNERS: Record<string, { sub: string; title: string; bg: string; color: string; badge?: string }> = {
-  "4": { sub: "회원가입 후 딱 한 번만 구매 가능한 특별 혜택", title: "첫구매 100원 기획전", bg: "linear-gradient(135deg,#d4889a 0%,#eab0bc 100%)", color: "#fff", badge: "1인 1회" },
-  "3": { sub: "seoulmono이 엄선한 고객 만족도 높은 인기 상품", title: "MD PICK", bg: "linear-gradient(135deg,#1565a8 0%,#2196f3 100%)", color: "#fff", badge: "MD 추천" },
-  "13": { sub: "함께 구매하면 더 저렴한 공동구매 상품", title: "공동구매", bg: "linear-gradient(135deg,#8e44ad 0%,#c39bd3 100%)", color: "#fff", badge: "🤝 공구" },
-  "5": { sub: "식당, 급식 전용 대용량 상품 모음", title: "대용량 식자재", bg: "linear-gradient(135deg,#2c6e49 0%,#52b788 100%)", color: "#fff", badge: "🍳 식자재" },
+  "4": { sub: "会員登録後、1回だけご購入いただける特別特典", title: "初回購入100円キャンペーン", bg: "linear-gradient(135deg,#d4889a 0%,#eab0bc 100%)", color: "#fff", badge: "お一人様1回" },
+  "3": { sub: "seoulmonoが厳選した、お客様満足度の高い人気商品", title: "MD PICK", bg: "linear-gradient(135deg,#1565a8 0%,#2196f3 100%)", color: "#fff", badge: "MDおすすめ" },
+  "13": { sub: "みんなで買えばもっとお得な共同購入商品", title: "共同購入", bg: "linear-gradient(135deg,#8e44ad 0%,#c39bd3 100%)", color: "#fff", badge: "🤝 共同購入" },
+  "5": { sub: "飲食店・給食向け大容量商品コレクション", title: "大容量業務用食材", bg: "linear-gradient(135deg,#2c6e49 0%,#52b788 100%)", color: "#fff", badge: "🍳 食材" },
 };
 
 const SORT_OPTIONS = [
-  { value: "hit", label: "판매량순" },
-  { value: "price_asc", label: "낮은가격순" },
-  { value: "price_desc", label: "높은가격순" },
-  { value: "rating", label: "평점높은순" },
-  { value: "review", label: "후기많은순" },
-  { value: "newest", label: "최근등록순" },
+  { value: "hit", label: "売れ筋順" },
+  { value: "price_asc", label: "価格が安い順" },
+  { value: "price_desc", label: "価格が高い順" },
+  { value: "rating", label: "評価が高い順" },
+  { value: "review", label: "レビューが多い順" },
+  { value: "newest", label: "新着順" },
 ];
 
 const LIMIT_OPTIONS = [20, 40, 60];
@@ -95,9 +95,9 @@ export default function List() {
   const topLevelCats = categories.filter(c => c.ca_id.length === 2);
   const subCats = selectedParent ? categories.filter(c => c.ca_id.startsWith(selectedParent) && c.ca_id.length > 2) : [];
 
-  const typeLabel = type ? (TYPE_LABELS[type] || "상품 목록") : "";
+  const typeLabel = type ? (TYPE_LABELS[type] || "商品一覧") : "";
   const catName = caId ? categories.find(c => c.ca_id === caId)?.ca_name || "" : "";
-  const displayTitle = typeLabel || catName || (searchQ ? `"${searchQ}" 검색결과` : "전체 상품");
+  const displayTitle = typeLabel || catName || (searchQ ? `"${searchQ}" の検索結果` : "すべての商品");
   const banner = type ? TYPE_BANNERS[type] : null;
 
   return (
@@ -132,19 +132,19 @@ export default function List() {
                 <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
                   <span style={{ fontSize: 18 }}>🎁</span>
                   <div>
-                    <p style={{ margin: 0, fontSize: 10, color: "rgba(255,255,255,0.85)", fontWeight: 600, letterSpacing: 0.3 }}>올따줴 신규회원 전용 특별 혜택</p>
-                    <p style={{ margin: 0, fontSize: 14, color: "#fff", fontWeight: 900 }}>첫구매 100원 혜택이란?</p>
+                    <p style={{ margin: 0, fontSize: 10, color: "rgba(255,255,255,0.85)", fontWeight: 600, letterSpacing: 0.3 }}>新規会員限定の特別特典</p>
+                    <p style={{ margin: 0, fontSize: 14, color: "#fff", fontWeight: 900 }}>初回購入100円特典とは?</p>
                   </div>
                 </div>
                 <p style={{ margin: "0 0 10px", fontSize: 12.5, color: "rgba(255,255,255,0.92)", lineHeight: 1.65 }}>
-                  처음 가입한 회원이라면 아래 상품 중 <strong style={{ color: "#fff", textDecoration: "underline" }}>1개를 단 100원</strong>에 구매할 수 있는 특별 기획전입니다.
+                  新規にご登録いただいた会員の方は、以下の商品の中から<strong style={{ color: "#fff", textDecoration: "underline" }}>1点をたったの100円</strong>でご購入いただける特別キャンペーンです。
                 </p>
                 <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
                   {[
-                    "회원가입 후 최초 1회 한정",
-                    "1인 1개 상품만 구매 가능",
-                    "기존 회원은 적용 불가",
-                    "혼합 주문 시 별도 결제",
+                    "会員登録後、初回1回限り",
+                    "お一人様1商品のみご購入可能",
+                    "既存会員の方は対象外",
+                    "他の商品との同時注文は別途決済",
                   ].map((text, i) => (
                     <span key={i} style={{
                       background: "rgba(255,255,255,0.25)", border: "1px solid rgba(255,255,255,0.45)",
@@ -162,10 +162,10 @@ export default function List() {
 
         {/* Breadcrumb */}
         <div style={{ display: "flex", alignItems: "center", gap: 5, marginBottom: 16, fontSize: 12, color: "#aaa" }}>
-          <button onClick={() => navigate("/")} style={{ background: "none", border: "none", cursor: "pointer", color: "#aaa", fontSize: 12, padding: 0 }}>홈</button>
+          <button onClick={() => navigate("/")} style={{ background: "none", border: "none", cursor: "pointer", color: "#aaa", fontSize: 12, padding: 0 }}>ホーム</button>
           {catName && <><span>›</span><span style={{ color: "#666" }}>{catName}</span></>}
           {typeLabel && <><span>›</span><span style={{ color: "#666" }}>{typeLabel}</span></>}
-          {searchQ && <><span>›</span><span style={{ color: "#666" }}>검색</span></>}
+          {searchQ && <><span>›</span><span style={{ color: "#666" }}>検索</span></>}
         </div>
 
         <div className="list-layout" style={{ display: "flex", gap: 24, alignItems: "flex-start" }}>
@@ -186,7 +186,7 @@ export default function List() {
                   fontSize: 13, fontWeight: 700, color: (!caId && !type) ? "#8B5E3C" : "#222",
                 }}
               >
-                <span>모든 카테고리</span>
+                <span>すべてのカテゴリー</span>
                 <ChevronRight size={14} color="#aaa" />
               </button>
               {topLevelCats.map(cat => {
@@ -256,7 +256,7 @@ export default function List() {
             <div style={{ background: "#fff", borderRadius: 10, padding: "14px 16px", marginBottom: 12, border: "1px solid #eee" }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
                 <h1 style={{ margin: 0, fontSize: 18, fontWeight: 800, color: "#111" }}>{displayTitle}</h1>
-                <span style={{ fontSize: 12, color: "#aaa" }}>총 {total.toLocaleString()}개</span>
+                <span style={{ fontSize: 12, color: "#aaa" }}>全 {total.toLocaleString()}点</span>
               </div>
 
               {/* Sort tabs */}
@@ -290,7 +290,7 @@ export default function List() {
                       onClick={() => navigate(`/list?ca_id=${selectedParent}`)}
                       style={{ border: "1px solid #ddd", borderRadius: 20, padding: "4px 12px", fontSize: 12, background: caId.length === 2 ? "#8B5E3C" : "#fff", color: caId.length === 2 ? "#fff" : "#666", cursor: "pointer", borderColor: caId.length === 2 ? "#8B5E3C" : "#ddd" }}
                     >
-                      전체
+                      すべて
                     </button>
                     {subCats.map(sc => (
                       <button
@@ -311,7 +311,7 @@ export default function List() {
                     onChange={e => setLimit(Number(e.target.value))}
                     style={{ border: "1px solid #ddd", borderRadius: 6, padding: "5px 8px", fontSize: 12, background: "#fff", cursor: "pointer" }}
                   >
-                    {LIMIT_OPTIONS.map(l => <option key={l} value={l}>{l}개씩 보기</option>)}
+                    {LIMIT_OPTIONS.map(l => <option key={l} value={l}>{l}件ずつ表示</option>)}
                   </select>
                   {/* Grid/List toggle */}
                   <button onClick={() => setGridView(true)} style={{ background: "none", border: "none", cursor: "pointer", padding: 4, color: gridView ? "#8B5E3C" : "#bbb" }}>
@@ -332,8 +332,8 @@ export default function List() {
             ) : items.length === 0 ? (
               <div style={{ textAlign: "center", padding: "70px 0", color: "#aaa", background: "#fff", borderRadius: 10 }}>
                 <p style={{ fontSize: 36, margin: "0 0 12px" }}>🔍</p>
-                <p style={{ fontSize: 15, margin: "0 0 6px", color: "#777" }}>상품이 없습니다</p>
-                <p style={{ fontSize: 13 }}>다른 카테고리를 선택해보세요</p>
+                <p style={{ fontSize: 15, margin: "0 0 6px", color: "#777" }}>商品がありません</p>
+                <p style={{ fontSize: 13 }}>別のカテゴリーをお選びください</p>
               </div>
             ) : gridView ? (
               <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 12 }} className="list-grid">
@@ -535,15 +535,15 @@ function ListItemRow({ item, onCartAdd }: { item: ShopItem; onCartAdd: () => voi
       <div style={{ width: 90, height: 90, flexShrink: 0, background: "#f8f8f8", borderRadius: 8, overflow: "hidden", border: "1px solid #f0f0f0" }}>
         {item.it_img1
           ? <img src={item.it_img1} alt={item.it_name} style={{ width: "100%", height: "100%", objectFit: "contain" }} loading="lazy" onError={e => { (e.target as HTMLImageElement).style.display = "none"; }} />
-          : <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", color: "#ddd", fontSize: 11 }}>이미지없음</div>
+          : <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", color: "#ddd", fontSize: 11 }}>画像なし</div>
         }
       </div>
       <div style={{ flex: 1, minWidth: 0 }}>
         <p style={{ margin: "0 0 6px", fontSize: 14, color: "#333", lineHeight: 1.4 }} className="line-clamp-2">{item.it_name}</p>
-        {disc > 0 && <p style={{ margin: "0 0 3px", fontSize: 12, color: "#b5b5b5", textDecoration: "line-through" }}>{item.it_cust_price.toLocaleString()}원</p>}
+        {disc > 0 && <p style={{ margin: "0 0 3px", fontSize: 12, color: "#b5b5b5", textDecoration: "line-through" }}>{item.it_cust_price.toLocaleString()}円</p>}
         <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
           {disc > 0 && <span style={{ fontSize: 14, fontWeight: 700, color: "#fa622f" }}>{disc}%</span>}
-          <span style={{ fontSize: 16, fontWeight: 700, color: "#111" }}>{item.it_price.toLocaleString()}원</span>
+          <span style={{ fontSize: 16, fontWeight: 700, color: "#111" }}>{item.it_price.toLocaleString()}円</span>
         </div>
       </div>
     </div>

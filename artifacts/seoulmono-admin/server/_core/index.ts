@@ -198,7 +198,7 @@ async function startServer() {
         console.error('[Scheduler] Point expiration notification job failed:', error);
       }
     }, {
-      timezone: 'Asia/Seoul'
+      timezone: 'Asia/Tokyo'
     });
     
     console.log('[Scheduler] Point expiration notification job scheduled (daily at 9:00 AM KST)');

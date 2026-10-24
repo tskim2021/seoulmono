@@ -44,13 +44,13 @@ export function verifyToken(token: string): TokenPayload | null {
 export function authMiddleware(req: Request, res: Response, next: NextFunction): void {
   const authHeader = req.headers.authorization;
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
-    res.status(401).json({ error: "인증이 필요합니다" });
+    res.status(401).json({ error: "認証が必要です" });
     return;
   }
   const token = authHeader.substring(7);
   const payload = verifyToken(token);
   if (!payload) {
-    res.status(401).json({ error: "유효하지 않은 토큰입니다" });
+    res.status(401).json({ error: "無効なトークンです" });
     return;
   }
   (req as any).user = payload;
@@ -60,7 +60,7 @@ export function authMiddleware(req: Request, res: Response, next: NextFunction):
 export function adminMiddleware(req: Request, res: Response, next: NextFunction): void {
   const user = (req as any).user;
   if (!user || user.mb_level < 10) {
-    res.status(403).json({ error: "관리자 권한이 필요합니다" });
+    res.status(403).json({ error: "管理者権限が必要です" });
     return;
   }
   next();

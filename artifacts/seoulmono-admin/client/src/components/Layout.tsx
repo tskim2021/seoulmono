@@ -753,7 +753,7 @@ function Footer() {
   const CustomerCenter = () => (
     <div className="flex flex-col gap-3">
       <p className="text-xs text-muted-foreground font-medium">お問い合わせ</p>
-      <p className="text-base font-semibold leading-snug">ご不明な点はありませんか？<br /><span className="text-primary">1:1 문의</span>で迅速にご回答いたします。</p>
+      <p className="text-base font-semibold leading-snug">ご不明な点はありませんか？<br /><span className="text-primary">お問い合わせ</span>で迅速にご回答いたします。</p>
       <Link href="/customer-service/inquiry">
         <span className="inline-flex items-center justify-center w-full px-4 py-2.5 rounded-lg bg-primary text-primary-foreground text-sm font-bold hover:bg-primary/90 transition-colors cursor-pointer shadow-sm">
           お問い合わせはこちら

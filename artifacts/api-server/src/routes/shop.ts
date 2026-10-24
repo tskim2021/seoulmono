@@ -191,7 +191,7 @@ router.get("/shop/home", async (req, res) => {
     });
   } catch (err: any) {
     req.log?.error({ err }, "ShopHome error");
-    res.status(500).json({ error: "서버 오류가 발생했습니다" });
+    res.status(500).json({ error: "サーバーエラーが発生しました" });
   }
 });
 
@@ -199,10 +199,10 @@ router.get("/shop/home", async (req, res) => {
 router.get("/shop/specials", async (req, res) => {
   try {
     const SPECIAL_FILTERS = [
-      { key: "expire",  label: "유통기한 임박특가", filter1: "8" },
-      { key: "time",    label: "타임특가",         filter1: "9" },
-      { key: "limited", label: "한정특가",         filter1: "10" },
-      { key: "brand",   label: "브랜드특가",       filter1: "11" },
+      { key: "expire",  label: "賞味期限間近特価", filter1: "8" },
+      { key: "time",    label: "タイムセール",         filter1: "9" },
+      { key: "limited", label: "限定特価",         filter1: "10" },
+      { key: "brand",   label: "ブランド特価",       filter1: "11" },
     ];
 
     const TARGET = 10;
@@ -245,7 +245,7 @@ router.get("/shop/specials", async (req, res) => {
     });
   } catch (err: any) {
     req.log?.error({ err }, "ShopSpecials error");
-    res.status(500).json({ error: "서버 오류가 발생했습니다" });
+    res.status(500).json({ error: "サーバーエラーが発生しました" });
   }
 });
 
@@ -289,7 +289,7 @@ router.get("/shop/giftsets", async (req, res) => {
     });
   } catch (err: any) {
     req.log?.error({ err }, "ShopGiftsets error");
-    res.status(500).json({ error: "서버 오류가 발생했습니다" });
+    res.status(500).json({ error: "サーバーエラーが発生しました" });
   }
 });
 
@@ -323,7 +323,7 @@ router.get("/shop/first-purchase", async (req, res) => {
     res.json({ items: (fallback as any[]).map(mapProduct) });
   } catch (err: any) {
     req.log?.error({ err }, "ShopFirstPurchase error");
-    res.status(500).json({ error: "서버 오류가 발생했습니다" });
+    res.status(500).json({ error: "サーバーエラーが発生しました" });
   }
 });
 
@@ -363,7 +363,7 @@ router.get("/shop/lowest", async (req, res) => {
     res.json({ items });
   } catch (err: any) {
     req.log?.error({ err }, "ShopLowest error");
-    res.status(500).json({ error: "서버 오류가 발생했습니다" });
+    res.status(500).json({ error: "サーバーエラーが発生しました" });
   }
 });
 
@@ -398,7 +398,7 @@ router.get("/shop/groupbuy", async (req, res) => {
       [...ids, ...ids]
     );
     res.json({ items: (rows as any[]).map(mapProduct) });
-  } catch (err: any) { res.status(500).json({ error: "서버 오류" }); }
+  } catch (err: any) { res.status(500).json({ error: "サーバーエラー" }); }
 });
 
 router.get("/shop/todaydeal", async (req, res) => {
@@ -419,7 +419,7 @@ router.get("/shop/todaydeal", async (req, res) => {
       [...ids, ...ids]
     );
     res.json({ items: (rows as any[]).map(mapProduct) });
-  } catch (err: any) { res.status(500).json({ error: "서버 오류" }); }
+  } catch (err: any) { res.status(500).json({ error: "サーバーエラー" }); }
 });
 
 router.get("/shop/categories", async (_req, res) => {
@@ -440,7 +440,7 @@ router.get("/shop/categories", async (_req, res) => {
       })),
     });
   } catch (err: any) {
-    res.status(500).json({ error: "서버 오류" });
+    res.status(500).json({ error: "サーバーエラー" });
   }
 });
 
@@ -548,7 +548,7 @@ router.get("/shop/items", async (req, res) => {
     });
   } catch (err: any) {
     req.log?.error({ err }, "ShopItems error");
-    res.status(500).json({ error: "서버 오류가 발생했습니다" });
+    res.status(500).json({ error: "サーバーエラーが発生しました" });
   }
 });
 
@@ -566,7 +566,7 @@ router.get("/shop/items/:id", async (req, res) => {
       [id]
     );
     if (rows.length === 0) {
-      res.status(404).json({ error: "상품을 찾을 수 없습니다" });
+      res.status(404).json({ error: "商品が見つかりません" });
       return;
     }
     const r = rows[0] as any;
@@ -615,7 +615,7 @@ router.get("/shop/items/:id", async (req, res) => {
     });
   } catch (err: any) {
     req.log?.error({ err }, "ShopItemDetail error");
-    res.status(500).json({ error: "서버 오류가 발생했습니다" });
+    res.status(500).json({ error: "サーバーエラーが発生しました" });
   }
 });
 
@@ -674,7 +674,7 @@ router.get("/shop/items/:id/related", async (req, res) => {
     });
   } catch (err: any) {
     req.log?.error({ err }, "RelatedItems error");
-    res.status(500).json({ error: "서버 오류" });
+    res.status(500).json({ error: "サーバーエラー" });
   }
 });
 
@@ -757,7 +757,7 @@ router.get("/shop/reviews", async (req, res) => {
     res.json(reviews);
   } catch (err: any) {
     req.log?.error({ err }, "Reviews error");
-    res.status(500).json({ error: "서버 오류가 발생했습니다" });
+    res.status(500).json({ error: "サーバーエラーが発生しました" });
   }
 });
 
@@ -774,7 +774,7 @@ router.get("/shop/reviews/:id", async (req, res) => {
        LIMIT 1`,
       [id]
     );
-    if (!(rows as any[]).length) return res.status(404).json({ error: "리뷰를 찾을 수 없습니다" });
+    if (!(rows as any[]).length) return res.status(404).json({ error: "レビューが見つかりません" });
     const r = (rows as any[])[0];
     const imgMatches = Array.from((r.is_content || "").matchAll(/<img[^>]+src=["']([^"']+)["']/gi)).map((m: any) => m[1]);
     const plainContent = (r.is_content || "").replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
@@ -789,7 +789,7 @@ router.get("/shop/reviews/:id", async (req, res) => {
     });
   } catch (err: any) {
     req.log?.error({ err }, "Review detail error");
-    res.status(500).json({ error: "서버 오류가 발생했습니다" });
+    res.status(500).json({ error: "サーバーエラーが発生しました" });
   }
 });
 
@@ -809,7 +809,7 @@ router.get("/shop/notices", async (req, res) => {
     res.json(rows);
   } catch (err: any) {
     req.log?.error({ err }, "Notices error");
-    res.status(500).json({ error: "서버 오류가 발생했습니다" });
+    res.status(500).json({ error: "サーバーエラーが発生しました" });
   }
 });
 
@@ -828,23 +828,23 @@ router.get("/shop/section-config", async (req, res) => {
     const r = (shopRows as any[])[0] || {};
     const c = (configRows as any[])[0] || {};
     res.json({
-      best: r.de_type1_title || "히트상품",
-      recommended: r.de_type2_title || "추천상품",
-      newest: r.de_type3_title || "최신상품",
-      popular: r.de_type4_title || "인기상품",
-      sale: r.de_type5_title || "할인상품",
-      review_subtitle: c.cream_theme_foot_notice || "소중한 후기를 남겨주세요",
+      best: r.de_type1_title || "ヒット商品",
+      recommended: r.de_type2_title || "おすすめ商品",
+      newest: r.de_type3_title || "新着商品",
+      popular: r.de_type4_title || "人気商品",
+      sale: r.de_type5_title || "セール商品",
+      review_subtitle: c.cream_theme_foot_notice || "大切なレビューをお寄せください",
     });
   } catch (err: any) {
     req.log?.error({ err }, "SectionConfig error");
-    res.status(500).json({ error: "서버 오류가 발생했습니다" });
+    res.status(500).json({ error: "サーバーエラーが発生しました" });
   }
 });
 
 // 푸터 사업자 정보 — seoulmono_settings(footer_*) 우선, 없으면 g5_config 값 사용
 router.get("/shop/footer-config", async (req, res) => {
   const HARD_DEFAULTS = {
-    company: "지구쇼핑몰",
+    company: "ソウルモノ",
     ceo: "김미희",
     address: "경기도 양주시 화합로1710번길 12, B218호(옥정동, 양주옥정 듀클래스 I)",
     business_num: "597-51-00016",
@@ -852,8 +852,8 @@ router.get("/shop/footer-config", async (req, res) => {
     online_num: "",
     privacy: "김미희",
     cs_tel: "010-2124-5201",
-    cs_hours: "평일 : 10:00 ~ 18:00",
-    cs_lunch: "점심시간 : 12:00 ~ 13:00  일요일 / 공휴일 휴무",
+    cs_hours: "平日 : 10:00 ~ 18:00",
+    cs_lunch: "昼休み : 12:00 ~ 13:00  日曜・祝日休業",
     bank_name: "",
     bank_num: "",
     bank_holder: "",
@@ -981,7 +981,7 @@ router.get("/shop/my-dashboard", authMiddleware, async (req, res) => {
         od_receipt_price: Number(o.od_receipt_price),
         od_settle_case: o.od_settle_case,
         od_time: o.od_time,
-        first_item: o.first_item || "상품 정보 없음",
+        first_item: o.first_item || "商品情報なし",
         first_img: o.first_img ? imgUrl(o.first_img) : "",
         item_count: Number(o.item_count) || 0,
       })),
@@ -992,7 +992,7 @@ router.get("/shop/my-dashboard", authMiddleware, async (req, res) => {
       review_count: reviewCount,
     });
   } catch (err: any) {
-    res.status(500).json({ error: "서버 오류" });
+    res.status(500).json({ error: "サーバーエラー" });
   }
 });
 
@@ -1043,7 +1043,7 @@ router.get("/shop/my-info", authMiddleware, async (req, res) => {
     });
   } catch (err: any) {
     console.error("[my-info] error:", err);
-    res.status(500).json({ error: "서버 오류" });
+    res.status(500).json({ error: "サーバーエラー" });
   }
 });
 
@@ -1058,7 +1058,7 @@ router.put("/shop/my-profile", authMiddleware, async (req, res) => {
     if (new_password) {
       const [rows] = await pool.query<RowDataPacket[]>("SELECT mb_password FROM g5_member WHERE mb_id = ?", [user.mb_id]);
       const ok = verifyGnuboardPassword(current_password || "", rows[0]?.mb_password || "");
-      if (!ok) { res.status(400).json({ error: "현재 비밀번호가 맞지 않습니다" }); return; }
+      if (!ok) { res.status(400).json({ error: "現在のパスワードが正しくありません" }); return; }
     }
 
     const fields: string[] = [];
@@ -1082,7 +1082,7 @@ router.put("/shop/my-profile", authMiddleware, async (req, res) => {
     vals.push(user.mb_id);
     await pool.query(`UPDATE g5_member SET ${fields.join(", ")} WHERE mb_id = ?`, vals);
     res.json({ ok: true });
-  } catch (err: any) { res.status(500).json({ error: "서버 오류" }); }
+  } catch (err: any) { res.status(500).json({ error: "サーバーエラー" }); }
 });
 
 // ── 마이페이지 주문 목록 ──────────────────────────────────────
@@ -1112,13 +1112,13 @@ router.get("/shop/my-orders", authMiddleware, async (req, res) => {
       od_settle_case: o.od_settle_case, od_time: o.od_time, od_memo: o.od_memo,
       od_b_name: o.od_b_name, od_b_hp: o.od_b_hp,
       first_it_id: o.first_it_id || "",
-      first_item: o.first_item || "상품 정보 없음",
+      first_item: o.first_item || "商品情報なし",
       first_img: o.first_img ? imgUrl(o.first_img) : "",
       item_count: Number(o.item_count) || 0,
       first_qty: Number(o.first_qty) || 1,
     }));
     res.json({ orders: result });
-  } catch (err: any) { res.status(500).json({ error: "서버 오류" }); }
+  } catch (err: any) { res.status(500).json({ error: "サーバーエラー" }); }
 });
 
 // ── 아이템 주문 여부 확인 (반드시 :od_id 보다 먼저 등록) ───────
@@ -1146,7 +1146,7 @@ router.get("/shop/my-orders/:od_id", authMiddleware, async (req, res) => {
       `SELECT * FROM g5_shop_order WHERE od_id = ? AND mb_id = ? LIMIT 1`,
       [od_id, user.mb_id]
     );
-    if ((orders as any[]).length === 0) return res.status(404).json({ error: "주문을 찾을 수 없습니다" });
+    if ((orders as any[]).length === 0) return res.status(404).json({ error: "注文が見つかりません" });
     const o = (orders as any[])[0];
 
     const [cartRows] = await pool.query<RowDataPacket[]>(
@@ -1175,7 +1175,7 @@ router.get("/shop/my-orders/:od_id", authMiddleware, async (req, res) => {
       od_invoice: o.od_invoice || "", od_delivery_company: o.od_delivery_company || "",
       items,
     });
-  } catch (err: any) { res.status(500).json({ error: "서버 오류" }); }
+  } catch (err: any) { res.status(500).json({ error: "サーバーエラー" }); }
 });
 
 // ── 마이페이지 쿠폰 목록 ──────────────────────────────────────
@@ -1189,7 +1189,7 @@ router.get("/shop/my-coupons", authMiddleware, async (req, res) => {
       [user.mb_id]
     );
     res.json({ coupons: rows.map(c => ({
-      cp_no: c.cp_no, cp_id: c.cp_id, cp_name: c.cp_name || "쿠폰",
+      cp_no: c.cp_no, cp_id: c.cp_id, cp_name: c.cp_name || "クーポン",
       cp_type: c.cp_type, cp_price: Number(c.cp_price),
       cp_minimum: Number(c.cp_minimum), cp_maximum: Number(c.cp_maximum),
       cp_start: c.cp_start, cp_end: c.cp_end,
@@ -1236,8 +1236,8 @@ router.post("/shop/kakao-channel-point", authMiddleware, async (req, res) => {
     const [rows] = await connection.query<RowDataPacket[]>(
       "SELECT mb_4, mb_point FROM g5_member WHERE mb_id = ? FOR UPDATE", [user.mb_id]
     );
-    if (!rows[0]) { await connection.rollback(); return void res.status(404).json({ error: "회원 정보 없음" }); }
-    if (rows[0].mb_4 === "1") { await connection.rollback(); return void res.json({ ok: false, message: "이미 적립하셨습니다." }); }
+    if (!rows[0]) { await connection.rollback(); return void res.status(404).json({ error: "会員情報がありません" }); }
+    if (rows[0].mb_4 === "1") { await connection.rollback(); return void res.json({ ok: false, message: "すでにポイントを付与済みです。" }); }
 
     const currentPoint = Number(rows[0].mb_point) || 0;
     const newPoint = currentPoint + pointAmount;
@@ -1248,13 +1248,13 @@ router.post("/shop/kakao-channel-point", authMiddleware, async (req, res) => {
     await connection.query(
       `INSERT INTO g5_point (mb_id, po_datetime, po_content, po_point, po_use_point, po_expired, po_expire_date, po_mb_point, po_rel_table, po_rel_id, po_rel_action)
        VALUES (?, ?, ?, ?, 0, 0, '9999-12-31', ?, '#kakao', 'channel', '카카오채널구독')`,
-      [user.mb_id, nowStr, `카카오 채널 구독 포인트 적립 (${pointAmount.toLocaleString()}P)`, pointAmount, newPoint]
+      [user.mb_id, nowStr, `カカオチャンネル登録ポイント付与 (${pointAmount.toLocaleString()}P)`, pointAmount, newPoint]
     ).catch(() => {});
     await connection.commit();
-    res.json({ ok: true, message: `${pointAmount.toLocaleString()} 포인트가 적립되었습니다!`, newBalance: newPoint, pointAmount });
+    res.json({ ok: true, message: `${pointAmount.toLocaleString()}ポイントが付与されました。`, newBalance: newPoint, pointAmount });
   } catch (err: any) {
     await connection.rollback();
-    res.status(500).json({ error: "포인트 적립 중 오류가 발생했습니다." });
+    res.status(500).json({ error: "ポイント付与中にエラーが発生しました。" });
   } finally { connection.release(); }
 });
 
@@ -1277,7 +1277,7 @@ router.get("/shop/points-history", authMiddleware, async (req, res) => {
       }));
     } catch { }
     res.json({ balance, history });
-  } catch (err: any) { res.status(500).json({ error: "서버 오류" }); }
+  } catch (err: any) { res.status(500).json({ error: "サーバーエラー" }); }
 });
 
 // ── 사용 가능 쿠폰 목록 (주문금액 기준 필터) ─────────────────
@@ -1297,7 +1297,7 @@ router.get("/shop/available-coupons", authMiddleware, async (req, res) => {
     );
     res.json({ coupons: rows.map(c => ({
       cp_no: c.cp_no,
-      cp_name: c.cp_subject || "쿠폰",
+      cp_name: c.cp_subject || "クーポン",
       cp_price: Number(c.cp_price),
       cp_method: c.cp_method,
       cp_minimum: Number(c.cp_minimum),
@@ -1345,7 +1345,7 @@ router.post("/shop/wishlist/:it_id", authMiddleware, async (req, res) => {
       );
       res.json({ wished: true });
     }
-  } catch { res.status(500).json({ error: "서버 오류" }); }
+  } catch { res.status(500).json({ error: "サーバーエラー" }); }
 });
 
 router.get("/shop/wishlist/:it_id/status", authMiddleware, async (req, res) => {
@@ -1404,7 +1404,7 @@ router.post("/shop/reviews", authMiddleware, async (req, res) => {
   try {
     const user = (req as any).user;
     const { it_id, od_id, wr_content, wr_rating } = req.body;
-    if (!it_id || !wr_content) { res.status(400).json({ error: "상품과 내용을 입력해주세요" }); return; }
+    if (!it_id || !wr_content) { res.status(400).json({ error: "商品と内容を入力してください" }); return; }
     const rating = Math.min(5, Math.max(1, Number(wr_rating) || 5));
     const now = new Date().toISOString().slice(0, 19).replace("T", " ");
     // 중복 리뷰 방지
@@ -1412,11 +1412,11 @@ router.post("/shop/reviews", authMiddleware, async (req, res) => {
       "SELECT wr_id FROM g5_write_review WHERE mb_id = ? AND it_id = ? AND od_id = ?",
       [user.mb_id, it_id, od_id || ""]
     );
-    if ((existing as any[]).length > 0) { res.status(400).json({ error: "이미 리뷰를 작성하셨습니다" }); return; }
+    if ((existing as any[]).length > 0) { res.status(400).json({ error: "すでにレビューを投稿済みです" }); return; }
     await pool.query(
       `INSERT INTO g5_write_review (mb_id, it_id, od_id, wr_subject, wr_content, wr_rating, wr_datetime, wr_ip, wr_is_comment)
        VALUES (?, ?, ?, ?, ?, ?, ?, '', 0)`,
-      [user.mb_id, it_id, od_id || "", `${user.mb_name || user.mb_id} 님의 리뷰`, wr_content, rating, now]
+      [user.mb_id, it_id, od_id || "", `${user.mb_name || user.mb_id} 様のレビュー`, wr_content, rating, now]
     );
     // 리뷰 평점/개수 업데이트
     await pool.query(
@@ -1427,7 +1427,7 @@ router.post("/shop/reviews", authMiddleware, async (req, res) => {
       [it_id, it_id, it_id]
     );
     res.status(201).json({ ok: true });
-  } catch { res.status(500).json({ error: "서버 오류" }); }
+  } catch { res.status(500).json({ error: "サーバーエラー" }); }
 });
 
 router.delete("/shop/reviews/:wr_id", authMiddleware, async (req, res) => {
@@ -1437,7 +1437,7 @@ router.delete("/shop/reviews/:wr_id", authMiddleware, async (req, res) => {
       "SELECT it_id FROM g5_write_review WHERE wr_id = ? AND mb_id = ?",
       [req.params.wr_id, user.mb_id]
     );
-    if (!(rows as any[]).length) { res.status(404).json({ error: "리뷰를 찾을 수 없습니다" }); return; }
+    if (!(rows as any[]).length) { res.status(404).json({ error: "レビューが見つかりません" }); return; }
     const it_id = (rows as any[])[0].it_id;
     await pool.query("DELETE FROM g5_write_review WHERE wr_id = ? AND mb_id = ?", [req.params.wr_id, user.mb_id]);
     await pool.query(
@@ -1448,7 +1448,7 @@ router.delete("/shop/reviews/:wr_id", authMiddleware, async (req, res) => {
       [it_id, it_id, it_id]
     );
     res.json({ ok: true });
-  } catch { res.status(500).json({ error: "서버 오류" }); }
+  } catch { res.status(500).json({ error: "サーバーエラー" }); }
 });
 
 // ── 마이페이지 배송지 목록 ────────────────────────────────────
@@ -1472,7 +1472,7 @@ router.post("/shop/addresses", authMiddleware, async (req, res) => {
   try {
     const user = (req as any).user;
     const { ma_name, ma_hp, ma_zip1, ma_zip2, ma_addr1, ma_addr2, ma_addr3, ma_default } = req.body;
-    if (!ma_name || !ma_addr1) { res.status(400).json({ error: "수령인과 주소를 입력해주세요" }); return; }
+    if (!ma_name || !ma_addr1) { res.status(400).json({ error: "受取人と住所を入力してください" }); return; }
     const conn = await pool.getConnection();
     try {
       await conn.beginTransaction();
@@ -1487,7 +1487,7 @@ router.post("/shop/addresses", authMiddleware, async (req, res) => {
       await conn.commit();
       res.json({ ma_id: r.insertId });
     } finally { conn.release(); }
-  } catch (err: any) { res.status(500).json({ error: "저장 실패" }); }
+  } catch (err: any) { res.status(500).json({ error: "保存に失敗しました" }); }
 });
 
 router.put("/shop/addresses/:id", authMiddleware, async (req, res) => {
@@ -1509,7 +1509,7 @@ router.put("/shop/addresses/:id", authMiddleware, async (req, res) => {
       await conn.commit();
       res.json({ ok: true });
     } finally { conn.release(); }
-  } catch (err: any) { res.status(500).json({ error: "수정 실패" }); }
+  } catch (err: any) { res.status(500).json({ error: "更新に失敗しました" }); }
 });
 
 router.delete("/shop/addresses/:id", authMiddleware, async (req, res) => {
@@ -1517,7 +1517,7 @@ router.delete("/shop/addresses/:id", authMiddleware, async (req, res) => {
     const user = (req as any).user;
     await pool.query("DELETE FROM g5_member_address WHERE ma_id = ? AND mb_id = ?", [req.params.id, user.mb_id]);
     res.json({ ok: true });
-  } catch (err: any) { res.status(500).json({ error: "삭제 실패" }); }
+  } catch (err: any) { res.status(500).json({ error: "削除に失敗しました" }); }
 });
 
 // ── 마이페이지 1:1 문의 ───────────────────────────────────────
@@ -1576,7 +1576,7 @@ router.get("/shop/inquiries", authMiddleware, async (req, res) => {
       wr_content: r.wr_content || "", wr_datetime: r.wr_datetime || "",
       has_reply: !!(r.wr_reply && r.wr_reply.trim()),
     })) });
-  } catch (err: any) { res.status(500).json({ error: "조회 실패: " + err.message }); }
+  } catch (err: any) { res.status(500).json({ error: "取得に失敗しました: " + err.message }); }
 });
 
 router.post("/shop/inquiries", authMiddleware, async (req, res) => {
@@ -1584,7 +1584,7 @@ router.post("/shop/inquiries", authMiddleware, async (req, res) => {
     await ensureQnaTable();
     const user = (req as any).user;
     const { subject, content } = req.body;
-    if (!subject || !content) { res.status(400).json({ error: "제목과 내용을 입력해주세요" }); return; }
+    if (!subject || !content) { res.status(400).json({ error: "件名と内容を入力してください" }); return; }
     const now = new Date().toISOString().slice(0, 19).replace("T", " ");
     const [r] = await pool.query<ResultSetHeader>(
       `INSERT INTO g5_write_qna (mb_id, wr_subject, wr_content, wr_datetime, wr_last, wr_name, wr_reply, wr_comment, wr_hit, wr_good, wr_nogood, wr_option, ca_name, wr_num, wr_reply_num, wr_ip, wr_password, wr_is_comment, wr_parent, wr_file)
@@ -1592,7 +1592,7 @@ router.post("/shop/inquiries", authMiddleware, async (req, res) => {
       [user.mb_id, subject, content, now, now, user.mb_name || user.mb_id]
     );
     res.json({ wr_id: r.insertId });
-  } catch (err: any) { res.status(500).json({ error: "문의 등록 실패: " + err.message }); }
+  } catch (err: any) { res.status(500).json({ error: "お問い合わせの登録に失敗しました: " + err.message }); }
 });
 
 // ── 광고/제휴문의 ──────────────────────────────────────────────
@@ -1620,7 +1620,7 @@ router.post("/shop/partnership", async (req, res) => {
     await ensurePartnershipTable();
     const { company_name, contact_name, phone, email, inquiry_type, subject, content } = req.body;
     if (!contact_name || !phone || !email || !subject || !content) {
-      res.status(400).json({ error: "담당자명, 연락처, 이메일, 제목, 내용은 필수입니다" }); return;
+      res.status(400).json({ error: "担当者名、連絡先、メールアドレス、件名、内容は必須です" }); return;
     }
     await pool.query(
       `INSERT INTO seoulmono_partnership (company_name, contact_name, phone, email, inquiry_type, subject, content)
@@ -1628,14 +1628,14 @@ router.post("/shop/partnership", async (req, res) => {
       [company_name || "", contact_name, phone, email, inquiry_type || "광고", subject, content]
     );
     res.json({ ok: true });
-  } catch (err: any) { res.status(500).json({ error: "문의 등록 실패: " + err.message }); }
+  } catch (err: any) { res.status(500).json({ error: "お問い合わせの登録に失敗しました: " + err.message }); }
 });
 
 // 광고/제휴문의 목록 조회 (관리자 전용)
 router.get("/shop/partnership", authMiddleware, async (req, res) => {
   try {
     const user = (req as any).user;
-    if (user.mb_level < 9) { res.status(403).json({ error: "권한이 없습니다" }); return; }
+    if (user.mb_level < 9) { res.status(403).json({ error: "権限がありません" }); return; }
     await ensurePartnershipTable();
     const page = Math.max(1, Number(req.query.page) || 1);
     const limit = 20;
@@ -1652,7 +1652,7 @@ router.get("/shop/partnership", authMiddleware, async (req, res) => {
 router.put("/shop/partnership/:id/read", authMiddleware, async (req, res) => {
   try {
     const user = (req as any).user;
-    if (user.mb_level < 9) { res.status(403).json({ error: "권한이 없습니다" }); return; }
+    if (user.mb_level < 9) { res.status(403).json({ error: "権限がありません" }); return; }
     await pool.query(`UPDATE seoulmono_partnership SET is_read = 1 WHERE id = ?`, [req.params.id]);
     res.json({ ok: true });
   } catch (err: any) { res.status(500).json({ error: err.message }); }
@@ -1669,13 +1669,13 @@ router.post("/shop/toss/confirm", authMiddleware, async (req, res) => {
     const { paymentKey, orderId, amount, items, name, phone, email, postcode, addr1, addr2, memo, coupon_no, point_use } = req.body;
 
     if (!paymentKey || !orderId || !amount) {
-      res.status(400).json({ error: "결제 정보가 올바르지 않습니다" }); return;
+      res.status(400).json({ error: "決済情報が正しくありません" }); return;
     }
     if (!Array.isArray(items) || items.length === 0) {
-      res.status(400).json({ error: "주문 상품을 선택해주세요" }); return;
+      res.status(400).json({ error: "注文商品を選択してください" }); return;
     }
     if (!name || !phone || !addr1) {
-      res.status(400).json({ error: "수령인, 연락처, 주소를 입력해주세요" }); return;
+      res.status(400).json({ error: "受取人、連絡先、住所を入力してください" }); return;
     }
 
     // 1) 토스 결제 승인 API
@@ -1687,7 +1687,7 @@ router.post("/shop/toss/confirm", authMiddleware, async (req, res) => {
     });
     const tossData = await tossRes.json() as any;
     if (!tossRes.ok) {
-      res.status(400).json({ error: tossData.message || "결제 승인 실패" }); return;
+      res.status(400).json({ error: tossData.message || "決済の承認に失敗しました" }); return;
     }
 
     // 2) 주문 생성
@@ -1699,7 +1699,7 @@ router.post("/shop/toss/confirm", authMiddleware, async (req, res) => {
     for (const item of items) {
       if (!item.it_id || !item.qty || item.qty < 1) {
         await connection.rollback();
-        res.status(400).json({ error: "잘못된 상품 정보입니다" }); return;
+        res.status(400).json({ error: "商品情報が正しくありません" }); return;
       }
       const [rows] = await connection.query<RowDataPacket[]>(
         "SELECT it_id, it_name, it_price FROM g5_shop_item WHERE it_id = ? AND it_use = '1'",
@@ -1707,7 +1707,7 @@ router.post("/shop/toss/confirm", authMiddleware, async (req, res) => {
       );
       if ((rows as any[]).length === 0) {
         await connection.rollback();
-        res.status(400).json({ error: `상품 ${item.it_id}을(를) 찾을 수 없습니다` }); return;
+        res.status(400).json({ error: `商品 ${item.it_id} が見つかりません` }); return;
       }
       const prod = (rows as any[])[0];
       let price = Number(prod.it_price) || 0;
@@ -1818,7 +1818,7 @@ router.post("/shop/toss/confirm", authMiddleware, async (req, res) => {
   } catch (err: any) {
     await connection.rollback().catch(() => {});
     console.error("[TOSS CONFIRM ERROR]", err?.message);
-    res.status(500).json({ error: err?.message || "주문 처리 중 오류가 발생했습니다" });
+    res.status(500).json({ error: err?.message || "注文処理中にエラーが発生しました" });
   } finally {
     connection.release();
   }
@@ -1839,12 +1839,12 @@ router.post("/shop/orders/:od_id/cancel", authMiddleware, async (req, res) => {
       [od_id, user.mb_id]
     );
     if ((orders as any[]).length === 0) {
-      res.status(404).json({ error: "주문을 찾을 수 없습니다" }); return;
+      res.status(404).json({ error: "注文が見つかりません" }); return;
     }
     const order = (orders as any[])[0];
 
     if (!PRE_SHIPPING_STATUSES.includes(order.od_status)) {
-      res.status(400).json({ error: `'${order.od_status}' 상태에서는 취소가 불가합니다. 고객센터로 문의해주세요.` }); return;
+      res.status(400).json({ error: `「${order.od_status}」の状態ではキャンセルできません。カスタマーセンターへお問い合わせください。` }); return;
     }
 
     await connection.beginTransaction();
@@ -1855,12 +1855,12 @@ router.post("/shop/orders/:od_id/cancel", authMiddleware, async (req, res) => {
       const tossRes = await fetch(`https://api.tosspayments.com/v1/payments/${order.od_tno}/cancel`, {
         method: "POST",
         headers: { Authorization: `Basic ${encoded}`, "Content-Type": "application/json" },
-        body: JSON.stringify({ cancelReason: reason || "고객 요청 취소" }),
+        body: JSON.stringify({ cancelReason: reason || "お客様都合によるキャンセル" }),
       });
       const tossData = await tossRes.json() as any;
       if (!tossRes.ok) {
         await connection.rollback();
-        res.status(400).json({ error: `결제 취소 실패: ${tossData.message || "알 수 없는 오류"}` }); return;
+        res.status(400).json({ error: `決済キャンセルに失敗しました: ${tossData.message || "不明なエラー"}` }); return;
       }
     }
 
@@ -1870,11 +1870,11 @@ router.post("/shop/orders/:od_id/cancel", authMiddleware, async (req, res) => {
     );
 
     await connection.commit();
-    res.json({ ok: true, message: "주문이 취소되었습니다." });
+    res.json({ ok: true, message: "注文をキャンセルしました。" });
   } catch (err: any) {
     await connection.rollback().catch(() => {});
     console.error("[ORDER CANCEL ERROR]", err?.message);
-    res.status(500).json({ error: err?.message || "취소 처리 중 오류가 발생했습니다" });
+    res.status(500).json({ error: err?.message || "キャンセル処理中にエラーが発生しました" });
   } finally {
     connection.release();
   }
@@ -1889,11 +1889,11 @@ router.post("/shop/orders", authMiddleware, async (req, res) => {
     const { items, name, phone, email, postcode, addr1, addr2, memo, payment_method, coupon_no, point_use } = req.body;
 
     if (!Array.isArray(items) || items.length === 0) {
-      res.status(400).json({ error: "주문 상품을 선택해주세요" });
+      res.status(400).json({ error: "注文商品を選択してください" });
       return;
     }
     if (!name || !phone || !addr1) {
-      res.status(400).json({ error: "수령인, 연락처, 주소를 입력해주세요" });
+      res.status(400).json({ error: "受取人、連絡先、住所を入力してください" });
       return;
     }
 
@@ -1905,7 +1905,7 @@ router.post("/shop/orders", authMiddleware, async (req, res) => {
     for (const item of items) {
       if (!item.it_id || !item.qty || item.qty < 1) {
         await connection.rollback();
-        res.status(400).json({ error: "잘못된 상품 정보입니다" });
+        res.status(400).json({ error: "商品情報が正しくありません" });
         return;
       }
       const [rows] = await connection.query<RowDataPacket[]>(
@@ -1914,7 +1914,7 @@ router.post("/shop/orders", authMiddleware, async (req, res) => {
       );
       if (rows.length === 0) {
         await connection.rollback();
-        res.status(400).json({ error: `상품 ${item.it_id}을(를) 찾을 수 없습니다` });
+        res.status(400).json({ error: `商品 ${item.it_id} が見つかりません` });
         return;
       }
       const prod = rows[0];
@@ -1938,14 +1938,14 @@ router.post("/shop/orders", authMiddleware, async (req, res) => {
       );
       if ((cRows as any[]).length === 0) {
         await connection.rollback();
-        res.status(400).json({ error: "유효하지 않은 쿠폰입니다" });
+        res.status(400).json({ error: "無効なクーポンです" });
         return;
       }
       validCoupon = (cRows as any[])[0];
       const minOrder = Number(validCoupon.cp_minimum) || 0;
       if (minOrder > 0 && totalPrice < minOrder) {
         await connection.rollback();
-        res.status(400).json({ error: `쿠폰 최소 주문금액은 ${minOrder.toLocaleString()}원입니다` });
+        res.status(400).json({ error: `クーポンの最低注文金額は${minOrder.toLocaleString()}円です` });
         return;
       }
       couponDiscount = Number(validCoupon.cp_price) || 0;
@@ -1963,13 +1963,13 @@ router.post("/shop/orders", authMiddleware, async (req, res) => {
       const balance = Number((mRows as any[])[0]?.mb_point) || 0;
       if (pointUse > balance) {
         await connection.rollback();
-        res.status(400).json({ error: `보유 포인트(${balance.toLocaleString()}P)가 부족합니다` });
+        res.status(400).json({ error: `保有ポイント(${balance.toLocaleString()}P)が不足しています` });
         return;
       }
       const maxPointUse = totalPrice - couponDiscount;
       if (pointUse > maxPointUse) {
         await connection.rollback();
-        res.status(400).json({ error: "포인트 사용액이 결제금액을 초과합니다" });
+        res.status(400).json({ error: "ポイント使用額が決済金額を超えています" });
         return;
       }
     }
@@ -2057,7 +2057,7 @@ router.post("/shop/orders", authMiddleware, async (req, res) => {
       await connection.query(
         `INSERT INTO g5_point (mb_id, po_datetime, po_content, po_point, po_use_point, po_expired, po_expire_date, po_mb_point, po_rel_table, po_rel_id, po_rel_action)
          VALUES (?, ?, ?, 0, ?, 0, '9999-12-31', ?, '#order', ?, '포인트사용')`,
-        [user.mb_id, nowStr, `주문 포인트 사용 (${orderId})`, pointUse, newPoint, orderId]
+        [user.mb_id, nowStr, `注文ポイント使用 (${orderId})`, pointUse, newPoint, orderId]
       ).catch(() => {});
     }
 
@@ -2086,7 +2086,7 @@ router.post("/shop/orders", authMiddleware, async (req, res) => {
   } catch (err: any) {
     await connection.rollback().catch(() => {});
     console.error("[ORDER ERROR]", err?.message, err?.code, err?.sqlMessage);
-    res.status(500).json({ error: err?.sqlMessage || err?.message || "주문 처리 중 오류가 발생했습니다" });
+    res.status(500).json({ error: err?.sqlMessage || err?.message || "注文処理中にエラーが発生しました" });
   } finally {
     connection.release();
   }
@@ -2114,19 +2114,19 @@ router.post("/shop/guest-orders", async (req, res) => {
   const connection = await pool.getConnection();
   try {
     const { items, name, phone, email, postcode, addr1, addr2, memo } = req.body;
-    if (!Array.isArray(items) || items.length === 0) { res.status(400).json({ error: "주문 상품을 선택해주세요" }); return; }
-    if (!name || !phone || !addr1) { res.status(400).json({ error: "수령인, 연락처, 주소를 입력해주세요" }); return; }
+    if (!Array.isArray(items) || items.length === 0) { res.status(400).json({ error: "注文商品を選択してください" }); return; }
+    if (!name || !phone || !addr1) { res.status(400).json({ error: "受取人、連絡先、住所を入力してください" }); return; }
 
     await connection.beginTransaction();
 
     let totalPrice = 0;
     const validatedItems: { it_id: string; qty: number; price: number; name: string; option: string }[] = [];
     for (const item of items) {
-      if (!item.it_id || !item.qty || item.qty < 1) { await connection.rollback(); res.status(400).json({ error: "잘못된 상품 정보입니다" }); return; }
+      if (!item.it_id || !item.qty || item.qty < 1) { await connection.rollback(); res.status(400).json({ error: "商品情報が正しくありません" }); return; }
       const [rows] = await connection.query<RowDataPacket[]>(
         "SELECT it_id, it_name, it_price FROM g5_shop_item WHERE it_id = ? AND it_use = '1' AND it_soldout != '1'", [item.it_id]
       );
-      if (rows.length === 0) { await connection.rollback(); res.status(400).json({ error: `상품을 찾을 수 없습니다` }); return; }
+      if (rows.length === 0) { await connection.rollback(); res.status(400).json({ error: `商品が見つかりません` }); return; }
       const prod = rows[0];
       let price = Number(prod.it_price) || 0;
       if (item.option_price) price += Number(item.option_price) || 0;
@@ -2183,11 +2183,11 @@ router.post("/shop/guest-orders", async (req, res) => {
     // SMS 고객에게 발송
     const goodNames = validatedItems.map(v => `${v.name}${v.option ? ` (${v.option})` : ""} x${v.qty}`).join(", ");
     const smsText = [
-      `[지구쇼핑몰] 주문이 접수되었습니다.`,
-      `주문번호: ${orderId}`,
-      `상품: ${goodNames.length > 30 ? goodNames.slice(0, 30) + "..." : goodNames}`,
-      `결제금액: ${receiptPrice.toLocaleString()}원`,
-      `(무통장입금 후 처리됩니다)`,
+      `[ソウルモノ] ご注文を受け付けました。`,
+      `注文番号: ${orderId}`,
+      `商品: ${goodNames.length > 30 ? goodNames.slice(0, 30) + "..." : goodNames}`,
+      `お支払い金額: ${receiptPrice.toLocaleString()}円`,
+      `(銀行振込のご入金後に処理いたします)`,
     ].join("\n");
     sendSms([cleanPhone], smsText).catch(() => {});
 
@@ -2209,7 +2209,7 @@ router.post("/shop/guest-orders", async (req, res) => {
     });
   } catch (err: any) {
     await connection.rollback().catch(() => {});
-    res.status(500).json({ error: err?.sqlMessage || err?.message || "주문 처리 중 오류가 발생했습니다" });
+    res.status(500).json({ error: err?.sqlMessage || err?.message || "注文処理中にエラーが発生しました" });
   } finally {
     connection.release();
   }
@@ -2266,32 +2266,32 @@ router.post("/shop/claims", authMiddleware, async (req, res) => {
     const user = (req as any).user;
     const { od_id, claim_type, reason } = req.body;
     if (!od_id || !claim_type || !reason?.trim()) {
-      res.status(400).json({ error: "주문번호, 요청유형, 사유를 입력해주세요" }); return;
+      res.status(400).json({ error: "注文番号、リクエスト種別、理由を入力してください" }); return;
     }
     const validTypes = ["교환", "반품", "환불", "취소"];
     if (!validTypes.includes(claim_type)) {
-      res.status(400).json({ error: "올바른 요청유형을 선택해주세요" }); return;
+      res.status(400).json({ error: "正しいリクエスト種別を選択してください" }); return;
     }
     const [orders] = await pool.query<RowDataPacket[]>(
       "SELECT od_id FROM g5_shop_order WHERE od_id = ? AND mb_id = ? LIMIT 1",
       [od_id, user.mb_id]
     );
     if ((orders as any[]).length === 0) {
-      res.status(404).json({ error: "주문을 찾을 수 없습니다" }); return;
+      res.status(404).json({ error: "注文が見つかりません" }); return;
     }
     const [existing] = await pool.query<RowDataPacket[]>(
       "SELECT id FROM seoulmono_claims WHERE od_id = ? AND mb_id = ? AND status IN ('접수','처리중') LIMIT 1",
       [od_id, user.mb_id]
     );
     if ((existing as any[]).length > 0) {
-      res.status(400).json({ error: "이미 처리 중인 요청이 있습니다. 완료 후 다시 요청해주세요." }); return;
+      res.status(400).json({ error: "すでに処理中のリクエストがあります。完了後にもう一度リクエストしてください。" }); return;
     }
     const [result] = await pool.query<ResultSetHeader>(
       "INSERT INTO seoulmono_claims (od_id, mb_id, claim_type, reason, status) VALUES (?, ?, ?, ?, '접수')",
       [od_id, user.mb_id, claim_type, reason.trim()]
     );
-    res.status(201).json({ id: (result as any).insertId, message: "요청이 접수되었습니다" });
-  } catch (err: any) { res.status(500).json({ error: "서버 오류" }); }
+    res.status(201).json({ id: (result as any).insertId, message: "リクエストを受け付けました" });
+  } catch (err: any) { res.status(500).json({ error: "サーバーエラー" }); }
 });
 
 // 내 클레임 목록 (고객)
@@ -2308,14 +2308,14 @@ router.get("/shop/claims", authMiddleware, async (req, res) => {
       [user.mb_id]
     );
     res.json({ claims: rows });
-  } catch (err: any) { res.status(500).json({ error: "서버 오류" }); }
+  } catch (err: any) { res.status(500).json({ error: "サーバーエラー" }); }
 });
 
 // 관리자 - 클레임 전체 목록
 router.get("/shop-admin/claims", authMiddleware, async (req, res) => {
   try {
     const user = (req as any).user;
-    if (user.mb_level < 9) { res.status(403).json({ error: "권한이 없습니다" }); return; }
+    if (user.mb_level < 9) { res.status(403).json({ error: "権限がありません" }); return; }
     const status = req.query.status as string;
     let where = "WHERE 1=1";
     const params: any[] = [];
@@ -2335,28 +2335,28 @@ router.get("/shop-admin/claims", authMiddleware, async (req, res) => {
       params
     );
     res.json({ claims: rows });
-  } catch (err: any) { res.status(500).json({ error: "서버 오류" }); }
+  } catch (err: any) { res.status(500).json({ error: "サーバーエラー" }); }
 });
 
 // 관리자 - 클레임 상태 변경 + 메모
 router.put("/shop-admin/claims/:id", authMiddleware, async (req, res) => {
   try {
     const user = (req as any).user;
-    if (user.mb_level < 9) { res.status(403).json({ error: "권한이 없습니다" }); return; }
+    if (user.mb_level < 9) { res.status(403).json({ error: "権限がありません" }); return; }
     const { status, admin_memo } = req.body;
     const validStatuses = ["접수", "처리중", "승인", "반려", "완료"];
     if (status && !validStatuses.includes(status)) {
-      res.status(400).json({ error: "올바른 상태값을 입력해주세요" }); return;
+      res.status(400).json({ error: "正しいステータス値を入力してください" }); return;
     }
     const updates: string[] = [];
     const qParams: any[] = [];
     if (status) { updates.push("status = ?"); qParams.push(status); }
     if (admin_memo !== undefined) { updates.push("admin_memo = ?"); qParams.push(admin_memo); }
-    if (updates.length === 0) { res.status(400).json({ error: "변경할 내용이 없습니다" }); return; }
+    if (updates.length === 0) { res.status(400).json({ error: "変更内容がありません" }); return; }
     qParams.push(Number(req.params.id));
     await pool.query(`UPDATE seoulmono_claims SET ${updates.join(", ")} WHERE id = ?`, qParams);
     res.json({ ok: true });
-  } catch (err: any) { res.status(500).json({ error: "서버 오류" }); }
+  } catch (err: any) { res.status(500).json({ error: "サーバーエラー" }); }
 });
 
 // 이벤트 상세 (공개)
@@ -2366,10 +2366,10 @@ router.get("/shop/events/:id", async (req, res) => {
       "SELECT * FROM shop_events WHERE id=? AND is_active=1",
       [req.params.id]
     );
-    if (!(rows as any[]).length) return res.status(404).json({ error: "없음" });
+    if (!(rows as any[]).length) return res.status(404).json({ error: "見つかりません" });
     res.json((rows as any[])[0]);
   } catch {
-    res.status(500).json({ error: "서버 오류" });
+    res.status(500).json({ error: "サーバーエラー" });
   }
 });
 
@@ -2391,20 +2391,20 @@ router.get("/shop/banners", async (_req, res) => {
 router.post("/shop/login", async (req, res) => {
   try {
     const { mb_id, password } = req.body;
-    if (!mb_id || !password) { res.status(400).json({ error: "아이디와 비밀번호를 입력해주세요" }); return; }
+    if (!mb_id || !password) { res.status(400).json({ error: "IDとパスワードを入力してください" }); return; }
     const [rows] = await pool.query<RowDataPacket[]>(
       "SELECT * FROM g5_member WHERE mb_id = ? AND (mb_leave_date = '' OR mb_leave_date IS NULL)",
       [mb_id]
     );
-    if (rows.length === 0) { res.status(401).json({ error: "아이디 또는 비밀번호가 올바르지 않습니다" }); return; }
+    if (rows.length === 0) { res.status(401).json({ error: "IDまたはパスワードが正しくありません" }); return; }
     const member = rows[0];
     const isAdmin = member.mb_level >= 10;
     const isApproved = member.mb_level >= 2;
-    if (!isAdmin && member.mb_level === 0) { res.status(403).json({ error: "가입이 거절된 계정입니다" }); return; }
-    if (!isAdmin && member.mb_level === 1 && member.mb_2 === "pending") { res.status(403).json({ error: "승인 대기 중인 계정입니다." }); return; }
+    if (!isAdmin && member.mb_level === 0) { res.status(403).json({ error: "登録が却下されたアカウントです" }); return; }
+    if (!isAdmin && member.mb_level === 1 && member.mb_2 === "pending") { res.status(403).json({ error: "承認待ちのアカウントです。" }); return; }
     const token = createToken({ mb_id: member.mb_id, mb_level: member.mb_level });
     res.json({ token, user: { mb_id: member.mb_id, mb_nick: member.mb_nick, mb_level: member.mb_level, mb_email: member.mb_email, is_admin: isAdmin, is_approved: isApproved } });
-  } catch (err) { console.error("[shop/login] error", err); res.status(500).json({ error: "서버 오류" }); }
+  } catch (err) { console.error("[shop/login] error", err); res.status(500).json({ error: "サーバーエラー" }); }
 });
 
 export default router;

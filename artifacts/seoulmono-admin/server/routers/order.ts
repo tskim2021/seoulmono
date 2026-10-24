@@ -224,7 +224,7 @@ export const orderRouter = router({
                   <tr style="border-bottom:1px solid #fbbf24;"><td style="padding:8px 0;color:#78350f;font-weight:600;">예금주</td><td style="padding:8px 0;text-align:right;color:#92400e;">${bankAccount.accountHolder}</td></tr>
                   <tr style="border-bottom:1px solid #fbbf24;"><td style="padding:8px 0;color:#78350f;font-weight:600;">입금 금액</td><td style="padding:8px 0;text-align:right;color:#92400e;font-size:18px;font-weight:700;">${depositAmount.toLocaleString()}원</td></tr>
                   <tr style="border-bottom:1px solid #fbbf24;"><td style="padding:8px 0;color:#78350f;font-weight:600;">입금자명</td><td style="padding:8px 0;text-align:right;color:#92400e;">${input.depositorName ?? ""}</td></tr>
-                  <tr><td style="padding:8px 0;color:#78350f;font-weight:600;">입금 기한</td><td style="padding:8px 0;text-align:right;color:#dc2626;font-weight:700;">${expiresAt.toLocaleString("ko-KR")}</td></tr>
+                  <tr><td style="padding:8px 0;color:#78350f;font-weight:600;">입금 기한</td><td style="padding:8px 0;text-align:right;color:#dc2626;font-weight:700;">${expiresAt.toLocaleString("ja-JP")}</td></tr>
                 </table>
               </div>
               <div style="background:#fee2e2;border-left:4px solid #dc2626;padding:15px;margin:20px 0;">

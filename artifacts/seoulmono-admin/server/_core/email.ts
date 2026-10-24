@@ -131,7 +131,7 @@ export async function generateEmailTemplate(params: {
 
   return `
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ja">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -321,7 +321,7 @@ export function generateReviewRequestEmail(params: {
   const PRIMARY = "#3a2a2a";
   return `
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ja">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">

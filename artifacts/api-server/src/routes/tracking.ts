@@ -75,7 +75,7 @@ router.get("/tracking/:invoice_no", authMiddleware, async (req, res) => {
         carrier: carrier || "CJ대한통운",
         events: [],
         fallback_url,
-        error: `API 오류: ${resp.status}`,
+        error: `APIエラー: ${resp.status}`,
       });
     }
 
@@ -116,7 +116,7 @@ router.get("/tracking/:invoice_no", authMiddleware, async (req, res) => {
         carrier_tel: data.carrier?.tel,
         events: [],
         fallback_url,
-        error: "아직 배송 이력이 없습니다. 택배사에 운송장이 등록된 후 다시 확인해주세요.",
+        error: "まだ配送履歴がありません。配送業者に送り状が登録された後、もう一度ご確認ください。",
       });
     }
 
@@ -137,7 +137,7 @@ router.get("/tracking/:invoice_no", authMiddleware, async (req, res) => {
       carrier: carrier || "CJ대한통운",
       events: [],
       fallback_url,
-      error: "배송 정보를 가져오지 못했습니다.",
+      error: "配送情報を取得できませんでした。",
     });
   }
 });

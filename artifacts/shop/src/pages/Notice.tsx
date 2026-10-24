@@ -80,7 +80,7 @@ export default function NoticePage() {
 
   async function handleWrite(e: React.FormEvent) {
     e.preventDefault();
-    if (!form.subject.trim() || !form.content.trim()) { setFormErr("제목과 내용을 입력해주세요."); return; }
+    if (!form.subject.trim() || !form.content.trim()) { setFormErr("タイトルと内容を入力してください。"); return; }
     setSaving(true); setFormErr("");
     const token = localStorage.getItem(TOKEN_KEY) || "";
     const headers = { "Content-Type": "application/json", Authorization: `Bearer ${token}` };
@@ -95,14 +95,14 @@ export default function NoticePage() {
     });
     const data = await res.json();
     setSaving(false);
-    if (!res.ok) { setFormErr(data.error || "오류가 발생했습니다."); return; }
+    if (!res.ok) { setFormErr(data.error || "エラーが発生しました。"); return; }
     setShowForm(false); setEditTarget(null); setForm({ subject: "", content: "", is_notice: false });
     loadList(1);
     if (detail && editTarget && detail.wr_id === editTarget.wr_id) setDetail(null);
   }
 
   async function handleDelete(id: number) {
-    if (!confirm("이 공지사항을 삭제하시겠습니까?")) return;
+    if (!confirm("このお知らせを削除してもよろしいですか?")) return;
     const token = localStorage.getItem(TOKEN_KEY) || "";
     await fetch(`/api/boards/notice/${id}`, {
       method: "DELETE",
@@ -119,13 +119,13 @@ export default function NoticePage() {
       <div style={{ background: "#f8faf9", borderBottom: "1px solid #e8f0eb", padding: "44px 0 36px" }}>
         <div className="page-wrap">
           <p style={{ margin: "0 0 4px", fontSize: 11, fontWeight: 700, color: "#8B5E3C", letterSpacing: "0.15em", textTransform: "uppercase" }}>Notice</p>
-          <h1 style={{ margin: 0, fontSize: 30, fontWeight: 900, color: "#1a1a1a", letterSpacing: "-0.5px" }}>공지사항</h1>
+          <h1 style={{ margin: 0, fontSize: 30, fontWeight: 900, color: "#1a1a1a", letterSpacing: "-0.5px" }}>お知らせ</h1>
         </div>
       </div>
 
       <div className="page-wrap" style={{ paddingTop: 28, paddingBottom: 72 }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
-          <p style={{ margin: 0, fontSize: 13, color: "#888" }}>총 <strong style={{ color: "#1a1a1a" }}>{total}</strong>건</p>
+          <p style={{ margin: 0, fontSize: 13, color: "#888" }}>全 <strong style={{ color: "#1a1a1a" }}>{total}</strong>件</p>
           {isAdmin && !showForm && (
             <button
               onClick={openNewForm}
@@ -137,7 +137,7 @@ export default function NoticePage() {
               }}
             >
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-              글쓰기
+              新規作成
             </button>
           )}
         </div>
@@ -149,17 +149,17 @@ export default function NoticePage() {
             padding: "24px", marginBottom: 24,
           }}>
             <h3 style={{ margin: "0 0 16px", fontSize: 16, fontWeight: 800, color: "#1a1a1a" }}>
-              {editTarget ? "공지사항 수정" : "새 공지사항 작성"}
+              {editTarget ? "お知らせを編集" : "新しいお知らせを作成"}
             </h3>
             {formErr && <p style={{ margin: "0 0 12px", fontSize: 13, color: "#e53935", background: "#fff5f5", borderRadius: 6, padding: "8px 12px" }}>{formErr}</p>}
             <input
               value={form.subject} onChange={e => setForm(f => ({ ...f, subject: e.target.value }))}
-              placeholder="제목"
+              placeholder="タイトル"
               style={{ width: "100%", border: "1.5px solid #d0e8d8", borderRadius: 8, padding: "11px 14px", fontSize: 14, marginBottom: 10, boxSizing: "border-box", outline: "none" }}
             />
             <textarea
               value={form.content} onChange={e => setForm(f => ({ ...f, content: e.target.value }))}
-              placeholder="내용"
+              placeholder="内容"
               rows={6}
               style={{ width: "100%", border: "1.5px solid #d0e8d8", borderRadius: 8, padding: "11px 14px", fontSize: 14, resize: "vertical", boxSizing: "border-box", outline: "none" }}
             />
@@ -171,12 +171,12 @@ export default function NoticePage() {
                 onChange={e => setForm(f => ({ ...f, is_notice: e.target.checked }))}
                 style={{ width: 16, height: 16, accentColor: "#8B5E3C" }}
               />
-              공지로 등록 (목록 최상단에 고정)
+              重要なお知らせとして登録 (一覧の最上部に固定)
             </label>
             <div style={{ display: "flex", gap: 8, marginTop: 14, justifyContent: "flex-end" }}>
-              <button type="button" onClick={() => { setShowForm(false); setEditTarget(null); }} style={{ padding: "9px 20px", border: "1px solid #ccc", borderRadius: 8, background: "#fff", cursor: "pointer", fontSize: 13 }}>취소</button>
+              <button type="button" onClick={() => { setShowForm(false); setEditTarget(null); }} style={{ padding: "9px 20px", border: "1px solid #ccc", borderRadius: 8, background: "#fff", cursor: "pointer", fontSize: 13 }}>キャンセル</button>
               <button type="submit" disabled={saving} style={{ padding: "9px 20px", background: "#8B5E3C", color: "#fff", border: "none", borderRadius: 8, cursor: "pointer", fontWeight: 700, fontSize: 13 }}>
-                {saving ? "저장 중..." : (editTarget ? "수정" : "등록")}
+                {saving ? "保存中..." : (editTarget ? "更新" : "登録")}
               </button>
             </div>
           </form>
@@ -190,21 +190,21 @@ export default function NoticePage() {
                 <div>
                   <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
                     {detail.is_notice === 1 && (
-                      <span style={{ background: "#8B5E3C", color: "#fff", fontSize: 11, fontWeight: 700, padding: "2px 8px", borderRadius: 4 }}>공지</span>
+                      <span style={{ background: "#8B5E3C", color: "#fff", fontSize: 11, fontWeight: 700, padding: "2px 8px", borderRadius: 4 }}>お知らせ</span>
                     )}
                     <h2 style={{ margin: 0, fontSize: 18, fontWeight: 800, color: "#1a1a1a" }}>{detail.wr_subject}</h2>
                   </div>
                   <div style={{ display: "flex", gap: 16, fontSize: 12, color: "#888" }}>
-                    <span>작성자: <strong style={{ color: "#555" }}>{detail.wr_name}</strong></span>
+                    <span>投稿者: <strong style={{ color: "#555" }}>{detail.wr_name}</strong></span>
                     <span>{fmtDate(detail.wr_datetime)}</span>
-                    <span>조회 {detail.wr_hit}</span>
+                    <span>閲覧数 {detail.wr_hit}</span>
                   </div>
                 </div>
                 <div style={{ display: "flex", gap: 6, flexShrink: 0 }}>
                   {isAdmin && (
                     <>
-                      <button onClick={() => openEditForm(detail as unknown as Post)} style={{ background: "#fff", border: "1px solid #DEC4A8", borderRadius: 6, padding: "5px 12px", fontSize: 12, color: "#8B5E3C", cursor: "pointer", fontWeight: 600 }}>수정</button>
-                      <button onClick={() => handleDelete(detail.wr_id)} style={{ background: "#fff", border: "1px solid #fcc", borderRadius: 6, padding: "5px 12px", fontSize: 12, color: "#e53935", cursor: "pointer", fontWeight: 600 }}>삭제</button>
+                      <button onClick={() => openEditForm(detail as unknown as Post)} style={{ background: "#fff", border: "1px solid #DEC4A8", borderRadius: 6, padding: "5px 12px", fontSize: 12, color: "#8B5E3C", cursor: "pointer", fontWeight: 600 }}>編集</button>
+                      <button onClick={() => handleDelete(detail.wr_id)} style={{ background: "#fff", border: "1px solid #fcc", borderRadius: 6, padding: "5px 12px", fontSize: 12, color: "#e53935", cursor: "pointer", fontWeight: 600 }}>削除</button>
                     </>
                   )}
                   <button onClick={() => setDetail(null)} style={{ background: "none", border: "none", cursor: "pointer", color: "#888", padding: 4 }}>
@@ -228,21 +228,21 @@ export default function NoticePage() {
 
         {/* 목록 테이블 */}
         {detailLoading ? (
-          <div style={{ textAlign: "center", padding: "40px 0", color: "#aaa" }}>불러오는 중...</div>
+          <div style={{ textAlign: "center", padding: "40px 0", color: "#aaa" }}>読み込み中...</div>
         ) : loading ? (
-          <div style={{ textAlign: "center", padding: "60px 0", color: "#aaa" }}>로딩 중...</div>
+          <div style={{ textAlign: "center", padding: "60px 0", color: "#aaa" }}>読み込み中...</div>
         ) : posts.length === 0 ? (
           <div style={{ textAlign: "center", padding: "80px 0", color: "#bbb" }}>
-            <p style={{ fontSize: 16, fontWeight: 700 }}>등록된 공지사항이 없습니다</p>
+            <p style={{ fontSize: 16, fontWeight: 700 }}>登録されたお知らせはありません</p>
           </div>
         ) : (
           <div>
             <div style={{ display: "grid", gridTemplateColumns: "60px 1fr 80px 80px 60px", gap: 0, background: "#f5f5f5", borderTop: "2px solid #1a1a1a", borderBottom: "1px solid #e0e0e0", padding: "10px 12px", fontSize: 12, fontWeight: 700, color: "#555" }}>
-              <span style={{ textAlign: "center" }}>번호</span>
-              <span>제목</span>
-              <span style={{ textAlign: "center" }}>작성자</span>
-              <span style={{ textAlign: "center" }}>날짜</span>
-              <span style={{ textAlign: "center" }}>조회</span>
+              <span style={{ textAlign: "center" }}>番号</span>
+              <span>タイトル</span>
+              <span style={{ textAlign: "center" }}>投稿者</span>
+              <span style={{ textAlign: "center" }}>日付</span>
+              <span style={{ textAlign: "center" }}>閲覧</span>
             </div>
             {posts.map((p, i) => (
               <div
@@ -262,7 +262,7 @@ export default function NoticePage() {
               >
                 <span style={{ textAlign: "center", fontSize: 13 }}>
                   {p.is_notice === 1
-                    ? <span style={{ background: "#8B5E3C", color: "#fff", fontSize: 10, fontWeight: 700, padding: "2px 6px", borderRadius: 3 }}>공지</span>
+                    ? <span style={{ background: "#8B5E3C", color: "#fff", fontSize: 10, fontWeight: 700, padding: "2px 6px", borderRadius: 3 }}>お知らせ</span>
                     : <span style={{ color: "#999" }}>{total - (page - 1) * PAGE_SIZE - i + posts.filter((x, j) => j < i && x.is_notice === 1).length}</span>
                   }
                 </span>

@@ -14,20 +14,20 @@ type Message = {
 
 const FAQ_DATA = [
   {
-    question: "배송은 얼마나 걸리나요?",
-    answer: "일반적으로 주문 후 2-3일 이내에 배송이 완료됩니다. 우체국 택배의 경우 영업일 기준이며, 주말 및 공휴일은 제외됩니다."
+    question: "配送にはどのくらいかかりますか？",
+    answer: "通常、ご注文後2〜3日以内に配送が完了します。営業日基準で、土日祝日は除きます。"
   },
   {
-    question: "배송비는 얼마인가요?",
-    answer: "기본 배송비는 3,000원이며, 50,000원 이상 구매 시 무료배송입니다. 도서산간 지역은 추가 배송비가 발생할 수 있습니다."
+    question: "送料はいくらですか？",
+    answer: "基本送料は3,000円で、50,000円以上のご購入で送料無料です。離島・山間部など一部地域は追加送料が発生する場合があります。"
   },
   {
-    question: "배송 조회는 어떻게 하나요?",
-    answer: "운송장 번호를 입력하시면 실시간 배송 현황을 확인하실 수 있습니다. 마이페이지 > 주문내역에서도 조회 가능합니다."
+    question: "配送状況の確認方法を教えてください",
+    answer: "追跡番号を入力すると、リアルタイムの配送状況を確認できます。マイページ > 注文履歴からも確認可能です。"
   },
   {
-    question: "배송지 변경이 가능한가요?",
-    answer: "배송 준비 중 상태에서만 변경 가능합니다. 이미 발송된 경우 택배사에 직접 문의하셔야 합니다."
+    question: "配送先の変更はできますか？",
+    answer: "配送準備中のステータスのみ変更可能です。すでに発送済みの場合は、配送業者へ直接お問い合わせください。"
   },
 ];
 
@@ -35,7 +35,7 @@ export default function ShippingChatbot() {
   const [messages, setMessages] = useState<Message[]>([
     {
       role: "bot",
-      content: "안녕하세요! 배송 문의 챗봇입니다. 운송장 번호를 입력하시거나 아래 자주 묻는 질문을 선택해주세요.",
+      content: "こんにちは！配送お問い合わせチャットボットです。追跡番号を入力するか、下のよくあるご質問をお選びください。",
       timestamp: new Date(),
     }
   ]);
@@ -63,15 +63,15 @@ export default function ShippingChatbot() {
         const botMessage: Message = {
           role: "bot",
           content: result.found 
-            ? `운송장 번호 ${input}의 배송 상태는 "${result.status}"입니다. 자세한 내용은 주문 상세 페이지에서 확인하실 수 있습니다.`
-            : `운송장 번호 ${input}를 찾을 수 없습니다. 번호를 다시 확인해주세요.`,
+            ? `追跡番号 ${input} の配送ステータスは「${result.status}」です。詳細は注文詳細ページでご確認いただけます。`
+            : `追跡番号 ${input} が見つかりません。番号をご確認の上、もう一度お試しください。`,
           timestamp: new Date(),
         };
         setMessages(prev => [...prev, botMessage]);
       } catch (e) {
         const botMessage: Message = {
           role: "bot",
-          content: "배송 조회 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.",
+          content: "配送状況の確認中にエラーが発生しました。しばらくしてからもう一度お試しください。",
           timestamp: new Date(),
         };
         setMessages(prev => [...prev, botMessage]);
@@ -86,7 +86,7 @@ export default function ShippingChatbot() {
         role: "bot",
         content: matchedFAQ 
           ? matchedFAQ.answer
-          : "죄송합니다. 정확한 답변을 찾지 못했습니다. 운송장 번호를 입력하시거나 아래 자주 묻는 질문을 선택해주세요.",
+          : "申し訳ございません。適切な回答が見つかりませんでした。追跡番号を入力するか、下のよくあるご質問をお選びください。",
         timestamp: new Date(),
       };
       setMessages(prev => [...prev, botMessage]);
@@ -114,7 +114,7 @@ export default function ShippingChatbot() {
     <div className="container max-w-4xl py-8">
       <div className="flex items-center gap-3 mb-6">
         <Package className="w-8 h-8 text-primary" />
-        <h1 className="text-3xl font-bold">배송 문의 챗봇</h1>
+        <h1 className="text-3xl font-bold">配送お問い合わせチャットボット</h1>
       </div>
       
       <Card className="p-6">
@@ -137,7 +137,7 @@ export default function ShippingChatbot() {
                 <Bot className="w-5 h-5" />
               </div>
               <div className="flex-1 p-3 rounded-lg bg-muted">
-                <p className="text-sm">입력 중...</p>
+                <p className="text-sm">入力中...</p>
               </div>
             </div>
           )}
@@ -145,7 +145,7 @@ export default function ShippingChatbot() {
         
         {/* FAQ 버튼 */}
         <div className="mb-4">
-          <p className="text-sm text-muted-foreground mb-2">자주 묻는 질문:</p>
+          <p className="text-sm text-muted-foreground mb-2">よくあるご質問:</p>
           <div className="flex flex-wrap gap-2">
             {FAQ_DATA.map((faq) => (
               <Button
@@ -166,7 +166,7 @@ export default function ShippingChatbot() {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyPress={(e) => e.key === "Enter" && handleSend()}
-            placeholder="운송장 번호 또는 질문을 입력하세요..."
+            placeholder="追跡番号または質問を入力してください..."
             disabled={loading}
           />
           <Button onClick={handleSend} disabled={loading || !input.trim()}>

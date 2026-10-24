@@ -13,6 +13,6 @@ export async function sendMail(opts: {
   subject: string;
   html: string;
 }) {
-  const from = `"지구쇼핑몰 고객센터" <${process.env.SMTP_USER?.trim()}>`;
+  const from = `"ソウルモノ カスタマーセンター" <${process.env.SMTP_USER?.trim()}>`;
   await transporter.sendMail({ from, ...opts });
 }

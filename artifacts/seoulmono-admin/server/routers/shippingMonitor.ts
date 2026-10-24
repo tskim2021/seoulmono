@@ -55,7 +55,7 @@ export const shippingMonitorRouter = router({
       const delayedList = delayedShipments
         .map(
           (s) =>
-            `- 주문번호: ${s.orderNumber}, 운송장: ${s.trackingNumber}, 마지막 업데이트: ${s.updatedAt?.toLocaleDateString("ko-KR")}`
+            `- 주문번호: ${s.orderNumber}, 운송장: ${s.trackingNumber}, 마지막 업데이트: ${s.updatedAt?.toLocaleDateString("ja-JP")}`
         )
         .join("\n");
 

@@ -14,7 +14,7 @@ export default function AdminNewsAutoSettings() {
 
   const updateMutation = trpc.news.updateAutoSetting.useMutation({
     onSuccess: () => {
-      toast.success("설정이 저장되었습니다.");
+      toast.success("設定を保存しました。");
       refetch();
     },
     onError: (err) => toast.error(err.message),
@@ -22,7 +22,7 @@ export default function AdminNewsAutoSettings() {
 
   const generateMutation = trpc.news.generateNow.useMutation({
     onSuccess: (result) => {
-      toast.success(`뉴스 ${result.generated}건이 생성되었습니다.`);
+      toast.success(`ニュース${result.generated}件を生成しました。`);
     },
     onError: (err) => toast.error(err.message),
   });
@@ -40,20 +40,20 @@ export default function AdminNewsAutoSettings() {
       <div className="flex items-center gap-3 mb-6">
         <Zap className="w-6 h-6 text-primary" />
         <div>
-          <h1 className="text-2xl font-bold">뉴스 자동생성 설정</h1>
-          <p className="text-sm text-muted-foreground">카테고리별 AI 뉴스 자동 생성을 설정합니다. 매일 오전 9시(KST)에 활성화된 카테고리의 뉴스가 자동 생성됩니다.</p>
+          <h1 className="text-2xl font-bold">ニュース自動生成設定</h1>
+          <p className="text-sm text-muted-foreground">カテゴリー別のAIニュース自動生成を設定します。毎日午前9時(KST)に、有効なカテゴリーのニュースが自動生成されます。</p>
         </div>
       </div>
 
       <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6 flex items-start gap-3">
         <Info className="w-5 h-5 text-blue-600 shrink-0 mt-0.5" />
         <div className="text-sm text-blue-800">
-          <p className="font-medium mb-1">자동 생성 안내</p>
+          <p className="font-medium mb-1">自動生成のご案内</p>
           <ul className="list-disc list-inside space-y-1 text-blue-700">
-            <li>활성화된 카테고리는 매일 오전 9시에 국내/해외/연구 뉴스가 각 1건씩 자동 생성됩니다.</li>
-            <li>키워드를 설정하면 해당 키워드와 관련된 뉴스가 생성됩니다.</li>
-            <li>프롬프트 템플릿을 커스텀하여 뉴스 스타일을 조정할 수 있습니다.</li>
-            <li>"즉시 생성" 버튼으로 수동으로 뉴스를 생성할 수도 있습니다.</li>
+            <li>有効なカテゴリーでは、毎日午前9時に国内・海外・研究ニュースが各1件ずつ自動生成されます。</li>
+            <li>キーワードを設定すると、そのキーワードに関連するニュースが生成されます。</li>
+            <li>プロンプトテンプレートをカスタマイズして、ニュースのスタイルを調整できます。</li>
+            <li>「今すぐ生成」ボタンで手動でニュースを生成することもできます。</li>
           </ul>
         </div>
       </div>
@@ -64,7 +64,7 @@ export default function AdminNewsAutoSettings() {
             <SettingCard
               key={setting.categoryId}
               setting={setting}
-              categoryName={categoriesData?.find((c: any) => c.id === setting.categoryId)?.name || `카테고리 ${setting.categoryId}`}
+              categoryName={categoriesData?.find((c: any) => c.id === setting.categoryId)?.name || `カテゴリー ${setting.categoryId}`}
               onSave={(data) => updateMutation.mutate({ categoryId: setting.categoryId, ...data })}
               onGenerate={() => generateMutation.mutate({ categoryId: setting.categoryId })}
               isSaving={updateMutation.isPending}
@@ -74,8 +74,8 @@ export default function AdminNewsAutoSettings() {
         ) : (
           <div className="text-center py-12 text-muted-foreground">
             <Zap className="w-12 h-12 mx-auto mb-4 opacity-30" />
-            <p>자동생성 설정이 없습니다.</p>
-            <p className="text-sm mt-1">카테고리가 등록되어 있는지 확인해주세요.</p>
+            <p>自動生成の設定がありません。</p>
+            <p className="text-sm mt-1">カテゴリーが登録されているかご確認ください。</p>
           </div>
         )}
       </div>
@@ -130,9 +130,9 @@ function SettingCard({
         <div className="flex items-center gap-3">
           <h3 className="font-semibold text-base">{categoryName}</h3>
           {isEnabled ? (
-            <Badge className="bg-green-100 text-green-700 text-xs"><CheckCircle2 className="w-3 h-3 mr-1" /> 활성</Badge>
+            <Badge className="bg-green-100 text-green-700 text-xs"><CheckCircle2 className="w-3 h-3 mr-1" /> 有効</Badge>
           ) : (
-            <Badge variant="secondary" className="text-xs"><XCircle className="w-3 h-3 mr-1" /> 비활성</Badge>
+            <Badge variant="secondary" className="text-xs"><XCircle className="w-3 h-3 mr-1" /> 無効</Badge>
           )}
         </div>
         <div className="flex items-center gap-2">
@@ -143,10 +143,10 @@ function SettingCard({
             disabled={isGenerating}
           >
             {isGenerating ? <Loader2 className="w-4 h-4 animate-spin mr-1" /> : <Zap className="w-4 h-4 mr-1" />}
-            즉시 생성
+            今すぐ生成
           </Button>
           <label className="flex items-center gap-2 cursor-pointer">
-            <span className="text-sm text-muted-foreground">자동생성</span>
+            <span className="text-sm text-muted-foreground">自動生成</span>
             <button
               type="button"
               role="switch"
@@ -162,31 +162,31 @@ function SettingCard({
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
         <div>
-          <label className="text-sm font-medium mb-1 block">키워드 (한국어)</label>
+          <label className="text-sm font-medium mb-1 block">キーワード (日本語)</label>
           <Input
             value={keywords}
             onChange={(e) => { setKeywords(e.target.value); markChanged(); }}
-            placeholder="탈모, 모발, 두피 관리"
+            placeholder="薄毛, 発毛, 頭皮ケア"
           />
-          <p className="text-xs text-muted-foreground mt-1">쉼표로 구분하여 입력</p>
+          <p className="text-xs text-muted-foreground mt-1">カンマ区切りで入力</p>
         </div>
         <div>
-          <label className="text-sm font-medium mb-1 block">키워드 (영어)</label>
+          <label className="text-sm font-medium mb-1 block">キーワード (英語)</label>
           <Input
             value={keywordsEn}
             onChange={(e) => { setKeywordsEn(e.target.value); markChanged(); }}
             placeholder="hair loss, hair care, scalp"
           />
-          <p className="text-xs text-muted-foreground mt-1">해외 뉴스 생성에 사용</p>
+          <p className="text-xs text-muted-foreground mt-1">海外ニュースの生成に使用</p>
         </div>
       </div>
 
       <div className="mb-4">
-        <label className="text-sm font-medium mb-1 block">커스텀 프롬프트 (선택)</label>
+        <label className="text-sm font-medium mb-1 block">カスタムプロンプト (任意)</label>
         <Textarea
           value={promptTemplate}
           onChange={(e) => { setPromptTemplate(e.target.value); markChanged(); }}
-          placeholder="기본 프롬프트를 사용하려면 비워두세요. 커스텀 프롬프트를 입력하면 AI가 해당 스타일로 뉴스를 생성합니다."
+          placeholder="デフォルトのプロンプトを使用する場合は空欄のままにしてください。カスタムプロンプトを入力すると、AIがそのスタイルでニュースを生成します。"
           rows={3}
         />
       </div>
@@ -195,7 +195,7 @@ function SettingCard({
         <div className="flex justify-end">
           <Button size="sm" onClick={handleSave} disabled={isSaving}>
             {isSaving ? <Loader2 className="w-4 h-4 animate-spin mr-1" /> : <Save className="w-4 h-4 mr-1" />}
-            설정 저장
+            設定保存
           </Button>
         </div>
       )}

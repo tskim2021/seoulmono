@@ -52,7 +52,7 @@ export async function startInfoBoardScheduler() {
       console.error("[InfoBoardScheduler] Auto generation failed:", error);
     }
   }, {
-    timezone: "Asia/Seoul",
+    timezone: "Asia/Tokyo",
   });
 
   console.log(`[InfoBoardScheduler] Scheduled daily at ${generateTime} KST (${settings.length} active settings)`);

@@ -17,7 +17,7 @@ if (Number.isNaN(port) || port <= 0) {
 }
 
 const FOOTER_SEED: Record<string, string> = {
-  footer_company: "주식회사 와이앤에이치에스",
+  footer_company: "株式会社ワイエヌエイチエス",
   footer_ceo: "윤석민",
   footer_address: "서울특별시 중랑구 용마산로 536 (망우동)",
   footer_business_num: "429-81-03401",
@@ -25,8 +25,8 @@ const FOOTER_SEED: Record<string, string> = {
   footer_privacy: "윤석민",
   footer_tel: "010-2051-5692",
   footer_cs_tel: "010-2051-5692",
-  footer_cs_hours: "평일 : 10:00 ~ 18:00",
-  footer_cs_lunch: "점심시간 : 12:00 ~ 13:00  일요일 / 공휴일 휴무",
+  footer_cs_hours: "平日 : 10:00 ~ 18:00",
+  footer_cs_lunch: "昼休み : 12:00 ~ 13:00  日曜・祝日休業",
 };
 
 async function initTempPwTable() {

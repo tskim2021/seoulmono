@@ -12,13 +12,13 @@ function imgUrl(p: string) {
   if (p.startsWith("/")) return p;
   return `/api/product-image/${p}`;
 }
-function fmtPrice(n: number) { return n > 0 ? n.toLocaleString() + "원" : "가격 문의"; }
+function fmtPrice(n: number) { return n > 0 ? n.toLocaleString() + "円" : "価格はお問い合わせください"; }
 
 const CATS = [
-  { id: "", label: "전체", emoji: "🎁" },
-  { id: "10", label: "과자류", emoji: "🍪" },
-  { id: "20", label: "유지류", emoji: "🫙" },
-  { id: "30", label: "통조림캔류", emoji: "🥫" },
+  { id: "", label: "すべて", emoji: "🎁" },
+  { id: "10", label: "お菓子類", emoji: "🍪" },
+  { id: "20", label: "油脂類", emoji: "🫙" },
+  { id: "30", label: "缶詰類", emoji: "🥫" },
 ];
 
 interface Product {
@@ -71,7 +71,7 @@ export default function GiftCustom() {
 
   const handleAdd = (p: Product) => {
     addToGiftCart({ it_id: p.it_id, it_name: p.it_name, it_price: p.it_price, it_img1: p.it_img1, quantity: 1, ca_id: p.ca_id });
-    showToast("선물 장바구니에 담았습니다");
+    showToast("ギフトカートに追加しました");
   };
 
   const handleQty = (it_id: string, delta: number) => {
@@ -93,10 +93,10 @@ export default function GiftCustom() {
       <div style={{ background: "linear-gradient(135deg,#8B5E3C 0%,#25a870 100%)", padding: "22px 20px 28px", color: "#fff" }}>
         <div style={{ maxWidth: 1100, margin: "0 auto" }}>
           <button onClick={() => navigate("/gift")} style={{ background: "rgba(255,255,255,0.2)", border: "none", color: "#fff", borderRadius: 20, padding: "5px 14px", fontSize: 12, cursor: "pointer", marginBottom: 14 }}>
-            ← 선물하기
+            ← ギフト
           </button>
-          <h1 style={{ fontSize: 26, fontWeight: 900, margin: "0 0 6px" }}>직접 골라서 선물세트 만들기</h1>
-          <p style={{ fontSize: 14, opacity: 0.85, margin: 0 }}>원하는 상품을 골라 나만의 선물세트를 구성하세요</p>
+          <h1 style={{ fontSize: 26, fontWeight: 900, margin: "0 0 6px" }}>お好きな商品でギフトセットを作る</h1>
+          <p style={{ fontSize: 14, opacity: 0.85, margin: 0 }}>お好みの商品を選んで、オリジナルギフトセットを作りましょう</p>
         </div>
       </div>
 
@@ -108,12 +108,12 @@ export default function GiftCustom() {
             <input
               value={search}
               onChange={e => setSearch(e.target.value)}
-              placeholder="상품명으로 검색..."
+              placeholder="商品名で検索..."
               style={{ flex: 1, border: "none", outline: "none", fontSize: 14, height: 44, background: "transparent" }}
             />
             {search && <button type="button" onClick={() => { setSearch(""); setQuery(""); setPage(1); }} style={{ background: "none", border: "none", cursor: "pointer", padding: 2 }}><X size={14} color="#aaa" /></button>}
           </div>
-          <button type="submit" style={{ background: "#8B5E3C", border: "none", color: "#fff", borderRadius: 12, padding: "0 22px", fontSize: 14, fontWeight: 700, cursor: "pointer" }}>검색</button>
+          <button type="submit" style={{ background: "#8B5E3C", border: "none", color: "#fff", borderRadius: 12, padding: "0 22px", fontSize: 14, fontWeight: 700, cursor: "pointer" }}>検索</button>
         </form>
 
         {/* 카테고리 탭 */}
@@ -143,7 +143,7 @@ export default function GiftCustom() {
         ) : products.length === 0 ? (
           <div style={{ textAlign: "center", padding: 60, color: "#aaa" }}>
             <ShoppingBag size={48} style={{ marginBottom: 12, opacity: 0.3 }} />
-            <p style={{ fontSize: 15 }}>상품이 없습니다</p>
+            <p style={{ fontSize: 15 }}>商品がありません</p>
           </div>
         ) : (
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(180px, 1fr))", gap: 14 }}>
@@ -179,7 +179,7 @@ export default function GiftCustom() {
                           onClick={() => handleAdd(p)}
                           style={{ width: "100%", background: "#8B5E3C", border: "none", color: "#fff", borderRadius: 10, height: 36, fontSize: 13, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 5 }}
                         >
-                          <Plus size={14} /> 담기
+                          <Plus size={14} /> 追加
                         </button>
                       ) : (
                         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", border: "1.5px solid #8B5E3C", borderRadius: 10, overflow: "hidden" }}>
@@ -203,9 +203,9 @@ export default function GiftCustom() {
         {/* 페이지네이션 */}
         {total > 24 && (
           <div style={{ display: "flex", justifyContent: "center", gap: 8, marginTop: 24 }}>
-            {page > 1 && <button onClick={() => setPage(p => p - 1)} style={{ background: "#fff", border: "1.5px solid #ddd", borderRadius: 8, padding: "8px 18px", cursor: "pointer", fontSize: 13 }}>이전</button>}
+            {page > 1 && <button onClick={() => setPage(p => p - 1)} style={{ background: "#fff", border: "1.5px solid #ddd", borderRadius: 8, padding: "8px 18px", cursor: "pointer", fontSize: 13 }}>前へ</button>}
             <span style={{ lineHeight: "38px", fontSize: 13, color: "#888" }}>{page} / {Math.ceil(total / 24)}</span>
-            {page * 24 < total && <button onClick={() => setPage(p => p + 1)} style={{ background: "#fff", border: "1.5px solid #ddd", borderRadius: 8, padding: "8px 18px", cursor: "pointer", fontSize: 13 }}>다음</button>}
+            {page * 24 < total && <button onClick={() => setPage(p => p + 1)} style={{ background: "#fff", border: "1.5px solid #ddd", borderRadius: 8, padding: "8px 18px", cursor: "pointer", fontSize: 13 }}>次へ</button>}
           </div>
         )}
       </div>
@@ -226,7 +226,7 @@ export default function GiftCustom() {
               style={{ width: "100%", height: 54, background: "linear-gradient(135deg,#8B5E3C,#25a870)", border: "none", borderRadius: 16, color: "#fff", fontSize: 16, fontWeight: 900, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 10, boxShadow: "0 4px 16px rgba(29,138,90,0.35)" }}
             >
               <Gift size={20} />
-              선물 장바구니 보기 ({cartCount}개)
+              ギフトカートを見る ({cartCount}点)
               <ChevronRight size={18} />
             </button>
           </div>

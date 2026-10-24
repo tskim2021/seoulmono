@@ -38,7 +38,7 @@ const boardUpload = multer({
     file.originalname = decodeFilename(file.originalname);
     const ext = path.extname(file.originalname).toLowerCase();
     if (!ALLOWED_EXTENSIONS.has(ext)) {
-      cb(new Error(`허용되지 않는 파일 형식입니다: ${ext}`));
+      cb(new Error(`許可されていないファイル形式です: ${ext}`));
       return;
     }
     cb(null, true);
@@ -138,7 +138,7 @@ router.get("/boards/notice", async (req, res) => {
     res.json({ posts: rows.map(mapNoticeRow), total, page, limit });
   } catch (err: any) {
     req.log?.error({ err }, "GetNotices error");
-    res.status(500).json({ error: "서버 오류가 발생했습니다" });
+    res.status(500).json({ error: "サーバーエラーが発生しました" });
   }
 });
 
@@ -152,7 +152,7 @@ router.get("/boards/notice/:id", async (req, res) => {
       [id]
     );
     if (rows.length === 0) {
-      res.status(404).json({ error: "게시글을 찾을 수 없습니다" });
+      res.status(404).json({ error: "投稿が見つかりません" });
       return;
     }
 
@@ -181,7 +181,7 @@ router.get("/boards/notice/:id", async (req, res) => {
     });
   } catch (err: any) {
     req.log?.error({ err }, "GetNotice error");
-    res.status(500).json({ error: "서버 오류가 발생했습니다" });
+    res.status(500).json({ error: "サーバーエラーが発生しました" });
   }
 });
 
@@ -190,7 +190,7 @@ router.post("/boards/notice", authMiddleware, adminMiddleware, boardUpload.array
     const user = (req as any).user;
     const { subject, content } = req.body;
     if (!subject || !content) {
-      res.status(400).json({ error: "제목과 내용을 입력해주세요" });
+      res.status(400).json({ error: "件名と内容を入力してください" });
       return;
     }
 
@@ -206,7 +206,7 @@ router.post("/boards/notice", authMiddleware, adminMiddleware, boardUpload.array
         } catch (e: any) {
           req.log?.error({ err: e }, "Failed to upload board file to GCS");
           for (const f of files) { try { fs.unlinkSync(f.path); } catch (_) {} }
-          res.status(500).json({ error: "파일 업로드에 실패했습니다. 다시 시도해주세요." });
+          res.status(500).json({ error: "ファイルのアップロードに失敗しました。もう一度お試しください。" });
           return;
         }
       }
@@ -250,17 +250,17 @@ router.post("/boards/notice", authMiddleware, adminMiddleware, boardUpload.array
     const wrId = result.insertId;
     await pool.query("UPDATE g5_write_notice SET wr_parent = ? WHERE wr_id = ?", [wrId, wrId]);
 
-    res.status(201).json({ message: "공지사항이 등록되었습니다", wr_id: wrId });
+    res.status(201).json({ message: "お知らせを登録しました", wr_id: wrId });
   } catch (err: any) {
     req.log?.error({ err }, "CreateNotice error");
-    res.status(500).json({ error: "서버 오류가 발생했습니다" });
+    res.status(500).json({ error: "サーバーエラーが発生しました" });
   }
 });
 
 router.get("/boards/files/:filename", async (req, res) => {
   const filename = (req.params as any).filename;
   if (!/^board_\d+_[a-z0-9]{6}\.[a-z0-9]+$/i.test(filename) || filename.includes("..") || filename.includes("/") || filename.includes("\\")) {
-    res.status(400).json({ error: "잘못된 파일명입니다" });
+    res.status(400).json({ error: "ファイル名が正しくありません" });
     return;
   }
   const ext = path.extname(filename).toLowerCase();
@@ -299,7 +299,7 @@ router.get("/boards/files/:filename", async (req, res) => {
     }
   }
 
-  res.status(404).json({ error: "파일을 찾을 수 없습니다" });
+  res.status(404).json({ error: "ファイルが見つかりません" });
 });
 
 router.put("/boards/notice/:id", authMiddleware, adminMiddleware, boardUpload.array("files", 5), async (req, res) => {
@@ -307,7 +307,7 @@ router.put("/boards/notice/:id", authMiddleware, adminMiddleware, boardUpload.ar
     const id = Number(req.params.id);
     const { subject, content } = req.body;
     if (!subject || !content) {
-      res.status(400).json({ error: "제목과 내용을 입력해주세요" });
+      res.status(400).json({ error: "件名と内容を入力してください" });
       return;
     }
     const [rows] = await pool.query<RowDataPacket[]>(
@@ -315,7 +315,7 @@ router.put("/boards/notice/:id", authMiddleware, adminMiddleware, boardUpload.ar
       [id]
     );
     if (rows.length === 0) {
-      res.status(404).json({ error: "게시글을 찾을 수 없습니다" });
+      res.status(404).json({ error: "投稿が見つかりません" });
       return;
     }
 
@@ -361,10 +361,10 @@ router.put("/boards/notice/:id", authMiddleware, adminMiddleware, boardUpload.ar
       "UPDATE g5_write_notice SET wr_subject = ?, wr_content = ?, wr_last = ?, wr_1 = ?, wr_file = ?, is_notice = ? WHERE wr_id = ?",
       [subject, content, now, allFiles.length > 0 ? JSON.stringify(allFiles) : "", allFiles.length, isNotice, id]
     );
-    res.json({ message: "공지사항이 수정되었습니다" });
+    res.json({ message: "お知らせを更新しました" });
   } catch (err: any) {
     req.log?.error({ err }, "UpdateNotice error");
-    res.status(500).json({ error: "서버 오류가 발생했습니다" });
+    res.status(500).json({ error: "サーバーエラーが発生しました" });
   }
 });
 
@@ -372,7 +372,7 @@ router.delete("/boards/notice", authMiddleware, adminMiddleware, async (req, res
   try {
     const { ids } = req.body as { ids: number[] };
     if (!Array.isArray(ids) || ids.length === 0) {
-      res.status(400).json({ error: "삭제할 항목을 선택해주세요" });
+      res.status(400).json({ error: "削除する項目を選択してください" });
       return;
     }
     const placeholders = ids.map(() => "?").join(",");
@@ -380,10 +380,10 @@ router.delete("/boards/notice", authMiddleware, adminMiddleware, async (req, res
       `DELETE FROM g5_write_notice WHERE wr_id IN (${placeholders}) AND wr_is_comment = 0`,
       ids
     );
-    res.json({ message: `${ids.length}개 공지사항이 삭제되었습니다` });
+    res.json({ message: `${ids.length}件のお知らせを削除しました` });
   } catch (err: any) {
     req.log?.error({ err }, "BulkDeleteNotice error");
-    res.status(500).json({ error: "서버 오류가 발생했습니다" });
+    res.status(500).json({ error: "サーバーエラーが発生しました" });
   }
 });
 
@@ -395,14 +395,14 @@ router.delete("/boards/notice/:id", authMiddleware, adminMiddleware, async (req,
       [id]
     );
     if (rows.length === 0) {
-      res.status(404).json({ error: "게시글을 찾을 수 없습니다" });
+      res.status(404).json({ error: "投稿が見つかりません" });
       return;
     }
     await pool.query("DELETE FROM g5_write_notice WHERE wr_id = ?", [id]);
-    res.json({ message: "공지사항이 삭제되었습니다" });
+    res.json({ message: "お知らせを削除しました" });
   } catch (err: any) {
     req.log?.error({ err }, "DeleteNotice error");
-    res.status(500).json({ error: "서버 오류가 발생했습니다" });
+    res.status(500).json({ error: "サーバーエラーが発生しました" });
   }
 });
 
@@ -473,7 +473,7 @@ router.get("/boards/qna", authMiddleware, async (req, res) => {
     });
   } catch (err: any) {
     req.log?.error({ err }, "GetQna error");
-    res.status(500).json({ error: "서버 오류가 발생했습니다" });
+    res.status(500).json({ error: "サーバーエラーが発生しました" });
   }
 });
 
@@ -492,7 +492,7 @@ router.get("/boards/qna/:id", authMiddleware, async (req, res) => {
 
     const [rows] = await pool.query<RowDataPacket[]>(query, params);
     if (rows.length === 0) {
-      res.status(404).json({ error: "게시글을 찾을 수 없습니다" });
+      res.status(404).json({ error: "投稿が見つかりません" });
       return;
     }
 
@@ -531,7 +531,7 @@ router.get("/boards/qna/:id", authMiddleware, async (req, res) => {
     });
   } catch (err: any) {
     req.log?.error({ err }, "GetQnaDetail error");
-    res.status(500).json({ error: "서버 오류가 발생했습니다" });
+    res.status(500).json({ error: "サーバーエラーが発生しました" });
   }
 });
 
@@ -540,7 +540,7 @@ router.post("/boards/qna", authMiddleware, boardUpload.array("files", 5), async 
     const user = (req as any).user;
     const { subject, content } = req.body;
     if (!subject || !content) {
-      res.status(400).json({ error: "제목과 내용을 입력해주세요" });
+      res.status(400).json({ error: "件名と内容を入力してください" });
       return;
     }
 
@@ -565,7 +565,7 @@ router.post("/boards/qna", authMiddleware, boardUpload.array("files", 5), async 
         } catch (e: any) {
           req.log?.error({ err: e }, "Failed to upload qna file to GCS");
           for (const f of files) { try { fs.unlinkSync(f.path); } catch (_) {} }
-          res.status(500).json({ error: "파일 업로드에 실패했습니다. 다시 시도해주세요." });
+          res.status(500).json({ error: "ファイルのアップロードに失敗しました。もう一度お試しください。" });
           return;
         }
       }
@@ -600,10 +600,10 @@ router.post("/boards/qna", authMiddleware, boardUpload.array("files", 5), async 
     const wrId = result.insertId;
     await pool.query("UPDATE g5_write_qna SET wr_parent = ? WHERE wr_id = ?", [wrId, wrId]);
 
-    res.status(201).json({ message: "문의가 등록되었습니다", wr_id: wrId });
+    res.status(201).json({ message: "お問い合わせを登録しました", wr_id: wrId });
   } catch (err: any) {
     req.log?.error({ err }, "CreateQna error");
-    res.status(500).json({ error: "서버 오류가 발생했습니다" });
+    res.status(500).json({ error: "サーバーエラーが発生しました" });
   }
 });
 
@@ -612,7 +612,7 @@ router.put("/boards/qna/:id", authMiddleware, adminMiddleware, boardUpload.array
     const id = Number(req.params.id);
     const { subject, content } = req.body;
     if (!subject || !content) {
-      res.status(400).json({ error: "제목과 내용을 입력해주세요" });
+      res.status(400).json({ error: "件名と内容を入力してください" });
       return;
     }
     const [rows] = await pool.query<RowDataPacket[]>(
@@ -620,7 +620,7 @@ router.put("/boards/qna/:id", authMiddleware, adminMiddleware, boardUpload.array
       [id]
     );
     if (rows.length === 0) {
-      res.status(404).json({ error: "게시글을 찾을 수 없습니다" });
+      res.status(404).json({ error: "投稿が見つかりません" });
       return;
     }
 
@@ -665,10 +665,10 @@ router.put("/boards/qna/:id", authMiddleware, adminMiddleware, boardUpload.array
       "UPDATE g5_write_qna SET wr_subject = ?, wr_content = ?, wr_last = ?, wr_1 = ?, wr_file = ? WHERE wr_id = ?",
       [subject, content, now, allFiles.length > 0 ? JSON.stringify(allFiles) : "", allFiles.length, id]
     );
-    res.json({ message: "문의글이 수정되었습니다" });
+    res.json({ message: "お問い合わせを更新しました" });
   } catch (err: any) {
     req.log?.error({ err }, "UpdateQna error");
-    res.status(500).json({ error: "서버 오류가 발생했습니다" });
+    res.status(500).json({ error: "サーバーエラーが発生しました" });
   }
 });
 
@@ -680,14 +680,14 @@ router.delete("/boards/qna/:id", authMiddleware, adminMiddleware, async (req, re
       [id]
     );
     if (rows.length === 0) {
-      res.status(404).json({ error: "게시글을 찾을 수 없습니다" });
+      res.status(404).json({ error: "投稿が見つかりません" });
       return;
     }
     await pool.query("DELETE FROM g5_write_qna WHERE wr_id = ? OR wr_parent = ?", [id, id]);
-    res.json({ message: "문의글이 삭제되었습니다" });
+    res.json({ message: "お問い合わせを削除しました" });
   } catch (err: any) {
     req.log?.error({ err }, "DeleteQna error");
-    res.status(500).json({ error: "서버 오류가 발생했습니다" });
+    res.status(500).json({ error: "サーバーエラーが発生しました" });
   }
 });
 
@@ -697,7 +697,7 @@ router.post("/boards/qna/:id/comment", authMiddleware, adminMiddleware, async (r
     const parentId = Number(req.params.id);
     const { content } = req.body;
     if (!content) {
-      res.status(400).json({ error: "답변 내용을 입력해주세요" });
+      res.status(400).json({ error: "回答内容を入力してください" });
       return;
     }
 
@@ -706,7 +706,7 @@ router.post("/boards/qna/:id/comment", authMiddleware, adminMiddleware, async (r
       [parentId]
     );
     if (parentRows.length === 0) {
-      res.status(404).json({ error: "원글을 찾을 수 없습니다" });
+      res.status(404).json({ error: "元の投稿が見つかりません" });
       return;
     }
 
@@ -714,7 +714,7 @@ router.post("/boards/qna/:id/comment", authMiddleware, adminMiddleware, async (r
       "SELECT mb_name, mb_email FROM g5_member WHERE mb_id = ?",
       [user.mb_id]
     );
-    const mbName = memberRows[0]?.mb_name || "관리자";
+    const mbName = memberRows[0]?.mb_name || "管理者";
     const mbEmail = memberRows[0]?.mb_email || "";
 
     const now = new Date().toISOString().slice(0, 19).replace("T", " ");
@@ -737,10 +737,10 @@ router.post("/boards/qna/:id/comment", authMiddleware, adminMiddleware, async (r
       [now, parentId]
     );
 
-    res.status(201).json({ message: "답변이 등록되었습니다" });
+    res.status(201).json({ message: "回答を登録しました" });
   } catch (err: any) {
     req.log?.error({ err }, "CreateQnaComment error");
-    res.status(500).json({ error: "서버 오류가 발생했습니다" });
+    res.status(500).json({ error: "サーバーエラーが発生しました" });
   }
 });
 
@@ -749,7 +749,7 @@ router.put("/boards/qna/:id/comment/:commentId", authMiddleware, adminMiddleware
     const commentId = Number(req.params.commentId);
     const { content } = req.body;
     if (!content) {
-      res.status(400).json({ error: "답변 내용을 입력해주세요" });
+      res.status(400).json({ error: "回答内容を入力してください" });
       return;
     }
     const [rows] = await pool.query<RowDataPacket[]>(
@@ -757,7 +757,7 @@ router.put("/boards/qna/:id/comment/:commentId", authMiddleware, adminMiddleware
       [commentId]
     );
     if (rows.length === 0) {
-      res.status(404).json({ error: "답변을 찾을 수 없습니다" });
+      res.status(404).json({ error: "回答が見つかりません" });
       return;
     }
     const now = new Date().toISOString().slice(0, 19).replace("T", " ");
@@ -765,10 +765,10 @@ router.put("/boards/qna/:id/comment/:commentId", authMiddleware, adminMiddleware
       "UPDATE g5_write_qna SET wr_content = ?, wr_last = ? WHERE wr_id = ?",
       [content, now, commentId]
     );
-    res.json({ message: "답변이 수정되었습니다" });
+    res.json({ message: "回答を更新しました" });
   } catch (err: any) {
     req.log?.error({ err }, "UpdateQnaComment error");
-    res.status(500).json({ error: "서버 오류가 발생했습니다" });
+    res.status(500).json({ error: "サーバーエラーが発生しました" });
   }
 });
 
@@ -781,7 +781,7 @@ router.delete("/boards/qna/:id/comment/:commentId", authMiddleware, adminMiddlew
       [commentId, parentId]
     );
     if (rows.length === 0) {
-      res.status(404).json({ error: "답변을 찾을 수 없습니다" });
+      res.status(404).json({ error: "回答が見つかりません" });
       return;
     }
     await pool.query("DELETE FROM g5_write_qna WHERE wr_id = ?", [commentId]);
@@ -789,10 +789,10 @@ router.delete("/boards/qna/:id/comment/:commentId", authMiddleware, adminMiddlew
       "UPDATE g5_write_qna SET wr_comment = GREATEST(wr_comment - 1, 0) WHERE wr_id = ?",
       [parentId]
     );
-    res.json({ message: "답변이 삭제되었습니다" });
+    res.json({ message: "回答を削除しました" });
   } catch (err: any) {
     req.log?.error({ err }, "DeleteQnaComment error");
-    res.status(500).json({ error: "서버 오류가 발생했습니다" });
+    res.status(500).json({ error: "サーバーエラーが発生しました" });
   }
 });
 
@@ -852,7 +852,7 @@ router.get("/admin/b2b-banners", authMiddleware, adminMiddleware, async (req, re
     );
     res.json({ banners: rows });
   } catch (err: any) {
-    res.status(500).json({ error: "서버 오류" });
+    res.status(500).json({ error: "サーバーエラー" });
   }
 });
 
@@ -873,7 +873,7 @@ router.post("/admin/b2b-banners", authMiddleware, adminMiddleware, boardUpload.f
     const [rows] = await pool.query<RowDataPacket[]>("SELECT * FROM b2b_banners WHERE id = ?", [result.insertId]);
     res.status(201).json({ banner: rows[0] });
   } catch (err: any) {
-    res.status(500).json({ error: "서버 오류" });
+    res.status(500).json({ error: "サーバーエラー" });
   }
 });
 
@@ -886,7 +886,7 @@ router.put("/admin/b2b-banners/:id", authMiddleware, adminMiddleware, boardUploa
     const mobileFile = files?.img_mobile?.[0];
 
     const [existing] = await pool.query<RowDataPacket[]>("SELECT * FROM b2b_banners WHERE id = ?", [id]);
-    if (!existing.length) { res.status(404).json({ error: "배너를 찾을 수 없습니다" }); return; }
+    if (!existing.length) { res.status(404).json({ error: "バナーが見つかりません" }); return; }
 
     const imgPc = pcFile ? await uploadBannerFile(pcFile) : (req.body.img_pc_url || existing[0].img_pc || "");
     const imgMobile = mobileFile ? await uploadBannerFile(mobileFile) : (req.body.img_mobile_url || existing[0].img_mobile || "");
@@ -898,7 +898,7 @@ router.put("/admin/b2b-banners/:id", authMiddleware, adminMiddleware, boardUploa
     const [rows] = await pool.query<RowDataPacket[]>("SELECT * FROM b2b_banners WHERE id = ?", [id]);
     res.json({ banner: rows[0] });
   } catch (err: any) {
-    res.status(500).json({ error: "서버 오류" });
+    res.status(500).json({ error: "サーバーエラー" });
   }
 });
 
@@ -906,9 +906,9 @@ router.delete("/admin/b2b-banners/:id", authMiddleware, adminMiddleware, async (
   try {
     const id = Number(req.params.id);
     await pool.query("DELETE FROM b2b_banners WHERE id = ?", [id]);
-    res.json({ message: "배너가 삭제되었습니다" });
+    res.json({ message: "バナーを削除しました" });
   } catch (err: any) {
-    res.status(500).json({ error: "서버 오류" });
+    res.status(500).json({ error: "サーバーエラー" });
   }
 });
 
@@ -939,7 +939,7 @@ router.get("/boards/cs", async (req, res) => {
     );
     res.json({ posts: rows, total, page, limit });
   } catch (err: any) {
-    res.status(500).json({ error: "서버 오류가 발생했습니다" });
+    res.status(500).json({ error: "サーバーエラーが発生しました" });
   }
 });
 
@@ -948,10 +948,10 @@ router.get("/boards/cs/:id", async (req, res) => {
   try {
     const id = Number(req.params.id);
     const [rows] = await pool.query<RowDataPacket[]>("SELECT * FROM shop_cs_posts WHERE id = ? AND is_active = 1", [id]);
-    if (!rows.length) { res.status(404).json({ error: "게시글을 찾을 수 없습니다" }); return; }
+    if (!rows.length) { res.status(404).json({ error: "投稿が見つかりません" }); return; }
     res.json(rows[0]);
   } catch (err: any) {
-    res.status(500).json({ error: "서버 오류가 발생했습니다" });
+    res.status(500).json({ error: "サーバーエラーが発生しました" });
   }
 });
 
@@ -960,14 +960,14 @@ router.post("/boards/cs", authMiddleware, adminMiddleware, async (req, res) => {
   try {
     const user = (req as any).user;
     const { title, content, is_notice, is_active, sort_order } = req.body;
-    if (!title || !content) { res.status(400).json({ error: "제목과 내용을 입력해주세요" }); return; }
+    if (!title || !content) { res.status(400).json({ error: "件名と内容を入力してください" }); return; }
     const [result] = await pool.query<ResultSetHeader>(
       "INSERT INTO shop_cs_posts (title, content, is_notice, is_active, sort_order, created_by) VALUES (?, ?, ?, ?, ?, ?)",
       [title, content, is_notice ? 1 : 0, is_active === false || is_active === 0 ? 0 : 1, Number(sort_order) || 0, user.mb_id]
     );
     res.status(201).json({ id: result.insertId });
   } catch (err: any) {
-    res.status(500).json({ error: "서버 오류가 발생했습니다" });
+    res.status(500).json({ error: "サーバーエラーが発生しました" });
   }
 });
 
@@ -976,14 +976,14 @@ router.put("/boards/cs/:id", authMiddleware, adminMiddleware, async (req, res) =
   try {
     const id = Number(req.params.id);
     const { title, content, is_notice, is_active, sort_order } = req.body;
-    if (!title || !content) { res.status(400).json({ error: "제목과 내용을 입력해주세요" }); return; }
+    if (!title || !content) { res.status(400).json({ error: "件名と内容を入力してください" }); return; }
     await pool.query(
       "UPDATE shop_cs_posts SET title=?, content=?, is_notice=?, is_active=?, sort_order=? WHERE id=?",
       [title, content, is_notice ? 1 : 0, is_active === false || is_active === 0 ? 0 : 1, Number(sort_order) || 0, id]
     );
-    res.json({ message: "수정되었습니다" });
+    res.json({ message: "更新しました" });
   } catch (err: any) {
-    res.status(500).json({ error: "서버 오류가 발생했습니다" });
+    res.status(500).json({ error: "サーバーエラーが発生しました" });
   }
 });
 
@@ -992,9 +992,9 @@ router.delete("/boards/cs/:id", authMiddleware, adminMiddleware, async (req, res
   try {
     const id = Number(req.params.id);
     await pool.query("DELETE FROM shop_cs_posts WHERE id = ?", [id]);
-    res.json({ message: "삭제되었습니다" });
+    res.json({ message: "削除しました" });
   } catch (err: any) {
-    res.status(500).json({ error: "서버 오류가 발생했습니다" });
+    res.status(500).json({ error: "サーバーエラーが発生しました" });
   }
 });
 
@@ -1004,17 +1004,17 @@ router.get("/admin/cs", authMiddleware, adminMiddleware, async (req, res) => {
     const [rows] = await pool.query<RowDataPacket[]>("SELECT * FROM shop_cs_posts ORDER BY is_notice DESC, sort_order ASC, id DESC");
     res.json(rows);
   } catch (err: any) {
-    res.status(500).json({ error: "서버 오류가 발생했습니다" });
+    res.status(500).json({ error: "サーバーエラーが発生しました" });
   }
 });
 
 router.use((err: any, _req: any, res: any, next: any) => {
-  if (err && err.message && err.message.includes("허용되지 않는 파일 형식")) {
+  if (err && err.message && err.message.includes("許可されていないファイル形式")) {
     res.status(400).json({ error: err.message });
     return;
   }
   if (err && err.code === "LIMIT_FILE_SIZE") {
-    res.status(400).json({ error: "파일 크기가 20MB를 초과했습니다" });
+    res.status(400).json({ error: "ファイルサイズが20MBを超えています" });
     return;
   }
   next(err);

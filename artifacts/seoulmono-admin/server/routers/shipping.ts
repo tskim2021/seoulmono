@@ -476,7 +476,7 @@ export const shippingRouter = router({
               <tr><td style="padding:8px;border:1px solid #eee;background:#f9f9f9;width:120px;">주문번호</td><td style="padding:8px;border:1px solid #eee;">${order.orderNumber}</td></tr>
               <tr><td style="padding:8px;border:1px solid #eee;background:#f9f9f9;">택배사</td><td style="padding:8px;border:1px solid #eee;">${carrierName}</td></tr>
               <tr><td style="padding:8px;border:1px solid #eee;background:#f9f9f9;">운송장번호</td><td style="padding:8px;border:1px solid #eee;font-family:monospace;">${input.trackingNumber}</td></tr>
-              <tr><td style="padding:8px;border:1px solid #eee;background:#f9f9f9;">예상 배송일</td><td style="padding:8px;border:1px solid #eee;">${estimatedDate.toLocaleDateString('ko-KR')}</td></tr>
+              <tr><td style="padding:8px;border:1px solid #eee;background:#f9f9f9;">예상 배송일</td><td style="padding:8px;border:1px solid #eee;">${estimatedDate.toLocaleDateString('ja-JP')}</td></tr>
             </table>
             <p>마이페이지에서 배송 현황을 확인하실 수 있습니다.</p>
           `,

@@ -16,7 +16,7 @@ async function issueCouponToMember(czId: number, mbId: string, connection?: any)
     "SELECT * FROM g5_shop_coupon_zone WHERE cz_id = ?",
     [czId]
   );
-  if (!zones.length) throw new Error("쿠폰 종류를 찾을 수 없습니다");
+  if (!zones.length) throw new Error("クーポンの種類が見つかりません");
   const zone = zones[0];
 
   const cpId = generateCouponId();
@@ -89,7 +89,7 @@ router.get("/admin/coupon-zones", authMiddleware, adminMiddleware, async (_req, 
       })),
     });
   } catch (err: any) {
-    res.status(500).json({ error: "서버 오류가 발생했습니다" });
+    res.status(500).json({ error: "サーバーエラーが発生しました" });
   }
 });
 
@@ -97,7 +97,7 @@ router.post("/admin/coupon-zones", authMiddleware, adminMiddleware, async (req, 
   try {
     const { cz_subject, cp_type, cp_price, cp_minimum, cp_maximum, cz_period, cz_period_date, cz_start, cz_end } = req.body;
     if (!cz_subject) {
-      res.status(400).json({ error: "쿠폰명을 입력해주세요" });
+      res.status(400).json({ error: "クーポン名を入力してください" });
       return;
     }
     const now = new Date().toISOString().slice(0, 19).replace("T", " ");
@@ -122,7 +122,7 @@ router.post("/admin/coupon-zones", authMiddleware, adminMiddleware, async (req, 
     );
     res.status(201).json({ cz_id: result.insertId });
   } catch (err: any) {
-    res.status(500).json({ error: "서버 오류가 발생했습니다" });
+    res.status(500).json({ error: "サーバーエラーが発生しました" });
   }
 });
 
@@ -131,7 +131,7 @@ router.put("/admin/coupon-zones/:id", authMiddleware, adminMiddleware, async (re
     const czId = Number(req.params.id);
     const { cz_subject, cp_type, cp_price, cp_minimum, cp_maximum, cz_period, cz_period_date, cz_start, cz_end } = req.body;
     if (!cz_subject) {
-      res.status(400).json({ error: "쿠폰명을 입력해주세요" });
+      res.status(400).json({ error: "クーポン名を入力してください" });
       return;
     }
     await pool.query(
@@ -155,7 +155,7 @@ router.put("/admin/coupon-zones/:id", authMiddleware, adminMiddleware, async (re
     );
     res.json({ success: true });
   } catch (err: any) {
-    res.status(500).json({ error: "서버 오류가 발생했습니다" });
+    res.status(500).json({ error: "サーバーエラーが発生しました" });
   }
 });
 
@@ -167,14 +167,14 @@ router.delete("/admin/coupon-zones/:id", authMiddleware, adminMiddleware, async 
       [czId]
     );
     if (Number(issued[0].cnt) > 0) {
-      res.status(400).json({ error: "이미 사용된 쿠폰이 있어 삭제할 수 없습니다" });
+      res.status(400).json({ error: "使用済みのクーポンがあるため削除できません" });
       return;
     }
     await pool.query("DELETE FROM g5_shop_coupon WHERE cz_id = ? AND od_id IS NULL", [czId]);
     await pool.query("DELETE FROM g5_shop_coupon_zone WHERE cz_id = ?", [czId]);
     res.json({ success: true });
   } catch (err: any) {
-    res.status(500).json({ error: "서버 오류가 발생했습니다" });
+    res.status(500).json({ error: "サーバーエラーが発生しました" });
   }
 });
 
@@ -183,7 +183,7 @@ router.post("/admin/coupon-zones/:id/issue", authMiddleware, adminMiddleware, as
     const czId = Number(req.params.id);
     const { mb_ids } = req.body;
     if (!Array.isArray(mb_ids) || mb_ids.length === 0) {
-      res.status(400).json({ error: "발급할 회원을 선택해주세요" });
+      res.status(400).json({ error: "発行する会員を選択してください" });
       return;
     }
     const issued: string[] = [];
@@ -198,7 +198,7 @@ router.post("/admin/coupon-zones/:id/issue", authMiddleware, adminMiddleware, as
     }
     res.json({ issued: issued.length, failed: failed.length });
   } catch (err: any) {
-    res.status(500).json({ error: "서버 오류가 발생했습니다" });
+    res.status(500).json({ error: "サーバーエラーが発生しました" });
   }
 });
 
@@ -261,7 +261,7 @@ router.get("/admin/coupons", authMiddleware, adminMiddleware, async (req, res) =
       limit,
     });
   } catch (err: any) {
-    res.status(500).json({ error: "서버 오류가 발생했습니다" });
+    res.status(500).json({ error: "サーバーエラーが発生しました" });
   }
 });
 
@@ -273,17 +273,17 @@ router.delete("/admin/coupons/:no", authMiddleware, adminMiddleware, async (req,
       [cpNo]
     );
     if (!rows.length) {
-      res.status(404).json({ error: "쿠폰을 찾을 수 없습니다" });
+      res.status(404).json({ error: "クーポンが見つかりません" });
       return;
     }
     if (rows[0].od_id) {
-      res.status(400).json({ error: "이미 사용된 쿠폰은 삭제할 수 없습니다" });
+      res.status(400).json({ error: "使用済みのクーポンは削除できません" });
       return;
     }
     await pool.query("DELETE FROM g5_shop_coupon WHERE cp_no = ?", [cpNo]);
     res.json({ success: true });
   } catch (err: any) {
-    res.status(500).json({ error: "서버 오류가 발생했습니다" });
+    res.status(500).json({ error: "サーバーエラーが発生しました" });
   }
 });
 
@@ -322,7 +322,7 @@ router.get("/my/coupons", authMiddleware, async (req, res) => {
       })),
     });
   } catch (err: any) {
-    res.status(500).json({ error: "서버 오류가 발생했습니다" });
+    res.status(500).json({ error: "サーバーエラーが発生しました" });
   }
 });
 
@@ -333,7 +333,7 @@ router.get("/my/coupon/validate", authMiddleware, async (req, res) => {
     const orderTotal = Number(req.query.order_total) || 0;
 
     if (!cpNo) {
-      res.status(400).json({ error: "쿠폰 번호가 필요합니다" });
+      res.status(400).json({ error: "クーポン番号が必要です" });
       return;
     }
 
@@ -344,18 +344,18 @@ router.get("/my/coupon/validate", authMiddleware, async (req, res) => {
     );
 
     if (!rows.length) {
-      res.status(404).json({ error: "사용 가능한 쿠폰이 없습니다" });
+      res.status(404).json({ error: "利用可能なクーポンがありません" });
       return;
     }
 
     const coupon = rows[0];
     if (coupon.cp_end && coupon.cp_end !== "0000-00-00" && coupon.cp_end < today) {
-      res.status(400).json({ error: "만료된 쿠폰입니다" });
+      res.status(400).json({ error: "有効期限切れのクーポンです" });
       return;
     }
     if (Number(coupon.cp_minimum) > 0 && orderTotal < Number(coupon.cp_minimum)) {
       res.status(400).json({
-        error: `최소 주문금액 ${Number(coupon.cp_minimum).toLocaleString()}원 이상일 때 사용 가능합니다`,
+        error: `最低注文金額 ${Number(coupon.cp_minimum).toLocaleString()}円以上の場合に利用できます`,
       });
       return;
     }
@@ -380,7 +380,7 @@ router.get("/my/coupon/validate", authMiddleware, async (req, res) => {
       discount,
     });
   } catch (err: any) {
-    res.status(500).json({ error: "서버 오류가 발생했습니다" });
+    res.status(500).json({ error: "サーバーエラーが発生しました" });
   }
 });
 
@@ -419,7 +419,7 @@ router.get("/my/points", authMiddleware, async (req, res) => {
       limit,
     });
   } catch (err: any) {
-    res.status(500).json({ error: "서버 오류가 발생했습니다" });
+    res.status(500).json({ error: "サーバーエラーが発生しました" });
   }
 });
 

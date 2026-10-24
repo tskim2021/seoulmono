@@ -46,7 +46,7 @@ export default function ReviewDetailPage() {
       <div style={{ background: "#fff", borderBottom: "1px solid #eee", padding: "44px 0 36px" }}>
         <div className="page-wrap">
           <p style={{ margin: "0 0 4px", fontSize: 11, fontWeight: 700, color: "#8B5E3C", letterSpacing: "0.15em", textTransform: "uppercase" }}>Review</p>
-          <h1 style={{ margin: 0, fontSize: 28, fontWeight: 900, color: "#1a1a1a" }}>고객 리뷰</h1>
+          <h1 style={{ margin: 0, fontSize: 28, fontWeight: 900, color: "#1a1a1a" }}>お客様レビュー</h1>
         </div>
       </div>
 
@@ -55,16 +55,16 @@ export default function ReviewDetailPage() {
           onClick={() => navigate("/reviews")}
           style={{ display: "flex", alignItems: "center", gap: 6, background: "none", border: "1px solid #ddd", borderRadius: 8, padding: "8px 16px", cursor: "pointer", fontSize: 13, color: "#555", marginBottom: 20 }}
         >
-          ← 목록으로
+          ← 一覧へ
         </button>
 
         {loading && (
-          <div style={{ textAlign: "center", padding: "80px 0", color: "#aaa" }}>불러오는 중...</div>
+          <div style={{ textAlign: "center", padding: "80px 0", color: "#aaa" }}>読み込み中...</div>
         )}
 
         {notFound && (
           <div style={{ textAlign: "center", padding: "80px 0", color: "#bbb" }}>
-            <p style={{ fontSize: 18, fontWeight: 700 }}>리뷰를 찾을 수 없습니다</p>
+            <p style={{ fontSize: 18, fontWeight: 700 }}>レビューが見つかりません</p>
           </div>
         )}
 
@@ -104,12 +104,12 @@ export default function ReviewDetailPage() {
                   </div>
                 )}
                 <div style={{ flex: 1, minWidth: 0 }}>
-                  <p style={{ margin: "0 0 2px", fontSize: 11, color: "#8B5E3C", fontWeight: 700 }}>구매 상품</p>
+                  <p style={{ margin: "0 0 2px", fontSize: 11, color: "#8B5E3C", fontWeight: 700 }}>購入商品</p>
                   <p style={{ margin: 0, fontSize: 14, fontWeight: 600, color: "#222", overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis" }}>
                     {review.it_name}
                   </p>
                 </div>
-                <span style={{ fontSize: 12, color: "#8B5E3C", fontWeight: 700, flexShrink: 0 }}>상품 보기 →</span>
+                <span style={{ fontSize: 12, color: "#8B5E3C", fontWeight: 700, flexShrink: 0 }}>商品を見る →</span>
               </div>
             )}
 
@@ -124,7 +124,7 @@ export default function ReviewDetailPage() {
                 <div style={{ display: "flex", flexWrap: "wrap", gap: 10, marginTop: 20 }}>
                   {review.is_imgs.map((src, i) => (
                     <div key={i} style={{ width: 120, height: 120, borderRadius: 10, overflow: "hidden", border: "1px solid #eee" }}>
-                      <img src={src} alt={`리뷰 이미지 ${i + 1}`} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                      <img src={src} alt={`レビュー画像 ${i + 1}`} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                     </div>
                   ))}
                 </div>
@@ -137,7 +137,7 @@ export default function ReviewDetailPage() {
                 onClick={() => navigate("/reviews")}
                 style={{ padding: "12px 32px", background: "#8B5E3C", color: "#fff", border: "none", borderRadius: 10, cursor: "pointer", fontSize: 14, fontWeight: 700 }}
               >
-                목록으로 돌아가기
+                一覧に戻る
               </button>
             </div>
           </div>

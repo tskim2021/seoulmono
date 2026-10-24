@@ -24,9 +24,9 @@ function eventStatus(ev: ShopEvent): { label: string; color: string } {
   today.setHours(0, 0, 0, 0);
   const start = ev.start_date ? new Date(ev.start_date) : null;
   const end = ev.end_date ? new Date(ev.end_date) : null;
-  if (start && today < start) return { label: "예정", color: "#f59e0b" };
-  if (end && today > end) return { label: "종료", color: "#9ca3af" };
-  return { label: "진행중", color: "#10b981" };
+  if (start && today < start) return { label: "開催予定", color: "#f59e0b" };
+  if (end && today > end) return { label: "終了", color: "#9ca3af" };
+  return { label: "開催中", color: "#10b981" };
 }
 
 export default function EventsPage() {
@@ -46,22 +46,22 @@ export default function EventsPage() {
     <div style={{ maxWidth: 1100, margin: "0 auto", padding: "32px 16px 60px" }}>
       {/* Breadcrumb */}
       <div style={{ display: "flex", alignItems: "center", gap: 4, marginBottom: 28, fontSize: 13, color: "#aaa" }}>
-        <button onClick={() => navigate("/")} style={{ background: "none", border: "none", color: "#aaa", cursor: "pointer", padding: 0, fontSize: 13 }}>홈</button>
+        <button onClick={() => navigate("/")} style={{ background: "none", border: "none", color: "#aaa", cursor: "pointer", padding: 0, fontSize: 13 }}>ホーム</button>
         <ChevronRight size={13} />
-        <span style={{ color: "#555", fontWeight: 600 }}>이벤트</span>
+        <span style={{ color: "#555", fontWeight: 600 }}>イベント</span>
       </div>
 
-      <h1 style={{ fontSize: 26, fontWeight: 800, color: "#111", marginBottom: 8 }}>이벤트</h1>
-      <p style={{ fontSize: 14, color: "#888", marginBottom: 36 }}>seoulmono의 다양한 이벤트를 확인하세요</p>
+      <h1 style={{ fontSize: 26, fontWeight: 800, color: "#111", marginBottom: 8 }}>イベント</h1>
+      <p style={{ fontSize: 14, color: "#888", marginBottom: 36 }}>seoulmonoのさまざまなイベントをチェックしてください</p>
 
       {loading && (
-        <div style={{ textAlign: "center", padding: "80px 0", color: "#bbb" }}>불러오는 중…</div>
+        <div style={{ textAlign: "center", padding: "80px 0", color: "#bbb" }}>読み込み中…</div>
       )}
 
       {!loading && events.length === 0 && (
         <div style={{ textAlign: "center", padding: "80px 0" }}>
           <Tag size={48} style={{ color: "#ddd", marginBottom: 16, display: "block", margin: "0 auto 16px" }} />
-          <p style={{ color: "#bbb", fontSize: 16 }}>진행중인 이벤트가 없습니다</p>
+          <p style={{ color: "#bbb", fontSize: 16 }}>開催中のイベントはありません</p>
         </div>
       )}
 
@@ -149,14 +149,14 @@ export function EventDetailPage() {
   }, [id]);
 
   if (loading) return (
-    <div style={{ textAlign: "center", padding: "80px 0", color: "#bbb" }}>불러오는 중…</div>
+    <div style={{ textAlign: "center", padding: "80px 0", color: "#bbb" }}>読み込み中…</div>
   );
 
   if (notFound || !ev) return (
     <div style={{ maxWidth: 800, margin: "60px auto", textAlign: "center", padding: "0 16px" }}>
-      <p style={{ fontSize: 18, color: "#666", marginBottom: 24 }}>이벤트를 찾을 수 없습니다</p>
+      <p style={{ fontSize: 18, color: "#666", marginBottom: 24 }}>イベントが見つかりません</p>
       <button onClick={() => navigate("/events")} style={{ background: "#8B5E3C", color: "#fff", border: "none", borderRadius: 8, padding: "10px 24px", cursor: "pointer", fontSize: 14 }}>
-        이벤트 목록으로
+        イベント一覧へ
       </button>
     </div>
   );
@@ -167,11 +167,11 @@ export function EventDetailPage() {
     <div style={{ maxWidth: 860, margin: "0 auto", padding: "32px 16px 60px" }}>
       {/* Breadcrumb */}
       <div style={{ display: "flex", alignItems: "center", gap: 4, marginBottom: 28, fontSize: 13, color: "#aaa" }}>
-        <button onClick={() => navigate("/")} style={{ background: "none", border: "none", color: "#aaa", cursor: "pointer", padding: 0, fontSize: 13 }}>홈</button>
+        <button onClick={() => navigate("/")} style={{ background: "none", border: "none", color: "#aaa", cursor: "pointer", padding: 0, fontSize: 13 }}>ホーム</button>
         <ChevronRight size={13} />
-        <button onClick={() => navigate("/events")} style={{ background: "none", border: "none", color: "#aaa", cursor: "pointer", padding: 0, fontSize: 13 }}>이벤트</button>
+        <button onClick={() => navigate("/events")} style={{ background: "none", border: "none", color: "#aaa", cursor: "pointer", padding: 0, fontSize: 13 }}>イベント</button>
         <ChevronRight size={13} />
-        <span style={{ color: "#555", fontWeight: 600 }}>상세</span>
+        <span style={{ color: "#555", fontWeight: 600 }}>詳細</span>
       </div>
 
       {/* Header */}
@@ -208,7 +208,7 @@ export function EventDetailPage() {
           style={{ fontSize: 15, lineHeight: 1.8, color: "#333" }}
         />
       ) : (
-        <p style={{ color: "#aaa", textAlign: "center", padding: "40px 0" }}>내용이 없습니다</p>
+        <p style={{ color: "#aaa", textAlign: "center", padding: "40px 0" }}>内容がありません</p>
       )}
 
       <div style={{ marginTop: 48, textAlign: "center" }}>
@@ -216,7 +216,7 @@ export function EventDetailPage() {
           onClick={() => navigate("/events")}
           style={{ background: "#f5f5f5", color: "#444", border: "none", borderRadius: 8, padding: "11px 28px", cursor: "pointer", fontSize: 14, fontWeight: 600 }}
         >
-          목록으로
+          一覧へ
         </button>
       </div>
     </div>

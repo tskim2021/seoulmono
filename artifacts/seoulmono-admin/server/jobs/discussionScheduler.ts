@@ -51,7 +51,7 @@ export async function startDiscussionScheduler() {
       console.error("[DiscussionScheduler] Auto generation failed:", error);
     }
   }, {
-    timezone: "Asia/Seoul",
+    timezone: "Asia/Tokyo",
   });
 
   console.log(`[DiscussionScheduler] Scheduled daily at ${generateTime} KST (${settings.length} active settings)`);

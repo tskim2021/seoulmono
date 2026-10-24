@@ -103,7 +103,7 @@ export const paymentRouter = {
                   </tr>
                   <tr>
                     <td style="padding: 8px 0; color: #78350f; font-weight: 600;">입금 기한</td>
-                    <td style="padding: 8px 0; text-align: right; color: #dc2626; font-weight: 700;">${expiresAt.toLocaleString("ko-KR")}</td>
+                    <td style="padding: 8px 0; text-align: right; color: #dc2626; font-weight: 700;">${expiresAt.toLocaleString("ja-JP")}</td>
                   </tr>
                 </table>
               </div>
@@ -268,7 +268,7 @@ export const paymentRouter = {
                   </tr>
                   <tr style="border-bottom: 1px solid #6ee7b7;">
                     <td style="padding: 8px 0; color: #065f46; font-weight: 600;">입금 확인 시간</td>
-                    <td style="padding: 8px 0; text-align: right; color: #047857;">${payment.confirmedAt?.toLocaleString("ko-KR")}</td>
+                    <td style="padding: 8px 0; text-align: right; color: #047857;">${payment.confirmedAt?.toLocaleString("ja-JP")}</td>
                   </tr>
                   <tr>
                     <td style="padding: 8px 0; color: #065f46; font-weight: 600;">입금 금액</td>

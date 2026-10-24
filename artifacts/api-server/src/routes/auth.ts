@@ -32,7 +32,7 @@ const upload = multer({
     if (allowed.includes(ext)) {
       cb(null, true);
     } else {
-      cb(new Error("허용되지 않는 파일 형식입니다. (PDF, JPG, PNG만 가능)"));
+      cb(new Error("許可されていないファイル形式です。(PDF、JPG、PNGのみ)"));
     }
   },
 });
@@ -50,7 +50,7 @@ router.get("/auth/naver-status", (_req, res) => {
 router.get("/auth/naver-redirect", (req, res) => {
   const clientId = process.env.NAVER_CLIENT_ID?.trim();
   if (!clientId) {
-    res.status(503).send("네이버 로그인이 설정되지 않았습니다.");
+    res.status(503).send("NAVERログインが設定されていません。");
     return;
   }
   const state = randomBytes(16).toString("hex");
@@ -66,13 +66,13 @@ router.post("/auth/naver", async (req, res) => {
   try {
     const { code, state } = req.body;
     if (!code) {
-      res.status(400).json({ error: "인증 코드가 없습니다" });
+      res.status(400).json({ error: "認証コードがありません" });
       return;
     }
     const clientId = process.env.NAVER_CLIENT_ID?.trim();
     const clientSecret = process.env.NAVER_CLIENT_SECRET?.trim();
     if (!clientId || !clientSecret) {
-      res.status(503).json({ error: "네이버 로그인이 설정되지 않았습니다" });
+      res.status(503).json({ error: "NAVERログインが設定されていません" });
       return;
     }
 
@@ -93,7 +93,7 @@ router.post("/auth/naver", async (req, res) => {
     const tokenData = await tokenRes.json() as any;
     if (!tokenData.access_token) {
       logger.error({ tokenData }, "[naver] token exchange failed");
-      res.status(400).json({ error: "네이버 토큰 발급 실패: " + (tokenData.error_description || tokenData.error || "") });
+      res.status(400).json({ error: "NAVERトークンの発行に失敗しました: " + (tokenData.error_description || tokenData.error || "") });
       return;
     }
 
@@ -104,13 +104,13 @@ router.post("/auth/naver", async (req, res) => {
     const naverData = await userRes.json() as any;
     const naverUser = naverData.response;
     if (!naverUser?.id) {
-      res.status(400).json({ error: "네이버 사용자 정보 조회 실패" });
+      res.status(400).json({ error: "NAVERユーザー情報の取得に失敗しました" });
       return;
     }
 
     const naverId = String(naverUser.id);
     const mbId = `naver_${naverId}`.slice(0, 20);
-    const nickname = naverUser.nickname || naverUser.name || "네이버회원";
+    const nickname = naverUser.nickname || naverUser.name || "NAVER会員";
     const email = naverUser.email || "";
 
     // 3) 기존 회원 조회
@@ -180,7 +180,7 @@ router.post("/auth/naver", async (req, res) => {
     });
   } catch (err: any) {
     req.log?.error({ err }, "Naver login error");
-    res.status(500).json({ error: "네이버 로그인 처리 중 오류가 발생했습니다" });
+    res.status(500).json({ error: "NAVERログイン処理中にエラーが発生しました" });
   }
 });
 
@@ -198,7 +198,7 @@ function getKakaoRedirectUri(_req: any): string {
 router.get("/auth/kakao-redirect", (req, res) => {
   const restApiKey = process.env.KAKAO_REST_API_KEY?.trim();
   if (!restApiKey) {
-    res.status(503).send("카카오 로그인이 설정되지 않았습니다. 관리자에게 문의해주세요.");
+    res.status(503).send("カカオログインが設定されていません。管理者にお問い合わせください。");
     return;
   }
   const redirectUri = getKakaoRedirectUri(req);
@@ -216,12 +216,12 @@ router.post("/auth/kakao", async (req, res) => {
   try {
     const { code, redirect_uri } = req.body;
     if (!code || !redirect_uri) {
-      res.status(400).json({ error: "인증 코드가 없습니다" });
+      res.status(400).json({ error: "認証コードがありません" });
       return;
     }
     const restApiKey = process.env.KAKAO_REST_API_KEY?.trim();
     if (!restApiKey) {
-      res.status(503).json({ error: "카카오 로그인이 설정되지 않았습니다" });
+      res.status(503).json({ error: "カカオログインが設定されていません" });
       return;
     }
 
@@ -247,7 +247,7 @@ router.post("/auth/kakao", async (req, res) => {
     const tokenData = await tokenRes.json() as any;
     if (!tokenData.access_token) {
       logger.error({ tokenData }, "[kakao] token exchange failed");
-      res.status(400).json({ error: "카카오 토큰 발급 실패: " + (tokenData.error_description || tokenData.error || "") });
+      res.status(400).json({ error: "カカオトークンの発行に失敗しました: " + (tokenData.error_description || tokenData.error || "") });
       return;
     }
 
@@ -257,13 +257,13 @@ router.post("/auth/kakao", async (req, res) => {
     });
     const kakaoUser = await userRes.json() as any;
     if (!kakaoUser.id) {
-      res.status(400).json({ error: "카카오 사용자 정보 조회 실패" });
+      res.status(400).json({ error: "カカオユーザー情報の取得に失敗しました" });
       return;
     }
 
     const kakaoId = String(kakaoUser.id);
     const mbId = `kakao_${kakaoId}`.slice(0, 20);
-    const nickname = kakaoUser.kakao_account?.profile?.nickname || kakaoUser.properties?.nickname || "카카오회원";
+    const nickname = kakaoUser.kakao_account?.profile?.nickname || kakaoUser.properties?.nickname || "カカオ会員";
     const email = kakaoUser.kakao_account?.email || "";
 
     // 3) 기존 회원 조회
@@ -338,7 +338,7 @@ router.post("/auth/kakao", async (req, res) => {
     });
   } catch (err: any) {
     req.log?.error({ err }, "Kakao login error");
-    res.status(500).json({ error: "카카오 로그인 처리 중 오류가 발생했습니다" });
+    res.status(500).json({ error: "カカオログイン処理中にエラーが発生しました" });
   }
 });
 
@@ -346,7 +346,7 @@ router.post("/auth/login", async (req, res) => {
   try {
     const parsed = LoginBody.safeParse(req.body);
     if (!parsed.success) {
-      res.status(400).json({ error: "아이디와 비밀번호를 입력해주세요" });
+      res.status(400).json({ error: "IDとパスワードを入力してください" });
       return;
     }
     const { mb_id, mb_password } = parsed.data;
@@ -359,7 +359,7 @@ router.post("/auth/login", async (req, res) => {
     );
 
     if (rows.length === 0) {
-      res.status(401).json({ error: "휴대폰번호 또는 비밀번호가 올바르지 않습니다" });
+      res.status(401).json({ error: "携帯電話番号またはパスワードが正しくありません" });
       return;
     }
 
@@ -377,18 +377,18 @@ router.post("/auth/login", async (req, res) => {
         const exp = new Date(expires_at);
         if (now > exp) {
           await pool.query("DELETE FROM seoulmono_temp_pw WHERE mb_id = ?", [mb_id]);
-          res.status(401).json({ error: "임시 비밀번호가 만료됐습니다. 비밀번호 찾기를 다시 시도해 주세요." });
+          res.status(401).json({ error: "仮パスワードの有効期限が切れました。パスワード再発行をもう一度お試しください。" });
           return;
         }
         if (!verifyGnuboardPassword(mb_password, temp_hash)) {
-          res.status(401).json({ error: "아이디 또는 비밀번호가 올바르지 않습니다" });
+          res.status(401).json({ error: "IDまたはパスワードが正しくありません" });
           return;
         }
         // 임시 비밀번호로 로그인 성공 → mb_password도 업데이트하여 마이페이지에서 비밀번호 변경 가능하게 함
         await pool.query("UPDATE g5_member SET mb_password = ? WHERE mb_id = ?", [temp_hash, mb_id]);
         await pool.query("DELETE FROM seoulmono_temp_pw WHERE mb_id = ?", [mb_id]);
       } else {
-        res.status(401).json({ error: "아이디 또는 비밀번호가 올바르지 않습니다" });
+        res.status(401).json({ error: "IDまたはパスワードが正しくありません" });
         return;
       }
     }
@@ -397,7 +397,7 @@ router.post("/auth/login", async (req, res) => {
     const isApproved = member.mb_level >= 2;
 
     if (!isAdmin && member.mb_level === 0) {
-      res.status(403).json({ error: "가입이 거절된 계정입니다. 관리자에게 문의해주세요." });
+      res.status(403).json({ error: "登録が却下されたアカウントです。管理者にお問い合わせください。" });
       return;
     }
 
@@ -419,7 +419,7 @@ router.post("/auth/login", async (req, res) => {
     });
   } catch (err: any) {
     req.log?.error({ err }, "Login error");
-    res.status(500).json({ error: "서버 오류가 발생했습니다" });
+    res.status(500).json({ error: "サーバーエラーが発生しました" });
   }
 });
 
@@ -428,12 +428,12 @@ router.post("/auth/register", upload.single("business_license"), async (req, res
     const data = req.body;
 
     if (!data.mb_id || !data.mb_password || !data.mb_name || !data.mb_email || !data.company_name || !data.business_number || !data.representative) {
-      res.status(400).json({ error: "필수 정보를 모두 입력해주세요" });
+      res.status(400).json({ error: "必須項目をすべて入力してください" });
       return;
     }
 
     if (!req.file) {
-      res.status(400).json({ error: "사업자등록증 파일을 첨부해주세요" });
+      res.status(400).json({ error: "事業者登録証のファイルを添付してください" });
       return;
     }
 
@@ -442,7 +442,7 @@ router.post("/auth/register", upload.single("business_license"), async (req, res
       [data.mb_id]
     );
     if (existingId.length > 0) {
-      res.status(400).json({ error: "이미 사용중인 아이디입니다" });
+      res.status(400).json({ error: "このIDはすでに使用されています" });
       return;
     }
 
@@ -451,7 +451,7 @@ router.post("/auth/register", upload.single("business_license"), async (req, res
       [data.mb_email || ""]
     );
     if (existingEmail.length > 0) {
-      res.status(400).json({ error: "이미 사용중인 이메일입니다" });
+      res.status(400).json({ error: "このメールアドレスはすでに使用されています" });
       return;
     }
 
@@ -525,17 +525,17 @@ router.post("/auth/register", upload.single("business_license"), async (req, res
       ]
     );
 
-    res.status(201).json({ message: "회원가입이 완료되었습니다. 관리자 승인 후 이용 가능합니다." });
+    res.status(201).json({ message: "会員登録が完了しました。管理者の承認後にご利用いただけます。" });
   } catch (err: any) {
     req.log?.error({ err }, "Register error");
-    let errorMessage = "가입 신청 중 오류가 발생했습니다.";
+    let errorMessage = "登録申請中にエラーが発生しました。";
     if (err.code === "ER_DUP_ENTRY") {
       if (err.message?.includes("mb_nick")) {
-        errorMessage = "닉네임이 중복되었습니다. 다시 시도해주세요.";
+        errorMessage = "ニックネームが重複しています。もう一度お試しください。";
       } else if (err.message?.includes("mb_email")) {
-        errorMessage = "이미 사용중인 이메일입니다.";
+        errorMessage = "このメールアドレスはすでに使用されています。";
       } else {
-        errorMessage = "이미 등록된 정보가 있습니다.";
+        errorMessage = "すでに登録されている情報があります。";
       }
     }
     res.status(500).json({ error: errorMessage });
@@ -580,7 +580,7 @@ router.get("/auth/me", authMiddleware, async (req, res) => {
     });
   } catch (err: any) {
     req.log?.error({ err }, "GetMe error");
-    res.status(500).json({ error: "서버 오류가 발생했습니다" });
+    res.status(500).json({ error: "サーバーエラーが発生しました" });
   }
 });
 
@@ -596,7 +596,7 @@ router.get("/auth/profile", authMiddleware, async (req, res) => {
       [user.mb_id]
     );
     if (rows.length === 0) {
-      res.status(404).json({ error: "사용자를 찾을 수 없습니다" });
+      res.status(404).json({ error: "ユーザーが見つかりません" });
       return;
     }
     const m = rows[0];
@@ -619,7 +619,7 @@ router.get("/auth/profile", authMiddleware, async (req, res) => {
     });
   } catch (err: any) {
     req.log?.error({ err }, "GetProfile error");
-    res.status(500).json({ error: "서버 오류가 발생했습니다" });
+    res.status(500).json({ error: "サーバーエラーが発生しました" });
   }
 });
 
@@ -629,23 +629,23 @@ router.put("/auth/profile", authMiddleware, async (req, res) => {
     const { mb_name, mb_hp, mb_email, current_password, new_password } = req.body;
 
     if (!mb_name || !mb_hp) {
-      res.status(400).json({ error: "이름과 휴대폰 번호는 필수입니다." });
+      res.status(400).json({ error: "お名前と携帯電話番号は必須です。" });
       return;
     }
 
     // 비밀번호 변경 요청 시 현재 비밀번호 검증
     if (new_password) {
       if (!current_password) {
-        res.status(400).json({ error: "현재 비밀번호를 입력해주세요." });
+        res.status(400).json({ error: "現在のパスワードを入力してください。" });
         return;
       }
       const [rows] = await pool.query<RowDataPacket[]>(
         "SELECT mb_password FROM g5_member WHERE mb_id = ?",
         [user.mb_id]
       );
-      if (rows.length === 0) { res.status(404).json({ error: "사용자를 찾을 수 없습니다." }); return; }
+      if (rows.length === 0) { res.status(404).json({ error: "ユーザーが見つかりません。" }); return; }
       const valid = await verifyGnuboardPassword(current_password, rows[0].mb_password);
-      if (!valid) { res.status(400).json({ error: "현재 비밀번호가 올바르지 않습니다." }); return; }
+      if (!valid) { res.status(400).json({ error: "現在のパスワードが正しくありません。" }); return; }
 
       const hashed = gnuboardPasswordHash(new_password);
       await pool.query(
@@ -661,7 +661,7 @@ router.put("/auth/profile", authMiddleware, async (req, res) => {
 
     res.json({ ok: true });
   } catch (err: any) {
-    res.status(500).json({ error: "수정 실패: " + err.message });
+    res.status(500).json({ error: "更新に失敗しました: " + err.message });
   }
 });
 
@@ -675,25 +675,25 @@ router.get("/auth/business-license/:filename", authMiddleware, async (req, res) 
       [user.mb_id]
     );
     if (rows.length === 0 || (rows[0].mb_2 !== filename && user.mb_level < 10)) {
-      res.status(403).json({ error: "접근 권한이 없습니다" });
+      res.status(403).json({ error: "アクセス権限がありません" });
       return;
     }
 
     const filePath = path.join(uploadDir, filename);
     const fs = await import("fs");
     if (!fs.existsSync(filePath)) {
-      res.status(404).json({ error: "파일을 찾을 수 없습니다" });
+      res.status(404).json({ error: "ファイルが見つかりません" });
       return;
     }
     res.sendFile(filePath);
   } catch (err: any) {
     req.log?.error({ err }, "GetBusinessLicenseUser error");
-    res.status(500).json({ error: "서버 오류가 발생했습니다" });
+    res.status(500).json({ error: "サーバーエラーが発生しました" });
   }
 });
 
 router.post("/auth/logout", (_req, res) => {
-  res.json({ message: "로그아웃 되었습니다" });
+  res.json({ message: "ログアウトしました" });
 });
 
 // ── 아이디 찾기 ──────────────────────────────────────────────────────────────
@@ -701,7 +701,7 @@ router.post("/auth/find-id", async (req, res) => {
   try {
     const { name, email } = req.body as { name?: string; email?: string };
     if (!name?.trim() || !email?.trim()) {
-      res.status(400).json({ error: "이름과 이메일을 모두 입력해 주세요." });
+      res.status(400).json({ error: "お名前とメールアドレスをすべて入力してください。" });
       return;
     }
     const [rows] = await pool.query<RowDataPacket[]>(
@@ -709,7 +709,7 @@ router.post("/auth/find-id", async (req, res) => {
       [name.trim(), email.trim()]
     );
     if (rows.length === 0) {
-      res.status(404).json({ error: "일치하는 회원 정보를 찾을 수 없습니다." });
+      res.status(404).json({ error: "一致する会員情報が見つかりません。" });
       return;
     }
     const { mb_id, mb_datetime } = rows[0];
@@ -721,7 +721,7 @@ router.post("/auth/find-id", async (req, res) => {
     const { sendMail } = await import("../lib/mailer.js");
     await sendMail({
       to: email.trim(),
-      subject: "[지구쇼핑몰] 아이디 찾기 안내",
+      subject: "[ソウルモノ] ID確認のご案内",
       html: `<!DOCTYPE html>
 <html lang="ko">
 <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"></head>
@@ -732,35 +732,35 @@ router.post("/auth/find-id", async (req, res) => {
         <!-- 헤더 -->
         <tr>
           <td style="background:linear-gradient(135deg,#1b5e3b 0%,#2d8a5a 100%);padding:32px 40px;text-align:center;">
-            <p style="margin:0 0 4px;font-size:12px;color:rgba(255,255,255,0.7);letter-spacing:1px;">좋은가격, 좋은상품</p>
-            <p style="margin:0;font-size:28px;font-weight:900;color:#fff;letter-spacing:-0.5px;">ALL <span style="color:#b2f0d0;">따옴</span></p>
+            <p style="margin:0 0 4px;font-size:12px;color:rgba(255,255,255,0.7);letter-spacing:1px;">良い価格、良い商品</p>
+            <p style="margin:0;font-size:28px;font-weight:900;color:#fff;letter-spacing:-0.5px;"><span style="color:#b2f0d0;">ソウルモノ</span></p>
           </td>
         </tr>
         <!-- 본문 -->
         <tr>
           <td style="padding:40px 40px 32px;">
             <p style="margin:0 0 6px;font-size:13px;color:#1D8A5A;font-weight:700;letter-spacing:0.5px;">ACCOUNT</p>
-            <h2 style="margin:0 0 20px;font-size:22px;font-weight:900;color:#111;">아이디 찾기 결과</h2>
-            <p style="margin:0 0 24px;font-size:15px;color:#555;line-height:1.7;">안녕하세요, <strong style="color:#111;">${name.trim()}</strong>님!<br>요청하신 아이디 정보를 안내드립니다.</p>
+            <h2 style="margin:0 0 20px;font-size:22px;font-weight:900;color:#111;">ID確認結果</h2>
+            <p style="margin:0 0 24px;font-size:15px;color:#555;line-height:1.7;">いつもご利用ありがとうございます。<strong style="color:#111;">${name.trim()}</strong>様<br>ご依頼のID情報をご案内いたします。</p>
 
             <!-- 아이디 카드 -->
             <table width="100%" cellpadding="0" cellspacing="0" style="background:#f0faf5;border:2px solid #b2f0d0;border-radius:12px;margin-bottom:28px;">
               <tr>
                 <td style="padding:24px 28px;">
-                  <p style="margin:0 0 8px;font-size:12px;color:#2d8a5a;font-weight:700;letter-spacing:0.5px;">회원 아이디</p>
+                  <p style="margin:0 0 8px;font-size:12px;color:#2d8a5a;font-weight:700;letter-spacing:0.5px;">会員ID</p>
                   <p style="margin:0;font-size:26px;font-weight:900;color:#1D8A5A;letter-spacing:-0.5px;">${mb_id}</p>
-                  ${joined ? `<p style="margin:10px 0 0;font-size:12px;color:#888;">가입일 &nbsp;·&nbsp; ${joined}</p>` : ""}
+                  ${joined ? `<p style="margin:10px 0 0;font-size:12px;color:#888;">登録日 &nbsp;·&nbsp; ${joined}</p>` : ""}
                 </td>
               </tr>
             </table>
 
-            <p style="margin:0 0 28px;font-size:13px;color:#888;line-height:1.7;">보안을 위해 아이디는 타인과 공유하지 마세요.<br>비밀번호가 기억나지 않으시면 비밀번호 찾기를 이용해 주세요.</p>
+            <p style="margin:0 0 28px;font-size:13px;color:#888;line-height:1.7;">セキュリティのため、IDは他の方と共有しないでください。<br>パスワードをお忘れの場合は、パスワード再発行をご利用ください。</p>
 
             <!-- CTA 버튼 -->
             <table width="100%" cellpadding="0" cellspacing="0">
               <tr>
                 <td align="center">
-                  <a href="https://seoulmono.com/shop/login" style="display:inline-block;background:linear-gradient(135deg,#1b5e3b,#2d8a5a);color:#fff;text-decoration:none;font-size:15px;font-weight:700;padding:14px 40px;border-radius:50px;letter-spacing:-0.2px;">로그인하러 가기 →</a>
+                  <a href="https://seoulmono.com/shop/login" style="display:inline-block;background:linear-gradient(135deg,#1b5e3b,#2d8a5a);color:#fff;text-decoration:none;font-size:15px;font-weight:700;padding:14px 40px;border-radius:50px;letter-spacing:-0.2px;">ログインはこちら →</a>
                 </td>
               </tr>
             </table>
@@ -769,8 +769,8 @@ router.post("/auth/find-id", async (req, res) => {
         <!-- 푸터 -->
         <tr>
           <td style="background:#f8f9fa;border-top:1px solid #eee;padding:20px 40px;text-align:center;">
-            <p style="margin:0 0 4px;font-size:11px;color:#bbb;">본 메일은 지구쇼핑몰 아이디 찾기 요청에 의해 발송되었습니다.</p>
-            <p style="margin:0;font-size:11px;color:#ccc;">© 2024 주식회사 와이앤에이치에스 · 고객센터 010-2051-5692</p>
+            <p style="margin:0 0 4px;font-size:11px;color:#bbb;">このメールはソウルモノのID確認のご依頼により送信されました。</p>
+            <p style="margin:0;font-size:11px;color:#ccc;">© 2024 株式会社ワイエヌエイチエス · カスタマーセンター 010-2051-5692</p>
           </td>
         </tr>
       </table>
@@ -779,10 +779,10 @@ router.post("/auth/find-id", async (req, res) => {
 </body>
 </html>`,
     });
-    res.json({ message: "이메일로 아이디를 발송했습니다.", masked: maskedId });
+    res.json({ message: "メールでIDをお送りしました。", masked: maskedId });
   } catch (err: any) {
     logger.error({ err }, "find-id error");
-    res.status(500).json({ error: "처리 중 오류가 발생했습니다." });
+    res.status(500).json({ error: "処理中にエラーが発生しました。" });
   }
 });
 
@@ -791,7 +791,7 @@ router.post("/auth/find-password", async (req, res) => {
   try {
     const { mb_id, email } = req.body as { mb_id?: string; email?: string };
     if (!mb_id?.trim() || !email?.trim()) {
-      res.status(400).json({ error: "아이디와 이메일을 모두 입력해 주세요." });
+      res.status(400).json({ error: "IDとメールアドレスをすべて入力してください。" });
       return;
     }
     const [rows] = await pool.query<RowDataPacket[]>(
@@ -799,7 +799,7 @@ router.post("/auth/find-password", async (req, res) => {
       [mb_id.trim(), email.trim()]
     );
     if (rows.length === 0) {
-      res.status(404).json({ error: "일치하는 회원 정보를 찾을 수 없습니다." });
+      res.status(404).json({ error: "一致する会員情報が見つかりません。" });
       return;
     }
     const member = rows[0];
@@ -817,7 +817,7 @@ router.post("/auth/find-password", async (req, res) => {
     const { sendMail } = await import("../lib/mailer.js");
     await sendMail({
       to: email.trim(),
-      subject: "[지구쇼핑몰] 임시 비밀번호 안내",
+      subject: "[ソウルモノ] 仮パスワードのご案内",
       html: `<!DOCTYPE html>
 <html lang="ko">
 <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"></head>
@@ -828,22 +828,22 @@ router.post("/auth/find-password", async (req, res) => {
         <!-- 헤더 -->
         <tr>
           <td style="background:linear-gradient(135deg,#1b5e3b 0%,#2d8a5a 100%);padding:32px 40px;text-align:center;">
-            <p style="margin:0 0 4px;font-size:12px;color:rgba(255,255,255,0.7);letter-spacing:1px;">좋은가격, 좋은상품</p>
-            <p style="margin:0;font-size:28px;font-weight:900;color:#fff;letter-spacing:-0.5px;">ALL <span style="color:#b2f0d0;">따옴</span></p>
+            <p style="margin:0 0 4px;font-size:12px;color:rgba(255,255,255,0.7);letter-spacing:1px;">良い価格、良い商品</p>
+            <p style="margin:0;font-size:28px;font-weight:900;color:#fff;letter-spacing:-0.5px;"><span style="color:#b2f0d0;">ソウルモノ</span></p>
           </td>
         </tr>
         <!-- 본문 -->
         <tr>
           <td style="padding:40px 40px 32px;">
             <p style="margin:0 0 6px;font-size:13px;color:#1D8A5A;font-weight:700;letter-spacing:0.5px;">SECURITY</p>
-            <h2 style="margin:0 0 20px;font-size:22px;font-weight:900;color:#111;">임시 비밀번호 발급</h2>
-            <p style="margin:0 0 28px;font-size:15px;color:#555;line-height:1.7;">안녕하세요, <strong style="color:#111;">${member.mb_name}</strong>님!<br>요청하신 임시 비밀번호를 발급했습니다.</p>
+            <h2 style="margin:0 0 20px;font-size:22px;font-weight:900;color:#111;">仮パスワードの発行</h2>
+            <p style="margin:0 0 28px;font-size:15px;color:#555;line-height:1.7;">いつもご利用ありがとうございます。<strong style="color:#111;">${member.mb_name}</strong>様<br>ご依頼の仮パスワードを発行しました。</p>
 
             <!-- 임시 비밀번호 카드 -->
             <table width="100%" cellpadding="0" cellspacing="0" style="background:#f0faf5;border:2px solid #b2f0d0;border-radius:12px;margin-bottom:20px;">
               <tr>
                 <td style="padding:28px;text-align:center;">
-                  <p style="margin:0 0 10px;font-size:12px;color:#2d8a5a;font-weight:700;letter-spacing:0.5px;">임시 비밀번호</p>
+                  <p style="margin:0 0 10px;font-size:12px;color:#2d8a5a;font-weight:700;letter-spacing:0.5px;">仮パスワード</p>
                   <p style="margin:0;font-size:30px;font-weight:900;color:#1D8A5A;letter-spacing:6px;font-family:monospace;">${tempPassword}</p>
                 </td>
               </tr>
@@ -853,7 +853,7 @@ router.post("/auth/find-password", async (req, res) => {
             <table width="100%" cellpadding="0" cellspacing="0" style="background:#fff8e1;border:1px solid #ffe082;border-radius:10px;margin-bottom:28px;">
               <tr>
                 <td style="padding:14px 18px;">
-                  <p style="margin:0;font-size:13px;color:#f57c00;line-height:1.6;">⏱ 이 비밀번호는 <strong>30분 후 만료</strong>됩니다.<br>로그인 후 마이페이지 → 비밀번호 변경에서 새 비밀번호로 변경해 주세요.</p>
+                  <p style="margin:0;font-size:13px;color:#f57c00;line-height:1.6;">⏱ このパスワードは<strong>30分後に失効</strong>します。<br>ログイン後、マイページ → パスワード変更で新しいパスワードに変更してください。</p>
                 </td>
               </tr>
             </table>
@@ -862,7 +862,7 @@ router.post("/auth/find-password", async (req, res) => {
             <table width="100%" cellpadding="0" cellspacing="0">
               <tr>
                 <td align="center">
-                  <a href="https://seoulmono.com/shop/login" style="display:inline-block;background:linear-gradient(135deg,#1b5e3b,#2d8a5a);color:#fff;text-decoration:none;font-size:15px;font-weight:700;padding:14px 40px;border-radius:50px;letter-spacing:-0.2px;">로그인하러 가기 →</a>
+                  <a href="https://seoulmono.com/shop/login" style="display:inline-block;background:linear-gradient(135deg,#1b5e3b,#2d8a5a);color:#fff;text-decoration:none;font-size:15px;font-weight:700;padding:14px 40px;border-radius:50px;letter-spacing:-0.2px;">ログインはこちら →</a>
                 </td>
               </tr>
             </table>
@@ -871,8 +871,8 @@ router.post("/auth/find-password", async (req, res) => {
         <!-- 푸터 -->
         <tr>
           <td style="background:#f8f9fa;border-top:1px solid #eee;padding:20px 40px;text-align:center;">
-            <p style="margin:0 0 4px;font-size:11px;color:#bbb;">본 메일은 지구쇼핑몰 비밀번호 찾기 요청에 의해 발송되었습니다.</p>
-            <p style="margin:0;font-size:11px;color:#ccc;">© 2024 주식회사 와이앤에이치에스 · 고객센터 010-2051-5692</p>
+            <p style="margin:0 0 4px;font-size:11px;color:#bbb;">このメールはソウルモノのパスワード再発行のご依頼により送信されました。</p>
+            <p style="margin:0;font-size:11px;color:#ccc;">© 2024 株式会社ワイエヌエイチエス · カスタマーセンター 010-2051-5692</p>
           </td>
         </tr>
       </table>
@@ -881,10 +881,10 @@ router.post("/auth/find-password", async (req, res) => {
 </body>
 </html>`,
     });
-    res.json({ message: "임시 비밀번호를 이메일로 발송했습니다." });
+    res.json({ message: "仮パスワードをメールでお送りしました。" });
   } catch (err: any) {
     logger.error({ err }, "find-password error");
-    res.status(500).json({ error: "처리 중 오류가 발생했습니다." });
+    res.status(500).json({ error: "処理中にエラーが発生しました。" });
   }
 });
 
@@ -899,7 +899,7 @@ const smsStore = new Map<string, SmsEntry>();
 
 async function sendSmsCode(to: string, code: string): Promise<boolean> {
   if (!SMS_SECRET_AUTH || !SMS_FROM_AUTH) return false;
-  const text = `[지구쇼핑몰] 인증번호 [${code}]를 입력해주세요. (5분 이내 유효)`;
+  const text = `[ソウルモノ] 認証番号 [${code}] を入力してください。(5分以内有効)`;
   try {
     const res = await fetch(SMS_API_URL_AUTH, {
       method: "POST",
@@ -919,10 +919,10 @@ async function sendSmsCode(to: string, code: string): Promise<boolean> {
 router.post("/auth/sms-send", async (req, res) => {
   try {
     const { phone } = req.body;
-    if (!phone) { res.status(400).json({ error: "휴대폰 번호를 입력해 주세요." }); return; }
+    if (!phone) { res.status(400).json({ error: "携帯電話番号を入力してください。" }); return; }
     const clean = phone.replace(/[^0-9]/g, "");
     if (clean.length < 10 || clean.length > 11) {
-      res.status(400).json({ error: "올바른 휴대폰 번호를 입력해 주세요." }); return;
+      res.status(400).json({ error: "正しい携帯電話番号を入力してください。" }); return;
     }
 
     // 기존 가입자 중복 확인
@@ -931,7 +931,7 @@ router.post("/auth/sms-send", async (req, res) => {
       [clean]
     );
     if (dup.length > 0) {
-      res.status(400).json({ error: "이미 가입된 휴대폰 번호입니다." }); return;
+      res.status(400).json({ error: "すでに登録されている携帯電話番号です。" }); return;
     }
 
     const code = String(Math.floor(100000 + Math.random() * 900000));
@@ -942,46 +942,46 @@ router.post("/auth/sms-send", async (req, res) => {
       // SMS 설정 없는 경우 개발/테스트 편의용 로그
       logger.warn({ phone: clean, code }, "[sms-auth] SMS not configured, code generated but not sent");
     }
-    res.json({ ok: true, message: "인증번호가 발송되었습니다." });
+    res.json({ ok: true, message: "認証番号を送信しました。" });
   } catch (err) {
     logger.error({ err }, "sms-send error");
-    res.status(500).json({ error: "인증번호 발송 중 오류가 발생했습니다." });
+    res.status(500).json({ error: "認証番号の送信中にエラーが発生しました。" });
   }
 });
 
 // 인증번호 확인
 router.post("/auth/sms-verify", (req, res) => {
   const { phone, code } = req.body;
-  if (!phone || !code) { res.status(400).json({ error: "정보를 모두 입력해 주세요." }); return; }
+  if (!phone || !code) { res.status(400).json({ error: "情報をすべて入力してください。" }); return; }
   const clean = phone.replace(/[^0-9]/g, "");
   const entry = smsStore.get(clean);
-  if (!entry) { res.status(400).json({ error: "인증번호를 먼저 요청해 주세요." }); return; }
+  if (!entry) { res.status(400).json({ error: "先に認証番号をリクエストしてください。" }); return; }
   if (Date.now() > entry.expiresAt) {
     smsStore.delete(clean);
-    res.status(400).json({ error: "인증번호가 만료되었습니다. 다시 요청해 주세요." }); return;
+    res.status(400).json({ error: "認証番号の有効期限が切れました。もう一度リクエストしてください。" }); return;
   }
   if (entry.code !== String(code).trim()) {
-    res.status(400).json({ error: "인증번호가 올바르지 않습니다." }); return;
+    res.status(400).json({ error: "認証番号が正しくありません。" }); return;
   }
   entry.verified = true;
-  res.json({ ok: true, message: "인증되었습니다." });
+  res.json({ ok: true, message: "認証されました。" });
 });
 
 // 아이디 중복확인
 router.get("/auth/check-id", async (req, res) => {
   try {
     const mbId = String(req.query.mb_id || "").trim();
-    if (!mbId) { res.status(400).json({ error: "아이디를 입력해 주세요." }); return; }
+    if (!mbId) { res.status(400).json({ error: "IDを入力してください。" }); return; }
     if (!/^[a-z0-9]{4,16}$/.test(mbId)) {
-      res.status(400).json({ error: "아이디는 영문 소문자/숫자 4~16자입니다." }); return;
+      res.status(400).json({ error: "IDは半角英小文字・数字の4〜16文字です。" }); return;
     }
     const [rows] = await pool.query<RowDataPacket[]>(
       "SELECT mb_id FROM g5_member WHERE mb_id = ? LIMIT 1", [mbId]
     );
-    if (rows.length > 0) { res.json({ available: false, message: "이미 사용중인 아이디입니다." }); return; }
-    res.json({ available: true, message: "사용 가능한 아이디입니다." });
+    if (rows.length > 0) { res.json({ available: false, message: "このIDはすでに使用されています。" }); return; }
+    res.json({ available: true, message: "このIDは使用できます。" });
   } catch (err) {
-    res.status(500).json({ error: "확인 중 오류가 발생했습니다." });
+    res.status(500).json({ error: "確認中にエラーが発生しました。" });
   }
 });
 
@@ -989,28 +989,28 @@ router.get("/auth/check-id", async (req, res) => {
 router.get("/auth/check-nick", async (req, res) => {
   try {
     const nick = String(req.query.mb_nick || "").trim();
-    if (!nick) { res.status(400).json({ error: "닉네임을 입력해 주세요." }); return; }
+    if (!nick) { res.status(400).json({ error: "ニックネームを入力してください。" }); return; }
     const [rows] = await pool.query<RowDataPacket[]>(
       "SELECT mb_id FROM g5_member WHERE mb_nick = ? LIMIT 1", [nick]
     );
-    if (rows.length > 0) { res.json({ available: false, message: "이미 사용중인 닉네임입니다." }); return; }
-    res.json({ available: true, message: "사용 가능한 닉네임입니다." });
+    if (rows.length > 0) { res.json({ available: false, message: "このニックネームはすでに使用されています。" }); return; }
+    res.json({ available: true, message: "このニックネームは使用できます。" });
   } catch (err) {
-    res.status(500).json({ error: "확인 중 오류가 발생했습니다." });
+    res.status(500).json({ error: "確認中にエラーが発生しました。" });
   }
 });
 
 router.get("/auth/check-email", async (req, res) => {
   try {
     const email = String(req.query.mb_email || "").trim();
-    if (!email) { res.status(400).json({ error: "이메일을 입력해 주세요." }); return; }
+    if (!email) { res.status(400).json({ error: "メールアドレスを入力してください。" }); return; }
     const [rows] = await pool.query<RowDataPacket[]>(
       "SELECT mb_id FROM g5_member WHERE mb_email = ? LIMIT 1", [email]
     );
-    if (rows.length > 0) { res.json({ available: false, message: "이미 사용중인 이메일입니다." }); return; }
-    res.json({ available: true, message: "사용 가능한 이메일입니다." });
+    if (rows.length > 0) { res.json({ available: false, message: "このメールアドレスはすでに使用されています。" }); return; }
+    res.json({ available: true, message: "このメールアドレスは使用できます。" });
   } catch (err) {
-    res.status(500).json({ error: "확인 중 오류가 발생했습니다." });
+    res.status(500).json({ error: "確認中にエラーが発生しました。" });
   }
 });
 
@@ -1023,15 +1023,15 @@ router.post("/auth/register-shop", async (req, res) => {
     const nameVal = (inputName || mb_nick || "").trim();
 
     if (!nameVal || !mb_hp || !mb_password) {
-      res.status(400).json({ error: "이름, 휴대폰번호, 비밀번호를 입력해 주세요." }); return;
+      res.status(400).json({ error: "お名前、携帯電話番号、パスワードを入力してください。" }); return;
     }
     if (mb_password.length < 6) {
-      res.status(400).json({ error: "비밀번호는 6자 이상이어야 합니다." }); return;
+      res.status(400).json({ error: "パスワードは6文字以上である必要があります。" }); return;
     }
 
     const clean = mb_hp.replace(/[^0-9]/g, "");
     if (clean.length < 10) {
-      res.status(400).json({ error: "올바른 휴대폰 번호를 입력해 주세요." }); return;
+      res.status(400).json({ error: "正しい携帯電話番号を入力してください。" }); return;
     }
 
     // 휴대폰번호 = mb_id (중복 확인)
@@ -1039,14 +1039,14 @@ router.post("/auth/register-shop", async (req, res) => {
     const [existPhone] = await pool.query<RowDataPacket[]>(
       "SELECT mb_id FROM g5_member WHERE mb_id = ? OR mb_hp = ? LIMIT 1", [mb_id, clean]
     );
-    if (existPhone.length > 0) { res.status(400).json({ error: "이미 가입된 휴대폰번호입니다." }); return; }
+    if (existPhone.length > 0) { res.status(400).json({ error: "すでに登録されている携帯電話番号です。" }); return; }
 
     // 이메일 중복 (이메일이 있는 경우만)
     if (mb_email && mb_email.trim()) {
       const [existEmailRow] = await pool.query<RowDataPacket[]>(
         "SELECT mb_id FROM g5_member WHERE mb_email = ? LIMIT 1", [mb_email.trim()]
       );
-      if (existEmailRow.length > 0) { res.status(400).json({ error: "이미 사용중인 이메일입니다." }); return; }
+      if (existEmailRow.length > 0) { res.status(400).json({ error: "このメールアドレスはすでに使用されています。" }); return; }
     }
 
     // 닉네임 유일성 보장 (이름 기반)
@@ -1127,11 +1127,11 @@ router.post("/auth/register-shop", async (req, res) => {
     });
   } catch (err: any) {
     logger.error({ err }, "register-shop error");
-    let msg = "가입 중 오류가 발생했습니다.";
+    let msg = "登録中にエラーが発生しました。";
     if (err.code === "ER_DUP_ENTRY") {
-      if (err.message?.includes("mb_nick")) msg = "닉네임이 중복되었습니다. 다시 시도해 주세요.";
-      else if (err.message?.includes("mb_email")) msg = "이미 사용중인 이메일입니다.";
-      else msg = "이미 등록된 정보가 있습니다.";
+      if (err.message?.includes("mb_nick")) msg = "ニックネームが重複しています。もう一度お試しください。";
+      else if (err.message?.includes("mb_email")) msg = "このメールアドレスはすでに使用されています。";
+      else msg = "すでに登録されている情報があります。";
     }
     res.status(500).json({ error: msg });
   }

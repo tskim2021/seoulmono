@@ -45,21 +45,21 @@ export default function Products() {
   const totalPages = Math.ceil((data?.total ?? 0) / 20);
 
   const CATEGORY_NAV = [
-    { label: "전체상품", slug: undefined,        href: "/products" },
-    { label: "탈모헤어", slug: "hair-loss",      href: "/products?category=hair-loss" },
-    { label: "성기능",   slug: "sexual-health",  href: "/products?category=sexual-health" },
-    { label: "피부미용", slug: "skin-beauty",    href: "/products?category=skin-beauty" },
-    { label: "다이어트", slug: "diet",           href: "/products?category=diet" },
-    { label: "기타",     slug: "etc",            href: "/products?category=etc" },
+    { label: "すべての商品", slug: undefined,        href: "/products" },
+    { label: "育毛・ヘアケア", slug: "hair-loss",      href: "/products?category=hair-loss" },
+    { label: "男性機能",   slug: "sexual-health",  href: "/products?category=sexual-health" },
+    { label: "スキンケア・美容", slug: "skin-beauty",    href: "/products?category=skin-beauty" },
+    { label: "ダイエット", slug: "diet",           href: "/products?category=diet" },
+    { label: "その他",     slug: "etc",            href: "/products?category=etc" },
   ];
 
-  const titleMap: Record<string, string> = { featured: "추천 상품", new: "신상품", best: "베스트셀러", sale: "특가 상품" };
-  const pageTitle = filter ? titleMap[filter] ?? "전체상품" : selectedCat ? selectedCat.name : "전체상품";
+  const titleMap: Record<string, string> = { featured: "おすすめ商品", new: "新商品", best: "ベストセラー", sale: "特価商品" };
+  const pageTitle = filter ? titleMap[filter] ?? "すべての商品" : selectedCat ? selectedCat.name : "すべての商品";
 
   useSEO({
     title: pageTitle,
-    description: `${pageTitle} - 탈모학교의 다양한 상품을 둘러보세요.`,
-    keywords: `${pageTitle}, 상품, 쇼핑, 온라인쇼핑`,
+    description: `${pageTitle} - ソウルモノの豊富な商品ラインナップをご覧ください。`,
+    keywords: `${pageTitle}, 商品, ショッピング, オンラインショップ`,
   });
 
   return (
@@ -67,7 +67,7 @@ export default function Products() {
       <div className="container py-8">
         {/* Breadcrumb */}
         <div className="flex items-center gap-2 text-sm text-muted-foreground mb-6">
-          <a href="/" className="hover:text-foreground transition-colors">홈</a>
+          <a href="/" className="hover:text-foreground transition-colors">ホーム</a>
           <span>/</span>
           <span className="text-foreground font-medium">{pageTitle}</span>
         </div>
@@ -76,7 +76,7 @@ export default function Products() {
           {/* Sidebar - Categories + Shopping Sidebar */}
           <aside className="hidden lg:block w-60 shrink-0 space-y-6">
             <div className="bg-card rounded-xl border p-4 elegant-shadow">
-              <h3 className="font-semibold text-sm mb-3 pb-2.5 border-b border-border/60">카테고리</h3>
+              <h3 className="font-semibold text-sm mb-3 pb-2.5 border-b border-border/60">カテゴリー</h3>
               <nav className="space-y-0.5">
                 {CATEGORY_NAV.map(cat => {
                   const isActive = cat.slug
@@ -102,14 +102,14 @@ export default function Products() {
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
               <div>
                 <h1 className="text-xl font-bold">{pageTitle}</h1>
-                <p className="text-sm text-muted-foreground mt-0.5">총 {data?.total ?? 0}개의 상품</p>
+                <p className="text-sm text-muted-foreground mt-0.5">全{data?.total ?? 0}件の商品</p>
               </div>
               <div className="flex items-center gap-3">
                 <div className="relative">
                   <Input
                     value={searchQuery}
                     onChange={e => setSearchQuery(e.target.value)}
-                    placeholder="검색..."
+                    placeholder="検索..."
                     className="w-48 h-9 pl-8 text-sm rounded-full"
                   />
                   <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground" />
@@ -124,11 +124,11 @@ export default function Products() {
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="newest">최신순</SelectItem>
-                    <SelectItem value="price_asc">낮은가격순</SelectItem>
-                    <SelectItem value="price_desc">높은가격순</SelectItem>
-                    <SelectItem value="popular">인기순</SelectItem>
-                    <SelectItem value="rating">평점순</SelectItem>
+                    <SelectItem value="newest">新着順</SelectItem>
+                    <SelectItem value="price_asc">価格の安い順</SelectItem>
+                    <SelectItem value="price_desc">価格の高い順</SelectItem>
+                    <SelectItem value="popular">人気順</SelectItem>
+                    <SelectItem value="rating">評価順</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -147,8 +147,8 @@ export default function Products() {
             ) : (data?.products ?? []).length === 0 ? (
               <div className="text-center py-20 text-muted-foreground">
                 <ShoppingBag className="w-16 h-16 mx-auto mb-4 opacity-20" />
-                <p className="font-medium">상품이 없습니다</p>
-                <p className="text-sm mt-1">다른 조건으로 검색해보세요</p>
+                <p className="font-medium">商品がありません</p>
+                <p className="text-sm mt-1">別の条件で検索してみてください</p>
               </div>
             ) : (
               <>

@@ -31,7 +31,7 @@ router.get("/settings/bank", authMiddleware, async (_req, res) => {
     res.json(settings);
   } catch (err: any) {
     _req.log?.error({ err }, "GetBankSettings error");
-    res.status(500).json({ error: "서버 오류가 발생했습니다" });
+    res.status(500).json({ error: "サーバーエラーが発生しました" });
   }
 });
 
@@ -51,7 +51,7 @@ router.put("/settings/bank", authMiddleware, adminMiddleware, async (req, res) =
     res.json({ success: true, ...settings });
   } catch (err: any) {
     req.log?.error({ err }, "UpdateBankSettings error");
-    res.status(500).json({ error: "서버 오류가 발생했습니다" });
+    res.status(500).json({ error: "サーバーエラーが発生しました" });
   }
 });
 
@@ -63,7 +63,7 @@ router.get("/settings/general", authMiddleware, adminMiddleware, async (_req, re
     res.json({ signup_point: Number(rows[0]?.cf_join_point || 0) });
   } catch (err: any) {
     _req.log?.error({ err }, "GetGeneralSettings error");
-    res.status(500).json({ error: "서버 오류가 발생했습니다" });
+    res.status(500).json({ error: "サーバーエラーが発生しました" });
   }
 });
 
@@ -77,7 +77,7 @@ router.put("/settings/general", authMiddleware, adminMiddleware, async (req, res
     res.json({ success: true, signup_point: Number(signup_point) || 0 });
   } catch (err: any) {
     req.log?.error({ err }, "UpdateGeneralSettings error");
-    res.status(500).json({ error: "서버 오류가 발생했습니다" });
+    res.status(500).json({ error: "サーバーエラーが発生しました" });
   }
 });
 
@@ -86,7 +86,7 @@ router.get("/settings/signup-coupon", authMiddleware, adminMiddleware, async (_r
     const [rows] = await pool.query<RowDataPacket[]>("SELECT cf_6 FROM g5_config LIMIT 1");
     res.json({ signup_coupon_id: Number(rows[0]?.cf_6 || 0) });
   } catch (err: any) {
-    res.status(500).json({ error: "서버 오류가 발생했습니다" });
+    res.status(500).json({ error: "サーバーエラーが発生しました" });
   }
 });
 
@@ -96,7 +96,7 @@ router.put("/settings/signup-coupon", authMiddleware, adminMiddleware, async (re
     await pool.query("UPDATE g5_config SET cf_6 = ?", [Number(signup_coupon_id) || 0]);
     res.json({ success: true, signup_coupon_id: Number(signup_coupon_id) || 0 });
   } catch (err: any) {
-    res.status(500).json({ error: "서버 오류가 발생했습니다" });
+    res.status(500).json({ error: "サーバーエラーが発生しました" });
   }
 });
 
@@ -128,7 +128,7 @@ router.put("/settings/payment", authMiddleware, adminMiddleware, async (req, res
     );
     res.json({ success: true });
   } catch (err: any) {
-    res.status(500).json({ error: "서버 오류" });
+    res.status(500).json({ error: "サーバーエラー" });
   }
 });
 
@@ -164,18 +164,18 @@ router.put("/settings/footer-config", authMiddleware, adminMiddleware, async (re
       );
     }
     res.json({ ok: true });
-  } catch { res.status(500).json({ error: "저장 실패" }); }
+  } catch { res.status(500).json({ error: "保存に失敗しました" }); }
 });
 
 // ── 메뉴 순서 설정 ─────────────────────────────────────────────
 const DEFAULT_MENU_ORDER = [
-  { id: "all",    label: "전체상품",  type: "list", href: "/products" },
-  { id: "new",    label: "신상품",    type: "list", href: "/products?sort=new" },
-  { id: "best",   label: "베스트",    type: "list", href: "/products?sort=popular" },
-  { id: "rec",    label: "추천상품",  type: "list", href: "/products?sort=recommended" },
-  { id: "evt",    label: "이벤트",    type: "page", href: "/events" },
-  { id: "cs",     label: "고객센터",  type: "page", href: "/cs" },
-  { id: "notice", label: "공지사항",  type: "page", href: "/notice" },
+  { id: "all",    label: "全商品",  type: "list", href: "/products" },
+  { id: "new",    label: "新商品",    type: "list", href: "/products?sort=new" },
+  { id: "best",   label: "ベスト",    type: "list", href: "/products?sort=popular" },
+  { id: "rec",    label: "おすすめ商品",  type: "list", href: "/products?sort=recommended" },
+  { id: "evt",    label: "イベント",    type: "page", href: "/events" },
+  { id: "cs",     label: "カスタマーセンター",  type: "page", href: "/cs" },
+  { id: "notice", label: "お知らせ",  type: "page", href: "/notice" },
 ];
 
 router.get("/settings/menu-order", async (_req, res) => {
@@ -214,7 +214,7 @@ router.put("/settings/menu-order", authMiddleware, adminMiddleware, async (req, 
     res.json({ success: true, order });
   } catch (err: any) {
     req.log?.error({ err }, "UpdateMenuOrder error");
-    res.status(500).json({ error: "서버 오류" });
+    res.status(500).json({ error: "サーバーエラー" });
   }
 });
 

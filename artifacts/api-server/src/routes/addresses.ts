@@ -56,7 +56,7 @@ router.post("/addresses", authMiddleware, async (req, res) => {
     const { ad_subject, ad_name, ad_tel, ad_hp, ad_zip1, ad_zip2, ad_addr1, ad_addr2, ad_addr3, ad_jibeon, ad_default } = req.body;
 
     if (!ad_name || !ad_addr1) {
-      res.status(400).json({ error: "수령인 이름과 주소는 필수입니다" });
+      res.status(400).json({ error: "受取人名と住所は必須です" });
       return;
     }
 
@@ -95,7 +95,7 @@ router.patch("/addresses/:id", authMiddleware, async (req, res) => {
       `SELECT ad_id FROM g5_shop_order_address WHERE ad_id = ? AND mb_id = ?`, [adId, user.mb_id]
     );
     if (existing.length === 0) {
-      res.status(404).json({ error: "배송지를 찾을 수 없습니다" });
+      res.status(404).json({ error: "配送先が見つかりません" });
       return;
     }
 
@@ -127,7 +127,7 @@ router.delete("/addresses/:id", authMiddleware, async (req, res) => {
     );
 
     if (result.affectedRows === 0) {
-      res.status(404).json({ error: "배송지를 찾을 수 없습니다" });
+      res.status(404).json({ error: "配送先が見つかりません" });
       return;
     }
 

@@ -36,7 +36,7 @@ export function startNewsScheduler() {
       console.error('[NewsScheduler] Auto generation failed:', error);
     }
   }, {
-    timezone: 'Asia/Seoul'
+    timezone: 'Asia/Tokyo'
   });
 
   console.log('[NewsScheduler] News auto-generation scheduled (daily at 9:00 AM KST)');

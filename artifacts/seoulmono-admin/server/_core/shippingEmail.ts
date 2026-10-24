@@ -33,7 +33,7 @@ function getEmailContent(data: ShippingEmailData): { subject: string; body: stri
 - 주문번호: ${orderNumber}
 - 운송장번호: ${trackingNumber}
 - 배송 상태: ${statusText}
-${estimatedDeliveryDate ? `- 예상 배송일: ${estimatedDeliveryDate.toLocaleDateString('ko-KR')}` : ''}
+${estimatedDeliveryDate ? `- 예상 배송일: ${estimatedDeliveryDate.toLocaleDateString('ja-JP')}` : ''}
 
 마이페이지에서 실시간 배송 추적이 가능합니다.
 
@@ -56,7 +56,7 @@ ${estimatedDeliveryDate ? `- 예상 배송일: ${estimatedDeliveryDate.toLocaleD
 - 주문번호: ${orderNumber}
 - 운송장번호: ${trackingNumber}
 - 배송 상태: ${statusText}
-${estimatedDeliveryDate ? `- 예상 배송일: ${estimatedDeliveryDate.toLocaleDateString('ko-KR')}` : ''}
+${estimatedDeliveryDate ? `- 예상 배송일: ${estimatedDeliveryDate.toLocaleDateString('ja-JP')}` : ''}
 
 마이페이지에서 실시간 배송 추적이 가능합니다.
 
