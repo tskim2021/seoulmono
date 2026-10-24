@@ -311,7 +311,7 @@
 
   /* Original Seoulmono bag mascot; typography remains sharp at every size. */
   function logoHtml() {
-    return '<span class="moa-logo-art sm-brand"><img class="sm-bag" src="/seoulmono-bag.png" alt="" width="72" height="72"><span class="sm-word">ソウルモノ<small>SEOULMONO</small></span></span>';
+    return '<span class="moa-logo-art sm-brand"><img class="sm-bag" src="/seoulmono-puppy.png" alt="" width="72" height="72"><span class="sm-word">ソウルモノ<small>SEOULMONO</small></span></span>';
   }
   function initMascot() {}
 
@@ -526,7 +526,7 @@
           '<div class="moa-ctrl"><b id="moa-cur">01</b><span>/ ' + String(total).padStart(2, "0") + '</span>' +
           '<button type="button" data-d="-1" aria-label="前へ">' + ICON.prev + '</button><button type="button" data-d="1" aria-label="次へ">' + ICON.chev + '</button>' +
           '<button type="button" data-play aria-label="自動再生の切り替え">' + ICON.pause + '</button></div></div>' +
-        '<a class="sm-side-banner" href="/products?sort=new" data-moa><span class="sm-side-tag">ソウルから、毎日。</span><h3>いいものに、<br>出会おう。</h3><p>韓国のとっておきを<br>あなたの暮らしへ。</p><img src="/seoulmono-bag.png" alt="ソウルモノのショッピングバッグキャラクター"><span class="sm-side-cta">新着商品を見る ' + ICON.chev + '</span></a>' +
+        '<a class="sm-side-banner" href="/products?sort=new" data-moa><span class="sm-side-tag">ソウルから、毎日。</span><h3>いいものに、<br>出会おう。</h3><p>韓国のとっておきを<br>あなたの暮らしへ。</p><img src="/seoulmono-puppy.png" alt="ソウルモノの子犬キャラクター"><span class="sm-side-cta">新着商品を見る ' + ICON.chev + '</span></a>' +
       '</div>' + quickHtml() + '</div>';
     first.parentNode.insertBefore(sec, first);
     first.style.display = "none";

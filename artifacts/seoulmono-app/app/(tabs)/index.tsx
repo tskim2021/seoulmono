@@ -267,7 +267,7 @@ export default function HomeScreen() {
   return (
     <View style={[styles.root, { backgroundColor: colors.background }]}>
       <View style={[styles.header, { paddingTop: insets.top + 10, backgroundColor: "#0758E8" }]}>
-        <Image source={require("@/assets/images/seoulmono-bag.png")} style={{ width: 34, height: 42 }} contentFit="contain" /><Text style={styles.logo}>ソウルモノ</Text>
+        <Image source={require("@/assets/images/seoulmono-puppy.png")} style={{ width: 44, height: 44 }} contentFit="contain" /><Text style={styles.logo}>ソウルモノ</Text>
         <Pressable onPress={() => router.push("/(tabs)/products")} style={styles.searchBtn}>
           <Feather name="search" size={16} color="rgba(255,255,255,0.7)" />
           <Text style={styles.searchPlaceholder}>商品を検索...</Text>
