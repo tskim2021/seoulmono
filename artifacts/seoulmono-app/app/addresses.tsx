@@ -210,7 +210,7 @@ export default function AddressesScreen() {
         </ScrollView>
       )}
 
-      {/* ── 배송지 등록/수정 모달 ── */}
+      {/* ── 配送先の登録/編集モーダル ── */}
       <Modal visible={showForm} animationType="slide" onRequestClose={() => setShowForm(false)}>
         <KeyboardAvoidingView
           style={[styles.root, { backgroundColor: colors.background }]}

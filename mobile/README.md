@@ -1,4 +1,4 @@
-### 해시키 추출
+### ハッシュキーの抽出
 
 ```
 keytool -genkey -v -keystore gongimnara.keystore -alias gongimnara -keyalg RSA -keysize 2048 -validity 10000

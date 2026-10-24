@@ -32,7 +32,7 @@ export function ChatbotWidget({ productId }: { productId?: number }) {
       setMessages(prev => [...prev, { role: "assistant" as const, content: String(data.content) }]);
     },
     onError: () => {
-      setMessages(prev => [...prev, { role: "assistant", content: "죄송합니다. 일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요." }]);
+      setMessages(prev => [...prev, { role: "assistant", content: "申し訳ございません。一時的なエラーが発生しました。しばらくしてからもう一度お試しください。" }]);
     },
   });
 
@@ -72,7 +72,7 @@ export function ChatbotWidget({ productId }: { productId?: number }) {
 
   const handleReset = () => {
     if (messages.length === 0) return;
-    if (confirm("대화 내용을 모두 삭제하시겠습니까?")) {
+    if (confirm("会話内容をすべて削除しますか？")) {
       setMessages([]);
       setInput("");
     }
@@ -138,8 +138,8 @@ export function ChatbotWidget({ productId }: { productId?: number }) {
                 <Bot className="w-4 h-4" />
               </div>
               <div>
-                <h3 className="font-semibold text-sm">AI 상담사</h3>
-                <p className="text-xs opacity-80">무엇이든 물어보세요</p>
+                <h3 className="font-semibold text-sm">AIアシスタント</h3>
+                <p className="text-xs opacity-80">何でもご質問ください</p>
               </div>
             </div>
             <div className="flex items-center gap-1">
@@ -147,7 +147,7 @@ export function ChatbotWidget({ productId }: { productId?: number }) {
                 <button
                   onClick={handleReset}
                   className="p-1.5 rounded-full hover:bg-primary-foreground/20 transition-colors"
-                  title="대화 초기화"
+                  title="会話をリセット"
                 >
                   <RefreshCw className="w-4 h-4" />
                 </button>
@@ -174,9 +174,9 @@ export function ChatbotWidget({ productId }: { productId?: number }) {
                   <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mb-4">
                     <Sparkles className="w-8 h-8 text-primary" />
                   </div>
-                  <h4 className="font-semibold mb-1">안녕하세요!</h4>
+                  <h4 className="font-semibold mb-1">こんにちは！</h4>
                   <p className="text-sm text-muted-foreground mb-4">
-                    탈모학교 AI 상담사입니다.<br />무엇을 도와드릴까요?
+                    ソウルモノ AIアシスタントです。<br />どのようなご用件でしょうか？
                   </p>
                   {suggestedQuestions && suggestedQuestions.length > 0 && (
                     <div className="space-y-2 w-full">
@@ -275,7 +275,7 @@ export function ChatbotWidget({ productId }: { productId?: number }) {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKeyDown}
-              placeholder="메시지를 입력하세요..."
+              placeholder="メッセージを入力してください..."
               className="min-h-[44px] sm:min-h-[40px] max-h-[100px] resize-none text-sm rounded-xl"
               rows={1}
             />

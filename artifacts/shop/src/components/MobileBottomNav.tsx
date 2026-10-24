@@ -2,11 +2,11 @@ import { useLocation } from "wouter";
 import { Home, Grid3X3, Award, Search, User } from "lucide-react";
 
 const TABS = [
-  { label: "홈", icon: Home, href: "/" },
-  { label: "카테고리", icon: Grid3X3, href: "/category" },
-  { label: "베스트", icon: Award, href: "/products?sort=popular" },
-  { label: "검색", icon: Search, href: "/search" },
-  { label: "마이", icon: User, href: "/mypage" },
+  { label: "ホーム", icon: Home, href: "/" },
+  { label: "カテゴリー", icon: Grid3X3, href: "/category" },
+  { label: "ベスト", icon: Award, href: "/products?sort=popular" },
+  { label: "検索", icon: Search, href: "/search" },
+  { label: "マイページ", icon: User, href: "/mypage" },
 ];
 
 export default function MobileBottomNav() {

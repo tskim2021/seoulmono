@@ -21,8 +21,8 @@ export default function QnADetail({ postId }: { postId: number }) {
   );
 
   useSEO({
-    title: post ? `Q&A: ${post.title}` : "상품 Q&A",
-    description: post?.content ?? "상품 Q&A 상세",
+    title: post ? `Q&A: ${post.title}` : "商品Q&A",
+    description: post?.content ?? "商品Q&A詳細",
   });
 
   if (postLoading) {
@@ -44,8 +44,8 @@ export default function QnADetail({ postId }: { postId: number }) {
       <Layout>
         <div className="container py-16 text-center text-muted-foreground">
           <HelpCircle className="w-10 h-10 mx-auto mb-3 opacity-30" />
-          <p>Q&A를 찾을 수 없습니다.</p>
-          <button onClick={() => navigate("/community/qna")} className="mt-4 text-sm underline">목록으로</button>
+          <p>Q&Aが見つかりません。</p>
+          <button onClick={() => navigate("/community/qna")} className="mt-4 text-sm underline">一覧へ</button>
         </div>
       </Layout>
     );
@@ -58,9 +58,9 @@ export default function QnADetail({ postId }: { postId: number }) {
       <div className="container py-8">
         {/* 브레드크럼 */}
         <div className="flex items-center gap-1.5 text-sm text-muted-foreground mb-6">
-          <Link href="/" className="hover:text-foreground">홈</Link>
+          <Link href="/" className="hover:text-foreground">ホーム</Link>
           <span>/</span>
-          <Link href="/community/qna" className="hover:text-foreground">상품 Q&amp;A</Link>
+          <Link href="/community/qna" className="hover:text-foreground">商品Q&amp;A</Link>
           <span>/</span>
           <span className="text-foreground font-medium line-clamp-1">{p.title}</span>
         </div>
@@ -77,7 +77,7 @@ export default function QnADetail({ postId }: { postId: number }) {
                 </div>
               )}
               <div>
-                <p className="text-xs text-muted-foreground">관련 상품</p>
+                <p className="text-xs text-muted-foreground">関連商品</p>
                 <p className="text-sm font-medium">{p.productName}</p>
               </div>
             </div>
@@ -93,19 +93,19 @@ export default function QnADetail({ postId }: { postId: number }) {
                 <h1 className="text-base font-semibold">{p.title}</h1>
                 {p.isAnswered ? (
                   <span className="inline-flex items-center gap-1 text-xs font-medium text-green-600 bg-green-50 border border-green-200 rounded-full px-2 py-0.5">
-                    <CheckCircle2 className="w-3 h-3" />답변완료
+                    <CheckCircle2 className="w-3 h-3" />回答済み
                   </span>
                 ) : (
                   <span className="inline-flex items-center gap-1 text-xs font-medium text-orange-500 bg-orange-50 border border-orange-200 rounded-full px-2 py-0.5">
-                    <Clock className="w-3 h-3" />대기중
+                    <Clock className="w-3 h-3" />待機中
                   </span>
                 )}
               </div>
               <p className="text-sm text-foreground whitespace-pre-wrap leading-relaxed">{p.content}</p>
               <div className="flex items-center gap-3 mt-3 text-xs text-muted-foreground">
-                <span className="flex items-center gap-1"><User className="w-3 h-3" />{p.authorName ?? p.userName ?? "익명"}</span>
+                <span className="flex items-center gap-1"><User className="w-3 h-3" />{p.authorName ?? p.userName ?? "匿名"}</span>
                 <span className="flex items-center gap-1"><Calendar className="w-3 h-3" />{formatDate(p.createdAt)}</span>
-                {comments.length > 0 && <span className="flex items-center gap-1"><MessageCircle className="w-3 h-3" />{comments.length}개의 답변</span>}
+                {comments.length > 0 && <span className="flex items-center gap-1"><MessageCircle className="w-3 h-3" />{comments.length}件の回答</span>}
               </div>
             </div>
           </div>
@@ -122,7 +122,7 @@ export default function QnADetail({ postId }: { postId: number }) {
                   <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-emerald-100 text-emerald-700 text-xs font-bold shrink-0 mt-0.5">A</span>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-2">
-                      <span className="text-sm font-medium">{comment.isAdmin ? "관리자" : (comment.userName ?? "익명")}</span>
+                      <span className="text-sm font-medium">{comment.isAdmin ? "管理者" : (comment.userName ?? "匿名")}</span>
                       <span className="text-xs text-muted-foreground">{formatDate(comment.createdAt)}</span>
                     </div>
                     <p className="text-sm whitespace-pre-wrap leading-relaxed">{comment.content}</p>
@@ -134,7 +134,7 @@ export default function QnADetail({ postId }: { postId: number }) {
         ) : (
           <div className="border rounded-xl p-8 text-center text-muted-foreground">
             <MessageCircle className="w-8 h-8 mx-auto mb-2 opacity-30" />
-            <p className="text-sm">아직 답변이 등록되지 않았습니다.</p>
+            <p className="text-sm">まだ回答が登録されていません。</p>
           </div>
         )}
 
@@ -144,7 +144,7 @@ export default function QnADetail({ postId }: { postId: number }) {
             onClick={() => navigate("/community/qna")}
             className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
           >
-            <ChevronLeft className="w-4 h-4" />목록으로
+            <ChevronLeft className="w-4 h-4" />一覧へ
           </button>
         </div>
       </div>

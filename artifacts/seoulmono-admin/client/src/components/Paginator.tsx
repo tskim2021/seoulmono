@@ -26,7 +26,7 @@ export default function Paginator({ page, totalPages, onPageChange, className = 
         className={btnBase}
         disabled={page === 1}
         onClick={() => onPageChange(1)}
-        aria-label="첫 페이지"
+        aria-label="最初のページ"
       >
         <ChevronsLeft className="w-4 h-4" />
       </Button>
@@ -36,7 +36,7 @@ export default function Paginator({ page, totalPages, onPageChange, className = 
         className={btnBase}
         disabled={page === 1}
         onClick={() => onPageChange(page - 1)}
-        aria-label="이전 페이지"
+        aria-label="前のページ"
       >
         <ChevronLeft className="w-4 h-4" />
       </Button>
@@ -59,7 +59,7 @@ export default function Paginator({ page, totalPages, onPageChange, className = 
         className={btnBase}
         disabled={page === totalPages}
         onClick={() => onPageChange(page + 1)}
-        aria-label="다음 페이지"
+        aria-label="次のページ"
       >
         <ChevronRight className="w-4 h-4" />
       </Button>
@@ -69,7 +69,7 @@ export default function Paginator({ page, totalPages, onPageChange, className = 
         className={btnBase}
         disabled={page === totalPages}
         onClick={() => onPageChange(totalPages)}
-        aria-label="마지막 페이지"
+        aria-label="最後のページ"
       >
         <ChevronsRight className="w-4 h-4" />
       </Button>

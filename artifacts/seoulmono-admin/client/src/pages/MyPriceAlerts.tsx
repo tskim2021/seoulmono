@@ -11,46 +11,46 @@ import { useSEO } from "@/hooks/useSEO";
 import { toast } from "sonner";
 
 export default function MyPriceAlerts() {
-  useSEO({ title: "가격 알림", description: "관심 상품 가격 변동 알림", noindex: true });
+  useSEO({ title: "価格アラート", description: "気になる商品の価格変動通知", noindex: true });
   const { isAuthenticated, loading } = useAuth();
   const { data: alerts, refetch } = trpc.priceAlert.list.useQuery(undefined, { enabled: isAuthenticated });
   const deleteMutation = trpc.priceAlert.delete.useMutation({
     onSuccess: () => {
-      toast.success("가격 알림이 삭제되었습니다");
+      toast.success("価格アラートを削除しました");
       refetch();
     },
   });
 
   if (!loading && !isAuthenticated) {
     return (
-      <MyPageLayout title="가격 알림">
+      <MyPageLayout title="価格アラート">
         <div className="text-center py-20">
           <Bell className="w-16 h-16 mx-auto mb-4 text-muted-foreground opacity-30" />
-          <h2 className="text-xl font-bold mb-2">로그인이 필요합니다</h2>
-          <Button asChild className="mt-4"><a href={getLoginUrl()}>로그인</a></Button>
+          <h2 className="text-xl font-bold mb-2">ログインが必要です</h2>
+          <Button asChild className="mt-4"><a href={getLoginUrl()}>ログイン</a></Button>
         </div>
       </MyPageLayout>
     );
   }
 
   return (
-    <MyPageLayout title="가격 알림">
+    <MyPageLayout title="価格アラート">
       <div className="bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-xl p-4 mb-6">
         <p className="text-sm text-blue-900 dark:text-blue-200">
           <Bell className="w-4 h-4 inline mr-1" />
-          위시리스트에 담긴 상품의 가격이 변동되면(인상·인하 모두) 이 페이지에 표시됩니다.
+          お気に入りに入れた商品の価格が変動すると（値上げ・値下げとも）このページに表示されます。
         </p>
       </div>
 
       {(alerts ?? []).length === 0 ? (
         <div className="bg-card border rounded-xl p-12 text-center">
           <Bell className="w-16 h-16 mx-auto mb-4 text-muted-foreground opacity-20" />
-          <h3 className="text-lg font-semibold mb-2">등록된 가격 알림이 없습니다</h3>
+          <h3 className="text-lg font-semibold mb-2">登録された価格アラートはありません</h3>
           <p className="text-sm text-muted-foreground mb-4">
-            위시리스트에 상품을 추가하면 가격 변동 시 자동으로 알림이 등록됩니다
+            お気に入りに商品を追加すると、価格変動時に自動でアラートが登録されます
           </p>
           <Link href="/wishlist">
-            <Button>위시리스트 보기</Button>
+            <Button>お気に入りを見る</Button>
           </Link>
         </div>
       ) : (
@@ -80,19 +80,19 @@ export default function MyPriceAlerts() {
                     <div className="flex items-start gap-2 mb-2 flex-wrap">
                       <Link href={productHref(alert.product?.slug)}>
                         <h3 className="font-semibold text-base hover:text-primary transition-colors line-clamp-1">
-                          {alert.product?.name || "상품 정보 없음"}
+                          {alert.product?.name || "商品情報なし"}
                         </h3>
                       </Link>
                       {hasChanged && isDown && (
                         <Badge className="bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300 border-0 text-xs shrink-0">
                           <TrendingDown className="w-3 h-3 mr-1" />
-                          가격 인하
+                          値下げ
                         </Badge>
                       )}
                       {hasChanged && isUp && (
                         <Badge className="bg-rose-100 text-rose-700 dark:bg-rose-900/40 dark:text-rose-300 border-0 text-xs shrink-0">
                           <TrendingUp className="w-3 h-3 mr-1" />
-                          가격 인상
+                          値上げ
                         </Badge>
                       )}
                     </div>
@@ -107,18 +107,18 @@ export default function MyPriceAlerts() {
                       </div>
                     ) : (
                       <div className="flex items-center gap-2 mb-2">
-                        <span className="text-sm text-muted-foreground">현재 가격:</span>
+                        <span className="text-sm text-muted-foreground">現在価格:</span>
                         <span className="text-lg font-bold price-text">{formatPrice(currentPrice)}</span>
                       </div>
                     )}
 
                     <div className="flex items-center gap-3 text-xs text-muted-foreground flex-wrap">
-                      <span>등록 시 가격: <span className="font-medium text-foreground">{formatPrice(alert.originalPrice)}</span></span>
+                      <span>登録時の価格: <span className="font-medium text-foreground">{formatPrice(alert.originalPrice)}</span></span>
                       {hasChanged && alert.changedAt && (
-                        <span>변동일: <span className="font-medium text-foreground">{formatDateTime(alert.changedAt)}</span></span>
+                        <span>変動日: <span className="font-medium text-foreground">{formatDateTime(alert.changedAt)}</span></span>
                       )}
                       {!hasChanged && (
-                        <span className="text-muted-foreground">변동 없음</span>
+                        <span className="text-muted-foreground">変動なし</span>
                       )}
                     </div>
                   </div>

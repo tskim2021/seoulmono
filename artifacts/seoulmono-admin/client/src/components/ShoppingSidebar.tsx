@@ -8,12 +8,12 @@ import { Link } from "wouter";
 import { Badge } from "@/components/ui/badge";
 
 const SERVICE_LINKS = [
-  { label: "주문내역", href: "/mypage/orders", icon: Package },
-  { label: "리워드", href: "/mypage/coupons", icon: Star, badge: "2" },
-  { label: "매거진", href: "/news", icon: Newspaper },
-  { label: "실시간 리뷰", href: "/shop/itemuselist.php", icon: MessageSquare, badge: "N" },
-  { label: "고객센터", href: "/customer-service", icon: HelpCircle },
-  { label: "브랜드 소개", href: "/about", icon: Info },
+  { label: "注文履歴", href: "/mypage/orders", icon: Package },
+  { label: "リワード", href: "/mypage/coupons", icon: Star, badge: "2" },
+  { label: "マガジン", href: "/news", icon: Newspaper },
+  { label: "リアルタイムレビュー", href: "/shop/itemuselist.php", icon: MessageSquare, badge: "N" },
+  { label: "お問い合わせ", href: "/customer-service", icon: HelpCircle },
+  { label: "ブランド紹介", href: "/about", icon: Info },
 ];
 
 function LoginCard() {
@@ -21,18 +21,18 @@ function LoginCard() {
   if (isAuthenticated) {
     return (
       <div className="rounded-2xl bg-gradient-to-br from-accent to-secondary p-6 text-center">
-        <p className="text-[15px] font-bold leading-snug">{user?.name ?? "회원"}님,<br />오늘도 좋은 하루 되세요</p>
+        <p className="text-[15px] font-bold leading-snug">{user?.name ?? "会員"}様、<br />今日も素敵な一日をお過ごしください</p>
         <Link href="/mypage">
-          <button className="mt-4 w-full h-11 rounded-full bg-foreground text-background text-[15px] font-bold">마이페이지</button>
+          <button className="mt-4 w-full h-11 rounded-full bg-foreground text-background text-[15px] font-bold">マイページ</button>
         </Link>
       </div>
     );
   }
   return (
     <div className="rounded-2xl bg-gradient-to-br from-accent to-secondary p-6 text-center">
-      <p className="text-[15px] font-bold leading-snug">로그인하고 특별한<br />직구 혜택을 만나보세요</p>
+      <p className="text-[15px] font-bold leading-snug">ログインして特別な<br />特典をお楽しみください</p>
       <a href={getLoginUrl()}>
-        <button className="mt-4 w-full h-11 rounded-full bg-foreground text-background text-[15px] font-bold">로그인</button>
+        <button className="mt-4 w-full h-11 rounded-full bg-foreground text-background text-[15px] font-bold">ログイン</button>
       </a>
     </div>
   );
@@ -41,7 +41,7 @@ function LoginCard() {
 function ServiceGrid() {
   return (
     <div>
-      <h4 className="text-[15px] font-extrabold text-center mb-4">인기 서비스</h4>
+      <h4 className="text-[15px] font-extrabold text-center mb-4">人気サービス</h4>
       <div className="grid grid-cols-3 gap-y-4">
         {SERVICE_LINKS.map(s => (
           <Link key={s.label} href={s.href} className="flex flex-col items-center gap-2">
@@ -73,8 +73,8 @@ function EventBanner() {
         <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-3">
           <Gift className="w-6 h-6 text-primary" />
         </div>
-        <p className="text-sm font-semibold text-foreground mb-1">진행 중인 이벤트가 없습니다</p>
-        <p className="text-xs text-muted-foreground">신규 이벤트 오픈 예정</p>
+        <p className="text-sm font-semibold text-foreground mb-1">開催中のイベントはありません</p>
+        <p className="text-xs text-muted-foreground">新規イベント準備中</p>
       </div>
     );
   }
@@ -82,7 +82,7 @@ function EventBanner() {
   return (
     <Link href={banner.linkUrl || "/products"}>
       <div className="rounded-xl overflow-hidden border elegant-shadow hover:opacity-90 transition-opacity cursor-pointer">
-        <img src={banner.imageUrl} alt="이벤트 배너" className="w-full h-auto object-cover" />
+        <img src={banner.imageUrl} alt="イベントバナー" className="w-full h-auto object-cover" />
       </div>
     </Link>
   );
@@ -95,7 +95,7 @@ function RecentProducts() {
     return (
       <div className="text-center py-4">
         <Clock className="w-8 h-8 mx-auto mb-2 text-muted-foreground/30" />
-        <p className="text-xs text-muted-foreground">최근 본 상품이 없습니다</p>
+        <p className="text-xs text-muted-foreground">最近見た商品はありません</p>
       </div>
     );
   }
@@ -157,7 +157,7 @@ function RecentProducts() {
           className="flex items-center gap-1 text-[10px] text-muted-foreground hover:text-foreground transition-colors mt-2 mx-auto"
         >
           <X className="w-3 h-3" />
-          전체 삭제
+          すべて削除
         </button>
       )}
     </div>
@@ -168,22 +168,22 @@ function RecentProducts() {
 export function ShoppingSidebarContent() {
   return (
     <>
-      {/* 로그인 카드 */}
+      {/* ログインカード */}
       <LoginCard />
 
-      {/* 인기 서비스 */}
+      {/* 人気サービス */}
       <ServiceGrid />
 
-      {/* 이벤트 배너 */}
+      {/* イベントバナー */}
       <EventBanner />
 
-      {/* 최근 본 상품 */}
+      {/* 最近見た商品 */}
       <div className="bg-card rounded-xl border p-4 elegant-shadow">
         <div className="flex items-center gap-2 mb-3 pb-2.5 border-b border-border/60">
           <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center">
             <Clock className="w-3.5 h-3.5 text-primary" />
           </div>
-          <h3 className="text-sm font-semibold">최근 본 상품</h3>
+          <h3 className="text-sm font-semibold">最近見た商品</h3>
         </div>
         <RecentProducts />
       </div>

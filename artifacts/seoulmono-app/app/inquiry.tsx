@@ -119,7 +119,7 @@ export default function InquiryScreen() {
 
   return (
     <View style={[styles.root, { backgroundColor: colors.background }]}>
-      {/* 헤더 */}
+      {/* ヘッダー */}
       <View style={[styles.header, { paddingTop: insets.top + 12, borderBottomColor: colors.border }]}>
         <Pressable onPress={() => router.back()} style={styles.backBtn}>
           <Feather name="arrow-left" size={22} color={colors.foreground} />
@@ -134,7 +134,7 @@ export default function InquiryScreen() {
         </Pressable>
       </View>
 
-      {/* 문의 목록 */}
+      {/* お問い合わせ一覧 */}
       {isLoading ? (
         <ActivityIndicator color={colors.primary} style={{ marginTop: 40 }} />
       ) : (
@@ -161,7 +161,7 @@ export default function InquiryScreen() {
         />
       )}
 
-      {/* 문의 등록 모달 */}
+      {/* お問い合わせ登録モーダル */}
       <Modal visible={showForm} animationType="slide" onRequestClose={() => setShowForm(false)}>
         <KeyboardAvoidingView
           style={[styles.root, { backgroundColor: colors.background }]}

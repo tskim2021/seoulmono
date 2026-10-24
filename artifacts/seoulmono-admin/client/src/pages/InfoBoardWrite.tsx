@@ -34,22 +34,22 @@ export default function InfoBoardWrite() {
 
   const createPost = trpc.infoBoard.createPost.useMutation({
     onSuccess: (result) => {
-      toast.success("게시글이 등록되었습니다.");
+      toast.success("投稿を登録しました。");
       navigate(`/info-board/${(result as any).id}`);
     },
     onError: (err) => {
-      toast.error(err.message || "게시글 등록에 실패했습니다.");
+      toast.error(err.message || "投稿の登録に失敗しました。");
       setIsSaving(false);
     },
   });
 
   const updatePost = trpc.infoBoard.updatePost.useMutation({
     onSuccess: () => {
-      toast.success("게시글이 수정되었습니다.");
+      toast.success("投稿を更新しました。");
       navigate(`/info-board/${editId}`);
     },
     onError: (err) => {
-      toast.error(err.message || "게시글 수정에 실패했습니다.");
+      toast.error(err.message || "投稿の更新に失敗しました。");
       setIsSaving(false);
     },
   });
@@ -57,7 +57,7 @@ export default function InfoBoardWrite() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!title.trim() || !content.trim()) {
-      toast.error("제목과 내용을 모두 입력해주세요.");
+      toast.error("タイトルと内容をすべて入力してください。");
       return;
     }
     setIsSaving(true);
@@ -80,9 +80,9 @@ export default function InfoBoardWrite() {
     return (
       <Layout><div className="min-h-screen bg-white flex items-center justify-center">
         <div className="text-center">
-          <p className="text-gray-500 mb-4">로그인이 필요합니다.</p>
+          <p className="text-gray-500 mb-4">ログインが必要です。</p>
           <a href={getLoginUrl()}>
-            <Button>로그인</Button>
+            <Button>ログイン</Button>
           </a>
         </div>
       </div></Layout>
@@ -96,19 +96,19 @@ export default function InfoBoardWrite() {
         {/* 상단 네비게이션 */}
         <Link href="/bbs/board.php?bo_table=info" className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-700 mb-6">
           <ArrowLeft className="w-4 h-4" />
-          정보나눔 목록
+          情報共有一覧
         </Link>
 
         <h1 className="text-2xl font-bold text-gray-900 mb-6">
-          {editId ? "게시글 수정" : "정보나눔 글쓰기"}
+          {editId ? "投稿の編集" : "情報共有 投稿作成"}
         </h1>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* 제목 */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1.5">제목</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1.5">タイトル</label>
             <Input
-              placeholder="제목을 입력하세요"
+              placeholder="タイトルを入力してください"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               className="text-base"
@@ -118,9 +118,9 @@ export default function InfoBoardWrite() {
 
           {/* 내용 */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1.5">내용</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1.5">内容</label>
             <Textarea
-              placeholder="건강 관련 정보를 자유롭게 공유해주세요..."
+              placeholder="健康に関する情報を自由に共有してください..."
               value={content}
               onChange={(e) => setContent(e.target.value)}
               className="min-h-[400px] text-sm leading-relaxed resize-none"
@@ -131,7 +131,7 @@ export default function InfoBoardWrite() {
           {/* 하단 버튼 */}
           <div className="flex items-center justify-between pt-4 border-t">
             <Link href="/bbs/board.php?bo_table=info">
-              <Button type="button" variant="outline">취소</Button>
+              <Button type="button" variant="outline">キャンセル</Button>
             </Link>
             <Button type="submit" disabled={isSaving || !title.trim() || !content.trim()} className="gap-2">
               {isSaving ? (
@@ -139,7 +139,7 @@ export default function InfoBoardWrite() {
               ) : (
                 <Save className="w-4 h-4" />
               )}
-              {editId ? "수정 완료" : "등록"}
+              {editId ? "更新完了" : "登録"}
             </Button>
           </div>
         </form>

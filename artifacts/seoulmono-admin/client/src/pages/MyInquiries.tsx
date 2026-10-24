@@ -17,8 +17,8 @@ export default function MyInquiries() {
   const [searchInput, setSearchInput] = useState("");
 
   useSEO({
-    title: "나의 1:1문의 내역",
-    description: "탈모학교 1:1 문의 내역",
+    title: "マイお問い合わせ履歴",
+    description: "ソウルモノ お問い合わせ履歴",
     noindex: true,
   });
 
@@ -36,30 +36,30 @@ export default function MyInquiries() {
 
   const getStatusBadge = (post: any) => {
     if (post.needsHuman === 1) {
-      return <Badge className="bg-orange-500 hover:bg-orange-600 shrink-0">상담사 답변 대기중</Badge>;
+      return <Badge className="bg-orange-500 hover:bg-orange-600 shrink-0">担当者の回答待ち</Badge>;
     }
     if (post.isAnswered) {
-      return <Badge className="bg-green-600 hover:bg-green-700 shrink-0">상담완료</Badge>;
+      return <Badge className="bg-green-600 hover:bg-green-700 shrink-0">対応完了</Badge>;
     }
     if (post.hasHumanReply) {
-      return <Badge className="bg-teal-500 hover:bg-teal-600 shrink-0">상담사 답변 완료</Badge>;
+      return <Badge className="bg-teal-500 hover:bg-teal-600 shrink-0">担当者回答済み</Badge>;
     }
-    return <Badge variant="secondary" className="shrink-0">답변 대기</Badge>;
+    return <Badge variant="secondary" className="shrink-0">回答待ち</Badge>;
   };
 
   return (
-    <MyPageLayout title="나의 1:1문의 내역">
+    <MyPageLayout title="マイお問い合わせ履歴">
       <div className="flex justify-end mb-6">
         <Button onClick={() => navigate("/customer-service/inquiry")}>
           <Plus className="w-4 h-4 mr-2" />
-          새 문의 작성
+          新規お問い合わせ
         </Button>
       </div>
 
       <form onSubmit={handleSearch} className="mb-6">
         <div className="flex gap-2">
           <Input
-            placeholder="문의 제목 검색..."
+            placeholder="お問い合わせタイトルを検索..."
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
           />
@@ -70,18 +70,18 @@ export default function MyInquiries() {
       </form>
 
       {isLoading ? (
-        <div className="text-center py-12">로딩 중...</div>
+        <div className="text-center py-12">読み込み中...</div>
       ) : !data || data.posts.length === 0 ? (
         <Card>
           <CardContent className="py-12 text-center text-muted-foreground">
             <MessageSquare className="w-12 h-12 mx-auto mb-4 opacity-50" />
-            <p>문의 내역이 없습니다.</p>
+            <p>お問い合わせ履歴がありません。</p>
             <Button
               variant="outline"
               onClick={() => navigate("/customer-service/inquiry")}
               className="mt-4"
             >
-              첫 문의 작성하기
+              最初のお問い合わせを作成
             </Button>
           </CardContent>
         </Card>
@@ -110,13 +110,13 @@ export default function MyInquiries() {
           {data.total > 10 && (
             <div className="flex justify-center gap-2 mt-6">
               <Button variant="outline" disabled={page === 1} onClick={() => setPage(p => p - 1)}>
-                이전
+                前へ
               </Button>
               <span className="flex items-center px-4">
                 {page} / {Math.ceil(data.total / 10)}
               </span>
               <Button variant="outline" disabled={page >= Math.ceil(data.total / 10)} onClick={() => setPage(p => p + 1)}>
-                다음
+                次へ
               </Button>
             </div>
           )}

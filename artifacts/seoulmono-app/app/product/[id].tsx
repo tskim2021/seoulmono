@@ -47,13 +47,13 @@ export default function ProductDetailScreen() {
     enabled: !!id,
   });
 
-  // API가 { item: {...} } 또는 직접 {...} 두 형태 모두 처리
+  // APIが { item: {...} } または直接 {...} のどちらの形式でも処理
   const item = data?.item ?? data;
   const images = (item?.images ?? [])
     .map((img: string) => getImageUrl(img))
     .filter((u: string | null): u is string => u !== null);
 
-  // it_price = 실제 판매가, it_cust_price = 정가(소비자가격)
+  // it_price = 実販売価格, it_cust_price = 定価(希望小売価格)
   const price = item?.it_price ?? 0;
   const origPrice = item?.it_cust_price ?? 0;
 

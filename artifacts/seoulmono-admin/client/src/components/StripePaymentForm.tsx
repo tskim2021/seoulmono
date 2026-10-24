@@ -34,17 +34,17 @@ const StripeCardInner = forwardRef<StripeCardHandle>((_, ref) => {
 
   useImperativeHandle(ref, () => ({
     async createPaymentMethod() {
-      if (!stripe || !elements) throw new Error("Stripe가 로드되지 않았습니다.");
+      if (!stripe || !elements) throw new Error("Stripeが読み込まれていません。");
 
       const cardNumberElement = elements.getElement(CardNumberElement);
-      if (!cardNumberElement) throw new Error("카드 정보를 입력해주세요.");
+      if (!cardNumberElement) throw new Error("カード情報を入力してください。");
 
       const { paymentMethod, error } = await stripe.createPaymentMethod({
         type: "card",
         card: cardNumberElement,
       });
 
-      if (error) throw new Error(error.message ?? "카드 정보를 확인해주세요.");
+      if (error) throw new Error(error.message ?? "カード情報をご確認ください。");
       return paymentMethod!.id;
     },
   }));
@@ -60,7 +60,7 @@ const StripeCardInner = forwardRef<StripeCardHandle>((_, ref) => {
   return (
     <div className="space-y-3">
       <div>
-        <label className="text-xs text-muted-foreground mb-1.5 block font-medium">카드 번호</label>
+        <label className="text-xs text-muted-foreground mb-1.5 block font-medium">カード番号</label>
         <div className="border rounded-lg px-3 py-3 bg-background focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-0 transition-all">
           <CardNumberElement options={CARD_ELEMENT_OPTIONS} onChange={handleChange("number")} />
         </div>
@@ -69,7 +69,7 @@ const StripeCardInner = forwardRef<StripeCardHandle>((_, ref) => {
 
       <div className="grid grid-cols-2 gap-3">
         <div>
-          <label className="text-xs text-muted-foreground mb-1.5 block font-medium">유효기간</label>
+          <label className="text-xs text-muted-foreground mb-1.5 block font-medium">有効期限</label>
           <div className="border rounded-lg px-3 py-3 bg-background focus-within:ring-2 focus-within:ring-ring transition-all">
             <CardExpiryElement options={CARD_ELEMENT_OPTIONS} onChange={handleChange("expiry")} />
           </div>
@@ -86,7 +86,7 @@ const StripeCardInner = forwardRef<StripeCardHandle>((_, ref) => {
 
       <p className="text-xs text-muted-foreground flex items-center gap-1 pt-1">
         <Lock className="w-3 h-3" />
-        카드 정보는 Stripe에 암호화되어 전송됩니다
+        カード情報は暗号化されてStripeに送信されます
       </p>
     </div>
   );

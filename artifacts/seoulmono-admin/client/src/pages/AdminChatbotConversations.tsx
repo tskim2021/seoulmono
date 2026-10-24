@@ -39,29 +39,29 @@ export default function AdminChatbotConversations() {
         <div>
           <h1 className="text-2xl font-bold flex items-center gap-2">
             <MessageSquare className="w-6 h-6" />
-            대화 이력
+            会話履歴
           </h1>
           <p className="text-sm text-muted-foreground mt-1">
-            사용자와 챗봇 간의 대화 이력을 확인할 수 있습니다.
+            ユーザーとチャットボットの会話履歴を確認できます。
           </p>
         </div>
         <div className="text-sm text-muted-foreground">
-          총 <span className="font-semibold text-foreground">{total}</span>건
+          合計 <span className="font-semibold text-foreground">{total}</span>件
         </div>
       </div>
 
       <Card>
         <CardHeader>
-          <CardTitle>대화 목록</CardTitle>
+          <CardTitle>会話一覧</CardTitle>
           <CardDescription>
-            최근 대화 이력이 최신순으로 표시됩니다.
+            直近の会話履歴が新しい順に表示されます。
           </CardDescription>
         </CardHeader>
         <CardContent>
           {conversations.length === 0 ? (
             <div className="text-center py-12 text-muted-foreground">
               <MessageSquare className="w-12 h-12 mx-auto mb-4 opacity-50" />
-              <p>대화 이력이 없습니다.</p>
+              <p>会話履歴がありません。</p>
             </div>
           ) : (
             <>
@@ -71,12 +71,12 @@ export default function AdminChatbotConversations() {
                     <div className="flex items-center justify-between text-xs text-muted-foreground">
                       <div className="flex items-center gap-2">
                         {conv.userId ? (
-                          <Badge variant="outline">사용자 ID: {conv.userId}</Badge>
+                          <Badge variant="outline">ユーザーID: {conv.userId}</Badge>
                         ) : (
-                          <Badge variant="secondary">익명</Badge>
+                          <Badge variant="secondary">匿名</Badge>
                         )}
                         {conv.productId && (
-                          <Badge variant="outline">상품 ID: {conv.productId}</Badge>
+                          <Badge variant="outline">商品ID: {conv.productId}</Badge>
                         )}
                       </div>
                       <span>{new Date(conv.createdAt).toLocaleString('ko-KR')}</span>

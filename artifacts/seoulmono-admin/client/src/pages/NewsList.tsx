@@ -18,13 +18,13 @@ const SECTION_COLORS: Record<string, string> = {
 };
 
 const SECTION_LABELS: Record<string, string> = {
-  domestic: "국내",
-  international: "해외",
-  research: "연구",
+  domestic: "国内",
+  international: "海外",
+  research: "研究",
 };
 
 export default function NewsList() {
-  useSEO({ title: "건강뉴스 - 카테고리별 국내외 건강 뉴스" });
+  useSEO({ title: "健康ニュース - カテゴリー別 国内外の健康ニュース" });
   // URL 파라미터에서 카테고리 추출
   const params = new URLSearchParams(window.location.search);
   const categoryParam = params.get("category");
@@ -63,10 +63,10 @@ export default function NewsList() {
     const now = new Date();
     const diff = now.getTime() - d.getTime();
     const hours = Math.floor(diff / (1000 * 60 * 60));
-    if (hours < 1) return "방금 전";
-    if (hours < 24) return `${hours}시간 전`;
+    if (hours < 1) return "たった今";
+    if (hours < 24) return `${hours}時間前`;
     const days = Math.floor(hours / 24);
-    if (days < 7) return `${days}일 전`;
+    if (days < 7) return `${days}日前`;
     return d.toLocaleDateString("ko-KR", { year: "numeric", month: "short", day: "numeric" });
   };
 
@@ -92,8 +92,8 @@ export default function NewsList() {
                 <Newspaper className="w-5 h-5 text-primary" />
               </div>
               <div>
-                <h1 className="text-2xl font-bold tracking-tight">건강뉴스</h1>
-                <p className="text-sm text-muted-foreground">카테고리별 국내외 건강 뉴스와 최신 연구 정보</p>
+                <h1 className="text-2xl font-bold tracking-tight">健康ニュース</h1>
+                <p className="text-sm text-muted-foreground">カテゴリー別の国内外の健康ニュースと最新研究情報</p>
               </div>
             </div>
           </div>
@@ -108,7 +108,7 @@ export default function NewsList() {
               className="rounded-full"
               onClick={() => handleCategoryChange(undefined)}
             >
-              전체 카테고리
+              すべてのカテゴリー
             </Button>
             {categories.map((cat: any) => (
               <Button
@@ -129,13 +129,13 @@ export default function NewsList() {
               <div className="relative flex-1 sm:w-64">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                 <Input
-                  placeholder="뉴스 검색..."
+                  placeholder="ニュースを検索..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="pl-9"
                 />
               </div>
-              <Button type="submit" size="sm">검색</Button>
+              <Button type="submit" size="sm">検索</Button>
             </form>
           </div>
 
@@ -203,8 +203,8 @@ export default function NewsList() {
           ) : (
             <div className="text-center py-16">
               <Newspaper className="w-12 h-12 text-muted-foreground/30 mx-auto mb-4" />
-              <p className="text-muted-foreground">등록된 뉴스가 없습니다.</p>
-              <p className="text-sm text-muted-foreground/70 mt-1">곧 새로운 건강 뉴스가 업데이트됩니다.</p>
+              <p className="text-muted-foreground">登録されたニュースはありません。</p>
+              <p className="text-sm text-muted-foreground/70 mt-1">まもなく新しい健康ニュースが更新されます。</p>
             </div>
           )}
 

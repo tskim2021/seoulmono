@@ -31,109 +31,109 @@ export const receiveMessage = async (
 
   try {
     switch (key) {
-      // 푸시 권한 확인
+      // プッシュ通知の権限確認
       case MESSAGE_KEY.notification.checkPermission: {
         const result = await notification.requestNotificationPermission();
         sendMessage(result);
         break;
       }
-      // 푸시 토큰 조회
+      // プッシュトークン取得
       case MESSAGE_KEY.notification.getToken: {
         const result = await notification.getNotificationToken();
         sendMessage(result);
         break;
       }
 
-      // 위치 권한 확인
+      // 位置情報の権限確認
       case MESSAGE_KEY.location.checkPermission: {
         const result = await geolocation.checkPermission();
         sendMessage(result);
         break;
       }
-      // 현재 위치 조회
+      // 現在地の取得
       case MESSAGE_KEY.location.getCurrentPosition: {
         const result = await geolocation.getCurrentPosition();
         sendMessage(result);
         break;
       }
 
-      // 기기 정보 조회
+      // 端末情報の取得
       case MESSAGE_KEY.device.getInfo: {
         const result = device.getInfo();
         sendMessage(result);
         break;
       }
 
-      // 링크 이동
+      // リンク移動
       case MESSAGE_KEY.linking.openSettings: {
         linking.openSettings();
         break;
       }
 
-      // 외부 브라우저 실행
+      // 外部ブラウザの起動
       case MESSAGE_KEY.linking.externalBrowser: {
         linking.externalBrowser(value);
         break;
       }
 
-      // 인앱 브라우저 실행
+      // アプリ内ブラウザの起動
       case MESSAGE_KEY.linking.inappBrowser: {
         linking.inappBrowser(value);
         break;
       }
 
-      // 카카오 로그인
+      // カカオログイン
       case MESSAGE_KEY.kakao.login: {
         try {
           const result = await kakao.login();
           sendMessage(result);
         } catch (e) {
-          // 취소 또는 실패 시 웹에 null 전달 (콜백이 무한 대기하지 않도록)
+          // キャンセルまたは失敗時はWebへnullを渡す (コールバックが無限に待機しないように)
           console.log('[Kakao Login Error]', e);
           sendMessage(null);
         }
         break;
       }
 
-      // 카카오 로그아웃
+      // カカオログアウト
       case MESSAGE_KEY.kakao.logout: {
         await kakao.logout();
         break;
       }
 
-      // 카카오 링크 해제
+      // カカオ連携解除
       case MESSAGE_KEY.kakao.unlink: {
         await kakao.unlink();
         break;
       }
 
-      // 네이버 로그인
+      // NAVERログイン
       case MESSAGE_KEY.naver.login: {
         try {
           const result = await naver.login();
           sendMessage(result);
         } catch (e) {
-          // 실패 시 웹에 null 전달
+          // 失敗時はWebへnullを渡す
           console.log('[Naver Login Error]', e);
           sendMessage(null);
         }
         break;
       }
 
-      // 네이버 로그아웃
+      // NAVERログアウト
       case MESSAGE_KEY.naver.logout: {
         await naver.logout();
         break;
       }
 
-      // 네이버 링크 해제
+      // NAVER連携解除
       case MESSAGE_KEY.naver.unlink: {
         await naver.unlink();
         break;
       }
 
       default: {
-        console.log('처리할 수 없는 메시지입니다', key);
+        console.log('処理できないメッセージです', key);
         break;
       }
     }
@@ -141,7 +141,7 @@ export const receiveMessage = async (
     if (e instanceof Error) {
       Alert.alert(e.message);
     } else {
-      Alert.alert('알 수 없는 오류가 발생했습니다', JSON.stringify(e));
+      Alert.alert('不明なエラーが発生しました', JSON.stringify(e));
     }
   }
 };

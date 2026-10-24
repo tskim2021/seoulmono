@@ -13,29 +13,29 @@ import { getLoginUrl } from "@/const";
 
 const menuSections = [
   {
-    title: "쇼핑 정보",
+    title: "ショッピング情報",
     items: [
-      { href: "/mypage/orders", icon: Package, label: "주문내역" },
-      { href: "/mypage/points", icon: Star, label: "포인트" },
-      { href: "/mypage/coupons", icon: Ticket, label: "쿠폰함" },
-      { href: "/mypage/reviews", icon: FileText, label: "내 리뷰" },
+      { href: "/mypage/orders", icon: Package, label: "注文履歴" },
+      { href: "/mypage/points", icon: Star, label: "ポイント" },
+      { href: "/mypage/coupons", icon: Ticket, label: "クーポン" },
+      { href: "/mypage/reviews", icon: FileText, label: "マイレビュー" },
     ],
   },
   {
-    title: "알림/관심",
+    title: "通知・お気に入り",
     items: [
-      { href: "/mypage/notifications", icon: Bell, label: "알림" },
-      { href: "/mypage/restock-alerts", icon: Bell, label: "재입고 알림" },
-      { href: "/wishlist", icon: Heart, label: "위시리스트" },
+      { href: "/mypage/notifications", icon: Bell, label: "通知" },
+      { href: "/mypage/restock-alerts", icon: Bell, label: "再入荷通知" },
+      { href: "/wishlist", icon: Heart, label: "お気に入り" },
     ],
   },
   {
-    title: "고객지원",
+    title: "サポート",
     items: [
-      { href: "/mypage/qna", icon: MessageSquare, label: "상품 Q&A" },
-      { href: "/mypage/inquiries", icon: MessageSquare, label: "1:1 문의" },
-      { href: "/mypage/addresses", icon: MapPin, label: "배송지 관리" },
-      { href: "/mypage/profile", icon: User, label: "회원정보 수정" },
+      { href: "/mypage/qna", icon: MessageSquare, label: "商品Q&A" },
+      { href: "/mypage/inquiries", icon: MessageSquare, label: "個別お問い合わせ" },
+      { href: "/mypage/addresses", icon: MapPin, label: "配送先管理" },
+      { href: "/mypage/profile", icon: User, label: "会員情報の変更" },
     ],
   },
 ];
@@ -56,8 +56,8 @@ export default function MyPageLayout({ children, title }: MyPageLayoutProps) {
       <Layout>
         <div className="container py-20 text-center">
           <User className="w-16 h-16 mx-auto mb-4 text-muted-foreground opacity-30" />
-          <h2 className="text-xl font-bold mb-2">로그인이 필요합니다</h2>
-          <Button asChild className="mt-4"><a href={getLoginUrl()}>로그인</a></Button>
+          <h2 className="text-xl font-bold mb-2">ログインが必要です</h2>
+          <Button asChild className="mt-4"><a href={getLoginUrl()}>ログイン</a></Button>
         </div>
       </Layout>
     );
@@ -79,11 +79,11 @@ export default function MyPageLayout({ children, title }: MyPageLayoutProps) {
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-1.5">
-                        <p className="font-bold text-sm truncate">{profile?.name ?? user?.name ?? "회원"}</p>
+                        <p className="font-bold text-sm truncate">{profile?.name ?? user?.name ?? "会員"}</p>
                       </div>
                       <p className="text-xs text-muted-foreground truncate mt-0.5">{profile?.email ?? user?.email}</p>
                       <div className="flex items-center gap-3 mt-1.5 text-xs">
-                        <span>포인트 <strong className="text-primary">{(profile?.points ?? 0).toLocaleString()}P</strong></span>
+                        <span>ポイント <strong className="text-primary">{(profile?.points ?? 0).toLocaleString()}P</strong></span>
                       </div>
                     </div>
                   </div>
@@ -121,7 +121,7 @@ export default function MyPageLayout({ children, title }: MyPageLayoutProps) {
                   className="flex items-center gap-3 px-4 py-2.5 text-sm text-muted-foreground hover:text-destructive hover:bg-destructive/5 transition-colors w-full"
                 >
                   <LogOut className="w-4 h-4" />
-                  <span>로그아웃</span>
+                  <span>ログアウト</span>
                 </button>
               </nav>
             </div>
@@ -131,7 +131,7 @@ export default function MyPageLayout({ children, title }: MyPageLayoutProps) {
             {title && (
               <div className="mb-6">
                 <div className="flex items-center gap-2 text-sm text-muted-foreground mb-2">
-                  <Link href="/mypage" className="hover:text-foreground">마이페이지</Link>
+                  <Link href="/mypage" className="hover:text-foreground">マイページ</Link>
                   <ChevronRight className="w-3 h-3" />
                   <span className="text-foreground font-medium">{title}</span>
                 </div>

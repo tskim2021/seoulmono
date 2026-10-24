@@ -16,10 +16,10 @@ import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/s
 const BASE = import.meta.env.BASE_URL;
 
 const ALL_CATEGORIES = [
-  { ca_id: "190", name: "비타민" },
-  { ca_id: "200", name: "영양제" },
-  { ca_id: "210", name: "유산균" },
-  { ca_id: "220", name: "슬리밍/이너뷰티" },
+  { ca_id: "190", name: "ビタミン" },
+  { ca_id: "200", name: "サプリメント" },
+  { ca_id: "210", name: "乳酸菌" },
+  { ca_id: "220", name: "スリミング/インナービューティー" },
 ];
 
 function CartBadge({ count }: { count: number }) {
@@ -51,7 +51,7 @@ function UserMenu() {
         className="flex items-center gap-1.5 text-sm font-medium hover:text-primary transition-colors p-2"
       >
         <User className="w-5 h-5" />
-        <span className="hidden sm:inline">로그인</span>
+        <span className="hidden sm:inline">ログイン</span>
       </a>
     );
   }
@@ -61,24 +61,24 @@ function UserMenu() {
       <DropdownMenuTrigger asChild>
         <button className="flex items-center gap-1.5 text-sm font-medium hover:text-primary transition-colors p-2 rounded-full hover:bg-accent">
           <User className="w-5 h-5" />
-          <span className="hidden sm:inline max-w-[80px] truncate">{user.mb_name ?? "회원"}</span>
+          <span className="hidden sm:inline max-w-[80px] truncate">{user.mb_name ?? "会員"}</span>
           <ChevronDown className="w-3 h-3 hidden sm:block" />
         </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-48">
         <DropdownMenuItem asChild>
           <a href={`${BASE}mypage`} className="flex items-center gap-2 cursor-pointer">
-            <LayoutDashboard className="w-4 h-4" />마이페이지
+            <LayoutDashboard className="w-4 h-4" />マイページ
           </a>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
           <a href={`${BASE}mypage`} className="flex items-center gap-2 cursor-pointer">
-            <Package className="w-4 h-4" />주문내역
+            <Package className="w-4 h-4" />注文履歴
           </a>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
           <a href={`${BASE}cs`} className="flex items-center gap-2 cursor-pointer">
-            <MapPin className="w-4 h-4" />고객센터
+            <MapPin className="w-4 h-4" />お客様センター
           </a>
         </DropdownMenuItem>
         {user.is_admin && (
@@ -86,7 +86,7 @@ function UserMenu() {
             <DropdownMenuSeparator />
             <DropdownMenuItem asChild>
               <a href={`${BASE}admin`} className="flex items-center gap-2 cursor-pointer">
-                <Settings className="w-4 h-4" />관리자
+                <Settings className="w-4 h-4" />管理者
               </a>
             </DropdownMenuItem>
           </>
@@ -96,7 +96,7 @@ function UserMenu() {
           onClick={handleLogout}
           className="flex items-center gap-2 text-destructive cursor-pointer"
         >
-          <LogOut className="w-4 h-4" />로그아웃
+          <LogOut className="w-4 h-4" />ログアウト
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
@@ -132,7 +132,7 @@ function SearchBar() {
           type="text"
           value={query}
           onChange={e => setQuery(e.target.value)}
-          placeholder="상품을 검색해보세요"
+          placeholder="商品を検索してみましょう"
           autoComplete="off"
           className="w-full h-10 pl-4 pr-10 rounded-full border border-border bg-secondary/50 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/40 transition-all"
         />
@@ -153,7 +153,7 @@ function CategoryDropdown() {
       <DropdownMenuTrigger asChild>
         <button className="flex items-center gap-1.5 text-sm font-semibold hover:text-primary transition-colors shrink-0 whitespace-nowrap">
           <Menu className="w-4 h-4 shrink-0" />
-          카테고리
+          カテゴリー
           <ChevronDown className="w-3 h-3 shrink-0" />
         </button>
       </DropdownMenuTrigger>
@@ -220,7 +220,7 @@ export default function Header() {
                 </button>
               </SheetTrigger>
               <SheetContent side="right" className="w-72 p-0">
-                <SheetTitle className="sr-only">메뉴</SheetTitle>
+                <SheetTitle className="sr-only">メニュー</SheetTitle>
                 <div className="p-6">
                   <div className="mb-6">
                     <SearchBar />
@@ -236,8 +236,8 @@ export default function Header() {
                       </button>
                     ))}
                     <div className="pt-2 border-t border-border">
-                      <a href={`${BASE}cs`} className="block px-3 py-2.5 rounded-lg text-sm font-medium hover:bg-accent transition-colors">고객센터</a>
-                      <a href={`${BASE}notice`} className="block px-3 py-2.5 rounded-lg text-sm font-medium hover:bg-accent transition-colors">공지사항</a>
+                      <a href={`${BASE}cs`} className="block px-3 py-2.5 rounded-lg text-sm font-medium hover:bg-accent transition-colors">お客様センター</a>
+                      <a href={`${BASE}notice`} className="block px-3 py-2.5 rounded-lg text-sm font-medium hover:bg-accent transition-colors">お知らせ</a>
                     </div>
                   </nav>
                 </div>

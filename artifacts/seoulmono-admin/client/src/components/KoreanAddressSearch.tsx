@@ -126,7 +126,7 @@ export default function KoreanAddressSearch({
         <Input
           readOnly
           value={value?.zipCode ?? ""}
-          placeholder="우편번호"
+          placeholder="郵便番号"
           className="w-28 bg-muted/50 cursor-pointer"
           onClick={() => setIsOpen(true)}
         />
@@ -137,7 +137,7 @@ export default function KoreanAddressSearch({
           className="gap-2 shrink-0"
         >
           <Search className="w-4 h-4" />
-          {compact ? "주소 검색" : "주소 찾기"}
+          {compact ? "住所検索" : "住所を探す"}
         </Button>
       </div>
 
@@ -157,7 +157,7 @@ export default function KoreanAddressSearch({
           <Input
             value={detail}
             onChange={handleDetailChange}
-            placeholder="상세주소 입력 (동/호수 등)"
+            placeholder="詳細住所を入力（棟・号室など）"
             className="ml-6"
           />
         </div>
@@ -171,7 +171,7 @@ export default function KoreanAddressSearch({
             className="flex items-center gap-1.5 text-xs text-blue-600 dark:text-blue-400 hover:underline mb-2"
           >
             <Globe className="w-3.5 h-3.5" />
-            영문 주소 {showEnglish ? "접기" : "확인/수정"}
+            英語住所 {showEnglish ? "閉じる" : "確認/修正"}
             {showEnglish ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
           </button>
 
@@ -179,13 +179,13 @@ export default function KoreanAddressSearch({
             <div className="space-y-2 p-3 bg-blue-50 dark:bg-blue-950/20 rounded-lg border border-blue-200 dark:border-blue-800">
               <p className="text-xs text-blue-600 dark:text-blue-400 font-medium flex items-center gap-1">
                 <Globe className="w-3 h-3" />
-                English Address (국제배송용)
+                English Address （国際配送用）
               </p>
               <Input
                 readOnly
                 value={value?.addressEn1 ?? ""}
                 className="bg-white dark:bg-background text-sm"
-                placeholder="영문 기본주소 (자동 변환)"
+                placeholder="英語基本住所（自動変換）"
               />
               <div className="space-y-2 relative">
                 <Input
@@ -201,7 +201,7 @@ export default function KoreanAddressSearch({
                 )}
               </div>
               <p className="text-[11px] text-muted-foreground">
-                국제배송을 위해 영문 주소가 필요합니다. 상세주소를 입력하면 자동으로 영문으로 번역됩니다.
+                国際配送のため英語住所が必要です。詳細住所を入力すると自動的に英語に翻訳されます。
               </p>
             </div>
           )}
@@ -214,7 +214,7 @@ export default function KoreanAddressSearch({
           <DialogHeader className="p-4 pb-0">
             <DialogTitle className="flex items-center gap-2">
               <MapPin className="w-5 h-5" />
-              주소 검색
+              住所検索
             </DialogTitle>
           </DialogHeader>
           <div className="h-[450px]">

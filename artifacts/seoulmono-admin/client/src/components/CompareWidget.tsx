@@ -14,7 +14,7 @@ export default function CompareWidget() {
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
           <GitCompare className="w-5 h-5" />
-          <span className="font-semibold">비교함 ({productIds.length}/4)</span>
+          <span className="font-semibold">比較リスト ({productIds.length}/4)</span>
         </div>
         <Button variant="ghost" size="sm" onClick={clearAll} className="h-6 w-6 p-0">
           <X className="w-4 h-4" />
@@ -23,7 +23,7 @@ export default function CompareWidget() {
       <div className="flex flex-col gap-2 mb-3">
         {productIds.map((id) => (
           <div key={id} className="flex items-center justify-between text-sm">
-            <span>상품 ID: {id}</span>
+            <span>商品ID: {id}</span>
             <Button variant="ghost" size="sm" onClick={() => removeProduct(id)} className="h-6 w-6 p-0">
               <X className="w-3 h-3" />
             </Button>
@@ -35,7 +35,7 @@ export default function CompareWidget() {
         className="w-full"
         disabled={productIds.length < 2}
       >
-        비교하기 ({productIds.length}개)
+        比較する ({productIds.length}件)
       </Button>
     </div>
   );

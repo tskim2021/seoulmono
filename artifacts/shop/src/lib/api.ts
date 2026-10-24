@@ -237,7 +237,7 @@ export function getShopPath(path: string): string {
 }
 
 export function formatPrice(price: number): string {
-  return price.toLocaleString("ko-KR") + "원";
+  return price.toLocaleString("ja-JP") + "円";
 }
 
 export function discountRate(original: number, sale: number): number {

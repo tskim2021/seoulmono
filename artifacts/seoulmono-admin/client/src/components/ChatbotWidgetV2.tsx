@@ -54,7 +54,7 @@ export function ChatbotWidgetV2({ productId }: { productId?: number }) {
       setMessages(prev => [...prev, { role: "assistant" as const, content: String(data.content) }]);
     },
     onError: () => {
-      setMessages(prev => [...prev, { role: "assistant", content: settings?.responseUnavailableMessage || "죄송합니다. 일시적인 오류가 발생했습니다." }]);
+      setMessages(prev => [...prev, { role: "assistant", content: settings?.responseUnavailableMessage || "申し訳ございません。一時的なエラーが発生しました。" }]);
     },
   });
 
@@ -105,7 +105,7 @@ export function ChatbotWidgetV2({ productId }: { productId?: number }) {
 
   const handleReset = () => {
     if (messages.length === 0 && navStack.length === 1) return;
-    if (confirm("대화를 초기화하시겠습니까?")) {
+    if (confirm("会話をリセットしますか？")) {
       setMessages([]);
       setInput("");
       setNavStack([{ mode: "welcome" }]);
@@ -223,7 +223,7 @@ export function ChatbotWidgetV2({ productId }: { productId?: number }) {
                 <button
                   onClick={handleBack}
                   className="p-1.5 rounded-full hover:bg-primary-foreground/20 transition-colors"
-                  title="뒤로가기"
+                  title="戻る"
                 >
                   <ArrowLeft className="w-4 h-4" />
                 </button>
@@ -233,13 +233,13 @@ export function ChatbotWidgetV2({ productId }: { productId?: number }) {
               </div>
               <div>
                 <h3 className="font-semibold text-sm">
-                  {currentNav.categoryName || "AI 상담사"}
+                  {currentNav.categoryName || "AIアシスタント"}
                 </h3>
                 <p className="text-xs opacity-80">
-                  {currentNav.mode === "welcome" && "무엇이든 물어보세요"}
-                  {currentNav.mode === "categories" && "카테고리 선택"}
-                  {currentNav.mode === "qna" && "질문 선택"}
-                  {currentNav.mode === "chat" && "AI와 대화 중"}
+                  {currentNav.mode === "welcome" && "何でもご質問ください"}
+                  {currentNav.mode === "categories" && "カテゴリを選択"}
+                  {currentNav.mode === "qna" && "質問を選択"}
+                  {currentNav.mode === "chat" && "AIと会話中"}
                 </p>
               </div>
             </div>
@@ -248,7 +248,7 @@ export function ChatbotWidgetV2({ productId }: { productId?: number }) {
                 <button
                   onClick={handleReset}
                   className="p-1.5 rounded-full hover:bg-primary-foreground/20 transition-colors"
-                  title="대화 초기화"
+                  title="会話をリセット"
                 >
                   <RefreshCw className="w-4 h-4" />
                 </button>
@@ -277,15 +277,15 @@ export function ChatbotWidgetV2({ productId }: { productId?: number }) {
                     <Sparkles className="w-8 h-8 text-primary" />
                   </div>
                   <div>
-                    <h4 className="font-semibold mb-1">안녕하세요!</h4>
+                    <h4 className="font-semibold mb-1">こんにちは！</h4>
                     <p className="text-sm text-muted-foreground">
-                      {settings?.greetingMessage || "탈모학교 AI 상담사입니다. 무엇을 도와드릴까요?"}
+                      {settings?.greetingMessage || "ソウルモノ AIアシスタントです。どのようなご用件でしょうか？"}
                     </p>
                   </div>
                   
                   {displayCategories.length > 0 && (
                     <div className="space-y-2 w-full">
-                      <p className="text-xs text-muted-foreground font-medium">카테고리별 문의</p>
+                      <p className="text-xs text-muted-foreground font-medium">カテゴリ別お問い合わせ</p>
                       {displayCategories.map((cat) => (
                         <button
                           key={cat.id}
@@ -309,7 +309,7 @@ export function ChatbotWidgetV2({ productId }: { productId?: number }) {
                       onClick={handleAIChat}
                       className="w-full text-sm px-4 py-3 rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-colors font-medium"
                     >
-                      AI와 직접 대화하기
+                      AIと直接チャットする
                     </button>
                   </div>
                 </div>
@@ -318,7 +318,7 @@ export function ChatbotWidgetV2({ productId }: { productId?: number }) {
               {/* Categories Screen */}
               {currentNav.mode === "categories" && (
                 <div className="space-y-3">
-                  <p className="text-sm text-muted-foreground">하위 카테고리를 선택하세요</p>
+                  <p className="text-sm text-muted-foreground">サブカテゴリを選択してください</p>
                   {displayCategories.map((cat) => (
                     <button
                       key={cat.id}
@@ -340,10 +340,10 @@ export function ChatbotWidgetV2({ productId }: { productId?: number }) {
               {/* QnA Screen */}
               {currentNav.mode === "qna" && qnaList && (
                 <div className="space-y-3">
-                  <p className="text-sm text-muted-foreground">자주 묻는 질문을 선택하세요</p>
+                  <p className="text-sm text-muted-foreground">よくあるご質問を選択してください</p>
                   {qnaList.length === 0 ? (
                     <div className="text-center py-8 text-muted-foreground">
-                      <p className="text-sm">등록된 질문이 없습니다.</p>
+                      <p className="text-sm">登録された質問はありません。</p>
                     </div>
                   ) : (
                     qnaList.map((qna: any) => (
@@ -361,7 +361,7 @@ export function ChatbotWidgetV2({ productId }: { productId?: number }) {
                       onClick={handleAIChat}
                       className="w-full text-sm px-4 py-2 rounded-lg bg-muted hover:bg-accent transition-colors"
                     >
-                      AI와 직접 대화하기
+                      AIと直接チャットする
                     </button>
                   </div>
                 </div>
@@ -375,9 +375,9 @@ export function ChatbotWidgetV2({ productId }: { productId?: number }) {
                       <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mb-4">
                         <Bot className="w-8 h-8 text-primary" />
                       </div>
-                      <h4 className="font-semibold mb-1">AI와 대화하기</h4>
+                      <h4 className="font-semibold mb-1">AIとチャットする</h4>
                       <p className="text-sm text-muted-foreground">
-                        궁금한 점을 자유롭게 물어보세요
+                        ご不明な点をお気軽にご質問ください
                       </p>
                     </div>
                   ) : (
@@ -448,7 +448,7 @@ export function ChatbotWidgetV2({ productId }: { productId?: number }) {
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   onKeyDown={handleKeyDown}
-                  placeholder="메시지를 입력하세요..."
+                  placeholder="メッセージを入力してください..."
                   className="resize-none text-sm min-h-[40px] max-h-[120px]"
                   rows={1}
                   disabled={chatMutation.isPending}

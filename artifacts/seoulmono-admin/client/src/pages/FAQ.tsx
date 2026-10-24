@@ -15,8 +15,8 @@ export default function FAQ() {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
   useSEO({
-    title: "FAQ - 자주 묻는 질문",
-    description: "탈모학교 자주 묻는 질문과 답변",
+    title: "FAQ - よくあるご質問",
+    description: "ソウルモノ よくあるご質問と回答",
   });
 
   const { data: allFaqs = [], isLoading } = trpc.faq.list.useQuery();
@@ -51,11 +51,11 @@ export default function FAQ() {
             className="mb-4"
           >
             <ChevronLeft className="w-4 h-4 mr-1" />
-            고객센터로 돌아가기
+            カスタマーセンターへ戻る
           </Button>
-          <h1 className="text-3xl font-bold mb-2">자주 묻는 질문 (FAQ)</h1>
+          <h1 className="text-3xl font-bold mb-2">よくあるご質問 (FAQ)</h1>
           <p className="text-muted-foreground">
-            고객님께서 자주 문의하시는 질문을 모아두었습니다. 해결되지 않으신 경우 1:1 문의를 이용해 주세요.
+            お客様からよくいただくご質問をまとめました。解決しない場合はお問い合わせをご利用ください。
           </p>
         </div>
 
@@ -64,7 +64,7 @@ export default function FAQ() {
           <div className="relative max-w-xl">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
             <Input
-              placeholder="질문을 검색하세요..."
+              placeholder="質問を検索..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="pl-10"
@@ -80,7 +80,7 @@ export default function FAQ() {
               size="sm"
               onClick={() => setSelectedCategory(null)}
             >
-              전체 ({allFaqs.length})
+              すべて ({allFaqs.length})
             </Button>
             {categories.map(cat => (
               <Button
@@ -104,10 +104,10 @@ export default function FAQ() {
           <Card>
             <CardContent className="py-12 text-center">
               <p className="text-muted-foreground">
-                {search ? "검색 결과가 없습니다." : "등록된 FAQ가 없습니다."}
+                {search ? "検索結果がありません。" : "登録されたFAQはありません。"}
               </p>
               <Link href="/customer-service/inquiry">
-                <Button className="mt-4">1:1 문의하기</Button>
+                <Button className="mt-4">お問い合わせ</Button>
               </Link>
             </CardContent>
           </Card>
@@ -144,12 +144,12 @@ export default function FAQ() {
         {/* 하단 CTA */}
         <Card className="mt-12 bg-muted/30">
           <CardContent className="py-8 text-center">
-            <h3 className="text-xl font-bold mb-2">원하는 답변을 찾지 못하셨나요?</h3>
+            <h3 className="text-xl font-bold mb-2">お探しの回答が見つかりませんでしたか？</h3>
             <p className="text-muted-foreground mb-4">
-              1:1 문의를 통해 궁금하신 사항을 문의해 주시면 신속하게 답변드리겠습니다.
+              お問い合わせフォームよりご質問をお寄せください。迅速にご回答いたします。
             </p>
             <Link href="/customer-service/inquiry">
-              <Button>1:1 문의하기</Button>
+              <Button>お問い合わせ</Button>
             </Link>
           </CardContent>
         </Card>

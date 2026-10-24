@@ -14,29 +14,29 @@ export default function Notifications() {
   const { data } = trpc.user.notifications.useQuery();
   const utils = trpc.useUtils();
   const markRead = trpc.user.markNotificationRead.useMutation({ onSuccess: () => utils.user.notifications.invalidate() });
-  const markAllRead = trpc.user.markAllNotificationsRead.useMutation({ onSuccess: () => { utils.user.notifications.invalidate(); toast.success("모두 읽음 처리되었습니다"); } });
+  const markAllRead = trpc.user.markAllNotificationsRead.useMutation({ onSuccess: () => { utils.user.notifications.invalidate(); toast.success("すべて既読にしました"); } });
   const deleteOne = trpc.user.deleteNotification.useMutation({ onSuccess: () => utils.user.notifications.invalidate() });
-  const deleteAll = trpc.user.deleteAllNotifications.useMutation({ onSuccess: () => { utils.user.notifications.invalidate(); toast.success("알림이 모두 삭제되었습니다"); } });
+  const deleteAll = trpc.user.deleteAllNotifications.useMutation({ onSuccess: () => { utils.user.notifications.invalidate(); toast.success("通知をすべて削除しました"); } });
 
   const notifications = data?.notifications ?? [];
 
   return (
-    <MyPageLayout title={`알림 (${data?.unreadCount ?? 0}건 미읽음)`}>
+    <MyPageLayout title={`通知 (未読${data?.unreadCount ?? 0}件)`}>
         <div className="flex justify-end gap-2 mb-6">
           {(data?.unreadCount ?? 0) > 0 && (
             <Button variant="outline" size="sm" onClick={() => markAllRead.mutate()} disabled={markAllRead.isPending}>
-              <CheckCheck className="w-4 h-4 mr-1" />모두 읽음
+              <CheckCheck className="w-4 h-4 mr-1" />すべて既読
             </Button>
           )}
           {notifications.length > 0 && (
-            <Button variant="outline" size="sm" onClick={() => { if (confirm("알림을 모두 삭제하시겠습니까?")) deleteAll.mutate(); }} disabled={deleteAll.isPending} className="text-destructive hover:text-destructive border-destructive/30 hover:border-destructive/60">
-              <Trash2 className="w-4 h-4 mr-1" />모두 삭제
+            <Button variant="outline" size="sm" onClick={() => { if (confirm("通知をすべて削除しますか？")) deleteAll.mutate(); }} disabled={deleteAll.isPending} className="text-destructive hover:text-destructive border-destructive/30 hover:border-destructive/60">
+              <Trash2 className="w-4 h-4 mr-1" />すべて削除
             </Button>
           )}
         </div>
 
         {notifications.length === 0 ? (
-          <div className="text-center py-20 text-muted-foreground"><Bell className="w-12 h-12 mx-auto mb-3 opacity-20" /><p className="text-sm">알림이 없습니다</p></div>
+          <div className="text-center py-20 text-muted-foreground"><Bell className="w-12 h-12 mx-auto mb-3 opacity-20" /><p className="text-sm">通知はありません</p></div>
         ) : (
           <div className="space-y-2">
             {notifications.map(n => {
@@ -67,12 +67,12 @@ export default function Notifications() {
                     <p className="text-xs text-muted-foreground mt-1">{formatDateTime(n.createdAt)}</p>
                   </div>
                   <div className="flex items-center gap-2 shrink-0">
-                    {n.link && <Link href={n.link} className="text-xs text-primary hover:underline self-center" onClick={e => e.stopPropagation()}>보기</Link>}
+                    {n.link && <Link href={n.link} className="text-xs text-primary hover:underline self-center" onClick={e => e.stopPropagation()}>見る</Link>}
                     <button
                       onClick={e => { e.stopPropagation(); deleteOne.mutate({ id: n.id }); }}
                       disabled={deleteOne.isPending}
                       className="p-1.5 rounded-lg text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors"
-                      title="알림 삭제"
+                      title="通知を削除"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
                     </button>

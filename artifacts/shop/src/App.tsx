@@ -57,7 +57,7 @@ function NotFound() {
   return (
     <div style={{ maxWidth: 1200, margin: "0 auto", padding: "80px 20px", textAlign: "center" }}>
       <h1 style={{ fontSize: 48, fontWeight: 700, color: "#ddd", marginBottom: 16 }}>404</h1>
-      <p style={{ fontSize: 18, color: "#666" }}>페이지를 찾을 수 없습니다</p>
+      <p style={{ fontSize: 18, color: "#666" }}>ページが見つかりません</p>
     </div>
   );
 }

@@ -76,35 +76,35 @@ export const promoCodeRouter = router({
     categoryIds: z.array(z.number()).optional(),
   })).query(async ({ input }) => {
     const promo = await db.getPromoCodeByCode(input.code);
-    if (!promo) return { valid: false, message: "존재하지 않는 할인코드입니다." };
-    if (!promo.isActive) return { valid: false, message: "사용 할 수 없는 할인코드입니다." };
+    if (!promo) return { valid: false, message: "存在しない割引コードです。" };
+    if (!promo.isActive) return { valid: false, message: "ご利用いただけない割引コードです。" };
 
     const now = new Date();
     if (now < promo.startDate || now > promo.endDate) {
-      return { valid: false, message: "할인코드 사용 기간이 아닙니다." };
+      return { valid: false, message: "割引コードの利用期間外です。" };
     }
     if (promo.totalUsageLimit !== -1 && promo.usedCount >= promo.totalUsageLimit) {
-      return { valid: false, message: "할인코드가 모두 소진되었습니다." };
+      return { valid: false, message: "割引コードは上限に達しました。" };
     }
     if (input.orderAmount && input.orderAmount < promo.minOrderAmount) {
-      return { valid: false, message: `최소 ${promo.minOrderAmount.toLocaleString()}원 이상 구매 시 사용 가능합니다.` };
+      return { valid: false, message: `${promo.minOrderAmount.toLocaleString()}円以上のご購入でご利用いただけます。` };
     }
     if (promo.targetProductIds && input.productIds) {
       const ids = promo.targetProductIds.split(",").map(Number).filter(Boolean);
       if (!input.productIds.some(pid => ids.includes(pid))) {
-        return { valid: false, message: "해당 상품에 적용되지 않는 할인코드입니다." };
+        return { valid: false, message: "この商品には適用できない割引コードです。" };
       }
     }
     if (promo.targetCategoryIds && input.categoryIds) {
       const ids = promo.targetCategoryIds.split(",").map(Number).filter(Boolean);
       if (!input.categoryIds.some(cid => ids.includes(cid))) {
-        return { valid: false, message: "해당 카테고리에 적용되지 않는 할인코드입니다." };
+        return { valid: false, message: "このカテゴリには適用できない割引コードです。" };
       }
     }
 
     const discountText = promo.discountType === "percent"
-      ? `${promo.discountValue}%${promo.maxDiscountAmount ? ` (최대 ${promo.maxDiscountAmount.toLocaleString()}원)` : ""}`
-      : `${promo.discountValue.toLocaleString()}원`;
+      ? `${promo.discountValue}%${promo.maxDiscountAmount ? ` (最大${promo.maxDiscountAmount.toLocaleString()}円)` : ""}`
+      : `${promo.discountValue.toLocaleString()}円`;
 
     return { valid: true, promo, discountText };
   }),
@@ -114,31 +114,31 @@ export const promoCodeRouter = router({
     orderId: z.number().optional(),
   })).mutation(async ({ ctx, input }) => {
     const promo = await db.getPromoCodeByCode(input.code);
-    if (!promo) throw new TRPCError({ code: "NOT_FOUND", message: "존재하지 않는 할인코드입니다." });
+    if (!promo) throw new TRPCError({ code: "NOT_FOUND", message: "存在しない割引コードです。" });
 
     const userId = ctx.user.id;
     const now = new Date();
     if (now < promo.startDate || now > promo.endDate) {
-      throw new TRPCError({ code: "BAD_REQUEST", message: "할인코드 사용 기간이 아닙니다." });
+      throw new TRPCError({ code: "BAD_REQUEST", message: "割引コードの利用期間外です。" });
     }
     if (!promo.isActive) {
-      throw new TRPCError({ code: "BAD_REQUEST", message: "사용 할 수 없는 할인코드입니다." });
+      throw new TRPCError({ code: "BAD_REQUEST", message: "ご利用いただけない割引コードです。" });
     }
     if (promo.totalUsageLimit !== -1 && promo.usedCount >= promo.totalUsageLimit) {
-      throw new TRPCError({ code: "BAD_REQUEST", message: "할인코드가 모두 소진되었습니다." });
+      throw new TRPCError({ code: "BAD_REQUEST", message: "割引コードは上限に達しました。" });
     }
 
     const userUsageCount = await db.getPromoCodeUsageCountByUser(promo.id, userId);
     if (userUsageCount >= promo.perUserLimit) {
-      throw new TRPCError({ code: "BAD_REQUEST", message: `한 사람당 ${promo.perUserLimit}회만 사용 가능한 할인코드입니다.` });
+      throw new TRPCError({ code: "BAD_REQUEST", message: `お一人様${promo.perUserLimit}回までご利用いただける割引コードです。` });
     }
 
     await db.recordPromoCodeUsage(promo.id, userId, input.orderId);
     await db.incrementPromoCodeUsedCount(promo.id);
 
     const discountText = promo.discountType === "percent"
-      ? `${promo.discountValue}%${promo.maxDiscountAmount ? ` (최대 ${promo.maxDiscountAmount.toLocaleString()}원)` : ""}`
-      : `${promo.discountValue.toLocaleString()}원`;
+      ? `${promo.discountValue}%${promo.maxDiscountAmount ? ` (最大${promo.maxDiscountAmount.toLocaleString()}円)` : ""}`
+      : `${promo.discountValue.toLocaleString()}円`;
 
     return { success: true, promoCodeId: promo.id, discountText, promoCodeName: promo.name };
   }),

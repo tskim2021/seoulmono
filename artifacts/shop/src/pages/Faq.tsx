@@ -38,6 +38,12 @@ const CATEGORIES = [
 
 interface Faq { id: number; category: string; question: string; answer: string; }
 
+const CAT_LABEL: Record<string, string> = {
+  "전체": "すべて", "회원/정보": "会員/情報", "주문/결제": "注文/お支払い", "배송": "配送",
+  "취소/교환/반품": "キャンセル/交換/返品", "서비스/기타": "サービス/その他",
+};
+const catLabel = (k: string) => CAT_LABEL[k] ?? k;
+
 export default function FaqPage() {
   const [faqs, setFaqs] = useState<Faq[]>([]);
   const [category, setCategory] = useState("전체");
@@ -70,7 +76,7 @@ export default function FaqPage() {
         padding: "52px 0 48px", textAlign: "center",
       }}>
         <p style={{ margin: "0 0 6px", fontSize: 12, fontWeight: 700, color: "rgba(255,255,255,0.7)", letterSpacing: "0.15em", textTransform: "uppercase" }}>Help Center</p>
-        <h1 style={{ margin: "0 0 20px", fontSize: 32, fontWeight: 900, color: "#fff", letterSpacing: "-0.5px" }}>자주 묻는 질문</h1>
+        <h1 style={{ margin: "0 0 20px", fontSize: 32, fontWeight: 900, color: "#fff", letterSpacing: "-0.5px" }}>よくあるご質問</h1>
 
         {/* 검색바 */}
         <div style={{ display: "flex", justifyContent: "center" }}>
@@ -85,7 +91,7 @@ export default function FaqPage() {
               value={search}
               onChange={e => setSearch(e.target.value)}
               onKeyDown={e => e.key === "Enter" && handleSearch()}
-              placeholder="궁금한 내용을 검색해보세요"
+              placeholder="知りたい内容を検索してみましょう"
               style={{
                 flex: 1, border: "none", outline: "none",
                 padding: "14px 20px", fontSize: 14, color: "#333",
@@ -101,7 +107,7 @@ export default function FaqPage() {
                 flexShrink: 0,
               }}
             >
-              검색
+              検索
             </button>
           </div>
         </div>
@@ -115,7 +121,7 @@ export default function FaqPage() {
               const active = category === cat.key;
               return (
                 <button
-                  key={cat.key}
+                  key={catLabel(cat.key)}
                   onClick={() => { setCategory(cat.key); setSearch(""); setQuery(""); }}
                   style={{
                     display: "flex", flexDirection: "column", alignItems: "center", gap: 6,
@@ -131,7 +137,7 @@ export default function FaqPage() {
                   }}
                 >
                   <span style={{ opacity: active ? 1 : 0.55 }}>{cat.icon}</span>
-                  {cat.key}
+                  {catLabel(cat.key)}
                 </button>
               );
             })}
@@ -145,23 +151,23 @@ export default function FaqPage() {
         {/* 결과 수 */}
         <p style={{ margin: "0 0 16px", fontSize: 13, color: "#888" }}>
           {query
-            ? <><strong style={{ color: "#8B5E3C" }}>'{query}'</strong> 검색 결과 총 <strong>{faqs.length}건</strong></>
-            : <>총 <strong>{faqs.length}건</strong></>
+            ? <><strong style={{ color: "#8B5E3C" }}>'{query}'</strong> の検索結果 全<strong>{faqs.length}件</strong></>
+            : <>全<strong>{faqs.length}件</strong></>
           }
         </p>
 
         {loading ? (
           <div style={{ textAlign: "center", padding: "60px 0", color: "#aaa", fontSize: 14 }}>
             <div style={{ width: 32, height: 32, border: "3px solid #e8f0eb", borderTopColor: "#8B5E3C", borderRadius: "50%", animation: "spin 0.8s linear infinite", margin: "0 auto 12px" }}/>
-            로딩 중...
+            読み込み中...
           </div>
         ) : faqs.length === 0 ? (
           <div style={{ textAlign: "center", padding: "80px 0" }}>
             <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="#ccc" strokeWidth="1.5" style={{ marginBottom: 16 }}>
               <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
             </svg>
-            <p style={{ margin: "0 0 6px", fontSize: 16, fontWeight: 700, color: "#bbb" }}>검색 결과가 없습니다</p>
-            <p style={{ margin: 0, fontSize: 13, color: "#ccc" }}>다른 검색어나 카테고리를 선택해보세요</p>
+            <p style={{ margin: "0 0 6px", fontSize: 16, fontWeight: 700, color: "#bbb" }}>検索結果がありません</p>
+            <p style={{ margin: 0, fontSize: 13, color: "#ccc" }}>別のキーワードやカテゴリーをお試しください</p>
           </div>
         ) : (
           <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
@@ -205,7 +211,7 @@ export default function FaqPage() {
                       flexShrink: 0, fontSize: 11, fontWeight: 600, color: "#8B5E3C",
                       background: "#F2E4D0", borderRadius: 99, padding: "3px 10px",
                       display: "none",
-                    }} className="faq-cat-badge">{faq.category}</span>
+                    }} className="faq-cat-badge">{catLabel(faq.category)}</span>
                     <svg
                       width="16" height="16" viewBox="0 0 16 16" fill="none"
                       style={{ flexShrink: 0, transform: isOpen ? "rotate(180deg)" : "none", transition: "transform 0.2s" }}
@@ -241,7 +247,7 @@ export default function FaqPage() {
                           <span style={{
                             fontSize: 11, fontWeight: 600, color: "#8B5E3C",
                             background: "#F2E4D0", borderRadius: 99, padding: "3px 10px",
-                          }}>{faq.category}</span>
+                          }}>{catLabel(faq.category)}</span>
                         </div>
                       </div>
                     </div>
@@ -260,9 +266,9 @@ export default function FaqPage() {
           justifyContent: "space-between", gap: 20, flexWrap: "wrap",
         }}>
           <div>
-            <p style={{ margin: "0 0 4px", fontSize: 14, fontWeight: 700, color: "rgba(255,255,255,0.8)" }}>찾으시는 답변이 없으신가요?</p>
-            <p style={{ margin: 0, fontSize: 22, fontWeight: 900, color: "#fff" }}>고객센터 010-2051-5692</p>
-            <p style={{ margin: "4px 0 0", fontSize: 12, color: "rgba(255,255,255,0.7)" }}>평일 10:00 ~ 18:00 (점심 12:00~13:00 / 토·일·공휴일 휴무)</p>
+            <p style={{ margin: "0 0 4px", fontSize: 14, fontWeight: 700, color: "rgba(255,255,255,0.8)" }}>お探しの回答が見つかりませんか?</p>
+            <p style={{ margin: 0, fontSize: 22, fontWeight: 900, color: "#fff" }}>お客様センター 010-2051-5692</p>
+            <p style={{ margin: "4px 0 0", fontSize: 12, color: "rgba(255,255,255,0.7)" }}>平日 10:00 ~ 18:00 (昼休み 12:00~13:00 / 土・日・祝日休業)</p>
           </div>
           <a
             href="tel:010-2051-5692"
@@ -278,7 +284,7 @@ export default function FaqPage() {
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
               <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 014.69 10.5 19.79 19.79 0 011.61 2c-.12-1.2.8-2 2-2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/>
             </svg>
-            전화 문의
+            お電話でのお問い合わせ
           </a>
         </div>
 

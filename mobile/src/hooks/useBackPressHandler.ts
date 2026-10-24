@@ -18,7 +18,7 @@ export const useBackPressHandler = (
 
       if (backPressCount === 0) {
         ToastAndroid.show(
-          '한 번 더 누르면 앱이 종료됩니다.',
+          'もう一度押すとアプリが終了します。',
           ToastAndroid.SHORT,
         );
         setBackPressCount(1);

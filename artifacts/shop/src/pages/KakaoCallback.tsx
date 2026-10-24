@@ -53,12 +53,12 @@ export default function KakaoCallback() {
             window.location.replace(`${BASE || "/"}`);
           }
         } else {
-          alert(data.error || "카카오 로그인에 실패했습니다.");
+          alert(data.error || "Kakaoログインに失敗しました。");
           navigate("/login");
         }
       })
       .catch(() => {
-        alert("네트워크 오류가 발생했습니다.");
+        alert("ネットワークエラーが発生しました。");
         navigate("/login");
       });
   }, []);
@@ -66,7 +66,7 @@ export default function KakaoCallback() {
   return (
     <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", minHeight: "100vh", fontFamily: "sans-serif" }}>
       <div style={{ width: 44, height: 44, border: "4px solid #FEE500", borderTop: "4px solid #3C1E1E", borderRadius: "50%", animation: "spin 0.8s linear infinite", marginBottom: 18 }} />
-      <p style={{ fontSize: 15, color: "#555", fontWeight: 600 }}>카카오 로그인 처리 중...</p>
+      <p style={{ fontSize: 15, color: "#555", fontWeight: 600 }}>Kakaoログイン処理中...</p>
       <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
     </div>
   );

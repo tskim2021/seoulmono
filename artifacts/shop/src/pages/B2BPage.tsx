@@ -16,14 +16,14 @@ export default function B2BPage() {
         body: JSON.stringify({ mb_id: id, mb_password: pw }),
       });
       const data = await res.json();
-      if (!res.ok) { setError(data.error || "로그인 실패"); return; }
+      if (!res.ok) { setError(data.error || "ログインに失敗しました"); return; }
       if (!data.user?.is_admin) {
-        setError("관리자 권한이 없습니다");
+        setError("管理者権限がありません");
         return;
       }
       localStorage.setItem("token", data.token);
       window.location.href = "/b2b/";
-    } catch { setError("네트워크 오류가 발생했습니다"); }
+    } catch { setError("ネットワークエラーが発生しました"); }
     finally { setLoading(false); }
   };
 
@@ -46,10 +46,10 @@ export default function B2BPage() {
             margin: "0 auto 16px", fontSize: 26,
           }}>🔐</div>
           <h1 style={{ margin: 0, fontSize: 22, fontWeight: 800, color: "#fff", letterSpacing: "-0.5px" }}>
-            관리자 로그인
+            管理者ログイン
           </h1>
           <p style={{ margin: "8px 0 0", fontSize: 13, color: "rgba(255,255,255,0.45)" }}>
-            seoulmono 관리자 전용 페이지입니다
+            seoulmono 管理者専用ページです
           </p>
         </div>
 
@@ -57,7 +57,7 @@ export default function B2BPage() {
           <div style={{ marginBottom: 14 }}>
             <input
               type="text" value={id} onChange={e => setId(e.target.value)}
-              placeholder="아이디" autoComplete="username" required
+              placeholder="ID" autoComplete="username" required
               style={{
                 width: "100%", height: 50, padding: "0 16px", boxSizing: "border-box",
                 background: "rgba(255,255,255,0.08)", border: "1.5px solid rgba(255,255,255,0.12)",
@@ -71,7 +71,7 @@ export default function B2BPage() {
           <div style={{ marginBottom: 20 }}>
             <input
               type="password" value={pw} onChange={e => setPw(e.target.value)}
-              placeholder="비밀번호" autoComplete="current-password" required
+              placeholder="パスワード" autoComplete="current-password" required
               style={{
                 width: "100%", height: 50, padding: "0 16px", boxSizing: "border-box",
                 background: "rgba(255,255,255,0.08)", border: "1.5px solid rgba(255,255,255,0.12)",
@@ -99,7 +99,7 @@ export default function B2BPage() {
             fontSize: 15, fontWeight: 700, cursor: loading ? "not-allowed" : "pointer",
             transition: "all 0.2s", letterSpacing: "-0.3px",
           }}>
-            {loading ? "로그인 중..." : "로그인"}
+            {loading ? "ログイン中..." : "ログイン"}
           </button>
         </form>
       </div>

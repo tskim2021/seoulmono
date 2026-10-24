@@ -8,9 +8,9 @@ import {
 } from '@react-native-seoul/kakao-login';
 
 /**
- * 카카오 로그인
- * - 카카오톡 앱이 설치되어 있으면 loginWithKakaoTalk() 사용 → 앱 자동 로그인
- * - 설치되어 있지 않으면 loginWithKakaoAccount() 사용 → 웹 로그인
+ * カカオログイン
+ * - カカオトークアプリがインストールされていれば loginWithKakaoTalk() を使用 → アプリで自動ログイン
+ * - インストールされていなければ loginWithKakaoAccount() を使用 → Webログイン
  */
 const login = async () => {
   const isAvailable = await isKakaoTalkLoginAvailable();

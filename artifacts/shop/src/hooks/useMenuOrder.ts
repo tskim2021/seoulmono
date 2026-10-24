@@ -2,12 +2,12 @@ import { useState, useEffect } from "react";
 import { getMenuOrder, type MenuItem } from "@/lib/api";
 
 const DEFAULT_ORDER: MenuItem[] = [
-  { id: "new",  label: "신상품",    type: "list", href: "/products?sort=new" },
-  { id: "best", label: "베스트",    type: "list", href: "/products?sort=popular" },
-  { id: "rec",  label: "추천상품",  type: "list", href: "/products?sort=recommended" },
-  { id: "evt",  label: "이벤트",    type: "page", href: "/events" },
-  { id: "cs",   label: "고객센터",  type: "page", href: "/cs" },
-  { id: "notice", label: "공지사항", type: "page", href: "/notice" },
+  { id: "new",  label: "新商品",    type: "list", href: "/products?sort=new" },
+  { id: "best", label: "ベスト",    type: "list", href: "/products?sort=popular" },
+  { id: "rec",  label: "おすすめ商品",  type: "list", href: "/products?sort=recommended" },
+  { id: "evt",  label: "イベント",    type: "page", href: "/events" },
+  { id: "cs",   label: "お客様センター",  type: "page", href: "/cs" },
+  { id: "notice", label: "お知らせ", type: "page", href: "/notice" },
 ];
 
 export function useMenuOrder() {

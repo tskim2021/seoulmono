@@ -17,8 +17,8 @@ export default function MyQnA() {
   const [searchInput, setSearchInput] = useState("");
 
   useSEO({
-    title: "나의 상품 Q&A",
-    description: "탈모학교 상품 Q&A 내역",
+    title: "マイ商品Q&A",
+    description: "ソウルモノ 商品Q&A履歴",
     noindex: true,
   });
 
@@ -36,20 +36,20 @@ export default function MyQnA() {
 
   const getStatusBadge = (post: any) => {
     if (post.hasHumanReply) {
-      return <Badge className="bg-teal-500 hover:bg-teal-600 shrink-0">답변 완료</Badge>;
+      return <Badge className="bg-teal-500 hover:bg-teal-600 shrink-0">回答済み</Badge>;
     }
     if (post.isAnswered) {
-      return <Badge className="bg-green-600 hover:bg-green-700 shrink-0">답변 완료</Badge>;
+      return <Badge className="bg-green-600 hover:bg-green-700 shrink-0">回答済み</Badge>;
     }
-    return <Badge variant="secondary" className="shrink-0">답변 대기</Badge>;
+    return <Badge variant="secondary" className="shrink-0">回答待ち</Badge>;
   };
 
   return (
-    <MyPageLayout title="나의 상품 Q&A">
+    <MyPageLayout title="マイ商品Q&A">
       <form onSubmit={handleSearch} className="mb-6">
         <div className="flex gap-2">
           <Input
-            placeholder="Q&A 제목 검색..."
+            placeholder="Q&Aタイトルを検索..."
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
           />
@@ -60,18 +60,18 @@ export default function MyQnA() {
       </form>
 
       {isLoading ? (
-        <div className="text-center py-12">로딩 중...</div>
+        <div className="text-center py-12">読み込み中...</div>
       ) : !data || data.posts.length === 0 ? (
         <Card>
           <CardContent className="py-12 text-center text-muted-foreground">
             <HelpCircle className="w-12 h-12 mx-auto mb-4 opacity-50" />
-            <p>Q&A 내역이 없습니다.</p>
+            <p>Q&A履歴がありません。</p>
             <Button
               variant="outline"
               onClick={() => navigate("/community/qna")}
               className="mt-4"
             >
-              Q&A 게시판 가기
+              Q&A掲示板へ
             </Button>
           </CardContent>
         </Card>
@@ -109,13 +109,13 @@ export default function MyQnA() {
           {data.total > 10 && (
             <div className="flex justify-center gap-2 mt-6">
               <Button variant="outline" disabled={page === 1} onClick={() => setPage(p => p - 1)}>
-                이전
+                前へ
               </Button>
               <span className="flex items-center px-4">
                 {page} / {Math.ceil(data.total / 10)}
               </span>
               <Button variant="outline" disabled={page >= Math.ceil(data.total / 10)} onClick={() => setPage(p => p + 1)}>
-                다음
+                次へ
               </Button>
             </div>
           )}

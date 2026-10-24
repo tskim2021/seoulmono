@@ -11,7 +11,7 @@ import { getLoginUrl } from "@/const";
 import { useSEO } from "@/hooks/useSEO";
 
 export default function Cart() {
-  useSEO({ title: "장바구니", description: "장바구니에 담은 상품을 확인하세요.", noindex: true });
+  useSEO({ title: "カート", description: "カートに入れた商品をご確認ください。", noindex: true });
   const { isAuthenticated, loading } = useAuth();
   const [, navigate] = useLocation();
   const { data: items, isLoading } = trpc.cart.list.useQuery(undefined, { enabled: isAuthenticated });
@@ -22,10 +22,10 @@ export default function Cart() {
     onSuccess: () => utils.cart.list.invalidate(),
   });
   const removeItem = trpc.cart.remove.useMutation({
-    onSuccess: () => { toast.success("삭제되었습니다"); utils.cart.list.invalidate(); },
+    onSuccess: () => { toast.success("削除しました"); utils.cart.list.invalidate(); },
   });
   const clearCart = trpc.cart.clear.useMutation({
-    onSuccess: () => { toast.success("장바구니를 비웠습니다"); utils.cart.list.invalidate(); },
+    onSuccess: () => { toast.success("カートを空にしました"); utils.cart.list.invalidate(); },
   });
 
   if (!loading && !isAuthenticated) {
@@ -33,9 +33,9 @@ export default function Cart() {
       <Layout>
         <div className="container py-20 text-center">
           <ShoppingCart className="w-16 h-16 mx-auto mb-4 text-muted-foreground opacity-30" />
-          <h2 className="text-xl font-bold mb-2">로그인이 필요합니다</h2>
-          <p className="text-muted-foreground text-sm mb-6">장바구니를 이용하려면 로그인해주세요</p>
-          <Button asChild><a href={getLoginUrl()}>로그인</a></Button>
+          <h2 className="text-xl font-bold mb-2">ログインが必要です</h2>
+          <p className="text-muted-foreground text-sm mb-6">カートをご利用になるにはログインしてください</p>
+          <Button asChild><a href={getLoginUrl()}>ログイン</a></Button>
         </div>
       </Layout>
     );
@@ -51,22 +51,22 @@ export default function Cart() {
   return (
     <Layout>
       <div className="container py-8">
-        <h1 className="text-2xl font-bold mb-8">장바구니</h1>
+        <h1 className="text-2xl font-bold mb-8">カート</h1>
 
         {cartItems.length === 0 ? (
           <div className="text-center py-20">
             <ShoppingCart className="w-16 h-16 mx-auto mb-4 text-muted-foreground opacity-30" />
-            <h2 className="text-lg font-semibold mb-2">장바구니가 비어있습니다</h2>
-            <p className="text-muted-foreground text-sm mb-6">마음에 드는 상품을 담아보세요</p>
-            <Button asChild variant="outline"><Link href="/products">쇼핑하러 가기</Link></Button>
+            <h2 className="text-lg font-semibold mb-2">カートは空です</h2>
+            <p className="text-muted-foreground text-sm mb-6">お気に入りの商品を入れてみましょう</p>
+            <Button asChild variant="outline"><Link href="/products">買い物を続ける</Link></Button>
           </div>
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Items */}
             <div className="lg:col-span-2 space-y-4">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-sm text-muted-foreground">총 {cartItems.length}개 상품</span>
-                <Button variant="ghost" size="sm" className="text-destructive text-xs" onClick={() => clearCart.mutate()}>전체삭제</Button>
+                <span className="text-sm text-muted-foreground">合計 {cartItems.length}点</span>
+                <Button variant="ghost" size="sm" className="text-destructive text-xs" onClick={() => clearCart.mutate()}>すべて削除</Button>
               </div>
               {cartItems.map(item => {
                 const product = item.product;
@@ -111,21 +111,21 @@ export default function Cart() {
             {/* Summary */}
             <div className="lg:col-span-1">
               <div className="bg-card border rounded-xl p-6 sticky top-24">
-                <h3 className="font-semibold mb-4">주문 요약</h3>
+                <h3 className="font-semibold mb-4">注文サマリー</h3>
                 <div className="space-y-3 text-sm">
-                  <div className="flex justify-between"><span className="text-muted-foreground">상품금액</span><span className="price-text">{formatPrice(subtotal)}</span></div>
-                  <div className="flex justify-between"><span className="text-muted-foreground">배송비</span><span className="price-text">{shippingFee === 0 ? "무료" : formatPrice(shippingFee)}</span></div>
+                  <div className="flex justify-between"><span className="text-muted-foreground">商品金額</span><span className="price-text">{formatPrice(subtotal)}</span></div>
+                  <div className="flex justify-between"><span className="text-muted-foreground">送料</span><span className="price-text">{shippingFee === 0 ? "無料" : formatPrice(shippingFee)}</span></div>
                   {benefit && benefit.freeShippingThreshold > 0 && subtotal < benefit.freeShippingThreshold && (
-                    <p className="text-xs text-muted-foreground">{formatPrice(benefit.freeShippingThreshold - subtotal)} 더 구매시 무료배송</p>
+                    <p className="text-xs text-muted-foreground">あと{formatPrice(benefit.freeShippingThreshold - subtotal)}のご購入で送料無料</p>
                   )}
                   <Separator />
-                  <div className="flex justify-between font-bold text-base"><span>총 결제금액</span><span className="text-primary price-text">{formatPrice(total)}</span></div>
+                  <div className="flex justify-between font-bold text-base"><span>お支払い合計</span><span className="text-primary price-text">{formatPrice(total)}</span></div>
                   {benefit && (
-                    <p className="text-xs text-muted-foreground mt-2">적립 예정 포인트: {benefit.pointRate}%</p>
+                    <p className="text-xs text-muted-foreground mt-2">付与予定ポイント: {benefit.pointRate}%</p>
                   )}
                 </div>
                 <Button className="w-full mt-6" size="lg" onClick={() => navigate("/checkout")}>
-                  주문하기 <ArrowRight className="w-4 h-4 ml-1" />
+                  注文する <ArrowRight className="w-4 h-4 ml-1" />
                 </Button>
               </div>
             </div>

@@ -10,14 +10,14 @@ const externalBrowser = (url: string) => {
     if (result) {
       Linking.openURL(url);
     } else {
-      Alert.alert('잘못된 URL 정보 입니다.');
+      Alert.alert('無効なURL情報です。');
     }
   });
 };
 
 const inappBrowser = (url: string) => {
   openBrowser(url, {}).catch(() => {
-    Alert.alert('잘못된 URL 정보 입니다.');
+    Alert.alert('無効なURL情報です。');
   });
 };
 

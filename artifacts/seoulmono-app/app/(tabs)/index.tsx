@@ -194,7 +194,7 @@ function BannerCarousel({ banners }: { banners: any[] }) {
           setActive(Math.round(e.nativeEvent.contentOffset.x / W));
         }}
         renderItem={({ item }) => {
-          // 앱 전용 이미지 → 없으면 image_url → 없으면 pc_img 순으로 폴백
+          // アプリ専用画像 → なければ image_url → なければ pc_img の順にフォールバック
           const raw = item.app_img || item.image_url || item.pc_img || item.mo_img || "";
           const imgUrl = raw.startsWith("http") ? raw : raw ? `https://seoulmono.com${raw}` : "";
           return (

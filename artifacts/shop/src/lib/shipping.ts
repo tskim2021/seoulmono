@@ -36,9 +36,9 @@ export function calcShipping(subtotal: number, postcode: string, addr: string): 
 
 export function getRegionLabel(region: ShippingRegion): string {
   switch (region) {
-    case "jeju": return "제주도";
-    case "island": return "도서산간";
-    case "special": return "특별지역";
+    case "jeju": return "済州島";
+    case "island": return "離島・山間部";
+    case "special": return "特別地域";
     default: return "";
   }
 }

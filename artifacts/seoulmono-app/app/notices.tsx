@@ -71,7 +71,7 @@ export default function NoticesScreen() {
                   <Feather name={isOpen ? "chevron-up" : "chevron-down"} size={16} color={colors.mutedForeground} />
                 </View>
                 <Text style={[styles.itemDate, { color: colors.mutedForeground }]}>
-                  {item.wr_datetime ? new Date(item.wr_datetime).toLocaleDateString("ko-KR") : item.created_at ? new Date(item.created_at).toLocaleDateString("ko-KR") : ""}
+                  {item.wr_datetime ? new Date(item.wr_datetime).toLocaleDateString("ja-JP") : item.created_at ? new Date(item.created_at).toLocaleDateString("ja-JP") : ""}
                 </Text>
                 {isOpen && item.wr_content && (
                   <Text style={[styles.itemContent, { color: colors.foreground, borderTopColor: colors.border }]}>

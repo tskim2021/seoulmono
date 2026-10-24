@@ -4,7 +4,7 @@ import { CheckCircle } from "lucide-react";
 export default function RegisterSuccess() {
   const [, navigate] = useLocation();
   const params = new URLSearchParams(window.location.search);
-  const name = params.get("name") || "고객";
+  const name = params.get("name") || "お客様";
 
   return (
     <div style={{
@@ -38,18 +38,18 @@ export default function RegisterSuccess() {
         </div>
 
         <h1 style={{ margin: "0 0 12px", fontSize: 22, fontWeight: 800, color: "#111" }}>
-          회원가입 완료!
+          会員登録が完了しました!
         </h1>
 
         <p style={{ margin: "0 0 8px", fontSize: 17, color: "#333", fontWeight: 600 }}>
-          <span style={{ color: "#8B5E3C" }}>{name}</span> 고객님,
+          <span style={{ color: "#8B5E3C" }}>{name}</span> 様、
         </p>
         <p style={{ margin: "0 0 32px", fontSize: 17, color: "#333" }}>
-          seoulmono 가입을 환영합니다 🎉
+          seoulmonoへのご登録ありがとうございます 🎉
         </p>
 
         <p style={{ margin: "0 0 28px", fontSize: 13, color: "#888", lineHeight: 1.6 }}>
-          지금 로그인하시면 첫 구매 혜택을 누리실 수 있습니다.
+          今すぐログインすると、初回購入特典をご利用いただけます。
         </p>
 
         <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
@@ -67,7 +67,7 @@ export default function RegisterSuccess() {
               cursor: "pointer",
             }}
           >
-            로그인하기
+            ログインする
           </button>
           <button
             onClick={() => navigate("/")}
@@ -83,7 +83,7 @@ export default function RegisterSuccess() {
               cursor: "pointer",
             }}
           >
-            쇼핑 시작하기
+            ショッピングを始める
           </button>
         </div>
       </div>

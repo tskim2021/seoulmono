@@ -15,8 +15,8 @@ const DEFAULTS: FooterConfig = {
   online_num: "2024-서울중랑-1470",
   privacy: "김미희",
   cs_tel: "010-2051-5692",
-  cs_hours: "평일 10:00 ~ 18:00",
-  cs_lunch: "점심시간 : 12:00 ~ 13:00 일요일/공휴일 휴무",
+  cs_hours: "平日 10:00 ~ 18:00",
+  cs_lunch: "昼休み : 12:00 ~ 13:00 日曜・祝日休業",
   bank_name: "",
   bank_num: "",
   bank_holder: "",
@@ -24,14 +24,14 @@ const DEFAULTS: FooterConfig = {
 
 function QuickMenu() {
   const menuItems = [
-    { icon: Truck, label: "주문/배송", href: `${BASE}mypage` },
-    { icon: CreditCard, label: "결제안내", href: `${BASE}cs` },
+    { icon: Truck, label: "注文/配送", href: `${BASE}mypage` },
+    { icon: CreditCard, label: "お支払いについて", href: `${BASE}cs` },
     { icon: HelpCircle, label: "FAQ", href: `${BASE}faq` },
-    { icon: MessageSquare, label: "1:1 문의", href: `${BASE}cs` },
-    { icon: ShoppingCart, label: "장바구니", href: `${BASE}cart` },
-    { icon: Eye, label: "최근상품", href: `${BASE}list` },
-    { icon: Search, label: "상품찾기", href: `${BASE}search` },
-    { icon: Award, label: "베스트", href: `${BASE}products?sort=popular` },
+    { icon: MessageSquare, label: "お問い合わせ", href: `${BASE}cs` },
+    { icon: ShoppingCart, label: "カート", href: `${BASE}cart` },
+    { icon: Eye, label: "最近見た商品", href: `${BASE}list` },
+    { icon: Search, label: "商品検索", href: `${BASE}search` },
+    { icon: Award, label: "ベスト", href: `${BASE}products?sort=popular` },
   ];
   return (
     <div>
@@ -63,7 +63,7 @@ function CSCenter({ cfg }: { cfg: FooterConfig }) {
       <div className="space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-start gap-4">
           <div className="flex-1">
-            <p className="text-xs text-muted-foreground mb-1">고객상담</p>
+            <p className="text-xs text-muted-foreground mb-1">お客様相談</p>
             <a
               href="mailto:cs@seoulmono.com"
               className="text-lg sm:text-xl font-bold text-foreground hover:text-primary transition-colors break-all no-underline"
@@ -72,18 +72,18 @@ function CSCenter({ cfg }: { cfg: FooterConfig }) {
             </a>
           </div>
           <div className="flex-1">
-            <p className="text-xs text-muted-foreground mb-1">결제안내</p>
-            <p className="text-sm font-medium">신용/체크 카드결제 가능합니다.</p>
+            <p className="text-xs text-muted-foreground mb-1">お支払いについて</p>
+            <p className="text-sm font-medium">クレジットカード・デビットカードがご利用いただけます。</p>
           </div>
         </div>
         <div className="flex flex-col sm:flex-row gap-4 pt-3 border-t border-border/60">
           <div className="flex-1">
-            <p className="text-xs font-semibold mb-1.5">· 상담안내</p>
+            <p className="text-xs font-semibold mb-1.5">· ご相談案内</p>
             <p className="text-xs text-muted-foreground leading-relaxed">{cfg.cs_hours}</p>
             <p className="text-xs text-muted-foreground leading-relaxed">{cfg.cs_lunch}</p>
           </div>
           <div className="flex-1">
-            <p className="text-xs font-semibold mb-1.5">· 주문마감시간</p>
+            <p className="text-xs font-semibold mb-1.5">· 注文締切時間</p>
             <div className="flex items-center gap-2">
               <div className="flex items-center gap-1">
                 <Clock className="w-4 h-4 text-muted-foreground" />
@@ -91,8 +91,8 @@ function CSCenter({ cfg }: { cfg: FooterConfig }) {
                 <span className="text-xs text-muted-foreground">AM</span>
               </div>
               <div className="text-xs text-muted-foreground leading-relaxed">
-                <p>평일오전 10시까지</p>
-                <p>주문시 당일 출고 요청됩니다.</p>
+                <p>平日午前10時までの</p>
+                <p>ご注文は当日出荷の手配となります。</p>
               </div>
             </div>
           </div>
@@ -123,15 +123,15 @@ export default function Footer() {
         <div className="container py-4">
           <div className="flex flex-wrap items-center justify-between gap-4 text-xs text-muted-foreground">
             <div className="flex flex-wrap items-center gap-4">
-              <a href={`${BASE}cs`} className="hover:text-foreground transition-colors">이용안내</a>
+              <a href={`${BASE}cs`} className="hover:text-foreground transition-colors">ご利用案内</a>
               <span className="text-border">/</span>
-              <a href={`${BASE}cs`} className="hover:text-foreground transition-colors">문의하기</a>
+              <a href={`${BASE}cs`} className="hover:text-foreground transition-colors">お問い合わせ</a>
               <span className="text-border">/</span>
-              <a href={`${BASE}notice`} className="hover:text-foreground transition-colors">공지사항</a>
+              <a href={`${BASE}notice`} className="hover:text-foreground transition-colors">お知らせ</a>
               <span className="text-border">/</span>
-              <a href={`${BASE}privacy`} className="hover:text-foreground transition-colors">개인정보처리방침</a>
+              <a href={`${BASE}privacy`} className="hover:text-foreground transition-colors">プライバシーポリシー</a>
               <span className="text-border">/</span>
-              <a href={`${BASE}terms`} className="hover:text-foreground transition-colors">이용약관</a>
+              <a href={`${BASE}terms`} className="hover:text-foreground transition-colors">利用規約</a>
               <span className="text-border">/</span>
               <a href={`${BASE}tokushoho`} className="hover:text-foreground transition-colors">特定商取引法に基づく表記</a>
             </div>

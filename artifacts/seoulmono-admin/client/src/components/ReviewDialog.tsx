@@ -36,7 +36,7 @@ export function ReviewDialog({ open, onOpenChange, orderItemId, productName, pro
 
     // 최대 5장 제한
     if (images.length + files.length > 5) {
-      toast.error("사진은 최대 5장까지 업로드할 수 있습니다.");
+      toast.error("写真は最大5枚までアップロードできます。");
       return;
     }
 
@@ -47,13 +47,13 @@ export function ReviewDialog({ open, onOpenChange, orderItemId, productName, pro
       for (const file of Array.from(files)) {
         // 파일 크기 체크 (5MB 제한)
         if (file.size > 5 * 1024 * 1024) {
-          toast.error(`${file.name}은(는) 5MB를 초과합니다.`);
+          toast.error(`${file.name} は5MBを超えています。`);
           continue;
         }
 
         // 이미지 파일 여부 확인
         if (!file.type.startsWith("image/")) {
-          toast.error(`${file.name}은(는) 이미지 파일이 아닙니다.`);
+          toast.error(`${file.name} は画像ファイルではありません。`);
           continue;
         }
 
@@ -81,10 +81,10 @@ export function ReviewDialog({ open, onOpenChange, orderItemId, productName, pro
       }
 
       setImages([...images, ...uploadedUrls]);
-      toast.success(`${uploadedUrls.length}개의 사진이 업로드되었습니다.`);
+      toast.success(`${uploadedUrls.length}枚の写真をアップロードしました。`);
     } catch (error) {
       console.error("Image upload error:", error);
-      toast.error("사진 업로드에 실패했습니다.");
+      toast.error("写真のアップロードに失敗しました。");
     } finally {
       setUploading(false);
       if (fileInputRef.current) {
@@ -99,7 +99,7 @@ export function ReviewDialog({ open, onOpenChange, orderItemId, productName, pro
 
   const createReview = trpc.reviews.create.useMutation({
     onSuccess: () => {
-      toast.success("리뷰가 작성되었습니다. 포인트가 적립되었습니다!");
+      toast.success("レビューを投稿しました。ポイントが付与されました！");
       onOpenChange(false);
       setRating(5);
       setTitle("");
@@ -110,17 +110,17 @@ export function ReviewDialog({ open, onOpenChange, orderItemId, productName, pro
       onSuccess?.();
     },
     onError: (error) => {
-      toast.error(error.message || "리뷰 작성에 실패했습니다.");
+      toast.error(error.message || "レビューの投稿に失敗しました。");
     },
   });
 
   const handleSubmit = () => {
     if (!title.trim()) {
-      toast.error("리뷰 제목을 입력해주세요.");
+      toast.error("レビューのタイトルを入力してください。");
       return;
     }
     if (content.length < 10) {
-      toast.error("리뷰 내용을 10자 이상 입력해주세요.");
+      toast.error("レビュー内容を10文字以上入力してください。");
       return;
     }
 
@@ -137,7 +137,7 @@ export function ReviewDialog({ open, onOpenChange, orderItemId, productName, pro
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[600px]">
         <DialogHeader>
-          <DialogTitle>리뷰 작성</DialogTitle>
+          <DialogTitle>レビュー投稿</DialogTitle>
           <DialogDescription asChild>
             <div className="flex items-center gap-2 mt-1">
               {productThumbnail && (
@@ -155,7 +155,7 @@ export function ReviewDialog({ open, onOpenChange, orderItemId, productName, pro
         <div className="space-y-6 py-4">
           {/* 별점 */}
           <div className="space-y-2">
-            <Label>별점</Label>
+            <Label>評価</Label>
             <div className="flex gap-1">
               {[1, 2, 3, 4, 5].map((star) => (
                 <button
@@ -176,17 +176,17 @@ export function ReviewDialog({ open, onOpenChange, orderItemId, productName, pro
                 </button>
               ))}
               <span className="ml-2 text-sm text-muted-foreground self-center">
-                {rating}점
+                {rating}点
               </span>
             </div>
           </div>
 
           {/* 제목 */}
           <div className="space-y-2">
-            <Label htmlFor="review-title">제목</Label>
+            <Label htmlFor="review-title">タイトル</Label>
             <Input
               id="review-title"
-              placeholder="리뷰 제목을 입력해주세요"
+              placeholder="レビューのタイトルを入力してください"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               maxLength={255}
@@ -195,26 +195,26 @@ export function ReviewDialog({ open, onOpenChange, orderItemId, productName, pro
 
           {/* 내용 */}
           <div className="space-y-2">
-            <Label htmlFor="review-content">내용</Label>
+            <Label htmlFor="review-content">内容</Label>
             <Textarea
               id="review-content"
-              placeholder="상품에 대한 솔직한 리뷰를 작성해주세요 (최소 10자)"
+              placeholder="商品についての率直なレビューをご記入ください（10文字以上）"
               value={content}
               onChange={(e) => setContent(e.target.value)}
               rows={6}
               className="resize-none"
             />
             <p className="text-xs text-muted-foreground">
-              {content.length} / 최소 10자
+              {content.length} / 最低10文字
             </p>
           </div>
 
           {/* 사진 업로드 */}
           <div className="space-y-2">
             <Label>
-              사진 업로드 (선택사항, 최대 5장)
+              写真アップロード（任意、最大5枚）
               <span className="text-xs text-primary ml-2">
-                +200 포인트
+                +200ポイント
               </span>
             </Label>
             <input
@@ -232,7 +232,7 @@ export function ReviewDialog({ open, onOpenChange, orderItemId, productName, pro
               disabled={uploading || images.length >= 5}
               className="w-full"
             >
-              {uploading ? "업로드 중..." : "사진 선택"}
+              {uploading ? "アップロード中..." : "写真を選択"}
             </Button>
             {images.length > 0 && (
               <div className="flex flex-wrap gap-2 mt-3">
@@ -240,7 +240,7 @@ export function ReviewDialog({ open, onOpenChange, orderItemId, productName, pro
                   <div key={idx} className="relative">
                     <img
                       src={img}
-                      alt={`리뷰 사진 ${idx + 1}`}
+                      alt={`レビュー写真 ${idx + 1}`}
                       className="w-20 h-20 rounded-lg object-cover"
                     />
                     <button
@@ -263,10 +263,10 @@ export function ReviewDialog({ open, onOpenChange, orderItemId, productName, pro
             onClick={() => onOpenChange(false)}
             disabled={createReview.isPending}
           >
-            취소
+            キャンセル
           </Button>
           <Button onClick={handleSubmit} disabled={createReview.isPending}>
-            {createReview.isPending ? "작성 중..." : "리뷰 작성"}
+            {createReview.isPending ? "投稿中..." : "レビュー投稿"}
           </Button>
         </DialogFooter>
       </DialogContent>

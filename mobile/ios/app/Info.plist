@@ -123,15 +123,15 @@
 		<true/>
 	</dict>
 	<key>NSCameraUsageDescription</key>
-	<string>앱 이용을 위해 카메라 접근 권한이 필요합니다.</string>
+	<string>アプリをご利用いただくために、カメラへのアクセス権限が必要です。</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>원활한 서비스 이용을 위해 사용자의 위치 정보를 수집합니다.</string>
+	<string>サービスを円滑にご利用いただくために、位置情報を取得します。</string>
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string>원활한 서비스 이용을 위해 사용자의 위치 정보를 수집합니다.</string>
+	<string>サービスを円滑にご利用いただくために、位置情報を取得します。</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>원활한 서비스 이용을 위해 사용자의 위치 정보를 수집합니다.</string>
+	<string>サービスを円滑にご利用いただくために、位置情報を取得します。</string>
 	<key>NSUserTrackingUsageDescription</key>
-	<string>ソウルモノ 앱 이용을 위해 사용자의 정보를 수집합니다.</string>
+	<string>ソウルモノのアプリをご利用いただくために、お客様の情報を収集します。</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>

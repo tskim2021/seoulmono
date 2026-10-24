@@ -68,12 +68,12 @@ export default function ProductCard({ item, onCartAdd, showRank, large }: Produc
         {/* Soldout overlay */}
         {isSoldout && (
           <div className="absolute inset-0 bg-black/35 flex items-center justify-center z-[4]">
-            <span className="text-white font-bold text-sm bg-black/50 px-3 py-1 rounded-full">품절</span>
+            <span className="text-white font-bold text-sm bg-black/50 px-3 py-1 rounded-full">売り切れ</span>
           </div>
         )}
         {isReady && (
           <div className="absolute inset-0 bg-white/55 flex items-center justify-center z-[4]">
-            <span className="text-gray-600 font-bold text-xs bg-white/92 px-3 py-1 rounded-full border border-border">판매준비중</span>
+            <span className="text-gray-600 font-bold text-xs bg-white/92 px-3 py-1 rounded-full border border-border">販売準備中</span>
           </div>
         )}
 
@@ -108,7 +108,7 @@ export default function ProductCard({ item, onCartAdd, showRank, large }: Produc
       {/* Cart button row */}
       {isReady ? (
         <div className="w-full py-2.5 bg-muted border-t border-border flex items-center justify-center gap-1 text-xs font-semibold text-muted-foreground shrink-0">
-          판매준비중
+          販売準備中
         </div>
       ) : (
         <button
@@ -122,7 +122,7 @@ export default function ProductCard({ item, onCartAdd, showRank, large }: Produc
           }`}
         >
           <ShoppingBasket className={`w-3.5 h-3.5 ${cartAdded ? "text-primary" : ""}`} />
-          {cartAdded ? "담겼어요!" : "장바구니담기"}
+          {cartAdded ? "追加しました!" : "カートに入れる"}
         </button>
       )}
 
@@ -134,7 +134,7 @@ export default function ProductCard({ item, onCartAdd, showRank, large }: Produc
         <div className="mt-1">
           {item.it_cust_price > item.it_price && disc > 0 && (
             <p className={`text-muted-foreground line-through mb-0.5 ${large ? "text-xs" : "text-[11px]"}`}>
-              {item.it_cust_price.toLocaleString()}원
+              {item.it_cust_price.toLocaleString()}円
             </p>
           )}
           <div className="flex items-baseline gap-1">

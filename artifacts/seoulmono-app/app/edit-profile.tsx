@@ -91,7 +91,7 @@ export default function EditProfileScreen() {
       style={[styles.root, { backgroundColor: colors.background }]}
       behavior={Platform.OS === "ios" ? "padding" : undefined}
     >
-      {/* 헤더 */}
+      {/* ヘッダー */}
       <View style={[styles.header, { paddingTop: insets.top + 12, borderBottomColor: colors.border }]}>
         <Pressable onPress={() => router.back()} style={styles.backBtn}>
           <Feather name="arrow-left" size={22} color={colors.foreground} />
@@ -101,7 +101,7 @@ export default function EditProfileScreen() {
       </View>
 
       <ScrollView contentContainerStyle={{ padding: 20, gap: 20, paddingBottom: 60 }}>
-        {/* 기본 정보 */}
+        {/* 基本情報 */}
         <View style={[styles.section, { borderColor: colors.border }]}>
           <Text style={[styles.sectionTitle, { color: colors.foreground }]}>基本情報</Text>
 
@@ -147,7 +147,7 @@ export default function EditProfileScreen() {
           </Field>
         </View>
 
-        {/* 비밀번호 변경 */}
+        {/* パスワード変更 */}
         <View style={[styles.section, { borderColor: colors.border }]}>
           <Pressable
             style={styles.sectionToggle}
@@ -193,7 +193,7 @@ export default function EditProfileScreen() {
           )}
         </View>
 
-        {/* 저장 버튼 */}
+        {/* 保存ボタン */}
         <Pressable
           style={[styles.saveBtn, { backgroundColor: isPending ? colors.muted : colors.primary }]}
           onPress={handleSave}

@@ -20,25 +20,25 @@ import { toast } from "sonner";
 import { Skeleton } from "@/components/ui/skeleton";
 
 const NAV_LINKS = [
-  { href: "/products", label: "쇼핑몰" },
-  { href: "/products?filter=new", label: "신상품" },
-  { href: "/products?filter=best", label: "베스트" },
-  { href: "/products?filter=featured", label: "추천상품" },
-  { href: "/products?filter=sale", label: "특가" },
-  { href: "/shop/itemuselist.php", label: "고객 리뷰" },
+  { href: "/products", label: "ショップ" },
+  { href: "/products?filter=new", label: "新商品" },
+  { href: "/products?filter=best", label: "ベスト" },
+  { href: "/products?filter=featured", label: "おすすめ商品" },
+  { href: "/products?filter=sale", label: "特価" },
+  { href: "/shop/itemuselist.php", label: "お客様レビュー" },
   {
     href: "/news",
-    label: "건강뉴스"
+    label: "健康ニュース"
   },
-  { href: "/bbs/board.php?bo_table=info", label: "정보나눔" },
+  { href: "/bbs/board.php?bo_table=info", label: "情報共有" },
   {
     href: "/customer-service",
-    label: "고객센터",
+    label: "お問い合わせ",
     subMenu: [
-      { href: "/bbs/board.php?bo_table=notice", label: "공지사항" },
+      { href: "/bbs/board.php?bo_table=notice", label: "お知らせ" },
       { href: "/customer-service/faq", label: "FAQ" },
-      { href: "/community/qna", label: "상품 Q&A" },
-      { href: "/customer-service/inquiry", label: "1:1 문의" },
+      { href: "/community/qna", label: "商品Q&A" },
+      { href: "/customer-service/inquiry", label: "個別お問い合わせ" },
     ]
   },
 ];
@@ -75,13 +75,13 @@ function NotificationBell() {
       {open && (
         <div className="absolute right-0 top-full mt-1 w-80 bg-popover border rounded-xl shadow-lg z-50 overflow-hidden">
           <div className="flex items-center justify-between px-4 py-2.5 border-b bg-muted/40">
-            <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">알림</span>
+            <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">通知</span>
             <Link href="/mypage/notifications" className="text-xs text-primary hover:underline flex items-center gap-0.5">
-              전체보기 <ChevronRight className="w-3 h-3" />
+              すべて見る <ChevronRight className="w-3 h-3" />
             </Link>
           </div>
           {recent.length === 0 ? (
-            <div className="px-4 py-6 text-center text-sm text-muted-foreground">알림이 없습니다</div>
+            <div className="px-4 py-6 text-center text-sm text-muted-foreground">通知はありません</div>
           ) : (
             <ul>
               {recent.map((n: any) => (
@@ -125,13 +125,13 @@ function NoticePopover() {
       {open && (
         <div className="absolute right-0 top-full mt-1 w-80 bg-popover border rounded-xl shadow-lg z-50 overflow-hidden">
           <div className="flex items-center justify-between px-4 py-2.5 border-b bg-muted/40">
-            <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">공지사항</span>
+            <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">お知らせ</span>
             <Link href="/bbs/board.php?bo_table=notice" className="text-xs text-primary hover:underline flex items-center gap-0.5">
-              전체보기 <ChevronRight className="w-3 h-3" />
+              すべて見る <ChevronRight className="w-3 h-3" />
             </Link>
           </div>
           {!notices || notices.length === 0 ? (
-            <div className="px-4 py-6 text-center text-sm text-muted-foreground">공지사항이 없습니다</div>
+            <div className="px-4 py-6 text-center text-sm text-muted-foreground">お知らせはありません</div>
           ) : (
             <ul>
               {notices.map((n: any) => (
@@ -178,13 +178,13 @@ function CartBadge() {
       {open && (
         <div className="absolute right-0 top-full mt-1 w-80 bg-popover border rounded-xl shadow-lg z-50 overflow-hidden">
           <div className="flex items-center justify-between px-4 py-2.5 border-b bg-muted/40">
-            <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">장바구니 {count > 0 ? `(${count})` : ""}</span>
+            <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">カート {count > 0 ? `(${count})` : ""}</span>
             <Link href="/cart" className="text-xs text-primary hover:underline flex items-center gap-0.5">
-              전체보기 <ChevronRight className="w-3 h-3" />
+              すべて見る <ChevronRight className="w-3 h-3" />
             </Link>
           </div>
           {count === 0 ? (
-            <div className="px-4 py-6 text-center text-sm text-muted-foreground">장바구니가 비어있습니다</div>
+            <div className="px-4 py-6 text-center text-sm text-muted-foreground">カートは空です</div>
           ) : (
             <>
               <ul className="max-h-64 overflow-y-auto divide-y">
@@ -199,20 +199,20 @@ function CartBadge() {
                       </div>
                       <div className="flex-1 min-w-0">
                         <p className="text-sm line-clamp-1">{item.product?.name}</p>
-                        <p className="text-xs text-muted-foreground mt-0.5">{item.quantity}개 · {formatPrice(price * item.quantity)}</p>
+                        <p className="text-xs text-muted-foreground mt-0.5">{item.quantity}個 · {formatPrice(price * item.quantity)}</p>
                       </div>
                     </li>
                   );
                 })}
               </ul>
               <div className="px-4 py-3 border-t bg-muted/30 flex items-center justify-between">
-                <span className="text-sm font-medium">합계</span>
+                <span className="text-sm font-medium">合計</span>
                 <span className="text-sm font-bold text-primary">{formatPrice(total)}</span>
               </div>
               <div className="px-4 pb-3">
                 <Link href="/checkout">
                   <button className="w-full bg-primary text-primary-foreground text-sm font-medium py-2 rounded-lg hover:opacity-90 transition-opacity">
-                    바로 결제
+                    今すぐ決済
                   </button>
                 </Link>
               </div>
@@ -237,7 +237,7 @@ function UserMenu() {
     return (
       <a href={getLoginUrl()} className="flex items-center gap-1.5 text-sm font-medium hover:text-primary transition-colors">
         <User className="w-5 h-5" />
-        <span className="hidden sm:inline">로그인</span>
+        <span className="hidden sm:inline">ログイン</span>
       </a>
     );
   }
@@ -248,36 +248,36 @@ function UserMenu() {
     <div className="relative" onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
       <button className="flex items-center gap-1.5 text-sm font-medium hover:text-primary transition-colors p-2 rounded-full hover:bg-accent" onClick={toggleMenu}>
         <User className="w-5 h-5" />
-        <span className="hidden sm:inline max-w-[80px] truncate">{user?.name ?? "회원"}</span>
+        <span className="hidden sm:inline max-w-[80px] truncate">{user?.name ?? "会員"}</span>
         <ChevronDown className="w-3 h-3 hidden sm:block" />
       </button>
       {open && (
         <div className="absolute right-0 top-full mt-1 w-52 bg-popover border rounded-xl shadow-lg z-50 overflow-hidden py-1">
-          <Link href="/mypage" className={menuLink}><LayoutDashboard className="w-4 h-4" />마이페이지</Link>
+          <Link href="/mypage" className={menuLink}><LayoutDashboard className="w-4 h-4" />マイページ</Link>
           <div className="h-px bg-border my-1" />
-          <div className="px-4 py-1"><p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">쇼핑 정보</p></div>
-          <Link href="/mypage/orders" className={menuLink}><Package className="w-4 h-4" />주문내역</Link>
-          <Link href="/mypage/points" className={menuLink}><Star className="w-4 h-4" />포인트</Link>
-          <Link href="/mypage/coupons" className={menuLink}><Ticket className="w-4 h-4" />쿠폰함</Link>
-          <Link href="/mypage/reviews" className={menuLink}><FileText className="w-4 h-4" />내 리뷰</Link>
+          <div className="px-4 py-1"><p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">ショッピング情報</p></div>
+          <Link href="/mypage/orders" className={menuLink}><Package className="w-4 h-4" />注文履歴</Link>
+          <Link href="/mypage/points" className={menuLink}><Star className="w-4 h-4" />ポイント</Link>
+          <Link href="/mypage/coupons" className={menuLink}><Ticket className="w-4 h-4" />クーポン</Link>
+          <Link href="/mypage/reviews" className={menuLink}><FileText className="w-4 h-4" />マイレビュー</Link>
           <div className="h-px bg-border my-1" />
-          <div className="px-4 py-1"><p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">알림/관심</p></div>
-          <Link href="/mypage/notifications" className={menuLink}><Bell className="w-4 h-4" />알림</Link>
-          <Link href="/mypage/restock-alerts" className={menuLink}><Bell className="w-4 h-4" />재입고 알림</Link>
-          <Link href="/wishlist" className={menuLink}><Heart className="w-4 h-4" />위시리스트</Link>
+          <div className="px-4 py-1"><p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">通知・お気に入り</p></div>
+          <Link href="/mypage/notifications" className={menuLink}><Bell className="w-4 h-4" />通知</Link>
+          <Link href="/mypage/restock-alerts" className={menuLink}><Bell className="w-4 h-4" />再入荷通知</Link>
+          <Link href="/wishlist" className={menuLink}><Heart className="w-4 h-4" />お気に入り</Link>
           <div className="h-px bg-border my-1" />
-          <div className="px-4 py-1"><p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">고객지원</p></div>
-          <Link href="/mypage/inquiries" className={menuLink}><MessageSquare className="w-4 h-4" />1:1 문의</Link>
-          <Link href="/mypage/addresses" className={menuLink}><MapPin className="w-4 h-4" />배송지 관리</Link>
-          <Link href="/mypage/profile" className={menuLink}><User className="w-4 h-4" />회원정보 수정</Link>
+          <div className="px-4 py-1"><p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">サポート</p></div>
+          <Link href="/mypage/inquiries" className={menuLink}><MessageSquare className="w-4 h-4" />個別お問い合わせ</Link>
+          <Link href="/mypage/addresses" className={menuLink}><MapPin className="w-4 h-4" />配送先管理</Link>
+          <Link href="/mypage/profile" className={menuLink}><User className="w-4 h-4" />会員情報の変更</Link>
           {user?.role === "admin" && (
             <>
               <div className="h-px bg-border my-1" />
-              <Link href="/admin" className={menuLink} onClick={() => window.scrollTo(0, 0)}><Settings className="w-4 h-4" />관리자</Link>
+              <Link href="/admin" className={menuLink} onClick={() => window.scrollTo(0, 0)}><Settings className="w-4 h-4" />管理画面</Link>
             </>
           )}
           <div className="h-px bg-border my-1" />
-          <button onClick={() => logout()} className={`${menuLink} text-destructive`}><LogOut className="w-4 h-4" />로그아웃</button>
+          <button onClick={() => logout()} className={`${menuLink} text-destructive`}><LogOut className="w-4 h-4" />ログアウト</button>
         </div>
       )}
     </div>
@@ -364,7 +364,7 @@ function SearchBar() {
           onChange={e => { setQuery(e.target.value); setOpen(true); }}
           onFocus={() => setOpen(true)}
           onKeyDown={handleKeyDown}
-          placeholder="상품을 검색해보세요"
+          placeholder="商品を検索"
           autoComplete="off"
           className="w-full h-10 pl-4 pr-10 rounded-full border border-border bg-secondary/50 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/40 transition-all"
         />
@@ -379,7 +379,7 @@ function SearchBar() {
           {trimmed.length < 1 && (
             <div className="px-3 pt-2.5 pb-1.5 flex items-center gap-1.5 text-xs text-muted-foreground">
               <TrendingUp className="w-3 h-3" />
-              <span>인기 검색어</span>
+              <span>人気検索ワード</span>
             </div>
           )}
           <ul role="listbox">
@@ -403,7 +403,7 @@ function SearchBar() {
                   {trimmed.length >= 1 ? highlightMatch(item.keyword, trimmed) : item.keyword}
                 </span>
                 {item.searchCount > 5 && (
-                  <span className="text-[10px] text-muted-foreground tabular-nums">{item.searchCount}회</span>
+                  <span className="text-[10px] text-muted-foreground tabular-nums">{item.searchCount}回</span>
                 )}
               </li>
             ))}
@@ -446,7 +446,7 @@ function Header() {
               <span className="text-xl font-black tracking-tight">
                 AME <span className="text-primary">PLUS</span>
               </span>
-              <span className="text-[11px] font-semibold text-muted-foreground tracking-wide">아메플러스</span>
+              <span className="text-[11px] font-semibold text-muted-foreground tracking-wide">アメプラス</span>
             </span>
           </Link>
 
@@ -472,7 +472,7 @@ function Header() {
                 </button>
               </SheetTrigger>
               <SheetContent side="right" className="w-72 p-0">
-                <SheetTitle className="sr-only">메뉴</SheetTitle>
+                <SheetTitle className="sr-only">メニュー</SheetTitle>
                 <div className="p-6">
                   <div className="mb-6">
                     <SearchBar />
@@ -588,18 +588,18 @@ function AdminNavLink() {
       className="shrink-0 ml-4 text-sm font-semibold text-red-600 hover:text-red-700 transition-colors flex items-center gap-1"
     >
       <Settings className="w-4 h-4" />
-      관리자
+      管理画面
     </Link>
   );
 }
 
 const CATEGORY_NAV = [
-  { label: "전체상품", href: "/products" },
-  { label: "탈모헤어", href: "/products?category=hair-loss" },
-  { label: "성기능",   href: "/products?category=sexual-health" },
-  { label: "피부미용", href: "/products?category=skin-beauty" },
-  { label: "다이어트", href: "/products?category=diet" },
-  { label: "기타",     href: "/products?category=etc" },
+  { label: "全商品", href: "/products" },
+  { label: "薄毛・ヘアケア", href: "/products?category=hair-loss" },
+  { label: "性機能",   href: "/products?category=sexual-health" },
+  { label: "スキンケア・美容", href: "/products?category=skin-beauty" },
+  { label: "ダイエット", href: "/products?category=diet" },
+  { label: "その他",   href: "/products?category=etc" },
 ];
 
 function CategoryDropdown() {
@@ -608,7 +608,7 @@ function CategoryDropdown() {
       <DropdownMenuTrigger asChild>
         <button className="flex items-center gap-1.5 text-sm font-semibold hover:text-primary transition-colors shrink-0 whitespace-nowrap">
           <Menu className="w-4 h-4 shrink-0" />
-          카테고리
+          カテゴリ
           <ChevronDown className="w-3 h-3 shrink-0" />
         </button>
       </DropdownMenuTrigger>
@@ -625,14 +625,14 @@ function CategoryDropdown() {
 
 function QuickMenu() {
   const menuItems = [
-    { icon: Truck, label: "주문/배송", href: "/mypage/orders" },
-    { icon: CreditCard, label: "개인결제", href: "/checkout" },
+    { icon: Truck, label: "注文・配送", href: "/mypage/orders" },
+    { icon: CreditCard, label: "個別決済", href: "/checkout" },
     { icon: HelpCircle, label: "FAQ", href: "/customer-service/faq" },
-    { icon: MessageSquare, label: "1:1 문의", href: "/customer-service/inquiry" },
-    { icon: ShoppingCart, label: "장바구니", href: "/cart" },
-    { icon: Eye, label: "투데이뷰", href: "/products" },
-    { icon: Search, label: "상품찾기", href: "/products" },
-    { icon: Heart, label: "위시리스트", href: "/wishlist" },
+    { icon: MessageSquare, label: "個別お問い合わせ", href: "/customer-service/inquiry" },
+    { icon: ShoppingCart, label: "カート", href: "/cart" },
+    { icon: Eye, label: "最近見た商品", href: "/products" },
+    { icon: Search, label: "商品を探す", href: "/products" },
+    { icon: Heart, label: "お気に入り", href: "/wishlist" },
   ];
   return (
     <div>
@@ -658,24 +658,24 @@ function CSCenter() {
       <div className="space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-start gap-4">
           <div className="flex-1">
-            <p className="text-xs text-muted-foreground mb-1">고객상담</p>
+            <p className="text-xs text-muted-foreground mb-1">お客様相談</p>
             <a href="mailto:hlschool.cs@gmail.com" className="text-lg sm:text-xl font-bold text-foreground hover:text-primary transition-colors break-all">
               hlschool.cs@gmail.com
             </a>
           </div>
           <div className="flex-1">
-            <p className="text-xs text-muted-foreground mb-1">결제안내</p>
-            <p className="text-sm font-medium">신용/체크 카드결제 가능합니다.</p>
+            <p className="text-xs text-muted-foreground mb-1">お支払い案内</p>
+            <p className="text-sm font-medium">クレジット/デビットカードでお支払いいただけます。</p>
           </div>
         </div>
         <div className="flex flex-col sm:flex-row gap-4 pt-3 border-t border-border/60">
           <div className="flex-1">
-            <p className="text-xs font-semibold mb-1.5">· 상담안내</p>
-            <p className="text-xs text-muted-foreground leading-relaxed">· 상담은 실시간 진행중입니다.</p>
-            <p className="text-xs text-muted-foreground leading-relaxed">· 상담은 문의게시판 또는 메일로 부탁드립니다.</p>
+            <p className="text-xs font-semibold mb-1.5">· ご相談案内</p>
+            <p className="text-xs text-muted-foreground leading-relaxed">· ご相談はリアルタイムで対応しています。</p>
+            <p className="text-xs text-muted-foreground leading-relaxed">· お問い合わせはフォームまたはメールでお願いいたします。</p>
           </div>
           <div className="flex-1">
-            <p className="text-xs font-semibold mb-1.5">· 주문마감시간</p>
+            <p className="text-xs font-semibold mb-1.5">· 注文締切時間</p>
             <div className="flex items-center gap-2">
               <div className="flex items-center gap-1">
                 <Clock className="w-4 h-4 text-muted-foreground" />
@@ -683,8 +683,8 @@ function CSCenter() {
                 <span className="text-xs text-muted-foreground">AM</span>
               </div>
               <div className="text-xs text-muted-foreground leading-relaxed">
-                <p>평일오전 10시까지</p>
-                <p>주문시 당일 출고 요청됩니다.</p>
+                <p>平日午前10時まで</p>
+                <p>のご注文は当日出荷いたします。</p>
               </div>
             </div>
           </div>
@@ -696,16 +696,16 @@ function CSCenter() {
 
 function Footer() {
   const LEFT_LINKS = [
-    { label: "회사소개", href: "/about" },
-    { label: "이용약관", href: "/terms" },
-    { label: "개인정보처리방침", href: "/privacy" },
-    { label: "배송안내", href: "/shipping-guide" },
+    { label: "会社概要", href: "/about" },
+    { label: "利用規約", href: "/terms" },
+    { label: "プライバシーポリシー", href: "/privacy" },
+    { label: "配送のご案内", href: "/shipping-guide" },
   ];
   const RIGHT_LINKS = [
-    { label: "공지사항", href: "/bbs/board.php?bo_table=notice" },
+    { label: "お知らせ", href: "/bbs/board.php?bo_table=notice" },
     { label: "FAQ", href: "/customer-service/faq" },
-    { label: "상품 Q&A", href: "/community/qna" },
-    { label: "1:1 문의", href: "/customer-service/inquiry" },
+    { label: "商品Q&A", href: "/community/qna" },
+    { label: "個別お問い合わせ", href: "/customer-service/inquiry" },
   ];
 
   const NoticePreview = () => {
@@ -720,9 +720,9 @@ function Footer() {
     return (
       <div className="min-w-0">
         <div className="flex items-center justify-between mb-5">
-          <h3 className="text-xl font-bold">공지사항</h3>
+          <h3 className="text-xl font-bold">お知らせ</h3>
           <Link href="/bbs/board.php?bo_table=notice" className="text-sm text-muted-foreground hover:text-primary transition-colors flex items-center gap-0.5">
-            더보기 <ChevronRight className="w-4 h-4" />
+            もっと見る <ChevronRight className="w-4 h-4" />
           </Link>
         </div>
         {isLoading ? (
@@ -742,7 +742,7 @@ function Footer() {
               </li>
             ))}
             {(!data || data.length === 0) && (
-              <li className="text-sm text-muted-foreground py-6 text-center">게시글이 없습니다</li>
+              <li className="text-sm text-muted-foreground py-6 text-center">投稿はありません</li>
             )}
           </ul>
         )}
@@ -752,11 +752,11 @@ function Footer() {
 
   const CustomerCenter = () => (
     <div className="flex flex-col gap-3">
-      <p className="text-xs text-muted-foreground font-medium">고객센터</p>
-      <p className="text-base font-semibold leading-snug">궁금하신 점이 있으신가요?<br /><span className="text-primary">1:1 문의</span>로 빠르게 답변해드립니다.</p>
+      <p className="text-xs text-muted-foreground font-medium">お問い合わせ</p>
+      <p className="text-base font-semibold leading-snug">ご不明な点はありませんか？<br /><span className="text-primary">1:1 문의</span>で迅速にご回答いたします。</p>
       <Link href="/customer-service/inquiry">
         <span className="inline-flex items-center justify-center w-full px-4 py-2.5 rounded-lg bg-primary text-primary-foreground text-sm font-bold hover:bg-primary/90 transition-colors cursor-pointer shadow-sm">
-          1:1 문의하기
+          お問い合わせはこちら
         </span>
       </Link>
     </div>
@@ -764,22 +764,22 @@ function Footer() {
 
   const AppDownload = () => (
     <div className="flex flex-col gap-3">
-      <p className="text-xs text-muted-foreground font-medium">앱 다운로드</p>
+      <p className="text-xs text-muted-foreground font-medium">アプリダウンロード</p>
       <div className="flex gap-3">
-        <button onClick={() => toast.info("앱 서비스 준비 중입니다. 조금만 기다려 주세요! 😊")} className="flex flex-col items-center gap-1.5 px-4 py-3 rounded-xl border border-border hover:bg-accent transition-colors">
+        <button onClick={() => toast.info("アプリは準備中です。もう少しお待ちください！😊")} className="flex flex-col items-center gap-1.5 px-4 py-3 rounded-xl border border-border hover:bg-accent transition-colors">
           <svg viewBox="0 0 24 24" className="w-8 h-8" fill="none">
             <path d="M3.18 1.05C2.76 1.29 2.5 1.73 2.5 2.26v19.48c0 .53.26.97.68 1.21l.1.06 10.91-10.91v-.26L3.28.99l-.1.06z" fill="#EA4335"/>
             <path d="M17.47 15.43l-3.63-3.64v-.27l3.63-3.63.08.05 4.3 2.44c1.23.7 1.23 1.84 0 2.54l-4.3 2.44-.08.07z" fill="#FBBC04"/>
             <path d="M17.55 15.36L13.88 11.7 3.18 22.4c.41.43 1.07.49 1.82.05l12.55-7.09" fill="#34A853"/>
             <path d="M17.55 8.04L5 .95C4.25.51 3.59.57 3.18 1l10.7 10.71 3.67-3.67z" fill="#EA4335"/>
           </svg>
-          <span className="text-xs text-muted-foreground">구글플레이</span>
+          <span className="text-xs text-muted-foreground">Google Play</span>
         </button>
-        <button onClick={() => toast.info("앱 서비스 준비 중입니다. 조금만 기다려 주세요! 😊")} className="flex flex-col items-center gap-1.5 px-4 py-3 rounded-xl border border-border hover:bg-accent transition-colors">
+        <button onClick={() => toast.info("アプリは準備中です。もう少しお待ちください！😊")} className="flex flex-col items-center gap-1.5 px-4 py-3 rounded-xl border border-border hover:bg-accent transition-colors">
           <svg viewBox="0 0 24 24" className="w-8 h-8" fill="currentColor">
             <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
           </svg>
-          <span className="text-xs text-muted-foreground">앱스토어</span>
+          <span className="text-xs text-muted-foreground">App Store</span>
         </button>
       </div>
     </div>
@@ -825,18 +825,18 @@ function Footer() {
 
   return (
     <footer className="bg-background border-t border-border/60 mt-auto">
-      {/* 공지사항 / 고객센터 / 앱 다운록드 섹션 */}
+      {/* お知らせ / お問い合わせ / アプリ */}
       <div className="container py-8 border-b border-border/60">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-0 items-start divide-y md:divide-y-0 md:divide-x divide-border/60">
-          {/* 1. 공지사항 */}
+          {/* 1. お知らせ */}
           <div className="md:col-span-5 py-6 md:py-2 md:pr-10">
             <NoticePreview />
           </div>
-          {/* 2. 1:1 문의 */}
+          {/* 2. お問い合わせ */}
           <div className="md:col-span-4 py-6 md:py-2 md:px-10">
             <CustomerCenter />
           </div>
-          {/* 3. 앱 다운록드 */}
+          {/* 3. アプリ */}
           <div className="md:col-span-3 py-6 md:py-2 md:pl-10">
             <AppDownload />
           </div>
@@ -859,10 +859,10 @@ function Footer() {
 
             {/* Company details */}
             <div className="text-sm text-muted-foreground space-y-1 leading-relaxed">
-              <p>인도 직배송 탈모·피부·건강 해외직구 전문 쇼핑몰</p>
+              <p>ソウルモノ - 韓国コスメ・ヘルスケア専門ショップ</p>
               <p>
-                <span className="text-foreground/60">대표</span> 탈모학교&nbsp;&nbsp;
-                <span className="text-foreground/60">이메일</span>{" "}
+                <span className="text-foreground/60">代表</span> ソウルモノ&nbsp;&nbsp;
+                <span className="text-foreground/60">メール</span>{" "}
                 <a href="mailto:hlschool.cs@gmail.com" className="hover:text-primary transition-colors">hlschool.cs@gmail.com</a>
               </p>
             </div>
@@ -870,30 +870,30 @@ function Footer() {
             {/* Disclaimer */}
             <div className="text-xs text-muted-foreground/50 leading-relaxed max-w-xl">
               <p className="mb-1">
-                본 쇼핑몰은 통신판매중개자로서 인도 직배송 상품의 중개 역할만을 수행하며, 직접적인 상품 판매 또는 제조를 하지 않습니다.
+                当ショップは取引の仲介のみを行い、商品の直接販売・製造は行っておりません。
               </p>
               <p className="mb-1">
-                모든 상품은 구매자 본인의 판단과 책임 하에 구매되며, 상품 사용 전 반드시 의사 또는 약사와 상담하시기 바랍니다.
+                すべての商品はお客様ご自身の判断と責任でご購入いただくものです。ご使用前に必ず医師または薬剤師にご相談ください。
               </p>
               <p>
-                부작용, 알레르기 등 개인차에 따른 반응에 대해 본 사이트는 법적 책임을 지지 않습니다.
+                副作用やアレルギーなど個人差による反応について、当サイトは法的責任を負いません。
               </p>
             </div>
 
-            <p className="text-xs text-foreground font-medium">&copy; 2025 탈모학교. All Rights Reserved.</p>
+            <p className="text-xs text-foreground font-medium">&copy; 2025 ソウルモノ. All Rights Reserved.</p>
           </div>
 
           {/* Right: links + socials */}
           <div className="flex flex-col gap-6 lg:items-end">
             <div className="grid grid-cols-3 gap-x-12 gap-y-1.5">
-              {/* 카테고리 */}
+              {/* カテゴリ */}
               <div className="flex flex-col gap-1.5">
                 {[
-                  { label: "탈모헤어", href: "/products?category=hair" },
-                  { label: "성기능", href: "/products?category=sexual" },
-                  { label: "피부미용", href: "/products?category=skin" },
-                  { label: "다이어트", href: "/products?category=diet" },
-                  { label: "기타", href: "/products?category=etc" },
+                  { label: "薄毛・ヘアケア", href: "/products?category=hair" },
+                  { label: "性機能", href: "/products?category=sexual" },
+                  { label: "スキンケア・美容", href: "/products?category=skin" },
+                  { label: "ダイエット", href: "/products?category=diet" },
+                  { label: "その他", href: "/products?category=etc" },
                 ].map(l => (
                   <Link key={l.label} href={l.href}
                     className="text-sm text-muted-foreground hover:text-primary transition-colors">
@@ -926,7 +926,7 @@ function Footer() {
               </div>
             </div>
 
-            {/* 결제 정보 */}
+            {/* 決済情報 */}
             <div className="flex flex-col gap-1.5 mt-2">
               <div className="flex items-center gap-2">
                 {/* Visa */}
@@ -942,17 +942,17 @@ function Footer() {
                     <path d="M24 8.5c2 2 3 4.5 3 6.5s-1 4.5-3 6.5c-2-2-3-4.5-3-6.5s1-4.5 3-6.5z" fill="#FF5F00"/>
                   </svg>
                 </div>
-                {/* 무통장 입금 */}
+                {/* 銀行振込 */}
                 <div className="h-5 px-2 bg-white rounded border flex items-center gap-1 shadow-sm">
                   <svg viewBox="0 0 24 24" className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2">
                     <rect x="2" y="5" width="20" height="14" rx="2"/>
                     <path d="M2 10h20"/>
                   </svg>
-                  <span className="text-[10px] font-bold text-foreground">무통장</span>
+                  <span className="text-[10px] font-bold text-foreground">銀行振込</span>
                 </div>
               </div>
               <p className="text-[11px] text-muted-foreground">
-                ※ 해외결제가능 카드 또는 무통장송금 가능합니다
+                ※ 海外決済対応カードまたは銀行振込をご利用いただけます
               </p>
             </div>
 
@@ -966,7 +966,7 @@ function Footer() {
 
 function TopBanner() {
   const { data } = trpc.product.topBannerText.useQuery();
-  const text = data?.text ?? "🌿 인도 직배송 해외직구 전문 쇼핑몰 · 탈모학교";
+  const text = data?.text ?? "🌿 ソウルモノ - 韓国コスメ・ヘルスケア専門ショップ";
   return (
     <div className="w-full bg-accent text-primary text-center text-[13px] py-2 px-4 tracking-wide font-semibold">
       {text}

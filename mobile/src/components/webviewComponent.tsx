@@ -79,11 +79,11 @@ const WebViewComponent = ({
       SendIntentAndroid.openChromeIntent(url)
         .then(isOpened => {
           if (!isOpened) {
-            ToastAndroid.show('앱 실행에 실패했습니다.', ToastAndroid.SHORT);
+            ToastAndroid.show('アプリの起動に失敗しました。', ToastAndroid.SHORT);
           }
         })
         .catch(() => {
-          ToastAndroid.show('앱 실행에 실패했습니다.', ToastAndroid.SHORT);
+          ToastAndroid.show('アプリの起動に失敗しました。', ToastAndroid.SHORT);
         });
 
       return false;

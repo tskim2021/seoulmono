@@ -83,7 +83,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         body: JSON.stringify({ mb_id, mb_password }),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "로그인에 실패했습니다");
+      if (!res.ok) throw new Error(data.error || "ログインに失敗しました");
       setToken(data.token);
       setUser(data.user);
       localStorage.setItem(TOKEN_KEY, data.token);

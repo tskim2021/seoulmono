@@ -63,7 +63,7 @@ export default function LoginScreen() {
           <Text style={[styles.logoSub, { color: colors.mutedForeground }]}>良い商品を、納得の価格で</Text>
         </View>
 
-        {/* 안내 메시지 */}
+        {/* 案内メッセージ */}
         <View style={[styles.infoBox, { backgroundColor: colors.secondary, borderColor: colors.border }]}>
           <Feather name="smartphone" size={15} color={colors.primary} />
           <Text style={[styles.infoText, { color: colors.primary }]}>

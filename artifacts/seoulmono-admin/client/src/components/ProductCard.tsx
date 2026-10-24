@@ -30,13 +30,13 @@ export default function ProductCard({ product }: ProductCardProps) {
   const { isAuthenticated } = useAuth();
   const utils = trpc.useUtils();
   const addToCart = trpc.cart.add.useMutation({
-    onSuccess: () => { toast.success("장바구니에 추가되었습니다"); utils.cart.list.invalidate(); },
-    onError: () => toast.error("로그인이 필요합니다"),
+    onSuccess: () => { toast.success("カートに追加しました"); utils.cart.list.invalidate(); },
+    onError: () => toast.error("ログインが必要です"),
   });
   const { data: wishlistItems } = trpc.wishlist.list.useQuery(undefined, { enabled: isAuthenticated });
   const isWishlisted = wishlistItems?.some(item => item.productId === product.id) ?? false;
   const toggleWishlist = trpc.wishlist.toggle.useMutation({
-    onSuccess: (data) => { toast.success(data.isAdded ? "위시리스트에 추가" : "위시리스트에서 제거"); utils.wishlist.list.invalidate(); },
+    onSuccess: (data) => { toast.success(data.isAdded ? "お気に入りに追加しました" : "お気に入りから削除しました"); utils.wishlist.list.invalidate(); },
   });
 
   const discount = getDiscountPercent(product.price, product.salePrice);
@@ -64,25 +64,25 @@ export default function ProductCard({ product }: ProductCardProps) {
           <div className="absolute top-2.5 left-2.5 flex flex-col gap-1">
             {product.isNew === 1 && <Badge className="bg-emerald-500 text-white text-[10px] px-1.5 py-0.5">NEW</Badge>}
             {product.isBest === 1 && <Badge className="bg-amber-500 text-white text-[10px] px-1.5 py-0.5">BEST</Badge>}
-            {product.status === "soldout" && <Badge variant="secondary" className="text-[10px] px-1.5 py-0.5">품절</Badge>}
+            {product.status === "soldout" && <Badge variant="secondary" className="text-[10px] px-1.5 py-0.5">売り切れ</Badge>}
           </div>
           {/* Quick actions */}
           <div className="absolute bottom-2 right-2 flex gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
             <button
-              onClick={(e) => { e.preventDefault(); e.stopPropagation(); useCompareStore.getState().addProduct(product.id); toast.success("비교함에 추가되었습니다"); }}
+              onClick={(e) => { e.preventDefault(); e.stopPropagation(); useCompareStore.getState().addProduct(product.id); toast.success("比較リストに追加しました"); }}
               className="w-8 h-8 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center hover:bg-white shadow-sm transition-colors"
             >
               <GitCompare className="w-4 h-4" />
             </button>
             <button
-              onClick={(e) => { e.preventDefault(); e.stopPropagation(); if (!isAuthenticated) { toast.error("로그인이 필요합니다"); return; } toggleWishlist.mutate({ productId: product.id }); }}
+              onClick={(e) => { e.preventDefault(); e.stopPropagation(); if (!isAuthenticated) { toast.error("ログインが必要です"); return; } toggleWishlist.mutate({ productId: product.id }); }}
               className={`w-8 h-8 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center hover:bg-white shadow-sm transition-colors ${isWishlisted ? "text-rose-500" : ""}`}
             >
               <Heart className={`w-4 h-4 transition-colors ${isWishlisted ? "fill-rose-500 text-rose-500" : ""}`} />
             </button>
             {product.status !== "soldout" && (
               <button
-                onClick={(e) => { e.preventDefault(); e.stopPropagation(); if (!isAuthenticated) { toast.error("로그인이 필요합니다"); return; } addToCart.mutate({ productId: product.id, quantity: 1 }); }}
+                onClick={(e) => { e.preventDefault(); e.stopPropagation(); if (!isAuthenticated) { toast.error("ログインが必要です"); return; } addToCart.mutate({ productId: product.id, quantity: 1 }); }}
                 className="w-8 h-8 rounded-full bg-primary/90 backdrop-blur-sm flex items-center justify-center hover:bg-primary text-primary-foreground shadow-sm transition-colors"
               >
                 <ShoppingCart className="w-4 h-4" />
@@ -92,11 +92,11 @@ export default function ProductCard({ product }: ProductCardProps) {
         </div>
       </Link>
 
-      {/* Info — ramumall order: 리뷰(N) → 이름 → 할인가(취소선) → 할인율+가격 */}
+      {/* Info — ramumall order: review → name → sale price → discount%+price */}
       <div className="mt-2.5">
         <div className="flex items-center gap-1 text-xs text-muted-foreground">
           {rating > 0 && <Star className="w-3 h-3 fill-amber-400 text-amber-400" />}
-          <span>리뷰({product.reviewCount})</span>
+          <span>レビュー({product.reviewCount})</span>
         </div>
 
         <Link href={productHref(product.slug, product.itId)}>
@@ -106,7 +106,7 @@ export default function ProductCard({ product }: ProductCardProps) {
         <div className="mt-1.5">
           {product.salePrice && (
             <div className="flex items-center gap-1.5">
-              <span className="text-xs text-muted-foreground">할인가</span>
+              <span className="text-xs text-muted-foreground">割引価格</span>
               <span className="text-xs text-muted-foreground line-through price-text">{formatPrice(product.price)}</span>
             </div>
           )}

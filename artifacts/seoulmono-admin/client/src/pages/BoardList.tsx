@@ -26,8 +26,8 @@ export default function BoardList({ slugProp }: { slugProp?: string } = {}) {
   const { data: board, isLoading: boardLoading } = trpc.community.boardBySlug.useQuery({ slug: slug! });
 
   useSEO({
-    title: board?.name ? `${board.name} 게시판` : "커뮤니티",
-    description: board?.description ?? `탈모학교 커뮤니티 게시판`,
+    title: board?.name ? `${board.name} 掲示板` : "コミュニティ",
+    description: board?.description ?? `ソウルモノ コミュニティ掲示板`,
   });
   const queryInput = useMemo(() => ({
     boardId: board?.id ?? 0,
@@ -45,16 +45,16 @@ export default function BoardList({ slugProp }: { slugProp?: string } = {}) {
     setPage(1);
   };
 
-  const boardTypeLabel: Record<string, string> = { free: "자유게시판", review: "고객 리뷰", qna: "Q&A", notice: "공지사항" };
+  const boardTypeLabel: Record<string, string> = { free: "自由掲示板", review: "お客様レビュー", qna: "Q&A", notice: "お知らせ" };
 
   return (
     <Layout>
       <div className="container py-8">
         {/* Board nav */}
         <div className="flex items-center gap-2 text-sm text-muted-foreground mb-6">
-          <Link href="/" className="hover:text-foreground">홈</Link>
+          <Link href="/" className="hover:text-foreground">ホーム</Link>
           <span>/</span>
-          <span className="text-foreground font-medium">{board?.name ?? boardTypeLabel[slug!] ?? "게시판"}</span>
+          <span className="text-foreground font-medium">{board?.name ?? boardTypeLabel[slug!] ?? "掲示板"}</span>
         </div>
 
 
@@ -67,12 +67,12 @@ export default function BoardList({ slugProp }: { slugProp?: string } = {}) {
           </div>
           <div className="flex items-center gap-3">
             <form onSubmit={handleSearch} className="relative">
-              <Input value={searchInput} onChange={e => setSearchInput(e.target.value)} placeholder="검색..." className="w-48 h-9 pl-8 text-sm rounded-full" />
+              <Input value={searchInput} onChange={e => setSearchInput(e.target.value)} placeholder="検索..." className="w-48 h-9 pl-8 text-sm rounded-full" />
               <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground" />
             </form>
             {isAuthenticated && board?.boardType !== "notice" && (
               <Button size="sm" onClick={() => navigate(`/community/${slug}/write`)}>
-                <PenSquare className="w-4 h-4 mr-1" />글쓰기
+                <PenSquare className="w-4 h-4 mr-1" />投稿する
               </Button>
             )}
           </div>
@@ -84,18 +84,18 @@ export default function BoardList({ slugProp }: { slugProp?: string } = {}) {
         ) : (data?.posts ?? []).length === 0 ? (
           <div className="text-center py-20 text-muted-foreground">
             <MessageCircle className="w-12 h-12 mx-auto mb-3 opacity-20" />
-            <p className="text-sm">게시글이 없습니다</p>
+            <p className="text-sm">投稿がありません</p>
           </div>
         ) : (
           <div className="border rounded-xl overflow-hidden">
             <table className="w-full">
               <thead>
                 <tr className="bg-secondary/50 text-xs text-muted-foreground">
-                  <th className="text-left py-3 px-4 font-medium w-16 hidden sm:table-cell">번호</th>
-                  <th className="text-left py-3 px-4 font-medium">제목</th>
-                  <th className="text-left py-3 px-4 font-medium w-24 hidden md:table-cell">작성자</th>
-                  <th className="text-center py-3 px-4 font-medium w-24 hidden md:table-cell">날짜</th>
-                  <th className="text-center py-3 px-4 font-medium w-16 hidden sm:table-cell">조회</th>
+                  <th className="text-left py-3 px-4 font-medium w-16 hidden sm:table-cell">番号</th>
+                  <th className="text-left py-3 px-4 font-medium">タイトル</th>
+                  <th className="text-left py-3 px-4 font-medium w-24 hidden md:table-cell">投稿者</th>
+                  <th className="text-center py-3 px-4 font-medium w-24 hidden md:table-cell">日付</th>
+                  <th className="text-center py-3 px-4 font-medium w-16 hidden sm:table-cell">閲覧</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border/60">
@@ -126,7 +126,7 @@ export default function BoardList({ slugProp }: { slugProp?: string } = {}) {
                         )}
                       </Link>
                     </td>
-                    <td className="py-3 px-4 text-sm text-muted-foreground hidden md:table-cell truncate max-w-[100px]">{post.userName ?? "익명"}</td>
+                    <td className="py-3 px-4 text-sm text-muted-foreground hidden md:table-cell truncate max-w-[100px]">{post.userName ?? "匿名"}</td>
                     <td className="py-3 px-4 text-xs text-muted-foreground text-center hidden md:table-cell">{formatDate(post.createdAt)}</td>
                     <td className="py-3 px-4 text-xs text-muted-foreground text-center hidden sm:table-cell">{post.viewCount}</td>
                   </tr>

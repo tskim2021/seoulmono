@@ -8,7 +8,7 @@ function getPermissionName(platform: string) {
   } else if (platform === 'android') {
     return PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION;
   } else {
-    throw new Error('지원하지 않는 플랫폼입니다.');
+    throw new Error('サポートされていないプラットフォームです。');
   }
 }
 

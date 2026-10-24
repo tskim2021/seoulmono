@@ -28,20 +28,20 @@
 
 - (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options 
 {
-  // 카카오 로그인 콜백
-  // kakaoccbab6acbcafedded697719354226809:// 스킴으로 시작하는 URL
+  // カカオログインのコールバック
+  // kakaoccbab6acbcafedded697719354226809:// スキームで始まるURL
   if ([RNKakaoLogins isKakaoTalkLoginUrl:url]) {
     return [RNKakaoLogins handleOpenUrl:url];
   }
 
-  // 네이버 로그인 콜백
-  // Info.plist의 CFBundleURLSchemes에 등록된 "seoulmono" 스킴 사용
-  // (config.ts serviceUrlSchemeIOS: 'seoulmono' 과 일치해야 함)
+  // NAVERログインのコールバック
+  // Info.plist の CFBundleURLSchemes に登録された "seoulmono" スキームを使用
+  // (config.ts serviceUrlSchemeIOS: 'seoulmono' と一致している必要がある)
   if ([url.scheme isEqualToString:@"seoulmono"]) {
     return [[NaverThirdPartyLoginConnection getSharedInstance] application:app openURL:url options:options];
   }
 
-  // 구글 로그인 콜백
+  // Googleログインのコールバック
   if ([GIDSignIn.sharedInstance handleURL:url]) {
     return YES;
   }

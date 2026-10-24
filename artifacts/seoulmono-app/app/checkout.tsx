@@ -18,9 +18,9 @@ import { unitPrice, useCart } from "@/contexts/CartContext";
 import { useAuth } from "@/contexts/AuthContext";
 import type { CartItem } from "@/lib/api";
 
-// 결제 로직은 웹의 KCP/Stripe/무통장 체크아웃을 그대로 재사용한다.
-// 네이티브에서 결제수단을 새로 붙이는 대신, 카트를 웹뷰의 체크아웃 페이지로
-// 넘겨 웹과 동일한 결제 플로우를 그대로 태운다.
+// 決済ロジックはWebのKCP/Stripe/銀行振込チェックアウトをそのまま再利用する。
+// ネイティブで決済手段を新たに実装する代わりに、カートをWebViewのチェックアウトページへ
+// 渡してWebと同じ決済フローをそのまま通す。
 const DOMAIN = (process.env.EXPO_PUBLIC_DOMAIN as string) || "seoulmono.com";
 const CHECKOUT_PATH = "/checkout";
 

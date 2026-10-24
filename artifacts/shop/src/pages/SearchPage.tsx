@@ -84,7 +84,7 @@ export default function SearchPage() {
               type="text"
               value={query}
               onChange={e => setQuery(e.target.value)}
-              placeholder="검색어를 입력하세요"
+              placeholder="キーワードを入力してください"
               style={{
                 flex: 1, border: "none", background: "transparent",
                 outline: "none", fontSize: 15, color: "#333", minWidth: 0,
@@ -109,7 +109,7 @@ export default function SearchPage() {
               fontSize: 14, fontWeight: 700, cursor: "pointer", flexShrink: 0,
             }}
           >
-            검색
+            検索
           </button>
         </form>
       </div>
@@ -120,21 +120,21 @@ export default function SearchPage() {
         <div style={{ padding: "20px 0 0" }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
             <span style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 14, fontWeight: 700, color: "#222" }}>
-              <Clock size={14} color="#888" /> 최근 검색어
+              <Clock size={14} color="#888" /> 最近の検索キーワード
             </span>
             {history.length > 0 && (
               <button
                 onClick={() => { saveHistory([]); setHistory([]); }}
                 style={{ background: "none", border: "none", cursor: "pointer", fontSize: 12, color: "#aaa", padding: 0 }}
               >
-                전체삭제
+                すべて削除
               </button>
             )}
           </div>
 
           {history.length === 0 ? (
             <p style={{ fontSize: 13, color: "#bbb", margin: "16px 0", textAlign: "center" }}>
-              최근 검색어가 없습니다
+              最近の検索キーワードはありません
             </p>
           ) : (
             <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
@@ -167,7 +167,7 @@ export default function SearchPage() {
 
         {/* 추천 검색어 */}
         <div>
-          <p style={{ fontSize: 14, fontWeight: 700, color: "#222", margin: "0 0 12px" }}>추천 검색어</p>
+          <p style={{ fontSize: 14, fontWeight: 700, color: "#222", margin: "0 0 12px" }}>おすすめキーワード</p>
           <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
             {RECOMMENDED.map(kw => (
               <button

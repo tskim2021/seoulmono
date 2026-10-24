@@ -7,8 +7,8 @@ const BASE = import.meta.env.BASE_URL.replace(/\/$/, "");
 const fmtDate = (s: string) => s ? new Date(s).toLocaleDateString("ko-KR", { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" }) : "";
 
 const STATUS_MAP: Record<string, { label: string; color: string }> = {
-  pending: { label: "주소 대기중", color: "bg-amber-100 text-amber-700" },
-  address_filled: { label: "배송지 입력완료", color: "bg-green-100 text-green-700" },
+  pending: { label: "住所入力待ち", color: "bg-amber-100 text-amber-700" },
+  address_filled: { label: "お届け先入力完了", color: "bg-green-100 text-green-700" },
 };
 
 interface GiftOrder {
@@ -54,8 +54,8 @@ export default function GiftMyPage() {
           <div className="inline-flex items-center justify-center w-14 h-14 bg-white/20 rounded-2xl mb-3 backdrop-blur-sm">
             <Gift size={28} className="text-white" />
           </div>
-          <h1 className="text-xl font-bold">보낸 선물</h1>
-          <p className="text-white/70 text-sm mt-1">내가 보낸 선물 목록입니다</p>
+          <h1 className="text-xl font-bold">送ったギフト</h1>
+          <p className="text-white/70 text-sm mt-1">送ったギフトの一覧です</p>
         </div>
       </div>
 
@@ -65,10 +65,10 @@ export default function GiftMyPage() {
         ) : orders.length === 0 ? (
           <div className="text-center py-20">
             <Gift size={48} className="mx-auto text-gray-200 mb-4" />
-            <p className="text-gray-400 font-medium">보낸 선물이 없습니다</p>
+            <p className="text-gray-400 font-medium">送ったギフトはありません</p>
             <button onClick={() => navigate(`${BASE}/gift`)}
               className="mt-4 px-6 py-2.5 bg-gradient-to-r from-rose-400 to-pink-500 text-white rounded-full text-sm font-semibold shadow-md">
-              선물 보내기
+              ギフトを送る
             </button>
           </div>
         ) : (
@@ -92,7 +92,7 @@ export default function GiftMyPage() {
                       </div>
                       <p className="text-xs text-gray-400 mt-0.5">{fmtDate(order.created_at)}</p>
                       {order.recipient_name && (
-                        <p className="text-xs text-gray-500">받는 분: {order.recipient_name}</p>
+                        <p className="text-xs text-gray-500">お受け取り人: {order.recipient_name}</p>
                       )}
                     </div>
                     <ChevronRight size={16} className="text-gray-400" />

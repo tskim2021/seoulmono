@@ -89,7 +89,7 @@ export default function RegisterScreen() {
 
       <ScrollView contentContainerStyle={styles.body} keyboardShouldPersistTaps="handled">
 
-        {/* 안내 메시지 */}
+        {/* 案内メッセージ */}
         <View style={[styles.infoBox, { backgroundColor: colors.secondary, borderColor: colors.border }]}>
           <Feather name="smartphone" size={15} color={colors.primary} />
           <Text style={[styles.infoText, { color: colors.primary }]}>
@@ -99,7 +99,7 @@ export default function RegisterScreen() {
 
         <View style={styles.form}>
 
-          {/* 이름 */}
+          {/* お名前 */}
           <View style={styles.field}>
             <Text style={[styles.label, { color: colors.foreground }]}>お名前 *</Text>
             <TextInput
@@ -111,7 +111,7 @@ export default function RegisterScreen() {
             />
           </View>
 
-          {/* 휴대폰번호 (= 아이디) */}
+          {/* 携帯電話番号 (= ID) */}
           <View style={styles.field}>
             <Text style={[styles.label, { color: colors.foreground }]}>
               携帯電話番号 * <Text style={[styles.labelNote, { color: colors.primary }]}>（IDとして使用されます）</Text>
@@ -126,7 +126,7 @@ export default function RegisterScreen() {
             />
           </View>
 
-          {/* 비밀번호 */}
+          {/* パスワード */}
           <View style={styles.field}>
             <Text style={[styles.label, { color: colors.foreground }]}>パスワード *</Text>
             <View style={[styles.pwWrap, { borderColor: colors.border, backgroundColor: colors.card }]}>
@@ -144,7 +144,7 @@ export default function RegisterScreen() {
             </View>
           </View>
 
-          {/* 비밀번호 확인 */}
+          {/* パスワード確認 */}
           <View style={styles.field}>
             <Text style={[styles.label, { color: colors.foreground }]}>パスワード（確認）*</Text>
             <TextInput

@@ -9,7 +9,7 @@ export default function PopularKeywords() {
   return (
     <section className="mt-10">
       <h3 className="text-[22px] font-extrabold">
-        인기 키워드 <span className="text-muted-foreground font-normal">&rsaquo;</span>
+        人気キーワード <span className="text-muted-foreground font-normal">&rsaquo;</span>
       </h3>
       <div className="mt-4 bg-[#181a1f] rounded-xl px-7 py-5 flex items-center gap-3 overflow-x-auto">
         {keywords.map((k, i) => (

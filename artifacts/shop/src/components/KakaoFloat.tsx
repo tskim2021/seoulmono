@@ -73,7 +73,7 @@ export default function KakaoFloat() {
         {showScrollTop && (
           <button
             onClick={scrollToTop}
-            title="맨 위로"
+            title="ページの先頭へ"
             style={{
               width: 44, height: 44,
               borderRadius: "50%",
@@ -91,7 +91,7 @@ export default function KakaoFloat() {
         <button
           className="kakao-channel-btn"
           onClick={openKakao}
-          title="카카오톡 채널 문의"
+          title="KakaoTalkチャンネルでお問い合わせ"
         >
           <div className="kakao-channel-icon">
             <svg width="28" height="24" viewBox="0 0 28 24" fill="none">
@@ -105,7 +105,7 @@ export default function KakaoFloat() {
               TALK
             </span>
           </div>
-          <span className="kakao-channel-label">카카오 문의</span>
+          <span className="kakao-channel-label">Kakaoお問い合わせ</span>
         </button>
       </div>
     </>

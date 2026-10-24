@@ -23,10 +23,10 @@ export const handleFileDownload = (url: string) => {
           ? `${RNFetchBlob.fs.dirs.DownloadDir}/${fileName}`
           : fileName;
 
-      Alert.alert('파일 다운로드', '파일을 다운로드하시겠습니까?', [
-        {text: '취소', style: 'cancel'},
+      Alert.alert('ファイルのダウンロード', 'ファイルをダウンロードしますか?', [
+        {text: 'キャンセル', style: 'cancel'},
         {
-          text: '확인',
+          text: 'OK',
           onPress: async () => {
             try {
               if (Platform.OS === 'android') {
@@ -35,8 +35,8 @@ export const handleFileDownload = (url: string) => {
                 );
                 if (granted !== PermissionsAndroid.RESULTS.GRANTED) {
                   Alert.alert(
-                    '권한이 필요합니다',
-                    '파일을 다운로드하려면 저장소 권한이 필요합니다.',
+                    '権限が必要です',
+                    'ファイルをダウンロードするには、ストレージの権限が必要です。',
                   );
                   return;
                 }
@@ -48,13 +48,13 @@ export const handleFileDownload = (url: string) => {
                   useDownloadManager: true,
                   notification: true,
                   path: downloadPath,
-                  description: '파일 다운로드 중...',
+                  description: 'ファイルをダウンロード中...',
                   title: fileName,
                   mime: 'application/octet-stream',
                 },
                 progress: (received: number, total: number) => {
                   const progress = (received / total) * 100;
-                  console.log(`다운로드 진행률: ${progress}%`);
+                  console.log(`ダウンロード進捗: ${progress}%`);
                 },
               };
 
@@ -66,9 +66,9 @@ export const handleFileDownload = (url: string) => {
               if (Platform.OS === 'ios') {
                 RNFetchBlob.ios.previewDocument(response.path());
               } else {
-                Alert.alert('다운로드 완료', '파일이 다운로드 되었습니다.', [
+                Alert.alert('ダウンロード完了', 'ファイルをダウンロードしました。', [
                   {
-                    text: '파일 열기',
+                    text: 'ファイルを開く',
                     onPress: () => {
                       RNFetchBlob.android.actionViewIntent(
                         response.path(),
@@ -76,17 +76,17 @@ export const handleFileDownload = (url: string) => {
                       );
                     },
                   },
-                  {text: '확인'},
+                  {text: 'OK'},
                 ]);
               }
             } catch (error) {
-              Alert.alert('오류', '파일 다운로드 중 오류가 발생했습니다.');
+              Alert.alert('エラー', 'ファイルのダウンロード中にエラーが発生しました。');
             }
           },
         },
       ]);
     } catch (error) {
-      Alert.alert('오류', '파일 다운로드를 처리할 수 없습니다.');
+      Alert.alert('エラー', 'ファイルのダウンロードを処理できません。');
     }
   };
 
