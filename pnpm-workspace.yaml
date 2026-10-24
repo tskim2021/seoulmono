@@ -1,5 +1,7 @@
 packages:
   - artifacts/*
+  - "!artifacts/seoulmono-admin"
+  - "!artifacts/seoulmono-app"
   - lib/*
   - lib/integrations/*
   - scripts
