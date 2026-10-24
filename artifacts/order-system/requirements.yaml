@@ -1,0 +1,18 @@
+packages:
+  "zustand": "For client-side shopping cart and state management"
+  "framer-motion": "For page transitions and polished micro-interactions"
+  "recharts": "For admin dashboard charts"
+  "date-fns": "For formatting order dates gracefully"
+  "react-hook-form": "For robust form handling and validation"
+  "@hookform/resolvers": "For zod form validation integration"
+  "clsx": "For class merging utility"
+  "tailwind-merge": "For class merging utility"
+
+images:
+  - path: "artifacts/order-system/public/images/auth-bg.png"
+    description: "Abstract modern corporate background in deep blue and silver hues, clean geometric shapes, professional, subtle lighting, suitable for a B2B platform login page"
+    aspect_ratio: "16:9"
+
+notes:
+  - Assumes customFetch uses localStorage 'token' for Authorization automatically, or sets a cookie
+  - Uses Pretendard as the main Korean font for a premium feel

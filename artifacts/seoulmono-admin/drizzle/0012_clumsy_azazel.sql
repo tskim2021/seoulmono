@@ -1,0 +1,6 @@
+ALTER TABLE `shipments` MODIFY COLUMN `status` enum('pending','picked_up','in_transit','out_for_delivery','delivered','failed','accepted','export_customs','departed_origin','in_transit_intl','arrived_destination','import_customs','customs_cleared','in_transit_domestic','returned') NOT NULL DEFAULT 'pending';--> statement-breakpoint
+ALTER TABLE `shippingHistory` MODIFY COLUMN `status` enum('pending','picked_up','in_transit','out_for_delivery','delivered','failed','accepted','export_customs','departed_origin','in_transit_intl','arrived_destination','import_customs','customs_cleared','in_transit_domestic','returned') NOT NULL;--> statement-breakpoint
+ALTER TABLE `shipments` ADD `shippingType` enum('domestic','international') DEFAULT 'domestic' NOT NULL;--> statement-breakpoint
+ALTER TABLE `shipments` ADD `webhookRegistered` int DEFAULT 0 NOT NULL;--> statement-breakpoint
+ALTER TABLE `shipments` ADD `lastSyncedAt` timestamp;--> statement-breakpoint
+ALTER TABLE `shippingHistory` ADD `rawStatus` text;

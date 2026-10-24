@@ -1,0 +1,1 @@
+ALTER TABLE `shipments` MODIFY COLUMN `status` enum('pending','picked_up','in_transit','out_for_delivery','delivered','failed','accepted','export_customs','departed_origin','in_transit_intl','arrived_destination','import_customs','customs_cleared','in_transit_domestic','returned','customs_hold','customs_arrival','customs_departure','alert') NOT NULL DEFAULT 'pending';

@@ -1,0 +1,1 @@
+ALTER TABLE `orders` ADD `recipientNameEn` varchar(50);

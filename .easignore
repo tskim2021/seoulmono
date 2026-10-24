@@ -1,0 +1,24 @@
+# Exclude monorepo files from EAS build archive
+artifacts/shop/
+artifacts/order-system/
+artifacts/api-server/
+artifacts/docs/
+node_modules/
+.expo/
+.expo-shared/
+android/
+ios/
+.git/
+__MACOSX/
+*.zip
+*.tar.gz
+*.log
+.vscode/
+.idea/
+.DS_Store
+*.keystore
+*.jks
+google-services.json
+GoogleService-Info.plist
+patches/
+_files/

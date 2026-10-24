@@ -1,0 +1,775 @@
+openapi: 3.1.0
+info:
+  # Do not change the title, if the title changes, the import paths will be broken
+  title: Api
+  version: 0.1.0
+  description: B2B Order Management System API
+servers:
+  - url: /api
+    description: Base API path
+tags:
+  - name: health
+    description: Health operations
+  - name: auth
+    description: Authentication
+  - name: products
+    description: Product catalog
+  - name: orders
+    description: Order management
+  - name: admin
+    description: Admin operations
+paths:
+  /healthz:
+    get:
+      operationId: healthCheck
+      tags: [health]
+      summary: Health check
+      responses:
+        "200":
+          description: Healthy
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthStatus"
+
+  /auth/login:
+    post:
+      operationId: login
+      tags: [auth]
+      summary: Partner login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginRequest"
+      responses:
+        "200":
+          description: Login success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LoginResponse"
+        "401":
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /auth/register:
+    post:
+      operationId: register
+      tags: [auth]
+      summary: Partner registration
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RegisterRequest"
+      responses:
+        "201":
+          description: Registration submitted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+        "400":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /auth/me:
+    get:
+      operationId: getMe
+      tags: [auth]
+      summary: Get current user info
+      responses:
+        "200":
+          description: Current user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserInfo"
+        "401":
+          description: Not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /auth/logout:
+    post:
+      operationId: logout
+      tags: [auth]
+      summary: Logout
+      responses:
+        "200":
+          description: Logged out
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+
+  /products:
+    get:
+      operationId: getProducts
+      tags: [products]
+      summary: Get product list
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+        - name: category
+          in: query
+          schema:
+            type: string
+        - name: search
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Product list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProductListResponse"
+
+  /products/{id}:
+    get:
+      operationId: getProduct
+      tags: [products]
+      summary: Get product detail
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Product detail
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Product"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /orders:
+    get:
+      operationId: getOrders
+      tags: [orders]
+      summary: Get order list (partner sees own orders, admin sees all)
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+        - name: status
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Order list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrderListResponse"
+    post:
+      operationId: createOrder
+      tags: [orders]
+      summary: Create a new order (partner)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateOrderRequest"
+      responses:
+        "201":
+          description: Order created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Order"
+        "400":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /orders/{id}:
+    get:
+      operationId: getOrder
+      tags: [orders]
+      summary: Get order detail
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Order detail
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrderDetail"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /orders/{id}/status:
+    patch:
+      operationId: updateOrderStatus
+      tags: [orders]
+      summary: Update order status (admin)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateOrderStatusRequest"
+      responses:
+        "200":
+          description: Status updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Order"
+
+  /admin/pending-members:
+    get:
+      operationId: getPendingMembers
+      tags: [admin]
+      summary: Get pending member registrations
+      responses:
+        "200":
+          description: Pending members
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MemberListResponse"
+
+  /admin/members:
+    get:
+      operationId: getMembers
+      tags: [admin]
+      summary: Get all members
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+      responses:
+        "200":
+          description: Member list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MemberListResponse"
+
+  /admin/members/{id}/approve:
+    post:
+      operationId: approveMember
+      tags: [admin]
+      summary: Approve member registration
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Member approved
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+
+  /admin/members/{id}/reject:
+    post:
+      operationId: rejectMember
+      tags: [admin]
+      summary: Reject member registration
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Member rejected
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+
+  /admin/dashboard:
+    get:
+      operationId: getDashboard
+      tags: [admin]
+      summary: Get admin dashboard stats
+      responses:
+        "200":
+          description: Dashboard data
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DashboardData"
+
+  /categories:
+    get:
+      operationId: getCategories
+      tags: [products]
+      summary: Get product categories
+      responses:
+        "200":
+          description: Category list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CategoryListResponse"
+
+components:
+  schemas:
+    HealthStatus:
+      type: object
+      properties:
+        status:
+          type: string
+      required:
+        - status
+
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+      required:
+        - error
+
+    MessageResponse:
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+        - message
+
+    LoginRequest:
+      type: object
+      properties:
+        mb_id:
+          type: string
+        mb_password:
+          type: string
+      required:
+        - mb_id
+        - mb_password
+
+    LoginResponse:
+      type: object
+      properties:
+        token:
+          type: string
+        user:
+          $ref: "#/components/schemas/UserInfo"
+      required:
+        - token
+        - user
+
+    RegisterRequest:
+      type: object
+      properties:
+        mb_id:
+          type: string
+        mb_password:
+          type: string
+        mb_name:
+          type: string
+        mb_email:
+          type: string
+        mb_hp:
+          type: string
+        company_name:
+          type: string
+        business_number:
+          type: string
+        representative:
+          type: string
+        business_type:
+          type: string
+        business_category:
+          type: string
+        company_address:
+          type: string
+      required:
+        - mb_id
+        - mb_password
+        - mb_name
+        - mb_email
+        - company_name
+        - business_number
+        - representative
+
+    UserInfo:
+      type: object
+      properties:
+        mb_id:
+          type: string
+        mb_name:
+          type: string
+        mb_email:
+          type: string
+        mb_hp:
+          type: string
+        mb_level:
+          type: integer
+        company_name:
+          type: string
+        business_number:
+          type: string
+        is_admin:
+          type: boolean
+        is_approved:
+          type: boolean
+      required:
+        - mb_id
+        - mb_name
+        - mb_level
+        - is_admin
+        - is_approved
+
+    Product:
+      type: object
+      properties:
+        it_id:
+          type: string
+        it_name:
+          type: string
+        it_cust_price:
+          type: number
+        it_price:
+          type: number
+        it_stock_qty:
+          type: integer
+        it_img1:
+          type: string
+        it_explan:
+          type: string
+        ca_id:
+          type: string
+        ca_name:
+          type: string
+        it_sell_email:
+          type: string
+        it_origin:
+          type: string
+        it_maker:
+          type: string
+      required:
+        - it_id
+        - it_name
+        - it_price
+
+    ProductListResponse:
+      type: object
+      properties:
+        products:
+          type: array
+          items:
+            $ref: "#/components/schemas/Product"
+        total:
+          type: integer
+        page:
+          type: integer
+        limit:
+          type: integer
+      required:
+        - products
+        - total
+        - page
+        - limit
+
+    CreateOrderRequest:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/OrderItemInput"
+        memo:
+          type: string
+      required:
+        - items
+
+    OrderItemInput:
+      type: object
+      properties:
+        it_id:
+          type: string
+        qty:
+          type: integer
+        price:
+          type: number
+      required:
+        - it_id
+        - qty
+        - price
+
+    Order:
+      type: object
+      properties:
+        od_id:
+          type: integer
+        mb_id:
+          type: string
+        mb_name:
+          type: string
+        company_name:
+          type: string
+        od_status:
+          type: string
+        od_receipt_price:
+          type: number
+        od_memo:
+          type: string
+        od_time:
+          type: string
+        item_count:
+          type: integer
+      required:
+        - od_id
+        - mb_id
+        - od_status
+        - od_receipt_price
+        - od_time
+
+    OrderDetail:
+      type: object
+      properties:
+        od_id:
+          type: integer
+        mb_id:
+          type: string
+        mb_name:
+          type: string
+        company_name:
+          type: string
+        od_status:
+          type: string
+        od_receipt_price:
+          type: number
+        od_memo:
+          type: string
+        od_time:
+          type: string
+        od_delivery_company:
+          type: string
+        od_invoice_no:
+          type: string
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/OrderItem"
+      required:
+        - od_id
+        - mb_id
+        - od_status
+        - od_receipt_price
+        - od_time
+        - items
+
+    OrderItem:
+      type: object
+      properties:
+        it_id:
+          type: string
+        it_name:
+          type: string
+        ct_qty:
+          type: integer
+        ct_price:
+          type: number
+        ct_status:
+          type: string
+      required:
+        - it_id
+        - it_name
+        - ct_qty
+        - ct_price
+
+    OrderListResponse:
+      type: object
+      properties:
+        orders:
+          type: array
+          items:
+            $ref: "#/components/schemas/Order"
+        total:
+          type: integer
+        page:
+          type: integer
+        limit:
+          type: integer
+      required:
+        - orders
+        - total
+        - page
+        - limit
+
+    UpdateOrderStatusRequest:
+      type: object
+      properties:
+        status:
+          type: string
+          enum:
+            - "주문접수"
+            - "결제완료"
+            - "처리중"
+            - "배송준비"
+            - "배송중"
+            - "배송완료"
+            - "구매완료"
+            - "취소"
+            - "반품"
+            - "교환"
+        delivery_company:
+          type: string
+        invoice_no:
+          type: string
+      required:
+        - status
+
+    Member:
+      type: object
+      properties:
+        mb_id:
+          type: string
+        mb_name:
+          type: string
+        mb_email:
+          type: string
+        mb_hp:
+          type: string
+        mb_level:
+          type: integer
+        mb_datetime:
+          type: string
+        company_name:
+          type: string
+        business_number:
+          type: string
+        representative:
+          type: string
+        is_approved:
+          type: boolean
+      required:
+        - mb_id
+        - mb_name
+        - mb_level
+
+    MemberListResponse:
+      type: object
+      properties:
+        members:
+          type: array
+          items:
+            $ref: "#/components/schemas/Member"
+        total:
+          type: integer
+      required:
+        - members
+        - total
+
+    DashboardData:
+      type: object
+      properties:
+        total_orders:
+          type: integer
+        pending_orders:
+          type: integer
+        processing_orders:
+          type: integer
+        completed_orders:
+          type: integer
+        pending_members:
+          type: integer
+        total_members:
+          type: integer
+        recent_orders:
+          type: array
+          items:
+            $ref: "#/components/schemas/Order"
+      required:
+        - total_orders
+        - pending_orders
+        - processing_orders
+        - completed_orders
+        - pending_members
+        - total_members
+        - recent_orders
+
+    CategoryListResponse:
+      type: object
+      properties:
+        categories:
+          type: array
+          items:
+            $ref: "#/components/schemas/Category"
+      required:
+        - categories
+
+    Category:
+      type: object
+      properties:
+        ca_id:
+          type: string
+        ca_name:
+          type: string
+      required:
+        - ca_id
+        - ca_name

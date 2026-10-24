@@ -1,0 +1,1 @@
+ALTER TABLE `products` ADD `minGrade` enum('bronze','silver','gold','vip','vvip') DEFAULT 'bronze' NOT NULL;

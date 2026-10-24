@@ -1,0 +1,294 @@
+import { trpc } from "@/lib/trpc";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { formatDate, formatDateTime, formatOrderNumber } from "@/lib/utils";
+import {
+  Shield, AlertTriangle, RefreshCw, ExternalLink, Clock, Package, Loader2, Truck, ArrowLeft
+} from "lucide-react";
+import { Link } from "wouter";
+import { toast } from "sonner";
+import { useState } from "react";
+
+export default function AdminCustomsHold() {
+  const { data: customsHoldList, isLoading, refetch } = trpc.shipping.adminCustomsHoldList.useQuery();
+  const refreshMut = trpc.shipping.adminRefreshTracking.useMutation();
+  const [refreshingIds, setRefreshingIds] = useState<Set<number>>(new Set());
+
+  const handleRefresh = async (orderId: number) => {
+    setRefreshingIds(prev => new Set(prev).add(orderId));
+    try {
+      const result = await refreshMut.mutateAsync({ orderId });
+      if (result.success) {
+        toast.success(`배송 정보가 업데이트되었습니다. (${result.eventsCount}건 추가)`);
+        refetch();
+      } else {
+        toast.error(result.message || "배송 정보를 조회할 수 없습니다.");
+      }
+    } catch (e: any) {
+      toast.error(e.message || "새로고침 실패");
+    } finally {
+      setRefreshingIds(prev => {
+        const next = new Set(prev);
+        next.delete(orderId);
+        return next;
+      });
+    }
+  };
+
+  const handleRefreshAll = async () => {
+    if (!customsHoldList || customsHoldList.length === 0) return;
+    toast.info("모든 통관검사 주문을 새로고침합니다...");
+    for (const item of customsHoldList) {
+      await handleRefresh(item.orderId);
+      // 1초 간격으로 요청 (우체국 사이트 부하 방지)
+      await new Promise(r => setTimeout(r, 1000));
+    }
+    toast.success("모든 통관검사 주문 새로고침 완료");
+  };
+
+  const getDaysHeld = (customsHoldAt: string | Date | null) => {
+    if (!customsHoldAt) return null;
+    const holdDate = new Date(customsHoldAt);
+    const now = new Date();
+    const diffMs = now.getTime() - holdDate.getTime();
+    return Math.floor(diffMs / (1000 * 60 * 60 * 24));
+  };
+
+  const getDaysHeldColor = (days: number | null) => {
+    if (days === null) return "text-muted-foreground";
+    if (days >= 14) return "text-red-600 font-bold";
+    if (days >= 7) return "text-orange-500 font-semibold";
+    return "text-yellow-600";
+  };
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <Loader2 className="w-8 h-8 animate-spin text-muted-foreground" />
+      </div>
+    );
+  }
+
+  const holdCount = customsHoldList?.length || 0;
+
+  return (
+    <div className="space-y-6">
+      {/* 헤더 */}
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-2xl font-bold flex items-center gap-2">
+            <Shield className="w-6 h-6 text-red-500" />
+            통관검사 현황
+          </h2>
+          <p className="text-sm text-muted-foreground mt-1">
+            통관검사에 걸린 주문을 실시간으로 모니터링합니다
+          </p>
+        </div>
+        <Button onClick={handleRefreshAll} variant="outline" className="gap-2" disabled={holdCount === 0}>
+          <RefreshCw className="w-4 h-4" />
+          전체 새로고침
+        </Button>
+      </div>
+
+      {/* 요약 카드 */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <Card>
+          <CardContent className="pt-6">
+            <div className="flex items-center gap-3">
+              <div className="p-3 rounded-lg bg-red-100 dark:bg-red-900/30">
+                <AlertTriangle className="w-6 h-6 text-red-600" />
+              </div>
+              <div>
+                <p className="text-sm text-muted-foreground">통관검사 대기</p>
+                <p className="text-2xl font-bold">{holdCount}건</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="pt-6">
+            <div className="flex items-center gap-3">
+              <div className="p-3 rounded-lg bg-orange-100 dark:bg-orange-900/30">
+                <Clock className="w-6 h-6 text-orange-600" />
+              </div>
+              <div>
+                <p className="text-sm text-muted-foreground">7일 이상 체류</p>
+                <p className="text-2xl font-bold">
+                  {customsHoldList?.filter(item => {
+                    const days = getDaysHeld(item.customsHoldAt);
+                    return days !== null && days >= 7;
+                  }).length || 0}건
+                </p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="pt-6">
+            <div className="flex items-center gap-3">
+              <div className="p-3 rounded-lg bg-red-100 dark:bg-red-900/30">
+                <AlertTriangle className="w-6 h-6 text-red-700" />
+              </div>
+              <div>
+                <p className="text-sm text-muted-foreground">14일 이상 체류</p>
+                <p className="text-2xl font-bold text-red-600">
+                  {customsHoldList?.filter(item => {
+                    const days = getDaysHeld(item.customsHoldAt);
+                    return days !== null && days >= 14;
+                  }).length || 0}건
+                </p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* 통관검사 목록 */}
+      {holdCount === 0 ? (
+        <Card>
+          <CardContent className="py-16 text-center">
+            <Shield className="w-12 h-12 text-green-500 mx-auto mb-3" />
+            <h3 className="text-lg font-semibold">통관검사 대기 주문이 없습니다</h3>
+            <p className="text-sm text-muted-foreground mt-1">
+              모든 주문이 정상적으로 통관 처리되고 있습니다
+            </p>
+          </CardContent>
+        </Card>
+      ) : (
+        <div className="space-y-4">
+          {customsHoldList?.map((item) => {
+            const daysHeld = getDaysHeld(item.customsHoldAt);
+            const isRefreshing = refreshingIds.has(item.orderId);
+
+            return (
+              <Card key={item.shipmentId} className="border-l-4 border-l-red-500">
+                <CardContent className="pt-6">
+                  <div className="flex flex-col lg:flex-row lg:items-start gap-4">
+                    {/* 왼쪽: 주문 정보 */}
+                    <div className="flex-1 space-y-3">
+                      <div className="flex items-center gap-3 flex-wrap">
+                        <Link href={`/admin/orders/${item.orderId}`}>
+                          <span className="font-semibold text-primary hover:underline cursor-pointer">
+                            {formatOrderNumber(item.orderNumber)}
+                          </span>
+                        </Link>
+                        <Badge variant="destructive" className="gap-1">
+                          <AlertTriangle className="w-3 h-3" />
+                          통관검사 대기
+                        </Badge>
+                        {daysHeld !== null && (
+                          <span className={`text-sm ${getDaysHeldColor(daysHeld)}`}>
+                            {daysHeld}일째 체류 중
+                          </span>
+                        )}
+                      </div>
+
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm">
+                        <div>
+                          <span className="text-muted-foreground">운송장 번호: </span>
+                          <span className="font-mono font-medium">{item.trackingNumber}</span>
+                        </div>
+                        {item.customsOffice && (
+                          <div>
+                            <span className="text-muted-foreground">세관: </span>
+                            <span className="font-medium text-red-600">{item.customsOffice}</span>
+                          </div>
+                        )}
+                        {item.customsNumber && (
+                          <div>
+                            <span className="text-muted-foreground">통관번호: </span>
+                            <span className="font-mono font-bold text-red-600">{item.customsNumber}</span>
+                          </div>
+                        )}
+                        {item.customsHoldAt && (
+                          <div>
+                            <span className="text-muted-foreground">검사 시작일: </span>
+                            <span>{formatDateTime(item.customsHoldAt)}</span>
+                          </div>
+                        )}
+                      </div>
+
+                      {/* 주문 상품 정보 */}
+                      {item.items && item.items.length > 0 && (
+                        <div className="text-sm bg-muted/50 rounded-lg p-3">
+                          <span className="text-muted-foreground">주문 상품: </span>
+                          {item.items.map((orderItem: any, idx: number) => (
+                            <span key={idx}>
+                              {orderItem.productName}
+                              {orderItem.quantity > 1 && ` x${orderItem.quantity}`}
+                              {idx < item.items.length - 1 && ", "}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+
+                      {/* 주문자 정보 */}
+                      {item.userName && (
+                        <div className="text-sm">
+                          <span className="text-muted-foreground">주문자: </span>
+                          <span>{item.userName}</span>
+                          {item.userEmail && (
+                            <span className="text-muted-foreground ml-2">({item.userEmail})</span>
+                          )}
+                        </div>
+                      )}
+                    </div>
+
+                    {/* 오른쪽: 액션 버튼 */}
+                    <div className="flex flex-col gap-2 lg:min-w-[160px]">
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="gap-2"
+                        onClick={() => handleRefresh(item.orderId)}
+                        disabled={isRefreshing}
+                      >
+                        {isRefreshing ? (
+                          <Loader2 className="w-4 h-4 animate-spin" />
+                        ) : (
+                          <RefreshCw className="w-4 h-4" />
+                        )}
+                        새로고침
+                      </Button>
+                      <Link href={`/admin/orders/${item.orderId}`}>
+                        <Button size="sm" variant="outline" className="gap-2 w-full">
+                          <Package className="w-4 h-4" />
+                          주문 상세
+                        </Button>
+                      </Link>
+                      <a
+                        href={`https://service.epost.go.kr/trace.RetrieveEmsRigiTraceList.comm?POST_CODE=${item.trackingNumber}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <Button size="sm" variant="outline" className="gap-2 w-full">
+                          <ExternalLink className="w-4 h-4" />
+                          우체국 조회
+                        </Button>
+                      </a>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            );
+          })}
+        </div>
+      )}
+
+      {/* 안내 */}
+      <Card className="bg-amber-50 dark:bg-amber-950/20 border-amber-200 dark:border-amber-800">
+        <CardContent className="pt-6">
+          <h4 className="font-semibold text-amber-800 dark:text-amber-200 mb-2">통관검사 안내</h4>
+          <ul className="text-sm text-amber-700 dark:text-amber-300 space-y-1">
+            <li>• 통관검사 대기 상태는 우체국 사이트에서 직접 크롤링하여 감지합니다.</li>
+            <li>• "인천공항본부세관 통관번호:XXXXXX" 형태의 빨간색 표시가 감지되면 자동으로 통관검사 상태로 전환됩니다.</li>
+            <li>• 배송 동기화 스케줄러가 주기적으로 자동 확인하며, 수동으로 새로고침할 수도 있습니다.</li>
+            <li>• 통관검사가 감지되면 관리자에게 알림이 발송됩니다.</li>
+            <li>• 14일 이상 체류 시 세관에 직접 문의하시기 바랍니다.</li>
+          </ul>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}

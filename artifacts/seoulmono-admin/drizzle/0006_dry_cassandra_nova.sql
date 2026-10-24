@@ -1,0 +1,1 @@
+ALTER TABLE `productOptions` ADD `isRequired` int DEFAULT 1 NOT NULL;

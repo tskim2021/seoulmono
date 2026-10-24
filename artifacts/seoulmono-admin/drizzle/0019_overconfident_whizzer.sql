@@ -1,0 +1,1 @@
+ALTER TABLE `users` ADD `emailNotifications` int DEFAULT 1 NOT NULL;

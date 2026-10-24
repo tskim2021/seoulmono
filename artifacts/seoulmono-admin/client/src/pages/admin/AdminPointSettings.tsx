@@ -1,0 +1,225 @@
+import { useState, useEffect, useMemo } from "react";
+import { trpc } from "@/lib/trpc";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Card } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
+import { toast } from "sonner";
+import { Save, Gift, Package, Loader2, Calendar, Clock, AlertCircle, Play, Bell } from "lucide-react";
+
+export default function AdminPointSettings() {
+  const { data, isLoading } = trpc.admin.getPointSettings.useQuery();
+  const categories = trpc.admin.categories.useQuery();
+  const updateSettings = trpc.admin.updatePointSettings.useMutation({
+    onSuccess: () => toast.success("포인트 설정이 저장되었습니다."),
+    onError: (e) => toast.error(e.message),
+  });
+  const bulkUpdate = trpc.admin.bulkUpdateProductPointRate.useMutation({
+    onSuccess: (d) => toast.success(`${d.updatedCount}개 상품의 포인트 적립률이 변경되었습니다.`),
+    onError: (e) => toast.error(e.message),
+  });
+
+  const utils = trpc.useUtils();
+  const { data: currentMonths, isLoading: expirationLoading } = trpc.user.getPointExpirationMonths.useQuery();
+  const setMonthsMut = trpc.user.adminSetPointExpirationMonths.useMutation({
+    onSuccess: () => { utils.user.getPointExpirationMonths.invalidate(); toast.success("포인트 만료 정책이 저장되었습니다."); },
+    onError: (err) => toast.error(err.message),
+  });
+  const expirePointsMut = trpc.user.adminExpirePoints.useMutation({
+    onSuccess: (result) => toast.success(`${result.expiredCount}건의 포인트가 만료되었습니다. (총 ${result.totalExpiredPoints.toLocaleString()}P)`),
+    onError: (err) => toast.error(err.message),
+  });
+  const testNotificationMut = trpc.user.adminTestExpirationNotification.useMutation({
+    onSuccess: (result) => toast.success(`알림 발송 완료: ${result.totalUsers}명 (이메일: ${result.emailSent}, 푸시: ${result.pushSent}, 실패: ${result.failed})`),
+    onError: (err) => toast.error(err.message),
+  });
+
+  const [regPoints, setRegPoints] = useState("");
+  const [defaultRate, setDefaultRate] = useState("1");
+  const [bulkRate, setBulkRate] = useState("1");
+  const [bulkCategoryId, setBulkCategoryId] = useState<number | undefined>(undefined);
+  const [expirationMonths, setExpirationMonths] = useState(12);
+
+  useEffect(() => {
+    if (data) {
+      setRegPoints(String(data.registrationPoints));
+      setDefaultRate(String(data.defaultProductPointRate));
+    }
+  }, [data]);
+
+  useMemo(() => {
+    if (currentMonths !== undefined) setExpirationMonths(currentMonths);
+  }, [currentMonths]);
+
+  if (isLoading || expirationLoading) return (
+    <div className="flex items-center justify-center py-20">
+      <Loader2 className="w-6 h-6 animate-spin" />
+    </div>
+  );
+
+  return (
+    <div>
+      <h1 className="text-2xl font-bold mb-6">포인트 설정</h1>
+
+      <div className="space-y-5">
+        {/* ── 적립 설정 ── */}
+        <div className="bg-card border rounded-xl p-5">
+          <h2 className="text-base font-semibold mb-4 flex items-center gap-2">
+            <Gift className="w-4 h-4 text-primary" />
+            포인트 적립 설정
+          </h2>
+          <div className="space-y-5">
+            <div>
+              <label className="text-sm font-medium block mb-1.5">회원가입 포인트</label>
+              <p className="text-xs text-muted-foreground mb-2">신규 회원 가입 시 자동으로 지급되는 포인트</p>
+              <div className="flex items-center gap-2 flex-wrap">
+                <div className="flex items-center gap-2">
+                  <Input type="number" min={0} value={regPoints} onChange={(e) => setRegPoints(e.target.value)} placeholder="0" className="w-28" />
+                  <span className="text-sm text-muted-foreground">P</span>
+                </div>
+                <div className="flex items-center gap-1">
+                  {[1000, 2000, 5000, 10000].map((v) => (
+                    <button key={v} type="button" onClick={() => setRegPoints(String(v))}
+                      className={`px-2.5 py-1 text-xs font-medium rounded border transition-colors ${
+                        regPoints === String(v) ? "bg-primary text-primary-foreground border-primary" : "bg-background text-foreground border-border hover:bg-accent"
+                      }`}
+                    >{v.toLocaleString()}</button>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <label className="text-sm font-medium block mb-1.5">기본 상품 포인트 적립률</label>
+              <p className="text-xs text-muted-foreground mb-2">새로 등록되는 상품의 기본 포인트 적립률(%)</p>
+              <div className="flex items-center gap-2 max-w-xs">
+                <Input type="number" min={0} max={100} value={defaultRate} onChange={(e) => setDefaultRate(e.target.value)} className="w-28" />
+                <span className="text-sm text-muted-foreground">%</span>
+              </div>
+            </div>
+
+            <Button onClick={() => updateSettings.mutate({ registrationPoints: Number(regPoints) || 0, defaultProductPointRate: Number(defaultRate) || 0 })} disabled={updateSettings.isPending} size="sm">
+              {updateSettings.isPending ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Save className="w-4 h-4 mr-2" />}
+              적립 설정 저장
+            </Button>
+          </div>
+        </div>
+
+        {/* ── 일괄 변경 ── */}
+        <div className="bg-card border rounded-xl p-5">
+          <h2 className="text-base font-semibold mb-3 flex items-center gap-2">
+            <Package className="w-4 h-4 text-amber-600" />
+            상품 포인트 적립률 일괄 변경
+          </h2>
+          <p className="text-xs text-muted-foreground mb-3">카테고리별 또는 전체 상품의 포인트 적립률을 한 번에 변경합니다.</p>
+          <div className="flex flex-col sm:flex-row gap-2">
+            <select className="border rounded px-2 py-1.5 text-sm bg-background w-full sm:w-40"
+              value={bulkCategoryId ?? ""}
+              onChange={(e) => setBulkCategoryId(e.target.value ? Number(e.target.value) : undefined)}
+            >
+              <option value="">전체 상품</option>
+              {(categories.data ?? []).map((c: any) => <option key={c.id} value={c.id}>{c.name}</option>)}
+            </select>
+            <div className="flex items-center gap-2">
+              <Input type="number" min={0} max={100} value={bulkRate} onChange={(e) => setBulkRate(e.target.value)} className="w-20" />
+              <span className="text-sm text-muted-foreground">%</span>
+            </div>
+            <Button variant="outline" size="sm"
+              onClick={() => { if (!confirm(`${bulkCategoryId ? "선택한 카테고리의" : "전체"} 상품 포인트 적립률을 ${bulkRate}%로 변경하시겠습니까?`)) return; bulkUpdate.mutate({ pointRate: Number(bulkRate) || 0, categoryId: bulkCategoryId }); }}
+              disabled={bulkUpdate.isPending}
+            >
+              {bulkUpdate.isPending ? <Loader2 className="w-4 h-4 mr-1 animate-spin" /> : null}
+              일괄 변경
+            </Button>
+          </div>
+        </div>
+
+        {/* ── 만료 설정 ── */}
+        <div className="bg-card border rounded-xl p-5">
+          <h2 className="text-base font-semibold mb-4 flex items-center gap-2">
+            <Calendar className="w-4 h-4 text-primary" />
+            포인트 만료 설정
+          </h2>
+          <p className="text-xs text-muted-foreground mb-4">포인트 적립 후 자동 소멸되는 기간을 설정합니다.</p>
+          <div className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium mb-1.5">포인트 만료 기간</label>
+              <div className="flex items-center gap-2">
+                <Input type="number" value={expirationMonths}
+                  onChange={(e) => setExpirationMonths(Math.max(1, Math.min(120, Number(e.target.value))))}
+                  className="w-28" min={1} max={120}
+                />
+                <span className="text-sm text-muted-foreground">개월</span>
+              </div>
+              <p className="text-xs text-muted-foreground mt-1">
+                포인트 적립일로부터 {expirationMonths}개월 후 자동 소멸됩니다.
+              </p>
+            </div>
+
+            <div className="bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-lg p-3">
+              <p className="text-xs font-medium text-blue-900 dark:text-blue-200 mb-1.5">적용 예시</p>
+              <div className="text-xs text-blue-700 dark:text-blue-400 space-y-0.5">
+                <p>• 2026년 1월 1일 적립 → {new Date(new Date(2026, 0, 1).setMonth(expirationMonths)).toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' })} 만료</p>
+                <p>• 2026년 6월 15일 적립 → {new Date(new Date(2026, 5, 15).setMonth(5 + expirationMonths)).toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' })} 만료</p>
+              </div>
+            </div>
+
+            <Button size="sm"
+              onClick={() => { if (expirationMonths < 1 || expirationMonths > 120) { toast.error("만료 기간은 1~120개월 사이로 설정해주세요."); return; } setMonthsMut.mutate({ months: expirationMonths }); }}
+              disabled={setMonthsMut.isPending}
+            >
+              {setMonthsMut.isPending ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Save className="w-4 h-4 mr-2" />}
+              만료 설정 저장
+            </Button>
+          </div>
+        </div>
+
+        {/* ── 수동 만료 / 알림 테스트 ── */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="bg-card border rounded-xl p-5">
+            <h2 className="text-base font-semibold mb-3 flex items-center gap-2">
+              <Clock className="w-4 h-4 text-orange-600" />
+              수동 만료 처리
+            </h2>
+            <div className="bg-orange-50 dark:bg-orange-950/30 border border-orange-200 dark:border-orange-800 rounded-lg p-3 mb-3">
+              <div className="flex items-start gap-1.5">
+                <AlertCircle className="w-4 h-4 text-orange-600 mt-0.5 shrink-0" />
+                <ul className="text-xs text-orange-700 dark:text-orange-400 space-y-0.5 list-disc list-inside">
+                  <li>만료일이 지난 포인트를 즉시 차감합니다.</li>
+                  <li>처리된 포인트는 복구할 수 없습니다.</li>
+                </ul>
+              </div>
+            </div>
+            <Button variant="outline" size="sm" className="w-full"
+              onClick={() => { if (confirm("만료된 포인트를 즉시 처리하시겠습니까?")) expirePointsMut.mutate(); }}
+              disabled={expirePointsMut.isPending}
+            >
+              {expirePointsMut.isPending ? <Loader2 className="w-4 h-4 mr-1 animate-spin" /> : <Play className="w-4 h-4 mr-1" />}
+              만료 포인트 즉시 처리
+            </Button>
+          </div>
+
+          <div className="bg-card border rounded-xl p-5">
+            <h2 className="text-base font-semibold mb-3 flex items-center gap-2">
+              <Bell className="w-4 h-4 text-blue-600" />
+              만료 예정 알림 테스트
+            </h2>
+            <div className="bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-lg p-3 mb-3">
+              <ul className="text-xs text-blue-700 dark:text-blue-400 space-y-0.5 list-disc list-inside">
+                <li>7일 이내 만료 예정 사용자에게 알림 발송</li>
+                <li>매일 오전 9시 자동 실행</li>
+              </ul>
+            </div>
+            <Button variant="outline" size="sm" className="w-full"
+              onClick={() => testNotificationMut.mutate()}
+              disabled={testNotificationMut.isPending}
+            >
+              {testNotificationMut.isPending ? <Loader2 className="w-4 h-4 mr-1 animate-spin" /> : <Bell className="w-4 h-4 mr-1" />}
+              알림 테스트 실행
+            </Button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

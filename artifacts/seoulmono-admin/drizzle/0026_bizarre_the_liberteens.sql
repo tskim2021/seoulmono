@@ -1,0 +1,1 @@
+ALTER TABLE `inquiryReplies` ADD `attachments` json;

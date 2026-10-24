@@ -1,0 +1,1 @@
+ALTER TABLE `pointHistory` ADD `expiresAt` timestamp;

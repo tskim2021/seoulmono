@@ -1,0 +1,97 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.CAMERA" />
+
+    <application
+      android:name=".MainApplication"
+      android:label="@string/app_name"
+      android:icon="@mipmap/ic_launcher"
+      android:roundIcon="@mipmap/ic_launcher_round"
+      android:allowBackup="false"
+      android:theme="@style/AppTheme"
+      android:usesCleartextTraffic="true"
+      android:supportsRtl="true">
+      <activity
+        android:name=".MainActivity"
+        android:label="@string/app_name"
+        android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|screenSize|smallestScreenSize|uiMode"
+        android:launchMode="singleTask"
+        android:windowSoftInputMode="adjustResize"
+        android:exported="true">
+        <intent-filter>
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter>
+      </activity>
+
+      <activity
+        android:name="com.kakao.sdk.auth.AuthCodeHandlerActivity"
+        android:exported="true">
+        <intent-filter>
+            <action android:name="android.intent.action.VIEW" />
+            <category android:name="android.intent.category.DEFAULT" />
+            <category android:name="android.intent.category.BROWSABLE" />
+            <data android:host="oauth"
+                android:scheme="kakaoccbab6acbcafedded697719354226809" />
+        </intent-filter>
+      </activity>
+
+      <!-- 네이버 로그인: 앱에서 콜백을 받기 위한 intent-filter -->
+      <activity
+        android:name="com.nhn.android.naverlogin.ui.OAuthLoginActivity"
+        android:exported="true"
+        android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+      <activity
+        android:name="com.nhn.android.naverlogin.ui.OAuthLoginInternalBrowserActivity"
+        android:exported="true"
+        android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+    </application>
+
+    <queries>
+      <package android:name="com.kakao.talk" /> <!-- 카카오톡 -->
+      <package android:name="com.nhn.android.search" /> <!-- 네이버 앱 (로그인/페이) -->
+      <!-- 네이버 앱으로 로그인 scheme -->
+      <intent>
+        <action android:name="android.intent.action.VIEW" />
+        <data android:scheme="naversearchthirdlogin" />
+      </intent>
+      <package android:name="com.samsung.android.spay" /> <!-- 삼성페이 -->
+      <package android:name="net.ib.android.smcard" /> <!-- 모니모페이 -->
+      <package android:name="com.mobiletoong.travelwallet" /> <!-- 신한카드 트레블월렛 -->
+      <package android:name="com.samsung.android.spaylite" /> <!-- 삼성페이 -->
+      <package android:name="com.ssg.serviceapp.android.egiftcertificate" /> <!-- SSGPAY -->
+      <package android:name="com.nhnent.payapp" /> <!-- PAYCO -->
+      <package android:name="com.lottemembers.android" /> <!-- L.POINT -->
+      <package android:name="viva.republica.toss" /> <!-- 토스-->
+      <package android:name="com.shinhan.smartcaremgr" /> <!-- 신한 슈퍼SOL -->
+      <package android:name="com.shcard.smartpay" /> <!-- 신한페이판 -->
+      <package android:name="com.shinhancard.smartshinhan" /> <!-- 신한페이판-공동인증서 -->
+      <package android:name="com.hyundaicard.appcard" /> <!-- 현대카드 -->
+      <package android:name="com.lumensoft.touchenappfree" /> <!-- 현대카드-공동인증서 -->
+      <package android:name="kr.co.samsungcard.mpocket" /> <!-- 삼성카드 -->
+      <package android:name="nh.smart.nhallonepay" /> <!-- 올원페이 -->
+      <package android:name="com.kbcard.cxh.appcard" /> <!-- KB Pay -->
+      <package android:name="com.kbstar.liivbank" /> <!-- Liiv(KB국민은행) -->
+      <package android:name="com.kbstar.reboot" /> <!-- Liiv Reboot(KB국민은행) -->
+      <package android:name="com.kbstar.kbbank" /> <!-- 스타뱅킹(KB국민은행) -->
+      <package android:name="kvp.jjy.MispAndroid320" /> <!-- ISP/페이북 -->
+      <package android:name="com.lcacApp" /> <!-- 롯데카드 -->
+      <package android:name="com.hanaskcard.paycla" /> <!-- 하나카드 -->
+      <package android:name="com.hanaskcard.rocomo.potal" />  <!--하나카드-->
+      <package android:name="kr.co.hanamembers.hmscustomer" /> <!-- 하나멤버스 -->
+      <package android:name="kr.co.citibank.citimobile" /> <!-- 씨티모바일 -->
+      <package android:name="com.wooricard.wpay" /> <!-- 우리페이 -->
+      <package android:name="com.wooricard.smartapp" /> <!-- 우리카드 -->
+      <package android:name="com.wooribank.smart.npib" /> <!-- 우리WON뱅킹 -->
+      <package android:name="com.lguplus.paynow" /> <!-- 페이나우 -->
+      <package android:name="com.kftc.bankpay.android" /> <!-- 뱅크페이 -->
+      <package android:name="com.TouchEn.mVaccine.webs" /> <!-- TouchEn mVaccine (신한) -->
+      <package android:name="kr.co.shiftworks.vguardweb" /> <!-- V-Guard (삼성) -->
+      <package android:name="com.ahnlab.v3mobileplus" /> <!-- V3 (NH, 현대) -->
+      <package android:name="com.kakaobank.channel" /> <!-- 카카오뱅크 -->
+    </queries>
+</manifest>
