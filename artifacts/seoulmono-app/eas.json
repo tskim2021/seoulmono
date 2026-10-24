@@ -57,9 +57,7 @@
   },
   "submit": {
     "production": {
-      "ios": {
-        "ascAppId": "App Store Connect \u306e Apple ID (\u6570\u5b57) \u3092\u8a2d\u5b9a"
-      },
+      "ios": {},
       "android": {}
     }
   }

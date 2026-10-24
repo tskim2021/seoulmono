@@ -1,3 +1,4 @@
+import { installPushRoutes } from './push-routes.mjs';
 import { createRequire as __bannerCrReq } from 'node:module';
 import __bannerPath from 'node:path';
 import __bannerUrl from 'node:url';
@@ -96320,6 +96321,7 @@ app.use((0, import_cors.default)());
 app.use("/api/shop/stripe/webhook", import_express18.default.raw({ type: "*/*", limit: "1mb" }));
 app.use(import_express18.default.json());
 app.use(import_express18.default.urlencoded({ extended: true }));
+try { await installPushRoutes(app, mysql_default, authMiddleware); } catch (error) { console.error("[push] initialization failed"); app.use("/api/push", (_req, res) => res.status(503).json({ error: "通知サービスを準備中です。" })); }
 app.use("/api", routes_default);
 function stripDefaultMeta(html) {
   return html

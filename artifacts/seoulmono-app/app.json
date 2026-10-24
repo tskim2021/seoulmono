@@ -2,7 +2,7 @@
   "expo": {
     "name": "ソウルモノ",
     "slug": "seoulmono-app",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "seoulmono",
@@ -20,6 +20,11 @@
         "ITSAppUsesNonExemptEncryption": false,
         "CFBundleDevelopmentRegion": "ja",
         "CFBundleAllowMixedLocalizations": true
+      },
+      "buildNumber": "2",
+      "appleTeamId": "L89UNHMAA6",
+      "entitlements": {
+        "aps-environment": "production"
       }
     },
     "android": {
@@ -27,7 +32,8 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.seoulmono.app"
+      "package": "com.seoulmono.app",
+      "versionCode": 2
     },
     "web": {
       "favicon": "./assets/images/icon.png"
@@ -44,7 +50,14 @@
       ],
       "expo-font",
       "expo-web-browser",
-      "expo-updates"
+      "expo-updates",
+      [
+        "expo-notifications",
+        {
+          "color": "#397AA3",
+          "defaultChannel": "seoulmono-news"
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true,
@@ -53,6 +66,7 @@
     "extra": {},
     "locales": {
       "ja": "./locales/ja.json"
-    }
+    },
+    "owner": "pinkfighter"
   }
 }

@@ -65,7 +65,7 @@ export default function MyScreen() {
         text: "ログアウト",
         style: "destructive",
         onPress: async () => {
-          await logout();
+          try { await logout(); } catch { Alert.alert("ログアウト", "通信環境を確認して、もう一度お試しください。"); }
         },
       },
     ]);
@@ -162,6 +162,7 @@ export default function MyScreen() {
           </MenuSection>
 
           <MenuSection title="アカウント">
+            <MenuItem icon="bell" label="通知設定" onPress={() => router.push("/push-settings")} />
             <MenuItem icon="settings" label="会員情報編集" onPress={() => router.push("/edit-profile")} />
             <MenuItem icon="log-out" label="ログアウト" onPress={handleLogout} />
           </MenuSection>

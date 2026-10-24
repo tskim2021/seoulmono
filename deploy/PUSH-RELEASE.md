@@ -1,0 +1,11 @@
+# Seoulmono app delivery and push
+
+The production API source is `artifacts/api-server-live/index.mjs`, with `push-routes.mjs` and `push-transport.mjs` alongside it. Copy all three to `artifacts/api-server/dist/` before restarting `seoulmono-api`. Do not replace the production API with the older generic source build.
+
+Push uses native APNs and FCM, independently of EAS. The app requests permission only from My Page → 通知設定, after login and after the respective provider is configured. Tokens are persisted in `sm_push_devices`; campaigns and delivery attempts use separate `sm_push_*` tables. Logout disables the token before dropping the app session. The administrator route `/admin/push` embeds `/push-admin.html`; the API accepts the existing g5 administrator session or bearer login, rechecks current administrator status and checks the Origin on writes. No new administrator account is created.
+
+Create `/etc/seoulmono/push.json` using `push-config.example.json` only after credentials are authorized. Store private files outside the repository and web root, mode 600. Android requires a Firebase Android app matching `com.seoulmono.app` and its private local `google-services.json` referenced in Expo android.googleServicesFile, then prebuild and rebuild. iOS requires the same bundle identifier with production APS entitlement, an APNs key authorized for this app, and a distribution-signed TestFlight build. Restart the API after credential configuration; `/api/push/config` reports configured provider availability, not actual device delivery.
+
+Run `node --test artifacts/api-server-live/push.test.mjs`. Compile the app with `pnpm --dir artifacts/seoulmono-app typecheck`. For a local iOS build in a path containing spaces, after `pod install`, run `node scripts/fix-ios-build-paths.cjs`. This fixes the generated Expo SDK 54 pod script quoting. Keep source/native dependencies local; no EAS build is required.
+
+Verify separately: APK signing and public file hash; App Store Connect app record; IPA upload and processing; actual TestFlight tester availability; provider acceptance; real-device display. Never mark a provider HTTP acceptance as confirmed receipt. Use administrator self-test after a real device has registered. No campaign is sent by installing or deploying this feature.

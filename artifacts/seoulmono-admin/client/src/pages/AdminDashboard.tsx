@@ -1,3 +1,4 @@
+import AdminPush from "./AdminPush";
 import { trpc } from "@/lib/trpc";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { Button } from "@/components/ui/button";
@@ -426,6 +427,7 @@ export function AdminLayout({ children }: { children: ReactNode }) {
     {
       label: "決済管理",
       items: [
+        { href: "/admin/push", icon: Mail, label: "プッシュ通知" },
         { href: "/admin/email-preview", icon: Mail, label: "이메일 미리보기" },
         { href: "/admin/faq", icon: HelpCircle, label: "FAQ 관리" },
         { href: "/admin/gnu-api-sync", icon: Globe, label: "외부 API 연동" },
@@ -6229,6 +6231,7 @@ export default function AdminDashboard() {
         <Route path="/admin/point-history" component={AdminPointHistory} />
         <Route path="/admin/point-settings" component={AdminPointSettings} />
         <Route path="/admin/point-expiration" component={AdminPointExpiration} />
+        <Route path="/admin/push" component={AdminPush} />
         <Route path="/admin/email-preview" component={AdminEmailPreview} />
         <Route path="/admin/faq" component={AdminFAQ} />
         <Route path="/admin/boards" component={AdminBoards} />

@@ -1,0 +1,11 @@
+{
+  "apns": {
+    "keyFile": "/etc/seoulmono/private/apns.p8",
+    "keyId": "APPLE_APNS_KEY_ID",
+    "teamId": "APPLE_TEAM_ID",
+    "topic": "com.seoulmono.app"
+  },
+  "fcm": {
+    "serviceAccountFile": "/etc/seoulmono/private/firebase-service-account.json"
+  }
+}

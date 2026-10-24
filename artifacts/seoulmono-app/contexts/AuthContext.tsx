@@ -7,6 +7,7 @@ import React, {
   useState,
 } from "react";
 
+import { disablePush } from "@/lib/push";
 import { api, User } from "@/lib/api";
 
 type AuthContextType = {
@@ -65,6 +66,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const logout = useCallback(async () => {
+    await disablePush();
     await api.post("/auth/logout").catch(() => {});
     await AsyncStorage.removeItem("auth_token");
     setUser(null);

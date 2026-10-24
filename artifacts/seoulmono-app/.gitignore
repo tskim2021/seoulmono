@@ -13,3 +13,8 @@ ios/
 
 expo-env.d.ts
 # @end expo-cli
+# Private release credentials and generated archives
+secrets/
+build/
+google-services.json
+GoogleService-Info.plist
