@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "seoulmono",
+    "name": "ソウルモノ",
     "slug": "seoulmono-app",
     "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "jiguapp",
+    "scheme": "seoulmono",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "splash": {
@@ -15,9 +15,11 @@
     },
     "ios": {
       "supportsTablet": false,
-      "bundleIdentifier": "co.kr.g9bus001",
+      "bundleIdentifier": "com.seoulmono.app",
       "infoPlist": {
-        "ITSAppUsesNonExemptEncryption": false
+        "ITSAppUsesNonExemptEncryption": false,
+        "CFBundleDevelopmentRegion": "ja",
+        "CFBundleAllowMixedLocalizations": true
       }
     },
     "android": {
@@ -25,19 +27,13 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "co.kr.g9bus001"
+      "package": "com.seoulmono.app"
     },
     "web": {
       "favicon": "./assets/images/icon.png"
     },
     "updates": {
-      "url": "https://u.expo.dev/64572a66-5a0e-40b7-9f90-a8aecfabfae9",
-      "enabled": true,
-      "checkAutomatically": "ON_LOAD",
-      "fallbackToCacheTimeout": 3000
-    },
-    "runtimeVersion": {
-      "policy": "appVersion"
+      "enabled": false
     },
     "plugins": [
       [
@@ -54,11 +50,9 @@
       "typedRoutes": true,
       "reactCompiler": true
     },
-    "extra": {
-      "eas": {
-        "projectId": "64572a66-5a0e-40b7-9f90-a8aecfabfae9"
-      }
-    },
-    "owner": "pinkfighter"
+    "extra": {},
+    "locales": {
+      "ja": "./locales/ja.json"
+    }
   }
 }
