@@ -227,7 +227,7 @@ function ItemTrackingSection({
   }
 
   const estimatedDate = shipment.estimatedDeliveryDate
-    ? new Date(shipment.estimatedDeliveryDate).toLocaleDateString("ko-KR", { month: "long", day: "numeric", weekday: "short" })
+    ? new Date(shipment.estimatedDeliveryDate).toLocaleDateString("ja-JP", { month: "long", day: "numeric", weekday: "short" })
     : null;
 
   return (
@@ -590,7 +590,7 @@ export default function OrderDetail() {
                   <div className="mt-2 flex items-center gap-1.5 text-sm text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/20 border border-emerald-200 dark:border-emerald-800/40 rounded-lg px-3 py-2">
                     <CheckCircle2 className="w-4 h-4 flex-shrink-0" />
                     <span className="font-semibold">返金完了</span>
-                    <span className="text-xs text-muted-foreground ml-1">{new Date(cancelledItems.find((i: any) => i.refundedAt)?.refundedAt).toLocaleString("ko-KR", { year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit", hour12: false })}</span>
+                    <span className="text-xs text-muted-foreground ml-1">{new Date(cancelledItems.find((i: any) => i.refundedAt)?.refundedAt).toLocaleString("ja-JP", { year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit", hour12: false })}</span>
                   </div>
                 )}
               </div>

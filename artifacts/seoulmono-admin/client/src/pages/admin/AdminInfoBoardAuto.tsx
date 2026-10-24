@@ -23,7 +23,7 @@ const STYLE_OPTIONS = [
 ];
 
 function formatDateTime(d: string | Date) {
-  return new Date(d).toLocaleString("ko-KR", { year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit" });
+  return new Date(d).toLocaleString("ja-JP", { year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit" });
 }
 
 export default function AdminInfoBoardAuto() {

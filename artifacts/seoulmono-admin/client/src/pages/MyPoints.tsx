@@ -29,7 +29,7 @@ export default function MyPoints() {
                   <strong className="font-bold">{expiringData.totalExpiring.toLocaleString()}P</strong>がまもなく失効します。
                   {expiringData.items.length > 0 && expiringData.items[0].expiresAt && (
                     <span className="ml-1">
-                      (最短 {new Date(expiringData.items[0].expiresAt).toLocaleDateString('ko-KR')} 失効)
+                      (最短 {new Date(expiringData.items[0].expiresAt).toLocaleDateString('ja-JP')} 失効)
                     </span>
                   )}
                 </p>

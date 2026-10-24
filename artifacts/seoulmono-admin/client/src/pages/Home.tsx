@@ -344,7 +344,7 @@ function NewsPreviewSection() {
     if (hours < 24) return `${hours}時間前`;
     const days = Math.floor(hours / 24);
     if (days < 7) return `${days}日前`;
-    return d.toLocaleDateString("ko-KR", { month: "short", day: "numeric" });
+    return d.toLocaleDateString("ja-JP", { month: "short", day: "numeric" });
   };
 
   const stripMarkdown = (text: string) => {
@@ -650,7 +650,7 @@ function ReviewCard({ post }: { post: any }) {
   const name = post.displayName || (post.userName ?? "匿名");
   const stars = Math.min(5, Math.max(1, post.rating ?? 5));
   const dateStr = post.createdAt
-    ? new Date(post.createdAt).toLocaleDateString("ko-KR", { year: "numeric", month: "2-digit", day: "2-digit" }).replace(/\. /g, "-").replace(/\.$/, "")
+    ? new Date(post.createdAt).toLocaleDateString("ja-JP", { year: "numeric", month: "2-digit", day: "2-digit" }).replace(/\. /g, "-").replace(/\.$/, "")
     : "";
 
   let images: string[] = [];

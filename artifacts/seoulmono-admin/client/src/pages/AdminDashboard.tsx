@@ -1408,7 +1408,7 @@ function AdminProducts() {
                   </div>
                   <div className="space-y-2">
                     <div className="grid grid-cols-[1fr_1fr_100px_80px_32px] gap-2 text-[11px] text-muted-foreground font-medium px-1">
-                      <span>옵션값</span><span>영문값</span><span className="text-right">판매금액</span><span className="text-right">재고</span><span></span>
+                      <span>オプション値</span><span>英字値</span><span className="text-right">販売金額</span><span className="text-right">在庫</span><span></span>
                     </div>
                     {group.values.map((v, vi) => (
                       <div key={vi} className="grid grid-cols-[1fr_1fr_100px_80px_32px] gap-2 items-center">
@@ -1487,60 +1487,60 @@ function AdminProducts() {
         </select>
         <select className="border rounded-lg px-3 py-2 text-sm bg-background" value={limit} onChange={e => { setLimit(Number(e.target.value)); setPage(1); }}>
           <option value={10}>10件</option>
-          <option value={20}>20개</option>
-          <option value={50}>50개</option>
-          <option value={100}>100개</option>
+          <option value={20}>20件</option>
+          <option value={50}>50件</option>
+          <option value={100}>100件</option>
         </select>
         {selectedIds.length > 0 && (
           <div className="flex items-center gap-2">
-            <span className="text-sm text-muted-foreground">{selectedIds.length}개 선택됨</span>
+            <span className="text-sm text-muted-foreground">{selectedIds.length}件選択中</span>
             <select className="border rounded px-3 py-2 text-sm" value={bulkAction} onChange={e => setBulkAction(e.target.value)}>
-              <option value="">일괄 작업 선택</option>
-              <option value="delete">삭제</option>
-              <option value="status:active">판매중으로 변경</option>
-              <option value="status:inactive">비활성으로 변경</option>
-              <option value="status:soldout">품절로 변경</option>
-              <optgroup label="포인트 적립률 (%)">
-                <option value="pointRate:percent:0">적립 0%</option>
-                <option value="pointRate:percent:1">적립 1%</option>
-                <option value="pointRate:percent:2">적립 2%</option>
-                <option value="pointRate:percent:3">적립 3%</option>
-                <option value="pointRate:percent:5">적립 5%</option>
-                <option value="pointRate:percent:10">적립 10%</option>
+              <option value="">一括操作を選択</option>
+              <option value="delete">削除</option>
+              <option value="status:active">販売中に変更</option>
+              <option value="status:inactive">無効に変更</option>
+              <option value="status:soldout">品切れに変更</option>
+              <optgroup label="ポイント付与率 (%)">
+                <option value="pointRate:percent:0">付与 0%</option>
+                <option value="pointRate:percent:1">付与 1%</option>
+                <option value="pointRate:percent:2">付与 2%</option>
+                <option value="pointRate:percent:3">付与 3%</option>
+                <option value="pointRate:percent:5">付与 5%</option>
+                <option value="pointRate:percent:10">付与 10%</option>
               </optgroup>
-              <optgroup label="포인트 적립 (고정금액)">
-                <option value="pointRate:fixed:500">적립 500원</option>
-                <option value="pointRate:fixed:1000">적립 1,000원</option>
-                <option value="pointRate:fixed:2000">적립 2,000원</option>
-                <option value="pointRate:fixed:5000">적립 5,000원</option>
+              <optgroup label="ポイント付与 (固定額)">
+                <option value="pointRate:fixed:500">付与 500円</option>
+                <option value="pointRate:fixed:1000">付与 1,000円</option>
+                <option value="pointRate:fixed:2000">付与 2,000円</option>
+                <option value="pointRate:fixed:5000">付与 5,000円</option>
               </optgroup>
-              <optgroup label="상품 플래그">
-                <option value="flag:isFeatured:1">추천상품 ON</option>
-                <option value="flag:isFeatured:0">추천상품 OFF</option>
-                <option value="flag:isNew:1">신상품 ON</option>
-                <option value="flag:isNew:0">신상품 OFF</option>
-                <option value="flag:isBest:1">베스트 ON</option>
-                <option value="flag:isBest:0">베스트 OFF</option>
+              <optgroup label="商品フラグ">
+                <option value="flag:isFeatured:1">おすすめ商品 ON</option>
+                <option value="flag:isFeatured:0">おすすめ商品 OFF</option>
+                <option value="flag:isNew:1">新商品 ON</option>
+                <option value="flag:isNew:0">新商品 OFF</option>
+                <option value="flag:isBest:1">ベスト ON</option>
+                <option value="flag:isBest:0">ベスト OFF</option>
               </optgroup>
-              <optgroup label="특가(할인가) 설정">
-                <option value="salePrice">특가가 일괄 설정</option>
+              <optgroup label="特価(割引価格)設定">
+                <option value="salePrice">特価を一括設定</option>
               </optgroup>
-              {cats?.map((c: any) => <option key={c.id} value={`category:${c.id}`}>{c.name}으로 이동</option>)}
+              {cats?.map((c: any) => <option key={c.id} value={`category:${c.id}`}>{c.name}に移動</option>)}
             </select>
             {bulkAction === "salePrice" && (
               <div className="flex items-center gap-1">
                 <Input
                   type="number"
                   min={0}
-                  placeholder="특가세팅"
+                  placeholder="特価設定"
                   value={bulkSalePrice}
                   onChange={e => setBulkSalePrice(e.target.value)}
                   className="w-28 h-8 text-sm"
                 />
-                <span className="text-xs text-muted-foreground">원</span>
+                <span className="text-xs text-muted-foreground">円</span>
               </div>
             )}
-            <Button size="sm" onClick={handleBulkAction} disabled={!bulkAction || (bulkAction === "salePrice" && !bulkSalePrice)}>실행</Button>
+            <Button size="sm" onClick={handleBulkAction} disabled={!bulkAction || (bulkAction === "salePrice" && !bulkSalePrice)}>実行</Button>
           </div>
         )}
       </div>
@@ -1548,7 +1548,7 @@ function AdminProducts() {
       {isSortOrderMode && (
         <div className="mb-2 flex items-center gap-2 text-xs text-muted-foreground bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800 rounded-lg px-3 py-2">
           <GripVertical className="w-3.5 h-3.5 text-amber-600 flex-shrink-0" />
-          <span>행을 드래그해서 노출순위를 조절하세요. 저장은 드롭 즉시 자동으로 됩니다.</span>
+          <span>行をドラッグして表示順位を調整してください。保存はドロップ時に自動で行われます。</span>
         </div>
       )}
       <div className="bg-card border rounded-xl overflow-hidden elegant-shadow">
@@ -1557,7 +1557,7 @@ function AdminProducts() {
             <thead><tr className="bg-secondary/50 text-xs text-muted-foreground">
               {isSortOrderMode && <th className="py-3 px-2 w-8"></th>}
               <th className="text-center py-3 px-4 w-12"><input type="checkbox" checked={selectedIds.length === (data?.products ?? []).length && (data?.products ?? []).length > 0} onChange={toggleSelectAll} /></th>
-              <th className="text-left py-3 px-4">ID</th><th className="text-left py-3 px-4">상품번호</th><th className="text-center py-3 px-4 w-20">이미지</th><th className="text-left py-3 px-4">상품명</th><th className="text-left py-3 px-4">1차 카테고리</th><th className="text-left py-3 px-4">2차 카테고리</th><th className="text-right py-3 px-4">가격</th><th className="text-right py-3 px-4">할인가</th><th className="text-center py-3 px-4">적립</th><th className="text-center py-3 px-4">재고</th><th className="text-center py-3 px-4">상태</th><th className="text-center py-3 px-4">노출순위</th><th className="text-center py-3 px-4">플래그</th><th className="text-center py-3 px-4">관리</th>
+              <th className="text-left py-3 px-4">ID</th><th className="text-left py-3 px-4">商品番号</th><th className="text-center py-3 px-4 w-20">画像</th><th className="text-left py-3 px-4">商品名</th><th className="text-left py-3 px-4">第1カテゴリー</th><th className="text-left py-3 px-4">第2カテゴリー</th><th className="text-right py-3 px-4">価格</th><th className="text-right py-3 px-4">割引価格</th><th className="text-center py-3 px-4">ポイント</th><th className="text-center py-3 px-4">在庫</th><th className="text-center py-3 px-4">ステータス</th><th className="text-center py-3 px-4">表示順位</th><th className="text-center py-3 px-4">フラグ</th><th className="text-center py-3 px-4">操作</th>
             </tr></thead>
             <tbody className="divide-y">
               {(isSortOrderMode ? localProducts : (data?.products ?? [])).map((p: any, idx: number) => {
@@ -1589,7 +1589,7 @@ function AdminProducts() {
                     {p.thumbnail ? (
                       <img src={p.thumbnail} alt={p.name} className="w-12 h-12 object-cover rounded border mx-auto" />
                     ) : (
-                      <div className="w-12 h-12 bg-muted rounded border mx-auto flex items-center justify-center text-[10px] text-muted-foreground">없음</div>
+                      <div className="w-12 h-12 bg-muted rounded border mx-auto flex items-center justify-center text-[10px] text-muted-foreground">なし</div>
                     )}
                   </td>
                   <td className="py-3 px-4 text-sm font-medium max-w-[200px] truncate">{p.name}</td>
@@ -1628,22 +1628,22 @@ function AdminProducts() {
                       </span>
                     )}
                   </td>
-                  <td className="py-3 px-4 text-sm text-center">{p.pointRateType === "fixed" ? `${(p.pointRate ?? 0).toLocaleString()}원` : `${p.pointRate ?? 0}%`}</td>
+                  <td className="py-3 px-4 text-sm text-center">{p.pointRateType === "fixed" ? `${(p.pointRate ?? 0).toLocaleString()}円` : `${p.pointRate ?? 0}%`}</td>
                   <td className="py-3 px-4 text-sm text-center">{p.stock}</td>
-                  <td className="py-3 px-4 text-center"><Badge variant={p.status === "active" ? "default" : "secondary"} className="text-[10px]">{p.status === "active" ? "판매중" : p.status === "soldout" ? "품절" : "비활성"}</Badge></td>
+                  <td className="py-3 px-4 text-center"><Badge variant={p.status === "active" ? "default" : "secondary"} className="text-[10px]">{p.status === "active" ? "販売中" : p.status === "soldout" ? "品切れ" : "無効"}</Badge></td>
                   <td className="py-3 px-4 text-center text-xs text-muted-foreground font-mono">{p.sortOrder ?? 0}</td>
                   <td className="py-3 px-4 text-center">
                     <div className="flex items-center justify-center gap-1">
-                      {p.isFeatured ? <Badge variant="outline" className="text-[9px] px-1">추천</Badge> : null}
-                      {p.isNew ? <Badge variant="outline" className="text-[9px] px-1">신상</Badge> : null}
-                      {p.isBest ? <Badge variant="outline" className="text-[9px] px-1">베스트</Badge> : null}
-                      {(p as any).noDiscount ? <Badge variant="outline" className="text-[9px] px-1 border-rose-400 text-rose-600">할인제외</Badge> : null}
+                      {p.isFeatured ? <Badge variant="outline" className="text-[9px] px-1">おすすめ</Badge> : null}
+                      {p.isNew ? <Badge variant="outline" className="text-[9px] px-1">新着</Badge> : null}
+                      {p.isBest ? <Badge variant="outline" className="text-[9px] px-1">ベスト</Badge> : null}
+                      {(p as any).noDiscount ? <Badge variant="outline" className="text-[9px] px-1 border-rose-400 text-rose-600">割引対象外</Badge> : null}
                     </div>
                   </td>
                   <td className="py-3 px-4 text-center">
                     <div className="flex items-center justify-center gap-1">
                       <Button variant="ghost" size="sm" onClick={() => openEdit(p)}><Pencil className="w-3.5 h-3.5" /></Button>
-                      <Button variant="ghost" size="sm" className="text-destructive" onClick={() => { if (confirm("삭제하시겠습니까?")) deleteMut.mutate({ id: p.id }); }}><Trash2 className="w-3.5 h-3.5" /></Button>
+                      <Button variant="ghost" size="sm" className="text-destructive" onClick={() => { if (confirm("削除しますか？")) deleteMut.mutate({ id: p.id }); }}><Trash2 className="w-3.5 h-3.5" /></Button>
                     </div>
                   </td>
                 </tr>
@@ -1652,7 +1652,7 @@ function AdminProducts() {
             </tbody>
           </table>
         </div>
-        {(data?.products ?? []).length === 0 && <p className="text-center py-8 text-sm text-muted-foreground">{isLoading ? "로딩 중..." : "상품이 없습니다"}</p>}
+        {(data?.products ?? []).length === 0 && <p className="text-center py-8 text-sm text-muted-foreground">{isLoading ? "読み込み中..." : "商品がありません"}</p>}
       </div>
 
       <Paginator page={page} totalPages={totalPages} onPageChange={setPage} className="mt-4" />
@@ -1747,7 +1747,7 @@ function AdminOrders() {
       setPendingDateFrom(""); setPendingDateTo("");
     }
   };
-  const updateStatus = trpc.admin.updateOrderStatus.useMutation({ onSuccess: () => { utils.admin.orders.invalidate(); utils.admin.orderTabCounts.invalidate(); toast.success("상태가 변경되었습니다."); } });
+  const updateStatus = trpc.admin.updateOrderStatus.useMutation({ onSuccess: () => { utils.admin.orders.invalidate(); utils.admin.orderTabCounts.invalidate(); toast.success("ステータスを変更しました。"); } });
   const statuses = ["pending", "paid", "preparing", "shipping", "delivered", "customs_hold", "cancelled"];
   const totalPages = Math.ceil((data?.total ?? 0) / pageSize);
 
@@ -1757,23 +1757,23 @@ function AdminOrders() {
   const [inlineCarrierId, setInlineCarrierId] = useState<number | undefined>(undefined);
   const { data: carriersData } = trpc.shipping.carriers.useQuery();
   const registerShipment = trpc.shipping.adminCreateShipment.useMutation({
-    onSuccess: () => { utils.admin.orders.invalidate(); utils.admin.orderTabCounts.invalidate(); setEditingKey(null); setInlineTrackingNumber(""); setInlineCarrierId(undefined); toast.success("운송장이 등록되었습니다."); },
+    onSuccess: () => { utils.admin.orders.invalidate(); utils.admin.orderTabCounts.invalidate(); setEditingKey(null); setInlineTrackingNumber(""); setInlineCarrierId(undefined); toast.success("追跡番号を登録しました。"); },
     onError: (e) => toast.error(e.message),
   });
   const updateShipmentInfo = trpc.shipping.adminUpdateShipmentInfo.useMutation({
-    onSuccess: () => { utils.admin.orders.invalidate(); utils.admin.orderTabCounts.invalidate(); setEditingKey(null); setInlineTrackingNumber(""); setInlineCarrierId(undefined); toast.success("운송장이 수정되었습니다."); },
+    onSuccess: () => { utils.admin.orders.invalidate(); utils.admin.orderTabCounts.invalidate(); setEditingKey(null); setInlineTrackingNumber(""); setInlineCarrierId(undefined); toast.success("追跡番号を更新しました。"); },
     onError: (e) => toast.error(e.message),
   });
   const confirmCustoms = trpc.shipping.adminConfirmCustoms.useMutation({
-    onSuccess: () => { utils.admin.orders.invalidate(); utils.admin.orderTabCounts.invalidate(); toast.success("통관검사를 확인 처리했습니다."); },
+    onSuccess: () => { utils.admin.orders.invalidate(); utils.admin.orderTabCounts.invalidate(); toast.success("通関検査を確認済みにしました。"); },
     onError: (e) => toast.error(e.message),
   });
   const confirmPaymentInList = trpc.payment.adminConfirmPayment.useMutation({
-    onSuccess: () => { utils.admin.orders.invalidate(); utils.admin.orderTabCounts.invalidate(); toast.success("입금이 확인되었습니다."); },
+    onSuccess: () => { utils.admin.orders.invalidate(); utils.admin.orderTabCounts.invalidate(); toast.success("入金を確認しました。"); },
     onError: (e) => toast.error(e.message),
   });
   const markOrderRefunded = trpc.order.adminMarkOrderRefunded.useMutation({
-    onSuccess: () => { utils.admin.orders.invalidate(); utils.admin.orderTabCounts.invalidate(); utils.order.adminRefundList.invalidate(); toast.success("환불 완료 처리되었습니다."); },
+    onSuccess: () => { utils.admin.orders.invalidate(); utils.admin.orderTabCounts.invalidate(); utils.order.adminRefundList.invalidate(); toast.success("返金完了として処理しました。"); },
     onError: (e) => toast.error(e.message),
   });
   const startEditTracking = (key: string, currentTracking?: string) => {
@@ -1782,7 +1782,7 @@ function AdminOrders() {
     setInlineCarrierId(undefined);
   };
   const saveItemTracking = (order: any, item: any) => {
-    if (!inlineTrackingNumber.trim()) { toast.error("운송장 번호를 입력해주세요."); return; }
+    if (!inlineTrackingNumber.trim()) { toast.error("追跡番号を入力してください。"); return; }
     if (item.shipment?.id) {
       updateShipmentInfo.mutate({ shipmentId: item.shipment.id, trackingNumber: inlineTrackingNumber.trim() });
     } else {
@@ -1803,8 +1803,8 @@ function AdminOrders() {
 
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
   const [bulkAction, setBulkAction] = useState<string>("");
-  const bulkUpdateStatusMut = trpc.bulkActions.updateOrdersStatus.useMutation({ onSuccess: () => { utils.admin.orders.invalidate(); utils.admin.orderTabCounts.invalidate(); setSelectedIds([]); toast.success("상태가 변경되었습니다."); }, onError: (err) => { toast.error("상태 변경 오류: " + err.message); } });
-  const bulkDeleteMut = trpc.bulkActions.deleteOrders.useMutation({ onSuccess: () => { utils.admin.orders.invalidate(); utils.admin.orderTabCounts.invalidate(); setSelectedIds([]); toast.success("선택된 주문이 삭제되었습니다."); }, onError: (err) => { toast.error("삭제 오류: " + err.message); } });
+  const bulkUpdateStatusMut = trpc.bulkActions.updateOrdersStatus.useMutation({ onSuccess: () => { utils.admin.orders.invalidate(); utils.admin.orderTabCounts.invalidate(); setSelectedIds([]); toast.success("ステータスを変更しました。"); }, onError: (err) => { toast.error("ステータス変更エラー: " + err.message); } });
+  const bulkDeleteMut = trpc.bulkActions.deleteOrders.useMutation({ onSuccess: () => { utils.admin.orders.invalidate(); utils.admin.orderTabCounts.invalidate(); setSelectedIds([]); toast.success("選択した注文を削除しました。"); }, onError: (err) => { toast.error("削除エラー: " + err.message); } });
 
   const toggleSelectAll = () => {
     if (selectedIds.length === (data?.orders ?? []).length) setSelectedIds([]);
@@ -1815,10 +1815,10 @@ function AdminOrders() {
     else setSelectedIds([...selectedIds, id]);
   };
   const handleBulkAction = () => {
-    if (selectedIds.length === 0) { toast.error("주문을 선택해주세요."); return; }
-    if (!bulkAction) { toast.error("작업을 선택해주세요."); return; }
+    if (selectedIds.length === 0) { toast.error("注文を選択してください。"); return; }
+    if (!bulkAction) { toast.error("操作を選択してください。"); return; }
     if (bulkAction === "delete") {
-      if (confirm(`선택된 ${selectedIds.length}개 주문을 삭제하시겠습니까?`)) {
+      if (confirm(`選択した${selectedIds.length}件の注文を削除しますか？`)) {
         bulkDeleteMut.mutate({ ids: selectedIds });
       }
     } else {
@@ -1846,35 +1846,35 @@ function AdminOrders() {
   );
   const refreshListTracking = trpc.shipping.adminRefreshTracking.useMutation({
     onSuccess: (res: any) => {
-      if (!res.success) { toast.info(res.message || "배송 정보를 아직 조회할 수 없습니다."); return; }
-      if (res.eventsCount > 0) toast.success(`${res.eventsCount}개 이벤트 업데이트`);
-      else toast.info("최신 상태입니다.");
+      if (!res.success) { toast.info(res.message || "配送情報をまだ照会できません。"); return; }
+      if (res.eventsCount > 0) toast.success(`${res.eventsCount}件のイベントを更新`);
+      else toast.info("最新の状態です。");
       setTimeout(() => refetchListModal(), 1500);
     },
     onError: (e: any) => toast.error(e.message),
   });
   const listShipmentStatusLabels: Record<string, string> = {
-    ready: "배송 준비", picked_up: "상품 수거", accepted: "접수",
-    export_customs: "출발국 통관", in_transit: "배송 중", in_transit_intl: "국제운송",
-    in_transit_domestic: "국내배송", arrived_destination: "도착국 도착",
-    import_customs: "도착국 통관", customs_cleared: "통관 완료",
-    out_for_delivery: "배달 출발", delivered: "배달 완료",
-    failed: "배송 실패", returned: "반송",
+    ready: "配送準備", picked_up: "集荷", accepted: "受付",
+    export_customs: "発送国通関", in_transit: "配送中", in_transit_intl: "国際輸送",
+    in_transit_domestic: "国内配送", arrived_destination: "到着国到着",
+    import_customs: "到着国通関", customs_cleared: "通関完了",
+    out_for_delivery: "配達に出発", delivered: "配達完了",
+    failed: "配送失敗", returned: "返送",
   };
 
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold">주문 관리 <span className="text-base font-normal text-muted-foreground">({data?.total ?? 0})</span></h1>
+        <h1 className="text-2xl font-bold">注文管理 <span className="text-base font-normal text-muted-foreground">({data?.total ?? 0})</span></h1>
         <div className="flex items-center gap-2">
           <Button size="sm" variant="outline" className="h-8 text-xs gap-1" onClick={expandAllOrders}>
-            <ChevronDown className="w-3.5 h-3.5" />펼치기
+            <ChevronDown className="w-3.5 h-3.5" />展開
           </Button>
           <Button size="sm" variant="outline" className="h-8 text-xs gap-1" onClick={collapseAllOrders}>
-            <ChevronRight className="w-3.5 h-3.5" />접기
+            <ChevronRight className="w-3.5 h-3.5" />閉じる
           </Button>
           <Button size="sm" variant="outline" className="h-8 text-xs gap-1" onClick={() => setLocation("/admin/excel-upload/tracking")}>
-            <Upload className="w-3.5 h-3.5" />엑셀 업로드
+            <Upload className="w-3.5 h-3.5" />Excelアップロード
           </Button>
         </div>
       </div>
@@ -1887,45 +1887,45 @@ function AdminOrders() {
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
             <Input
               className="pl-9 h-8 text-sm"
-              placeholder="주문번호, 수취인명, 전화번호 검색..."
+              placeholder="注文番号、受取人名、電話番号で検索..."
               value={pendingSearch}
               onChange={e => setPendingSearch(e.target.value)}
               onKeyDown={e => e.key === "Enter" && applyFilters()}
             />
           </div>
           <Button size="sm" className="h-8 px-4 bg-rose-600 hover:bg-rose-700 text-white gap-1.5" onClick={applyFilters}>
-            <Search className="w-3.5 h-3.5" />검색
+            <Search className="w-3.5 h-3.5" />検索
           </Button>
         </div>
 
         {/* 주문일자 */}
         <div className="flex items-center gap-0 border-b">
-          <div className="w-24 px-3 py-2.5 text-xs font-semibold text-muted-foreground bg-secondary/40 self-stretch flex items-center flex-shrink-0">주문일자</div>
+          <div className="w-24 px-3 py-2.5 text-xs font-semibold text-muted-foreground bg-secondary/40 self-stretch flex items-center flex-shrink-0">注文日</div>
           <div className="flex items-center gap-2 px-3 py-2 flex-wrap">
             <input type="date" className="border rounded px-2 py-1 text-xs h-7 bg-background" value={pendingDateFrom} onChange={e => { setPendingDateFrom(e.target.value); setActiveDatePreset(""); }} />
             <span className="text-xs text-muted-foreground">~</span>
             <input type="date" className="border rounded px-2 py-1 text-xs h-7 bg-background" value={pendingDateTo} onChange={e => { setPendingDateTo(e.target.value); setActiveDatePreset(""); }} />
             {(["오늘", "7일", "14일", "1개월", "3개월", "전체"] as const).map(p => (
-              <button key={p} onClick={() => applyDatePreset(p)} className={`text-xs px-2.5 py-1 rounded border h-7 transition-colors ${activeDatePreset === p ? "bg-primary text-primary-foreground border-primary" : "bg-background border-border hover:bg-accent"}`}>{p}</button>
+              <button key={p} onClick={() => applyDatePreset(p)} className={`text-xs px-2.5 py-1 rounded border h-7 transition-colors ${activeDatePreset === p ? "bg-primary text-primary-foreground border-primary" : "bg-background border-border hover:bg-accent"}`}>{({ "오늘": "今日", "7일": "7日", "14일": "14日", "1개월": "1か月", "3개월": "3か月", "전체": "すべて" } as Record<string, string>)[p] ?? p}</button>
             ))}
           </div>
         </div>
 
         {/* 입금/주문상태 */}
         <div className="flex items-center gap-0 border-b">
-          <div className="w-24 px-3 py-2.5 text-xs font-semibold text-muted-foreground bg-secondary/40 self-stretch flex items-center flex-shrink-0">입금/주문상태</div>
+          <div className="w-24 px-3 py-2.5 text-xs font-semibold text-muted-foreground bg-secondary/40 self-stretch flex items-center flex-shrink-0">入金/注文状態</div>
           <div className="flex flex-wrap gap-x-4 gap-y-1 px-3 py-2">
             {([
-              { label: "전체", value: "", noTracking: false, count: tabCounts?.total },
-              { label: "입금전", value: "pending", noTracking: false, count: tabCounts?.pending },
-              { label: "결제완료", value: "paid", noTracking: false, count: tabCounts?.paid },
-              { label: "상품준비중", value: "preparing", noTracking: false, count: tabCounts?.preparing },
-              { label: "배송중", value: "shipping", noTracking: false, count: tabCounts?.shipping },
-              { label: "배송완료", value: "delivered", noTracking: false, count: tabCounts?.delivered },
-              { label: "통관검사", value: "customs_hold", noTracking: false, count: tabCounts?.customs_hold },
-              { label: "취소", value: "cancelled", noTracking: false, count: tabCounts?.cancelled },
-              { label: "일부취소", value: "partial_cancel", noTracking: false, count: tabCounts?.partialCancelled },
-              { label: "배송지연", value: "", noTracking: true, count: undefined },
+              { label: "すべて", value: "", noTracking: false, count: tabCounts?.total },
+              { label: "入金前", value: "pending", noTracking: false, count: tabCounts?.pending },
+              { label: "支払い済み", value: "paid", noTracking: false, count: tabCounts?.paid },
+              { label: "商品準備中", value: "preparing", noTracking: false, count: tabCounts?.preparing },
+              { label: "配送中", value: "shipping", noTracking: false, count: tabCounts?.shipping },
+              { label: "配送完了", value: "delivered", noTracking: false, count: tabCounts?.delivered },
+              { label: "通関検査", value: "customs_hold", noTracking: false, count: tabCounts?.customs_hold },
+              { label: "キャンセル", value: "cancelled", noTracking: false, count: tabCounts?.cancelled },
+              { label: "一部キャンセル", value: "partial_cancel", noTracking: false, count: tabCounts?.partialCancelled },
+              { label: "配送遅延", value: "", noTracking: true, count: undefined },
             ] as const).map(opt => {
               const isActive = opt.noTracking ? (noTrackingFilter && !refundFilter) : (statusFilter === opt.value && !noTrackingFilter && !refundFilter);
               return (
@@ -1943,7 +1943,7 @@ function AdminOrders() {
               <input type="radio" name="orderStatusFilter" className="accent-rose-600" checked={refundFilter}
                 onChange={() => { setRefundFilter(true); setStatusFilter(""); setNoTrackingFilter(false); setPage(1); }} />
               <span className={refundFilter ? "font-semibold text-rose-600" : "text-foreground"}>
-                환불{tabCounts?.refunded !== undefined ? <span className="text-muted-foreground ml-0.5 font-normal">{tabCounts.refunded}</span> : null}
+                返金{tabCounts?.refunded !== undefined ? <span className="text-muted-foreground ml-0.5 font-normal">{tabCounts.refunded}</span> : null}
               </span>
             </label>
           </div>
@@ -1951,9 +1951,9 @@ function AdminOrders() {
 
         {/* 결제수단 */}
         <div className="flex items-center gap-0 border-b">
-          <div className="w-24 px-3 py-2.5 text-xs font-semibold text-muted-foreground bg-secondary/40 self-stretch flex items-center flex-shrink-0">결제수단</div>
+          <div className="w-24 px-3 py-2.5 text-xs font-semibold text-muted-foreground bg-secondary/40 self-stretch flex items-center flex-shrink-0">決済方法</div>
           <div className="flex flex-wrap gap-x-4 px-3 py-2">
-            {([{ label: "전체", value: "" }, { label: "카드결제", value: "card" }, { label: "무통장입금", value: "bank_transfer" }] as const).map(opt => (
+            {([{ label: "すべて", value: "" }, { label: "カード決済", value: "card" }, { label: "銀行振込", value: "bank_transfer" }] as const).map(opt => (
               <label key={opt.value} className="flex items-center gap-1.5 cursor-pointer text-xs py-0.5">
                 <input type="radio" name="paymentMethodFilter" className="accent-rose-600" checked={pendingPaymentMethod === opt.value}
                   onChange={() => setPendingPaymentMethod(opt.value)} />
@@ -1965,13 +1965,13 @@ function AdminOrders() {
 
         {/* 표시 건수 */}
         <div className="flex items-center gap-0 border-b">
-          <div className="w-24 px-3 py-2.5 text-xs font-semibold text-muted-foreground bg-secondary/40 self-stretch flex items-center flex-shrink-0">표시 건수</div>
+          <div className="w-24 px-3 py-2.5 text-xs font-semibold text-muted-foreground bg-secondary/40 self-stretch flex items-center flex-shrink-0">表示件数</div>
           <div className="flex flex-wrap gap-x-4 px-3 py-2">
             {([20, 50, 100] as const).map(n => (
               <label key={n} className="flex items-center gap-1.5 cursor-pointer text-xs py-0.5">
                 <input type="radio" name="pageSizeFilter" className="accent-rose-600" checked={pageSize === n}
                   onChange={() => { setPageSize(n); setPage(1); }} />
-                <span className={pageSize === n ? "font-semibold text-rose-600" : "text-foreground"}>{n}개</span>
+                <span className={pageSize === n ? "font-semibold text-rose-600" : "text-foreground"}>{n}件</span>
               </label>
             ))}
           </div>
@@ -1979,10 +1979,10 @@ function AdminOrders() {
 
         {/* 정렬 + 하단 버튼 */}
         <div className="flex items-center gap-0">
-          <div className="w-24 px-3 py-2.5 text-xs font-semibold text-muted-foreground bg-secondary/40 self-stretch flex items-center flex-shrink-0">정렬</div>
+          <div className="w-24 px-3 py-2.5 text-xs font-semibold text-muted-foreground bg-secondary/40 self-stretch flex items-center flex-shrink-0">並び替え</div>
           <div className="flex flex-1 items-center justify-between flex-wrap gap-2 px-3 py-2">
             <div className="flex flex-wrap gap-x-4 gap-y-1">
-              {([{ label: "주문일", value: "createdAt" }, { label: "금액", value: "totalAmount" }, { label: "상태", value: "status" }] as const).map(opt => (
+              {([{ label: "注文日", value: "createdAt" }, { label: "金額", value: "totalAmount" }, { label: "ステータス", value: "status" }] as const).map(opt => (
                 <label key={opt.value} className="flex items-center gap-1.5 cursor-pointer text-xs py-0.5">
                   <input type="radio" name="sortByFilter" className="accent-rose-600" checked={pendingSortBy === opt.value}
                     onChange={() => setPendingSortBy(opt.value)} />
@@ -1991,29 +1991,29 @@ function AdminOrders() {
               ))}
               <label className="flex items-center gap-1.5 cursor-pointer text-xs py-0.5">
                 <input type="checkbox" className="accent-rose-600" checked={pendingSortAsc} onChange={e => setPendingSortAsc(e.target.checked)} />
-                <span className={pendingSortAsc ? "font-semibold text-rose-600" : "text-foreground"}>오름차순</span>
+                <span className={pendingSortAsc ? "font-semibold text-rose-600" : "text-foreground"}>昇順</span>
               </label>
             </div>
             <div className="flex items-center gap-2">
               <Button size="sm" className="h-7 text-xs px-3 bg-rose-600 hover:bg-rose-700 text-white gap-1" onClick={applyFilters}>
-                <Search className="w-3 h-3" />검색
+                <Search className="w-3 h-3" />検索
               </Button>
               <Button size="sm" variant="outline" className="h-7 text-xs px-3 gap-1" onClick={resetFilters}>
-                <X className="w-3 h-3" />초기화
+                <X className="w-3 h-3" />リセット
               </Button>
               <Button size="sm" variant="outline" className="h-7 text-xs gap-1"
-                onClick={() => { downloadOrdersExcel(data?.orders ?? []); toast.success("엑셀 다운로드 중..."); }}>
-                <Upload className="w-3.5 h-3.5" />엑셀
+                onClick={() => { downloadOrdersExcel(data?.orders ?? []); toast.success("Excelをダウンロード中..."); }}>
+                <Upload className="w-3.5 h-3.5" />Excel
               </Button>
               {selectedIds.length > 0 && (
                 <div className="flex items-center gap-1.5">
-                  <span className="text-xs text-muted-foreground">{selectedIds.length}개 선택</span>
+                  <span className="text-xs text-muted-foreground">{selectedIds.length}件選択</span>
                   <select className="border rounded px-2 py-1 text-xs h-7" value={bulkAction} onChange={e => setBulkAction(e.target.value)}>
-                    <option value="">일괄작업</option>
-                    <option value="delete">삭제</option>
-                    {statuses.map(s => <option key={s} value={s}>{getOrderStatusLabel(s)}로 변경</option>)}
+                    <option value="">一括操作</option>
+                    <option value="delete">削除</option>
+                    {statuses.map(s => <option key={s} value={s}>{getOrderStatusLabel(s)}に変更</option>)}
                   </select>
-                  <Button size="sm" className="h-7 text-xs" onClick={handleBulkAction} disabled={!bulkAction}>실행</Button>
+                  <Button size="sm" className="h-7 text-xs" onClick={handleBulkAction} disabled={!bulkAction}>実行</Button>
                 </div>
               )}
             </div>
@@ -2027,12 +2027,12 @@ function AdminOrders() {
             <thead>
               <tr className="bg-secondary/50 text-xs text-muted-foreground border-b">
                 <th className="text-center py-3 px-3 w-10"><input type="checkbox" checked={selectedIds.length === (data?.orders ?? []).length && (data?.orders ?? []).length > 0} onChange={toggleSelectAll} /></th>
-                <th className="text-left py-3 px-3">주문번호</th>
-                <th className="text-left py-3 px-3">주문 상품</th>
-                <th className="text-right py-3 px-3">금액</th>
-                <th className="text-center py-3 px-3">상태</th>
-                <th className="text-left py-3 px-3 min-w-[180px]">운송장</th>
-                <th className="text-center py-3 px-3">작업</th>
+                <th className="text-left py-3 px-3">注文番号</th>
+                <th className="text-left py-3 px-3">注文商品</th>
+                <th className="text-right py-3 px-3">金額</th>
+                <th className="text-center py-3 px-3">ステータス</th>
+                <th className="text-left py-3 px-3 min-w-[180px]">追跡番号</th>
+                <th className="text-center py-3 px-3">操作</th>
               </tr>
             </thead>
             <tbody>
@@ -2057,20 +2057,20 @@ function AdminOrders() {
                               {isCollapsed ? <ChevronRight className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
                               <span className="font-mono text-primary">{formatOrderNumber(o.orderNumber)}</span>
                               <span className="text-[11px] font-normal text-muted-foreground">
-                                {(() => { const d = new Date(o.createdAt); return d.toLocaleString("ko-KR", { year:"numeric", month:"2-digit", day:"2-digit", hour:"2-digit", minute:"2-digit", hour12: false }); })()}
+                                {(() => { const d = new Date(o.createdAt); return d.toLocaleString("ja-JP", { year:"numeric", month:"2-digit", day:"2-digit", hour:"2-digit", minute:"2-digit", hour12: false }); })()}
                               </span>
                             </button>
-                            <span className="text-xs text-muted-foreground">{items.length}개 상품</span>
+                            <span className="text-xs text-muted-foreground">{items.length}点の商品</span>
                             <span className="flex items-center gap-1">
                               {o.paymentMethod === "card" && (
-                                <span className="inline-flex items-center justify-center w-4 h-4 rounded text-[9px] font-bold bg-blue-100 text-blue-700 border border-blue-300 flex-shrink-0">카</span>
+                                <span className="inline-flex items-center justify-center w-4 h-4 rounded text-[9px] font-bold bg-blue-100 text-blue-700 border border-blue-300 flex-shrink-0">カ</span>
                               )}
                               {(o.paymentMethod === "bank_transfer" || o.paymentMethod === "virtual_account") && (
-                                <span className="inline-flex items-center justify-center w-4 h-4 rounded text-[9px] font-bold bg-emerald-100 text-emerald-700 border border-emerald-300 flex-shrink-0">무</span>
+                                <span className="inline-flex items-center justify-center w-4 h-4 rounded text-[9px] font-bold bg-emerald-100 text-emerald-700 border border-emerald-300 flex-shrink-0">振</span>
                               )}
-                              <span className="text-xs font-semibold price-text">실결제: {formatPrice(o.totalAmount - (o.discountAmount ?? 0) - (o.pointsUsed ?? 0))}</span>
+                              <span className="text-xs font-semibold price-text">実決済額: {formatPrice(o.totalAmount - (o.discountAmount ?? 0) - (o.pointsUsed ?? 0))}</span>
                               {(o.pointsUsed ?? 0) > 0 && (
-                                <span className="text-[10px] text-rose-500 font-medium">포인트: {(o.pointsUsed ?? 0).toLocaleString()}</span>
+                                <span className="text-[10px] text-rose-500 font-medium">ポイント: {(o.pointsUsed ?? 0).toLocaleString()}</span>
                               )}
                             </span>
                             {o.paymentMethod === "bank_transfer" && o.paymentStatus === "pending" && o.paymentId && (
@@ -2078,7 +2078,7 @@ function AdminOrders() {
                                 className="text-[11px] px-2 py-0.5 rounded-full font-semibold bg-amber-100 text-amber-700 dark:bg-amber-950/40 dark:text-amber-400 border border-amber-300 hover:bg-amber-200 transition-colors disabled:opacity-50"
                                 disabled={confirmPaymentInList.isPending}
                                 onClick={(e) => { e.stopPropagation(); confirmPaymentInList.mutate({ paymentId: o.paymentId }); }}
-                              >입금확인</button>
+                              >入金確認</button>
                             )}
                           </div>
                           {/* 오른쪽: 수취인 연락처 정보 — 공간 부족 시 다음 줄 */}
@@ -2120,12 +2120,12 @@ function AdminOrders() {
                           <td colSpan={6} className="py-2 px-3">
                             <div className="flex items-center gap-4 flex-wrap">
                               <div className="flex items-center gap-1.5">
-                                <span className="text-xs text-muted-foreground">환불 금액</span>
-                                <span className={`text-sm font-bold ${allRefunded ? "text-emerald-600" : "text-rose-600"}`}>{(totalRefund).toLocaleString()}원</span>
+                                <span className="text-xs text-muted-foreground">返金額</span>
+                                <span className={`text-sm font-bold ${allRefunded ? "text-emerald-600" : "text-rose-600"}`}>{(totalRefund).toLocaleString()}円</span>
                               </div>
                               {bankInfo && (
                                 <div className="flex items-center gap-1.5">
-                                  <span className="text-xs text-muted-foreground">환불 계좌</span>
+                                  <span className="text-xs text-muted-foreground">返金先口座</span>
                                   <span className="text-xs font-medium font-mono">{bankInfo}</span>
                                 </div>
                               )}
@@ -2134,7 +2134,7 @@ function AdminOrders() {
                                   className="ml-auto px-3 py-1 rounded text-xs font-semibold bg-emerald-100 text-emerald-700 border border-emerald-300 hover:bg-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-400 dark:border-emerald-700 transition-colors disabled:opacity-50"
                                   disabled={markOrderRefunded.isPending}
                                   onClick={() => markOrderRefunded.mutate({ orderId: o.id })}
-                                >환불 완료</button>
+                                >返金完了</button>
                               )}
                             </div>
                           </td>
@@ -2180,9 +2180,9 @@ function AdminOrders() {
                                 {item.options && Object.keys(item.options).length > 0 && (
                                   <div className="text-[11px] text-muted-foreground">{Object.values(item.options).join(", ")}</div>
                                 )}
-                                <div className="text-[11px] text-muted-foreground">{item.quantity}개 × {formatPrice(item.price)}</div>
+                                <div className="text-[11px] text-muted-foreground">{item.quantity}個 × {formatPrice(item.price)}</div>
                                 {item.product?.noDiscount === 1 && (
-                                  <span className="inline-block mt-0.5 text-[9px] px-1.5 py-0.5 rounded bg-amber-50 text-amber-700 border border-amber-300 font-medium">할인 제외 상품</span>
+                                  <span className="inline-block mt-0.5 text-[9px] px-1.5 py-0.5 rounded bg-amber-50 text-amber-700 border border-amber-300 font-medium">割引対象外商品</span>
                                 )}
                               </div>
                             </div>
@@ -2209,12 +2209,12 @@ function AdminOrders() {
                           {/* 상태 */}
                           <td className="py-3 px-3 text-center">
                             {itemCancelled ? (
-                              <span className="text-[11px] px-2 py-0.5 rounded-full font-medium bg-rose-100 text-rose-400 dark:bg-rose-950/40 dark:text-rose-400">취소됨</span>
+                              <span className="text-[11px] px-2 py-0.5 rounded-full font-medium bg-rose-100 text-rose-400 dark:bg-rose-950/40 dark:text-rose-400">キャンセル済み</span>
                             ) : (
                               <>
                                 <span className={`text-[11px] px-2 py-0.5 rounded-full font-medium ${getOrderStatusColor(item.itemStatus ?? o.status)}`}>{getOrderStatusLabel(item.itemStatus ?? o.status)}</span>
                                 {o.status === "customs_hold" && item.shipment?.customsConfirmed === 1 && (
-                                  <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-blue-50 text-blue-600 font-semibold border border-blue-200 ml-1">확인</span>
+                                  <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-blue-50 text-blue-600 font-semibold border border-blue-200 ml-1">確認</span>
                                 )}
                               </>
                             )}
@@ -2224,7 +2224,7 @@ function AdminOrders() {
                             <div className="flex items-center gap-1">
                               <Input
                                 className="h-7 !text-[11px] w-[110px] font-mono tracking-wide"
-                                placeholder="운송장 번호"
+                                placeholder="追跡番号"
                                 defaultValue={itemShipment?.trackingNumber ?? ""}
                                 key={`${itemKey}-${itemShipment?.trackingNumber ?? ""}`}
                                 disabled={["pending", "paid"].includes(o.status) || itemCancelled}
@@ -2255,7 +2255,7 @@ function AdminOrders() {
                                 <button
                                   className="text-muted-foreground hover:text-primary p-1 flex-shrink-0"
                                   onClick={() => setListTrackingItem({ ...item, _orderId: o.id })}
-                                  title="배송 타임라인"
+                                  title="配送タイムライン"
                                 >
                                   <Truck className="w-3.5 h-3.5" />
                                 </button>
@@ -2293,13 +2293,13 @@ function AdminOrders() {
                                 <button
                                   className={`px-1.5 py-0.5 rounded text-[10px] font-semibold border whitespace-nowrap transition-colors ${item.shipment.customsConfirmed === 1 ? "bg-blue-50 text-blue-600 border-blue-200 hover:bg-blue-100" : "bg-rose-50 text-rose-600 border-rose-200 hover:bg-rose-100"}`}
                                   onClick={() => confirmCustoms.mutate({ shipmentId: item.shipment.id, confirm: item.shipment.customsConfirmed !== 1 })}
-                                  title={item.shipment.customsConfirmed === 1 ? "통관검사 확인 해제" : "통관검사 확인"}
+                                  title={item.shipment.customsConfirmed === 1 ? "通関検査の確認を解除" : "通関検査を確認"}
                                   disabled={confirmCustoms.isPending}
                                 >
-                                  {item.shipment.customsConfirmed === 1 ? "확인완료" : "미확인"}
+                                  {item.shipment.customsConfirmed === 1 ? "確認済み" : "未確認"}
                                 </button>
                               )}
-                              <button className="text-muted-foreground hover:text-primary p-1" onClick={() => setLocation(`/admin/orders/${o.orderNumber}`)} title="주문 상세">
+                              <button className="text-muted-foreground hover:text-primary p-1" onClick={() => setLocation(`/admin/orders/${o.orderNumber}`)} title="注文詳細">
                                 <ExternalLink className="w-3.5 h-3.5" />
                               </button>
                             </div>
@@ -2314,7 +2314,7 @@ function AdminOrders() {
             </tbody>
           </table>
         </div>
-        {(data?.orders ?? []).length === 0 && <p className="text-center py-8 text-sm text-muted-foreground">주문이 없습니다</p>}
+        {(data?.orders ?? []).length === 0 && <p className="text-center py-8 text-sm text-muted-foreground">注文がありません</p>}
       </div>
 
       <Paginator page={page} totalPages={totalPages} onPageChange={setPage} className="mt-4" />
@@ -2334,9 +2334,9 @@ function AdminOrders() {
               <div>
                 <div className="flex items-center gap-2">
                   <Clock className="w-4 h-4 text-primary" />
-                  <span className="font-bold text-base">배송 타임라인</span>
+                  <span className="font-bold text-base">配送タイムライン</span>
                   {listModalData?.history && (
-                    <span className="text-sm text-muted-foreground">{listModalData.history.length}건</span>
+                    <span className="text-sm text-muted-foreground">{listModalData.history.length}件</span>
                   )}
                 </div>
                 <p className="text-sm text-muted-foreground mt-0.5 line-clamp-1">{listTrackingItem.productName}</p>
@@ -2359,20 +2359,20 @@ function AdminOrders() {
                 disabled={refreshListTracking.isPending}
               >
                 <RotateCcw className={`w-3 h-3 ${refreshListTracking.isPending ? "animate-spin" : ""}`} />
-                새로고침
+                再読み込み
               </Button>
             </div>
 
             {/* 추적번호 */}
             <div className="mx-4 mt-4 border rounded-xl p-4 flex-shrink-0">
               <p className="text-[11px] text-muted-foreground mb-0.5">
-                추적번호 · {listModalData?.carrier?.name ?? listTrackingItem.shipment?.carrier?.name ?? "택배사"}
+                追跡番号 · {listModalData?.carrier?.name ?? listTrackingItem.shipment?.carrier?.name ?? "配送業者"}
               </p>
               <p className="font-bold text-base">{listTrackingItem.shipment?.trackingNumber}</p>
               <div className="flex gap-2 mt-2 flex-wrap">
                 <Button size="sm" variant="outline" className="h-7 text-xs gap-1"
-                  onClick={() => { navigator.clipboard.writeText(listTrackingItem.shipment?.trackingNumber ?? ""); toast.success("복사됨"); }}>
-                  <Copy className="w-3 h-3" />복사
+                  onClick={() => { navigator.clipboard.writeText(listTrackingItem.shipment?.trackingNumber ?? ""); toast.success("コピーしました"); }}>
+                  <Copy className="w-3 h-3" />コピー
                 </Button>
                 <Button size="sm" className="h-7 text-xs gap-1 bg-blue-600 hover:bg-blue-700 text-white" asChild>
                   <a href={`https://t.17track.net/en#nums=${listTrackingItem.shipment?.trackingNumber}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1">
@@ -2382,7 +2382,7 @@ function AdminOrders() {
                 {/^\d{10,13}$/.test(listTrackingItem.shipment?.trackingNumber ?? "") && (
                   <Button size="sm" className="h-7 text-xs gap-1 bg-orange-600 hover:bg-orange-700 text-white" asChild>
                     <a href={`https://track.shiptrack.co.kr/cjkorex/${listTrackingItem.shipment?.trackingNumber}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1">
-                      <ExternalLink className="w-3 h-3" />CJ조회
+                      <ExternalLink className="w-3 h-3" />CJで照会
                     </a>
                   </Button>
                 )}
@@ -2394,13 +2394,13 @@ function AdminOrders() {
               {!listModalData ? (
                 <div className="text-center py-8 text-muted-foreground">
                   <Loader2 className="w-8 h-8 mx-auto mb-2 animate-spin opacity-40" />
-                  <p className="text-sm">불러오는 중...</p>
+                  <p className="text-sm">読み込み中...</p>
                 </div>
               ) : !listModalData.history || listModalData.history.length === 0 ? (
                 <div className="text-center py-8 text-muted-foreground">
                   <Truck className="w-10 h-10 mx-auto mb-2 opacity-30" />
-                  <p className="text-sm">아직 배송 이력이 없습니다</p>
-                  <p className="text-xs mt-1">새로고침 버튼으로 최신 정보를 불러오세요</p>
+                  <p className="text-sm">まだ配送履歴がありません</p>
+                  <p className="text-xs mt-1">再読み込みボタンで最新情報を取得してください</p>
                 </div>
               ) : (
                 <div className="space-y-0">
@@ -2422,7 +2422,7 @@ function AdminOrders() {
                               {renderShippingDesc(entry.description || listShipmentStatusLabels[entry.status] || entry.status)}
                             </span>
                             {isFirst && (
-                              <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-semibold border ${isDelivered ? "bg-blue-50 text-blue-600 border-blue-200" : "bg-primary/10 text-primary border-primary/20"}`}>현재</span>
+                              <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-semibold border ${isDelivered ? "bg-blue-50 text-blue-600 border-blue-200" : "bg-primary/10 text-primary border-primary/20"}`}>現在</span>
                             )}
                           </div>
                           {entry.location && (
@@ -2442,9 +2442,9 @@ function AdminOrders() {
             {/* 푸터 */}
             <div className="flex items-center justify-between px-5 py-3 border-t flex-shrink-0">
               <span className="text-xs text-muted-foreground">
-                {listModalData?.updatedAt ? `최종동기: ${formatDateTime(listModalData.updatedAt)}` : "자동 업데이트"}
+                {listModalData?.updatedAt ? `最終同期: ${formatDateTime(listModalData.updatedAt)}` : "自動更新"}
               </span>
-              <Button size="sm" variant="outline" onClick={() => setListTrackingItem(null)} className="h-7 text-xs">닫기</Button>
+              <Button size="sm" variant="outline" onClick={() => setListTrackingItem(null)} className="h-7 text-xs">閉じる</Button>
             </div>
           </div>
         </div>
@@ -2460,13 +2460,13 @@ function AdminOrderDetail({ id }: { id: string }) {
   const { data: carriers } = trpc.shipping.adminCarriers.useQuery();
   const { data: paymentData, refetch: refetchPayment } = trpc.payment.adminGetPaymentByOrderId.useQuery({ orderId: Number(id) }, { enabled: !!order });
   const utils = trpc.useUtils();
-  const updateStatus = trpc.admin.updateOrderStatus.useMutation({ onSuccess: () => { utils.order.adminGetById.invalidate({ id }); utils.admin.orderTabCounts.invalidate(); toast.success("상태가 변경되었습니다."); } });
+  const updateStatus = trpc.admin.updateOrderStatus.useMutation({ onSuccess: () => { utils.order.adminGetById.invalidate({ id }); utils.admin.orderTabCounts.invalidate(); toast.success("ステータスを変更しました。"); } });
   const confirmPayment = trpc.payment.adminConfirmPayment.useMutation({
     onSuccess: () => {
       utils.order.adminGetById.invalidate({ id });
       utils.admin.orderTabCounts.invalidate();
       refetchPayment();
-      toast.success("입금이 확인되었습니다.");
+      toast.success("入金を確認しました。");
     },
     onError: (e) => toast.error(e.message),
   });
@@ -2475,7 +2475,7 @@ function AdminOrderDetail({ id }: { id: string }) {
       utils.order.adminGetById.invalidate({ id });
       utils.admin.orderTabCounts.invalidate();
       refetchPayment();
-      toast.success("입금확인이 취소되었습니다.");
+      toast.success("入金確認を取り消しました。");
     },
     onError: (e) => toast.error(e.message),
   });
@@ -2489,7 +2489,7 @@ function AdminOrderDetail({ id }: { id: string }) {
       utils.order.adminGetById.invalidate({ id });
       utils.shipping.adminTrackOrder.invalidate({ orderId: Number(id) });
       utils.admin.orderTabCounts.invalidate();
-      toast.success("운송장이 등록되었습니다.");
+      toast.success("追跡番号を登録しました。");
       setShowShipmentForm(false);
       setTrackingNumber("");
     },
@@ -2551,10 +2551,10 @@ function AdminOrderDetail({ id }: { id: string }) {
       setCancelItemIds([]);
       setCancelReason("");
       if (result.allCancelled) {
-        toast.success(`전체 상품이 취소되었습니다. 환불 금액: ${formatPrice(result.refundAmount ?? 0)}`);
+        toast.success(`全商品をキャンセルしました。返金額: ${formatPrice(result.refundAmount ?? 0)}`);
       } else {
-        const parts = [`${result.cancelledCount}개 상품이 취소되었습니다.`, `환불 금액: ${formatPrice(result.refundAmount ?? 0)}`];
-        if ((result.couponReduction ?? 0) > 0) parts.push(`(쿠폰 차감 -${formatPrice(result.couponReduction ?? 0)} 포함)`);
+        const parts = [`${result.cancelledCount}点の商品をキャンセルしました。`, `返金額: ${formatPrice(result.refundAmount ?? 0)}`];
+        if ((result.couponReduction ?? 0) > 0) parts.push(`(クーポン差引 -${formatPrice(result.couponReduction ?? 0)} を含む)`);
         toast.success(parts.join(" "));
       }
     },
@@ -2566,7 +2566,7 @@ function AdminOrderDetail({ id }: { id: string }) {
       utils.admin.orders.invalidate();
       utils.admin.orderTabCounts.invalidate();
       utils.order.adminRefundList.invalidate();
-      toast.success("상품 취소가 복원되었습니다.");
+      toast.success("商品のキャンセルを復元しました。");
     },
     onError: (e) => toast.error(e.message),
   });
@@ -2576,7 +2576,7 @@ function AdminOrderDetail({ id }: { id: string }) {
       utils.admin.orders.invalidate();
       utils.admin.orderTabCounts.invalidate();
       utils.order.adminRefundList.invalidate();
-      toast.success("환불 완료 처리되었습니다.");
+      toast.success("返金完了として処理しました。");
     },
     onError: (e) => toast.error(e.message),
   });
@@ -2586,7 +2586,7 @@ function AdminOrderDetail({ id }: { id: string }) {
       utils.admin.orders.invalidate();
       utils.admin.orderTabCounts.invalidate();
       utils.order.adminRefundList.invalidate();
-      toast.success("환불 대기 상태로 변경되었습니다.");
+      toast.success("返金待ち状態に変更しました。");
     },
     onError: (e) => toast.error(e.message),
   });
@@ -2594,7 +2594,7 @@ function AdminOrderDetail({ id }: { id: string }) {
     onSuccess: () => {
       utils.order.adminGetById.invalidate({ id });
       utils.admin.orderTabCounts.invalidate();
-      toast.success("상품 상태가 변경되었습니다.");
+      toast.success("商品のステータスを変更しました。");
     },
     onError: (e) => toast.error(e.message),
   });
@@ -2607,7 +2607,7 @@ function AdminOrderDetail({ id }: { id: string }) {
     onSuccess: () => {
       utils.order.adminGetById.invalidate({ id });
       utils.shipping.adminTrackOrder.invalidate({ orderId: Number(id) });
-      toast.success("배송 정보가 수정되었습니다.");
+      toast.success("配送情報を更新しました。");
       setShowEditShipmentDialog(false);
     },
     onError: (e) => toast.error(e.message),
@@ -2616,15 +2616,15 @@ function AdminOrderDetail({ id }: { id: string }) {
   const refreshTracking = trpc.shipping.adminRefreshTracking.useMutation({
     onSuccess: (data: { success: boolean; eventsCount: number; delivered?: boolean; message?: string }) => {
       if (!data.success) {
-        toast.info(data.message || "배송 정보를 아직 조회할 수 없습니다.");
+        toast.info(data.message || "配送情報をまだ照会できません。");
         return;
       }
       if (data.delivered) {
-        toast.success("배송이 완료되었습니다!");
+        toast.success("配送が完了しました！");
       } else if (data.eventsCount > 0) {
-        toast.success(`배송 정보가 업데이트되었습니다. (${data.eventsCount}개 새 이벤트)`);
+        toast.success(`配送情報を更新しました。(新規イベント ${data.eventsCount}件)`);
       } else {
-        toast.info("배송 정보가 최신 상태입니다.");
+        toast.info("配送情報は最新の状態です。");
       }
       utils.order.adminGetById.invalidate({ id });
       utils.shipping.adminTrackOrder.invalidate({ orderId: Number(id) });
@@ -2638,33 +2638,33 @@ function AdminOrderDetail({ id }: { id: string }) {
     : null;
 
   const shipmentStatusLabels: Record<string, string> = {
-    ready: "배송 준비",
-    picked_up: "상품 수거",
-    accepted: "접수",
-    export_customs: "출발국 통관",
-    in_transit: "배송 중",
-    in_transit_intl: "국제운송",
-    in_transit_domestic: "국내배송",
-    arrived_destination: "도착국 도착",
-    import_customs: "도착국 통관",
-    customs_cleared: "통관 완료",
-    customs_departure: "통관 출발",
-    customs_arrival: "통관 도착",
-    out_for_delivery: "배달 출발",
-    delivered: "배달 완료",
-    failed: "배송 실패",
-    returned: "반송",
-    alert: "주의",
+    ready: "配送準備",
+    picked_up: "集荷",
+    accepted: "受付",
+    export_customs: "発送国通関",
+    in_transit: "配送中",
+    in_transit_intl: "国際輸送",
+    in_transit_domestic: "国内配送",
+    arrived_destination: "到着国到着",
+    import_customs: "到着国通関",
+    customs_cleared: "通関完了",
+    customs_departure: "通関出発",
+    customs_arrival: "通関到着",
+    out_for_delivery: "配達に出発",
+    delivered: "配達完了",
+    failed: "配送失敗",
+    returned: "返送",
+    alert: "注意",
   };
 
   // 국제배송 단계 정의
   const intlShipmentSteps = [
-    { key: "accepted", label: "접수", icon: Package },
-    { key: "export_customs", label: "출발국 통관", icon: Shield },
-    { key: "in_transit_intl", label: "국제운송", icon: Plane },
-    { key: "import_customs", label: "도착국 통관", icon: Globe },
-    { key: "out_for_delivery", label: "현지배송", icon: Truck },
-    { key: "delivered", label: "배달완료", icon: CheckCircle2 },
+    { key: "accepted", label: "受付", icon: Package },
+    { key: "export_customs", label: "発送国通関", icon: Shield },
+    { key: "in_transit_intl", label: "国際輸送", icon: Plane },
+    { key: "import_customs", label: "到着国通関", icon: Globe },
+    { key: "out_for_delivery", label: "現地配送", icon: Truck },
+    { key: "delivered", label: "配達完了", icon: CheckCircle2 },
   ];
 
   function mapToIntlStep(status: string): number {
@@ -2680,13 +2680,13 @@ function AdminOrderDetail({ id }: { id: string }) {
     return mapping[status] ?? 0;
   }
 
-  if (!order) return <div className="text-center py-12 text-muted-foreground">로딩 중...</div>;
+  if (!order) return <div className="text-center py-12 text-muted-foreground">読み込み中...</div>;
 
   return (
     <div>
       <div className="flex items-center gap-3 mb-6">
-        <Button variant="ghost" size="sm" onClick={() => window.history.back()}><ChevronLeft className="w-4 h-4 mr-1" /> 목록</Button>
-        <h1 className="text-2xl font-bold">주문 상세</h1>
+        <Button variant="ghost" size="sm" onClick={() => window.history.back()}><ChevronLeft className="w-4 h-4 mr-1" /> 一覧</Button>
+        <h1 className="text-2xl font-bold">注文詳細</h1>
         <div className="ml-auto">
           {order.status !== "cancelled" && (order.items ?? []).some((i: any) => !i.cancelledAt) && (
             <Button
@@ -2695,7 +2695,7 @@ function AdminOrderDetail({ id }: { id: string }) {
               className="h-8 text-xs border-rose-300 text-rose-600 hover:bg-rose-50 gap-1.5"
               onClick={() => { setCancelItemIds([]); setCancelReason(""); setShowPartialCancelDialog(true); }}
             >
-              <X className="w-3.5 h-3.5" />부분 취소
+              <X className="w-3.5 h-3.5" />一部キャンセル
             </Button>
           )}
         </div>
@@ -2705,8 +2705,8 @@ function AdminOrderDetail({ id }: { id: string }) {
       <Dialog open={showPartialCancelDialog} onOpenChange={setShowPartialCancelDialog}>
         <DialogContent className="max-w-lg">
           <DialogHeader>
-            <DialogTitle>부분 취소</DialogTitle>
-            <DialogDescription>취소할 상품을 선택하세요. 선택한 상품의 재고가 복구되고 주문 금액이 재계산됩니다.</DialogDescription>
+            <DialogTitle>一部キャンセル</DialogTitle>
+            <DialogDescription>キャンセルする商品を選択してください。選択した商品の在庫が戻り、注文金額が再計算されます。</DialogDescription>
           </DialogHeader>
           {(() => {
             const activeItems = (order.items ?? []).filter((i: any) => !i.cancelledAt);
@@ -2753,19 +2753,19 @@ function AdminOrderDetail({ id }: { id: string }) {
                         <div className="flex-1 min-w-0">
                           <p className="text-sm font-medium leading-snug">{item.productName}</p>
                           <div className="flex items-center gap-2 mt-0.5 flex-wrap">
-                            <span className="text-xs text-muted-foreground">수량 {item.quantity}개 · {formatPrice(itemTotal)}</span>
+                            <span className="text-xs text-muted-foreground">数量 {item.quantity}個 · {formatPrice(itemTotal)}</span>
                             {isNoDiscount && (
-                              <span className="text-[10px] px-1.5 py-0.5 rounded bg-amber-50 text-amber-700 border border-amber-300 font-medium">할인 제외 상품</span>
+                              <span className="text-[10px] px-1.5 py-0.5 rounded bg-amber-50 text-amber-700 border border-amber-300 font-medium">割引対象外商品</span>
                             )}
                             {itemCoupon > 0 && (
-                              <span className="text-xs text-rose-600 bg-rose-100 dark:bg-rose-950/30 px-1.5 py-0.5 rounded font-medium">쿠폰 -{formatPrice(itemCoupon)}</span>
+                              <span className="text-xs text-rose-600 bg-rose-100 dark:bg-rose-950/30 px-1.5 py-0.5 rounded font-medium">クーポン -{formatPrice(itemCoupon)}</span>
                             )}
                             {itemDiscount > 0 && (
-                              <span className="text-xs text-orange-600 bg-orange-50 dark:bg-orange-950/30 px-1.5 py-0.5 rounded font-medium">할인 -{formatPrice(itemDiscount)}</span>
+                              <span className="text-xs text-orange-600 bg-orange-50 dark:bg-orange-950/30 px-1.5 py-0.5 rounded font-medium">割引 -{formatPrice(itemDiscount)}</span>
                             )}
                           </div>
                           {(itemCoupon > 0 || itemDiscount > 0) && (
-                            <p className="text-xs font-semibold text-emerald-700 dark:text-emerald-400 mt-0.5">환불 예상: {formatPrice(itemRefund)}</p>
+                            <p className="text-xs font-semibold text-emerald-700 dark:text-emerald-400 mt-0.5">返金予定: {formatPrice(itemRefund)}</p>
                           )}
                         </div>
                       </label>
@@ -2775,51 +2775,51 @@ function AdminOrderDetail({ id }: { id: string }) {
 
                 {cancelItemIds.length > 0 && (
                   <div className="rounded-lg bg-muted/50 border p-3 text-sm space-y-1.5">
-                    <p className="font-semibold text-sm mb-1">환불 예상 내역</p>
+                    <p className="font-semibold text-sm mb-1">返金予定の内訳</p>
                     <div className="flex justify-between text-muted-foreground">
-                      <span>취소 상품 합계 ({cancelItemIds.length}개)</span>
+                      <span>キャンセル商品合計 ({cancelItemIds.length}点)</span>
                       <span>{formatPrice(selectedTotal)}</span>
                     </div>
                     {couponReduction > 0 && (
                       <div className="flex justify-between text-rose-600">
                         <span className="flex items-center gap-1">
-                          <span className="text-xs px-1 py-0.5 bg-rose-100 text-rose-600 rounded font-semibold">쿠폰</span>
-                          차감
+                          <span className="text-xs px-1 py-0.5 bg-rose-100 text-rose-600 rounded font-semibold">クーポン</span>
+                          差引
                         </span>
                         <span>-{formatPrice(couponReduction)}</span>
                       </div>
                     )}
                     {discountReduction > 0 && (
                       <div className="flex justify-between text-orange-600">
-                        <span>상품 할인 차감</span>
+                        <span>商品割引の差引</span>
                         <span>-{formatPrice(discountReduction)}</span>
                       </div>
                     )}
                     <div className="flex justify-between font-bold border-t pt-1.5">
-                      <span>환불 금액</span>
+                      <span>返金額</span>
                       <span className="text-emerald-700 dark:text-emerald-400">{formatPrice(refundAmount)}</span>
                     </div>
                   </div>
                 )}
 
                 <div className="space-y-1.5">
-                  <label className="text-sm font-medium">취소 사유 (선택)</label>
+                  <label className="text-sm font-medium">キャンセル理由 (任意)</label>
                   <Input
                     className="h-8 text-sm"
-                    placeholder="고객 요청, 재고 부족 등..."
+                    placeholder="お客様のご要望、在庫不足など..."
                     value={cancelReason}
                     onChange={e => setCancelReason(e.target.value)}
                   />
                 </div>
                 <DialogFooter className="gap-2 mt-2">
-                  <Button variant="outline" size="sm" onClick={() => setShowPartialCancelDialog(false)}>닫기</Button>
+                  <Button variant="outline" size="sm" onClick={() => setShowPartialCancelDialog(false)}>閉じる</Button>
                   <Button
                     size="sm"
                     className="bg-rose-600 hover:bg-rose-700 text-white"
                     disabled={cancelItemIds.length === 0 || partialCancel.isPending}
                     onClick={() => partialCancel.mutate({ orderId: order.id, itemIds: cancelItemIds, reason: cancelReason || undefined })}
                   >
-                    {partialCancel.isPending ? "처리 중..." : `${cancelItemIds.length}개 취소 (환불 ${formatPrice(refundAmount)})`}
+                    {partialCancel.isPending ? "処理中..." : `${cancelItemIds.length}点をキャンセル (返金 ${formatPrice(refundAmount)})`}
                   </Button>
                 </DialogFooter>
               </>
@@ -2831,10 +2831,10 @@ function AdminOrderDetail({ id }: { id: string }) {
       <div className="grid lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 space-y-6">
           <div className="bg-card border rounded-xl p-6 elegant-shadow">
-            <h3 className="font-semibold mb-4">주문 정보</h3>
+            <h3 className="font-semibold mb-4">注文情報</h3>
             <div className="grid sm:grid-cols-2 gap-4 text-sm">
-              <div><span className="text-muted-foreground">주문번호:</span> <span className="font-mono font-medium">{formatOrderNumber(order.orderNumber)}</span></div>
-              <div><span className="text-muted-foreground">주문일:</span> {formatDateTime(order.createdAt)}</div>
+              <div><span className="text-muted-foreground">注文番号:</span> <span className="font-mono font-medium">{formatOrderNumber(order.orderNumber)}</span></div>
+              <div><span className="text-muted-foreground">注文日:</span> {formatDateTime(order.createdAt)}</div>
             </div>
           </div>
 
@@ -2848,20 +2848,20 @@ function AdminOrderDetail({ id }: { id: string }) {
                 <div className="flex items-center justify-between mb-5">
                   <div className="flex items-center gap-2">
                     <Package className="w-4 h-4 text-primary" />
-                    <h3 className="font-semibold">구매 상품 목록 ({allItems.length}개)</h3>
+                    <h3 className="font-semibold">購入商品一覧 ({allItems.length}点)</h3>
                   </div>
                   <div className="flex items-center gap-3">
                     <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                      <span>송장입력</span>
+                      <span>追跡番号入力</span>
                       <div className="w-20 h-1.5 bg-muted rounded-full overflow-hidden">
                         <div className="h-full bg-primary rounded-full transition-all" style={{ width: `${allItems.length ? filledCount / allItems.length * 100 : 0}%` }} />
                       </div>
                       <span>{filledCount}/{allItems.length}</span>
                     </div>
                     {missingCount > 0 ? (
-                      <span className="text-xs px-2.5 py-1 rounded-full bg-orange-100 text-orange-600 dark:bg-orange-950/30 dark:text-orange-400 font-semibold">{missingCount}개 미입력</span>
+                      <span className="text-xs px-2.5 py-1 rounded-full bg-orange-100 text-orange-600 dark:bg-orange-950/30 dark:text-orange-400 font-semibold">{missingCount}件未入力</span>
                     ) : (
-                      <span className="text-xs px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-600 dark:bg-emerald-950/30 dark:text-emerald-400 font-semibold">모두 입력됨</span>
+                      <span className="text-xs px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-600 dark:bg-emerald-950/30 dark:text-emerald-400 font-semibold">すべて入力済み</span>
                     )}
                   </div>
                 </div>
@@ -2881,31 +2881,31 @@ function AdminOrderDetail({ id }: { id: string }) {
                         {/* 헤더 */}
                         <div className={`flex items-center justify-between px-4 py-2.5 border-b ${isCancelled ? "bg-rose-50/60 dark:bg-rose-950/20 border-rose-100 dark:border-rose-900/30" : hasTracking ? "bg-emerald-50 dark:bg-emerald-950/20 border-emerald-100 dark:border-emerald-800/30" : "bg-secondary/50"}`}>
                           <span className="text-xs font-mono font-semibold text-muted-foreground">
-                            주문번호 {formatOrderNumber(order.orderNumber)}
+                            注文番号 {formatOrderNumber(order.orderNumber)}
                             <span className="ml-2 opacity-50">#{String(item.id).padStart(6, '0')}</span>
                           </span>
                           {isCancelled ? (
                             <div className="flex items-center gap-1.5 flex-wrap">
                               <span className="text-xs px-2 py-0.5 rounded-full font-medium bg-gray-200 text-gray-600 dark:bg-gray-700 dark:text-gray-300 flex items-center gap-1">
-                                <X className="w-3 h-3" />취소됨
+                                <X className="w-3 h-3" />キャンセル済み
                               </span>
                               {item.refundedAt ? (
                                 <>
                                   <span className="text-xs px-2 py-0.5 rounded-full font-medium bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400 flex items-center gap-1">
-                                    <CheckCircle2 className="w-3 h-3" />환불 완료 {formatDateTime(item.refundedAt)}
+                                    <CheckCircle2 className="w-3 h-3" />返金完了 {formatDateTime(item.refundedAt)}
                                   </span>
                                   <button
                                     className="text-xs px-2 py-0.5 rounded-full font-medium bg-muted text-muted-foreground border hover:bg-accent flex items-center gap-1 disabled:opacity-50"
                                     disabled={markItemRefundPending.isPending}
                                     onClick={() => markItemRefundPending.mutate({ itemId: item.id })}
-                                  ><RotateCcw className="w-3 h-3" />환불취소</button>
+                                  ><RotateCcw className="w-3 h-3" />返金取消</button>
                                 </>
                               ) : (item.refundAmount ?? 0) > 0 ? (
                                 <button
                                   className="text-xs px-2 py-0.5 rounded-full font-medium bg-emerald-100 text-emerald-700 border border-emerald-300 hover:bg-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-400 flex items-center gap-1 disabled:opacity-50"
                                   disabled={markItemRefunded.isPending}
                                   onClick={() => markItemRefunded.mutate({ itemId: item.id })}
-                                ><Check className="w-3 h-3" />환불 완료 ({formatPrice(item.refundAmount)})</button>
+                                ><Check className="w-3 h-3" />返金完了 ({formatPrice(item.refundAmount)})</button>
                               ) : null}
                             </div>
                           ) : hasTracking ? (
@@ -2926,9 +2926,9 @@ function AdminOrderDetail({ id }: { id: string }) {
                             <p className="text-sm font-semibold leading-snug">{item.productName}</p>
                             {item.options && <p className="text-xs text-muted-foreground mt-0.5">{Object.entries(item.options).map(([k, v]) => `${k}: ${v}`).join(", ")}</p>}
                             <div className="flex items-center gap-3 mt-2 flex-wrap">
-                              <span className="text-xs bg-primary/10 text-primary px-2 py-0.5 rounded-full font-medium">수량 {item.quantity}개</span>
-                              <span className="text-xs text-muted-foreground">단가 {formatPrice(item.price)}</span>
-                              <span className="text-xs font-bold">소계 {formatPrice(item.price * item.quantity)}</span>
+                              <span className="text-xs bg-primary/10 text-primary px-2 py-0.5 rounded-full font-medium">数量 {item.quantity}個</span>
+                              <span className="text-xs text-muted-foreground">単価 {formatPrice(item.price)}</span>
+                              <span className="text-xs font-bold">小計 {formatPrice(item.price * item.quantity)}</span>
                               {(() => {
                                 const itemTotal = item.price * item.quantity;
                                 const isNoDiscount = item.product?.noDiscount === 1;
@@ -2942,10 +2942,10 @@ function AdminOrderDetail({ id }: { id: string }) {
                                 return (
                                   <>
                                     {isNoDiscount && (
-                                      <span className="text-[10px] px-1.5 py-0.5 rounded bg-amber-50 text-amber-700 border border-amber-300 font-medium">할인 제외 상품</span>
+                                      <span className="text-[10px] px-1.5 py-0.5 rounded bg-amber-50 text-amber-700 border border-amber-300 font-medium">割引対象外商品</span>
                                     )}
                                     {itemCoupon > 0 && (
-                                      <span className="text-xs text-rose-600 font-medium bg-rose-50 dark:bg-rose-950/30 px-2 py-0.5 rounded-full">쿠폰 -{formatPrice(itemCoupon)}</span>
+                                      <span className="text-xs text-rose-600 font-medium bg-rose-50 dark:bg-rose-950/30 px-2 py-0.5 rounded-full">クーポン -{formatPrice(itemCoupon)}</span>
                                     )}
                                   </>
                                 );
@@ -2964,13 +2964,13 @@ function AdminOrderDetail({ id }: { id: string }) {
                               className="text-xs border rounded px-2 py-1 text-muted-foreground hover:text-foreground hover:border-foreground transition-colors flex items-center gap-1"
                               onClick={() => startEditItem(item)}
                             >
-                              <Pencil className="w-3 h-3" />수정
+                              <Pencil className="w-3 h-3" />編集
                             </button>
                             <button
                               className="text-xs border rounded px-2 py-1 text-muted-foreground hover:text-primary hover:border-primary transition-colors flex items-center gap-1"
                               onClick={() => setTrackingModalItem(item)}
                             >
-                              <Search className="w-3 h-3" />추적
+                              <Search className="w-3 h-3" />追跡
                             </button>
                           </div>
                         ) : (
@@ -2980,14 +2980,14 @@ function AdminOrderDetail({ id }: { id: string }) {
                               value={inputCarrierId ?? ""}
                               onChange={e => setItemInputs(prev => ({ ...prev, [item.id]: { tracking: inputTracking, carrierId: e.target.value ? Number(e.target.value) : undefined } }))}
                             >
-                              <option value="">택배사 선택</option>
+                              <option value="">配送業者を選択</option>
                               {(carriers ?? []).map((c: any) => (
                                 <option key={c.id} value={c.id}>{c.name}</option>
                               ))}
                             </select>
                             <Input
                               className="h-9 text-sm font-mono flex-1 min-w-[160px]"
-                              placeholder="송장번호 입력"
+                              placeholder="追跡番号を入力"
                               value={inputTracking}
                               onChange={e => setItemInputs(prev => ({ ...prev, [item.id]: { tracking: e.target.value, carrierId: inputCarrierId } }))}
                               onKeyDown={e => {
@@ -3003,10 +3003,10 @@ function AdminOrderDetail({ id }: { id: string }) {
                               disabled={!inputTracking.trim() || registerShipmentItem.isPending || updateShipmentInfoInline.isPending}
                               onClick={() => { saveItemTrackingDetail(item, inputTracking, inputCarrierId); cancelEditItem(item.id); }}
                             >
-                              <Save className="w-3.5 h-3.5" />저장
+                              <Save className="w-3.5 h-3.5" />保存
                             </Button>
                             {isEditing && (
-                              <Button size="sm" variant="ghost" className="h-9 text-xs" onClick={() => cancelEditItem(item.id)}>닫기</Button>
+                              <Button size="sm" variant="ghost" className="h-9 text-xs" onClick={() => cancelEditItem(item.id)}>閉じる</Button>
                             )}
                           </div>
                         ))}
@@ -3015,7 +3015,7 @@ function AdminOrderDetail({ id }: { id: string }) {
                         <div className="flex items-center gap-2 px-4 py-3 flex-wrap">
                           {isCancelled && (
                             <span className="text-xs text-rose-400 flex items-center gap-1 mr-1">
-                              <X className="w-3 h-3" />취소됨 — 다른 상태로 변경 시 복원됩니다
+                              <X className="w-3 h-3" />キャンセル済み — 別のステータスに変更すると復元されます
                             </span>
                           )}
                           <div className="flex items-center gap-2 ml-auto">
@@ -3041,7 +3041,7 @@ function AdminOrderDetail({ id }: { id: string }) {
                               }}
                               disabled={updateStatus.isPending || partialCancel.isPending || uncancelItem.isPending || updateItemStatus.isPending}
                             >
-                              {isCancelled && itemStatus !== "cancelled" ? "복원" : "변경"}
+                              {isCancelled && itemStatus !== "cancelled" ? "復元" : "変更"}
                             </Button>
                           </div>
                         </div>
@@ -3056,24 +3056,24 @@ function AdminOrderDetail({ id }: { id: string }) {
 
         <div className="space-y-6">
           <div className="bg-card border rounded-xl p-6 elegant-shadow">
-            <h3 className="font-semibold mb-4">배송 정보</h3>
+            <h3 className="font-semibold mb-4">配送情報</h3>
             <div className="space-y-2 text-sm">
-              <div><span className="text-muted-foreground">수령인:</span> {order.recipientName}{(order as any).recipientNameEn ? ` (${(order as any).recipientNameEn})` : ""}</div>
-              <div><span className="text-muted-foreground">연락처:</span> {order.recipientPhone ? order.recipientPhone.replace(/^0/, '+82-').replace(/(\+82-)(\d{1,2})(\d{3,4})(\d{4})$/, '+82-$2-$3-$4') : "-"}</div>
-              <div><span className="text-muted-foreground">우편번호:</span> {order.zipCode}</div>
-              <div><span className="text-muted-foreground">주소:</span> {order.address1} {order.address2}</div>
+              <div><span className="text-muted-foreground">受取人:</span> {order.recipientName}{(order as any).recipientNameEn ? ` (${(order as any).recipientNameEn})` : ""}</div>
+              <div><span className="text-muted-foreground">連絡先:</span> {order.recipientPhone ? order.recipientPhone.replace(/^0/, '+82-').replace(/(\+82-)(\d{1,2})(\d{3,4})(\d{4})$/, '+82-$2-$3-$4') : "-"}</div>
+              <div><span className="text-muted-foreground">郵便番号:</span> {order.zipCode}</div>
+              <div><span className="text-muted-foreground">住所:</span> {order.address1} {order.address2}</div>
               {(order as any).addressEn1 && (
                 <div className="mt-1 p-2 bg-blue-50 dark:bg-blue-950/20 rounded text-xs text-blue-600 dark:text-blue-400">
-                  <span className="font-medium">영문주소:</span> {(order as any).addressEn2 ? `${(order as any).addressEn2}, ${(order as any).addressEn1}` : (order as any).addressEn1}
+                  <span className="font-medium">英語住所:</span> {(order as any).addressEn2 ? `${(order as any).addressEn2}, ${(order as any).addressEn1}` : (order as any).addressEn1}
                 </div>
               )}
-              {order.memo && <div><span className="text-muted-foreground">메모:</span> {order.memo}</div>}
+              {order.memo && <div><span className="text-muted-foreground">メモ:</span> {order.memo}</div>}
             </div>
           </div>
 
           <div className="bg-card border rounded-xl p-6 elegant-shadow">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="font-semibold">결제 정보</h3>
+              <h3 className="font-semibold">お支払い情報</h3>
               {paymentData && paymentData.status === "pending" && (
                 <Button
                   size="sm"
@@ -3082,7 +3082,7 @@ function AdminOrderDetail({ id }: { id: string }) {
                   onClick={() => confirmPayment.mutate({ paymentId: paymentData.id })}
                 >
                   <CheckCircle2 className="w-3.5 h-3.5" />
-                  {confirmPayment.isPending ? "처리 중..." : "입금 확인"}
+                  {confirmPayment.isPending ? "処理中..." : "入金確認"}
                 </Button>
               )}
               {paymentData && paymentData.status === "confirmed" && (
@@ -3091,21 +3091,21 @@ function AdminOrderDetail({ id }: { id: string }) {
                   variant="outline"
                   className="gap-1 h-7 text-xs border-rose-400 text-rose-600 bg-rose-50 hover:bg-rose-100 dark:bg-rose-950/20"
                   disabled={cancelPaymentConfirmation.isPending}
-                  onClick={() => { if (window.confirm("입금확인을 취소하시겠습니까? 주문 상태가 입금 대기로 돌아갑니다.")) cancelPaymentConfirmation.mutate({ paymentId: paymentData.id }); }}
+                  onClick={() => { if (window.confirm("入金確認を取り消しますか？注文ステータスが入金待ちに戻ります。")) cancelPaymentConfirmation.mutate({ paymentId: paymentData.id }); }}
                 >
                   <XCircle className="w-3.5 h-3.5" />
-                  {cancelPaymentConfirmation.isPending ? "처리 중..." : "입금확인 취소"}
+                  {cancelPaymentConfirmation.isPending ? "処理中..." : "入金確認の取消"}
                 </Button>
               )}
             </div>
             <div className="space-y-2 text-sm">
-              <div className="flex justify-between"><span className="text-muted-foreground">상품 금액</span><span className="price-text">{formatPrice(order.totalAmount)}</span></div>
-              <div className="flex justify-between"><span className="text-muted-foreground">배송비 (국제배송)</span><span className="text-emerald-600 font-medium">무료</span></div>
+              <div className="flex justify-between"><span className="text-muted-foreground">商品金額</span><span className="price-text">{formatPrice(order.totalAmount)}</span></div>
+              <div className="flex justify-between"><span className="text-muted-foreground">送料 (国際配送)</span><span className="text-emerald-600 font-medium">無料</span></div>
               {(order.couponDiscount ?? 0) > 0 && (
                 <div className="flex justify-between">
                   <span className="text-muted-foreground flex items-center gap-1 flex-wrap">
-                    <span className="text-xs px-1.5 py-0.5 bg-rose-100 text-rose-600 dark:bg-rose-950/30 rounded font-semibold">쿠폰</span>
-                    할인
+                    <span className="text-xs px-1.5 py-0.5 bg-rose-100 text-rose-600 dark:bg-rose-950/30 rounded font-semibold">クーポン</span>
+                    割引
                     {(order as any).couponName && (
                       <span className="text-xs px-1.5 py-0.5 bg-rose-50 text-rose-600 border border-rose-200 rounded font-medium">{(order as any).couponName}</span>
                     )}
@@ -3114,11 +3114,11 @@ function AdminOrderDetail({ id }: { id: string }) {
                 </div>
               )}
               {((order.discountAmount ?? 0) - (order.couponDiscount ?? 0)) > 0 && (
-                <div className="flex justify-between"><span className="text-muted-foreground">등급 할인</span><span className="text-rose-600">-{formatPrice((order.discountAmount ?? 0) - (order.couponDiscount ?? 0))}</span></div>
+                <div className="flex justify-between"><span className="text-muted-foreground">会員ランク割引</span><span className="text-rose-600">-{formatPrice((order.discountAmount ?? 0) - (order.couponDiscount ?? 0))}</span></div>
               )}
-              {order.pointsUsed > 0 && <div className="flex justify-between"><span className="text-muted-foreground">포인트 사용</span><span className="text-rose-600">-{formatPrice(order.pointsUsed)}</span></div>}
+              {order.pointsUsed > 0 && <div className="flex justify-between"><span className="text-muted-foreground">ポイント利用</span><span className="text-rose-600">-{formatPrice(order.pointsUsed)}</span></div>}
               <div className="flex justify-between border-t pt-2 font-bold">
-                <span>총 결제금액</span>
+                <span>お支払い合計</span>
                 <span className="price-text">{formatPrice(order.totalAmount + order.shippingFee - (order.pointsUsed ?? 0) - (order.discountAmount ?? 0))}</span>
               </div>
             </div>
@@ -3126,39 +3126,39 @@ function AdminOrderDetail({ id }: { id: string }) {
               <div className={`mt-4 rounded-lg p-3 text-sm space-y-1.5 ${paymentData.status === "confirmed" ? "bg-emerald-50 dark:bg-emerald-950/20" : paymentData.status === "pending" ? "bg-amber-50 dark:bg-amber-950/20" : "bg-muted/50"}`}>
                 <div className="flex items-center gap-2 font-medium mb-2">
                   {paymentData.status === "confirmed"
-                    ? <Fragment><CheckCircle2 className="w-4 h-4 text-emerald-600" /><span className="text-emerald-700 dark:text-emerald-400">입금 확인 완료</span></Fragment>
+                    ? <Fragment><CheckCircle2 className="w-4 h-4 text-emerald-600" /><span className="text-emerald-700 dark:text-emerald-400">入金確認完了</span></Fragment>
                     : paymentData.status === "pending"
-                    ? <Fragment><Clock className="w-4 h-4 text-amber-600" /><span className="text-amber-700 dark:text-amber-400">입금 대기 중</span></Fragment>
-                    : <Fragment><AlertCircle className="w-4 h-4 text-muted-foreground" /><span className="text-muted-foreground">취소됨</span></Fragment>
+                    ? <Fragment><Clock className="w-4 h-4 text-amber-600" /><span className="text-amber-700 dark:text-amber-400">入金待ち</span></Fragment>
+                    : <Fragment><AlertCircle className="w-4 h-4 text-muted-foreground" /><span className="text-muted-foreground">キャンセル済み</span></Fragment>
                   }
                 </div>
                 {paymentData.bankAccount && (
                   <div className="flex justify-between text-xs">
-                    <span className="text-muted-foreground">입금 계좌</span>
+                    <span className="text-muted-foreground">振込先口座</span>
                     <span className="font-medium">{paymentData.bankAccount.bankName} {paymentData.bankAccount.accountNumber}</span>
                   </div>
                 )}
                 {paymentData.depositorName && (
                   <div className="flex justify-between text-xs">
-                    <span className="text-muted-foreground">입금자명</span>
+                    <span className="text-muted-foreground">振込名義</span>
                     <span className="font-medium">{paymentData.depositorName}</span>
                   </div>
                 )}
                 {paymentData.depositAmount && (
                   <div className="flex justify-between text-xs">
-                    <span className="text-muted-foreground">입금 금액</span>
+                    <span className="text-muted-foreground">振込金額</span>
                     <span className="font-bold price-text">{formatPrice(paymentData.depositAmount)}</span>
                   </div>
                 )}
                 {paymentData.status === "pending" && paymentData.expiresAt && (
                   <div className="flex justify-between text-xs">
-                    <span className="text-muted-foreground">입금 기한</span>
+                    <span className="text-muted-foreground">振込期限</span>
                     <span className="font-medium text-rose-600">{formatDateTime(paymentData.expiresAt)}</span>
                   </div>
                 )}
                 {paymentData.status === "confirmed" && paymentData.confirmedAt && (
                   <div className="flex justify-between text-xs">
-                    <span className="text-muted-foreground">확인 시각</span>
+                    <span className="text-muted-foreground">確認日時</span>
                     <span className="font-medium text-emerald-600">{formatDateTime(paymentData.confirmedAt)}</span>
                   </div>
                 )}
@@ -3193,32 +3193,32 @@ function AdminOrderDetail({ id }: { id: string }) {
                 <div className="mt-4 rounded-lg p-3 text-sm space-y-1.5 bg-pink-50 dark:bg-pink-950/20 border border-pink-200 dark:border-pink-800/40">
                   <div className="flex items-center gap-2 font-medium mb-2">
                     <XCircle className="w-4 h-4 text-rose-500" />
-                    <span className="text-rose-700 dark:text-rose-400">취소 / 환불 정보</span>
+                    <span className="text-rose-700 dark:text-rose-400">キャンセル / 返金情報</span>
                   </div>
                   <div className="flex justify-between text-xs">
-                    <span className="text-muted-foreground">취소 상품 ({cancelledItems.length}개)</span>
+                    <span className="text-muted-foreground">キャンセル商品 ({cancelledItems.length}点)</span>
                     <span className="font-medium">{formatPrice(cancelledTotal)}</span>
                   </div>
                   {couponReduction > 0 && (
                     <div className="flex justify-between text-xs">
-                      <span className="text-muted-foreground">쿠폰 할인 차감</span>
+                      <span className="text-muted-foreground">クーポン割引の差引</span>
                       <span className="text-rose-500">-{formatPrice(couponReduction)}</span>
                     </div>
                   )}
                   {gradeReduction > 0 && (
                     <div className="flex justify-between text-xs">
-                      <span className="text-muted-foreground">등급 할인 차감</span>
+                      <span className="text-muted-foreground">会員ランク割引の差引</span>
                       <span className="text-rose-500">-{formatPrice(gradeReduction)}</span>
                     </div>
                   )}
                   <div className="flex justify-between text-xs border-t border-pink-200 dark:border-pink-800/40 pt-1.5 font-bold">
-                    <span className="text-rose-700 dark:text-rose-400">환불 금액</span>
+                    <span className="text-rose-700 dark:text-rose-400">返金額</span>
                     <span className="text-rose-600">{formatPrice(refundAmount)}</span>
                   </div>
                   {cancelledItems.some((i: any) => i.refundedAt) && (
                     <div className="mt-1.5 flex items-center gap-1.5 text-xs text-emerald-700 dark:text-emerald-400">
                       <CheckCircle2 className="w-3.5 h-3.5 flex-shrink-0" />
-                      <span className="font-medium">환불 완료:</span>
+                      <span className="font-medium">返金完了:</span>
                       <span>{formatDateTime(cancelledItems.find((i: any) => i.refundedAt)?.refundedAt)}</span>
                     </div>
                   )}
@@ -3228,13 +3228,13 @@ function AdminOrderDetail({ id }: { id: string }) {
                         <div key={idx} className="flex items-start gap-1.5 text-xs bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800/40 rounded px-2 py-1.5">
                           <CreditCard className="w-3.5 h-3.5 text-amber-600 flex-shrink-0 mt-0.5" />
                           <div className="flex-1 min-w-0">
-                            <span className="font-semibold text-amber-800 dark:text-amber-300">환불 계좌</span>
+                            <span className="font-semibold text-amber-800 dark:text-amber-300">返金先口座</span>
                             <span className="text-amber-900 dark:text-amber-200 ml-1">{r.bankInfo}</span>
                           </div>
                           <button
                             className="text-amber-600 hover:text-amber-800 flex-shrink-0"
-                            onClick={() => { navigator.clipboard.writeText(r.bankInfo); toast.success("계좌번호 복사됨"); }}
-                            title="복사"
+                            onClick={() => { navigator.clipboard.writeText(r.bankInfo); toast.success("口座番号をコピーしました"); }}
+                            title="コピー"
                           >
                             <Copy className="w-3.5 h-3.5" />
                           </button>
@@ -3249,11 +3249,11 @@ function AdminOrderDetail({ id }: { id: string }) {
 
           {order.user && (
             <div className="bg-card border rounded-xl p-6 elegant-shadow">
-              <h3 className="font-semibold mb-4">주문자 정보</h3>
+              <h3 className="font-semibold mb-4">注文者情報</h3>
               <div className="space-y-2 text-sm">
-                <div><span className="text-muted-foreground">이름:</span> {order.user.name ?? "-"}</div>
-                <div><span className="text-muted-foreground">아이디:</span> {order.user.email ?? "-"}</div>
-                <div><span className="text-muted-foreground">등급:</span> {getGradeLabel(order.user.grade)}</div>
+                <div><span className="text-muted-foreground">氏名:</span> {order.user.name ?? "-"}</div>
+                <div><span className="text-muted-foreground">ID:</span> {order.user.email ?? "-"}</div>
+                <div><span className="text-muted-foreground">会員ランク:</span> {getGradeLabel(order.user.grade)}</div>
               </div>
             </div>
           )}
@@ -3264,24 +3264,24 @@ function AdminOrderDetail({ id }: { id: string }) {
       <Dialog open={showEditShipmentDialog} onOpenChange={setShowEditShipmentDialog}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>배송 정보 수정</DialogTitle>
+            <DialogTitle>配送情報の編集</DialogTitle>
             <DialogDescription>
-              운송장 번호를 수정할 수 있습니다. 운송장 번호가 변경되면 17track에 자동으로 재등록됩니다.
+              追跡番号を編集できます。追跡番号を変更すると、17trackに自動で再登録されます。
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
             <div>
-              <label className="text-sm font-medium mb-1.5 block">운송장 번호</label>
+              <label className="text-sm font-medium mb-1.5 block">追跡番号</label>
               <Input
                 value={editTrackingNumber}
                 onChange={(e) => setEditTrackingNumber(e.target.value)}
-                placeholder="운송장 번호 입력 (예: EE123456789KR)"
+                placeholder="追跡番号を入力 (例: EE123456789JP)"
               />
             </div>
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setShowEditShipmentDialog(false)}>
-              취소
+              キャンセル
             </Button>
             <Button
               disabled={!editTrackingNumber || updateShipmentInfo.isPending}
@@ -3292,7 +3292,7 @@ function AdminOrderDetail({ id }: { id: string }) {
                 });
               }}
             >
-              {updateShipmentInfo.isPending ? "수정 중..." : "수정"}
+              {updateShipmentInfo.isPending ? "更新中..." : "更新"}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -3313,9 +3313,9 @@ function AdminOrderDetail({ id }: { id: string }) {
               <div>
                 <div className="flex items-center gap-2">
                   <Clock className="w-4 h-4 text-primary" />
-                  <span className="font-bold text-base">배송 타임라인</span>
+                  <span className="font-bold text-base">配送タイムライン</span>
                   {modalTrackingData?.history && (
-                    <span className="text-sm text-muted-foreground">{modalTrackingData.history.length}건</span>
+                    <span className="text-sm text-muted-foreground">{modalTrackingData.history.length}件</span>
                   )}
                 </div>
                 <p className="text-sm text-muted-foreground mt-0.5 line-clamp-1">{trackingModalItem.productName}</p>
@@ -3338,7 +3338,7 @@ function AdminOrderDetail({ id }: { id: string }) {
                 disabled={refreshTracking.isPending}
               >
                 <RotateCcw className={`w-3 h-3 ${refreshTracking.isPending ? "animate-spin" : ""}`} />
-                새로고침
+                再読み込み
               </Button>
             </div>
 
@@ -3346,7 +3346,7 @@ function AdminOrderDetail({ id }: { id: string }) {
             <div className="mx-4 mt-4 border rounded-xl p-4 flex-shrink-0">
               <div className="mb-3">
                 <p className="text-[11px] text-muted-foreground mb-0.5">
-                  추적번호 · {modalTrackingData?.carrier?.name ?? trackingModalItem.shipment?.carrier?.name ?? "택배사"}
+                  追跡番号 · {modalTrackingData?.carrier?.name ?? trackingModalItem.shipment?.carrier?.name ?? "配送業者"}
                 </p>
                 <p className="font-bold text-base text-foreground">
                   {trackingModalItem.shipment?.trackingNumber}
@@ -3354,7 +3354,7 @@ function AdminOrderDetail({ id }: { id: string }) {
                 {order.recipientName && (
                   <p className="text-xs text-muted-foreground flex items-center gap-1 mt-1">
                     <MapPin className="w-3 h-3 flex-shrink-0" />
-                    수령인: {order.recipientName}{(order as any).recipientNameEn ? ` ${(order as any).recipientNameEn}` : ""}
+                    受取人: {order.recipientName}{(order as any).recipientNameEn ? ` ${(order as any).recipientNameEn}` : ""}
                   </p>
                 )}
               </div>
@@ -3363,9 +3363,9 @@ function AdminOrderDetail({ id }: { id: string }) {
                   size="sm"
                   variant="outline"
                   className="h-7 text-xs gap-1"
-                  onClick={() => { navigator.clipboard.writeText(trackingModalItem.shipment?.trackingNumber ?? ""); toast.success("복사됨"); }}
+                  onClick={() => { navigator.clipboard.writeText(trackingModalItem.shipment?.trackingNumber ?? ""); toast.success("コピーしました"); }}
                 >
-                  <Copy className="w-3 h-3" />복사
+                  <Copy className="w-3 h-3" />コピー
                 </Button>
                 <Button size="sm" className="h-7 text-xs gap-1 bg-blue-600 hover:bg-blue-700 text-white" asChild>
                   <a
@@ -3387,7 +3387,7 @@ function AdminOrderDetail({ id }: { id: string }) {
                         rel="noopener noreferrer"
                         className="flex items-center gap-1"
                       >
-                        <ExternalLink className="w-3 h-3" />CJ대한통운
+                        <ExternalLink className="w-3 h-3" />CJ大韓通運
                       </a>
                     </Button>
                     <Button size="sm" variant="outline" className="h-7 text-xs gap-1" asChild>
@@ -3410,13 +3410,13 @@ function AdminOrderDetail({ id }: { id: string }) {
               {!modalTrackingData ? (
                 <div className="text-center py-8 text-muted-foreground">
                   <Loader2 className="w-8 h-8 mx-auto mb-2 animate-spin opacity-40" />
-                  <p className="text-sm">불러오는 중...</p>
+                  <p className="text-sm">読み込み中...</p>
                 </div>
               ) : !modalTrackingData.history || modalTrackingData.history.length === 0 ? (
                 <div className="text-center py-8 text-muted-foreground">
                   <Truck className="w-10 h-10 mx-auto mb-2 opacity-30" />
-                  <p className="text-sm">아직 배송 이력이 없습니다</p>
-                  <p className="text-xs mt-1">갱신 버튼으로 최신 정보를 불러오세요</p>
+                  <p className="text-sm">まだ配送履歴がありません</p>
+                  <p className="text-xs mt-1">更新ボタンで最新情報を取得してください</p>
                 </div>
               ) : (
                 <div className="space-y-0">
@@ -3440,7 +3440,7 @@ function AdminOrderDetail({ id }: { id: string }) {
                               {renderShippingDesc(entry.description || shipmentStatusLabels[entry.status] || entry.status)}
                             </span>
                             {isFirst && (
-                              <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-semibold border ${isDelivered ? "bg-blue-50 text-blue-600 border-blue-200" : "bg-primary/10 text-primary border-primary/20"}`}>현재</span>
+                              <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-semibold border ${isDelivered ? "bg-blue-50 text-blue-600 border-blue-200" : "bg-primary/10 text-primary border-primary/20"}`}>現在</span>
                             )}
                           </div>
                           {entry.location && (
@@ -3461,8 +3461,8 @@ function AdminOrderDetail({ id }: { id: string }) {
             <div className="flex items-center justify-between px-5 py-3 border-t flex-shrink-0">
               <span className="text-xs text-muted-foreground">
                 {modalTrackingData?.updatedAt
-                  ? `최종동기: ${formatDateTime(modalTrackingData.updatedAt)} · 매일 자동업데이트`
-                  : "자동 업데이트"}
+                  ? `最終同期: ${formatDateTime(modalTrackingData.updatedAt)} · 毎日自動更新`
+                  : "自動更新"}
               </span>
               <Button
                 size="sm"
@@ -3470,7 +3470,7 @@ function AdminOrderDetail({ id }: { id: string }) {
                 onClick={() => setTrackingModalItem(null)}
                 className="h-7 text-xs"
               >
-                닫기
+                閉じる
               </Button>
             </div>
           </div>
@@ -3536,7 +3536,7 @@ function CartConvertModal({ userId, userName, userEmail, items, onClose, onSucce
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!form.recipientName.trim() || !form.recipientPhone.trim() || !form.zipCode.trim() || !form.address1.trim()) {
-      toast.error("수령인, 전화번호, 우편번호, 주소는 필수입니다.");
+      toast.error("受取人、電話番号、郵便番号、住所は必須です。");
       return;
     }
     convertMut.mutate({ userId, ...form });
@@ -3548,7 +3548,7 @@ function CartConvertModal({ userId, userName, userEmail, items, onClose, onSucce
     <Dialog open onOpenChange={onClose}>
       <DialogContent className="sm:max-w-2xl w-full p-5 overflow-hidden">
         <DialogHeader className="pb-1">
-          <DialogTitle className="text-base">장바구니 → 주문 전환</DialogTitle>
+          <DialogTitle className="text-base">カート → 注文に変換</DialogTitle>
           <DialogDescription className="text-xs">{userName ?? userEmail} ({userEmail})</DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-2">
@@ -3561,80 +3561,80 @@ function CartConvertModal({ userId, userName, userEmail, items, onClose, onSucce
                     ? <img src={item.product.thumbnail} alt="" className="w-full h-full object-cover" />
                     : <ShoppingBag className="w-3 h-3 text-muted-foreground/40" />}
                 </div>
-                <div className="flex-1 min-w-0 text-xs truncate">{item.product?.name ?? `상품 #${item.productId}`}</div>
+                <div className="flex-1 min-w-0 text-xs truncate">{item.product?.name ?? `商品 #${item.productId}`}</div>
                 <div className="text-xs text-muted-foreground shrink-0">×{item.quantity}</div>
-                <div className="text-xs font-semibold shrink-0 text-right">{((item.product?.salePrice ?? 0) * item.quantity).toLocaleString()}원</div>
+                <div className="text-xs font-semibold shrink-0 text-right">{((item.product?.salePrice ?? 0) * item.quantity).toLocaleString()}円</div>
               </div>
             ))}
             <div className="flex justify-between px-2 py-1 bg-muted/30">
-              <span className="text-xs font-semibold">합계</span>
-              <span className="text-xs font-bold text-primary">{totalAmount.toLocaleString()}원</span>
+              <span className="text-xs font-semibold">合計</span>
+              <span className="text-xs font-bold text-primary">{totalAmount.toLocaleString()}円</span>
             </div>
           </div>
 
           {/* 수령인 / 영문이름 */}
           <div className="grid grid-cols-2 gap-x-3 gap-y-2">
             <div className="space-y-0.5 min-w-0">
-              <label className="text-[11px] font-medium text-muted-foreground">수령인 *</label>
+              <label className="text-[11px] font-medium text-muted-foreground">受取人 *</label>
               <div className="flex gap-1">
-                <Input className={inp + " min-w-0 flex-1"} value={form.recipientName} onChange={e => setForm(f => ({ ...f, recipientName: e.target.value }))} placeholder="홍길동" />
+                <Input className={inp + " min-w-0 flex-1"} value={form.recipientName} onChange={e => setForm(f => ({ ...f, recipientName: e.target.value }))} placeholder="山田 太郎" />
                 <Button type="button" size="sm" variant="outline" className="h-7 w-8 px-0 text-[10px] shrink-0" onClick={translateName} disabled={translatingName}>
                   {translatingName ? <Loader2 className="w-3 h-3 animate-spin" /> : "EN"}
                 </Button>
               </div>
             </div>
             <div className="space-y-0.5 min-w-0">
-              <label className="text-[11px] font-medium text-muted-foreground">영문 이름</label>
+              <label className="text-[11px] font-medium text-muted-foreground">英語氏名</label>
               <Input className={inp + " w-full"} value={form.recipientNameEn} onChange={e => setForm(f => ({ ...f, recipientNameEn: e.target.value }))} placeholder="Hong Gildong" />
             </div>
 
             {/* 전화번호 / 우편번호 */}
             <div className="space-y-0.5 min-w-0">
-              <label className="text-[11px] font-medium text-muted-foreground">전화번호 *</label>
+              <label className="text-[11px] font-medium text-muted-foreground">電話番号 *</label>
               <Input className={inp + " w-full"} value={form.recipientPhone} onChange={e => setForm(f => ({ ...f, recipientPhone: e.target.value }))} placeholder="010-0000-0000" />
             </div>
             <div className="space-y-0.5 min-w-0">
-              <label className="text-[11px] font-medium text-muted-foreground">우편번호 *</label>
+              <label className="text-[11px] font-medium text-muted-foreground">郵便番号 *</label>
               <Input className={inp + " w-full"} value={form.zipCode} onChange={e => setForm(f => ({ ...f, zipCode: e.target.value }))} placeholder="12345" />
             </div>
 
             {/* 주소 / 영문주소 */}
             <div className="space-y-0.5 min-w-0">
-              <label className="text-[11px] font-medium text-muted-foreground">주소 *</label>
+              <label className="text-[11px] font-medium text-muted-foreground">住所 *</label>
               <div className="flex gap-1">
-                <Input className={inp + " min-w-0 flex-1"} value={form.address1} onChange={e => setForm(f => ({ ...f, address1: e.target.value }))} placeholder="기본 주소" />
+                <Input className={inp + " min-w-0 flex-1"} value={form.address1} onChange={e => setForm(f => ({ ...f, address1: e.target.value }))} placeholder="基本住所" />
                 <Button type="button" size="sm" variant="outline" className="h-7 w-8 px-0 text-[10px] shrink-0" onClick={translateAddress} disabled={translatingAddr}>
                   {translatingAddr ? <Loader2 className="w-3 h-3 animate-spin" /> : "EN"}
                 </Button>
               </div>
             </div>
             <div className="space-y-0.5 min-w-0">
-              <label className="text-[11px] font-medium text-muted-foreground">영문 주소</label>
+              <label className="text-[11px] font-medium text-muted-foreground">英語住所</label>
               <Input className={inp + " w-full"} value={form.addressEn1} onChange={e => setForm(f => ({ ...f, addressEn1: e.target.value }))} placeholder="123 Main St" />
             </div>
 
             {/* 상세주소 / 영문상세 */}
             <div className="space-y-0.5 min-w-0">
-              <label className="text-[11px] font-medium text-muted-foreground">상세 주소</label>
-              <Input className={inp + " w-full"} value={form.address2} onChange={e => setForm(f => ({ ...f, address2: e.target.value }))} placeholder="상세 주소 (선택)" />
+              <label className="text-[11px] font-medium text-muted-foreground">建物名・部屋番号</label>
+              <Input className={inp + " w-full"} value={form.address2} onChange={e => setForm(f => ({ ...f, address2: e.target.value }))} placeholder="建物名・部屋番号 (任意)" />
             </div>
             <div className="space-y-0.5 min-w-0">
-              <label className="text-[11px] font-medium text-muted-foreground">영문 상세 주소</label>
-              <Input className={inp + " w-full"} value={form.addressEn2} onChange={e => setForm(f => ({ ...f, addressEn2: e.target.value }))} placeholder="Apt 101 (선택)" />
+              <label className="text-[11px] font-medium text-muted-foreground">英語 建物名・部屋番号</label>
+              <Input className={inp + " w-full"} value={form.addressEn2} onChange={e => setForm(f => ({ ...f, addressEn2: e.target.value }))} placeholder="Apt 101 (任意)" />
             </div>
 
             {/* 메모 / 결제상태 */}
             <div className="space-y-0.5 min-w-0">
-              <label className="text-[11px] font-medium text-muted-foreground">메모</label>
-              <Input className={inp + " w-full"} value={form.memo} onChange={e => setForm(f => ({ ...f, memo: e.target.value }))} placeholder="배송 메모 (선택)" />
+              <label className="text-[11px] font-medium text-muted-foreground">メモ</label>
+              <Input className={inp + " w-full"} value={form.memo} onChange={e => setForm(f => ({ ...f, memo: e.target.value }))} placeholder="配送メモ (任意)" />
             </div>
             <div className="space-y-0.5 min-w-0">
-              <label className="text-[11px] font-medium text-muted-foreground">결제 상태</label>
+              <label className="text-[11px] font-medium text-muted-foreground">支払い状況</label>
               <div className="flex gap-1">
                 <button type="button" className={`flex-1 h-7 rounded border text-[11px] font-medium transition-colors ${form.paymentStatus === "pending" ? "bg-yellow-50 border-yellow-400 text-yellow-700" : "border-muted text-muted-foreground"}`}
-                  onClick={() => setForm(f => ({ ...f, paymentStatus: "pending" }))}>입금 대기</button>
+                  onClick={() => setForm(f => ({ ...f, paymentStatus: "pending" }))}>入金待ち</button>
                 <button type="button" className={`flex-1 h-7 rounded border text-[11px] font-medium transition-colors ${form.paymentStatus === "paid" ? "bg-green-50 border-green-400 text-green-700" : "border-muted text-muted-foreground"}`}
-                  onClick={() => setForm(f => ({ ...f, paymentStatus: "paid" }))}>결제 완료</button>
+                  onClick={() => setForm(f => ({ ...f, paymentStatus: "paid" }))}>支払い済み</button>
               </div>
             </div>
           </div>
@@ -3643,13 +3643,13 @@ function CartConvertModal({ userId, userName, userEmail, items, onClose, onSucce
           <div className="flex items-center justify-between pt-1">
             <label className="flex items-center gap-1.5 text-xs cursor-pointer">
               <input type="checkbox" checked={form.clearCart} onChange={e => setForm(f => ({ ...f, clearCart: e.target.checked }))} className="rounded" />
-              주문 후 장바구니 비우기
+              注文後にカートを空にする
             </label>
             <div className="flex gap-2">
-              <Button type="button" variant="outline" size="sm" onClick={onClose}>취소</Button>
+              <Button type="button" variant="outline" size="sm" onClick={onClose}>キャンセル</Button>
               <Button type="submit" size="sm" disabled={convertMut.isPending}>
                 {convertMut.isPending && <Loader2 className="w-3 h-3 animate-spin mr-1" />}
-                주문 생성
+                注文を作成
               </Button>
             </div>
           </div>
@@ -3682,15 +3682,15 @@ function AdminCartManagement() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold">장바구니 현황</h1>
-          <p className="text-muted-foreground text-sm mt-1">고객별 장바구니에 담긴 상품을 조회합니다.</p>
+          <h1 className="text-2xl font-bold">カート状況</h1>
+          <p className="text-muted-foreground text-sm mt-1">お客様ごとのカートに入っている商品を確認します。</p>
         </div>
-        {data && <Badge variant="secondary" className="text-sm">{data.total}명</Badge>}
+        {data && <Badge variant="secondary" className="text-sm">{data.total}名</Badge>}
       </div>
 
       <form onSubmit={handleSearch} className="flex gap-2 max-w-sm">
         <Input
-          placeholder="이름 또는 이메일 검색"
+          placeholder="名前またはメールアドレスで検索"
           value={searchInput}
           onChange={e => setSearchInput(e.target.value)}
           className="text-sm"
@@ -3700,7 +3700,7 @@ function AdminCartManagement() {
 
       {error && (
         <div className="bg-destructive/10 text-destructive text-sm rounded-lg p-4">
-          오류: {error.message}
+          エラー: {error.message}
         </div>
       )}
       {isLoading ? (
@@ -3708,7 +3708,7 @@ function AdminCartManagement() {
       ) : !data || data.rows.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-20 gap-3 text-muted-foreground">
           <ShoppingCart className="w-10 h-10" />
-          <p>장바구니에 상품을 담은 고객이 없습니다.</p>
+          <p>カートに商品を入れているお客様はいません。</p>
         </div>
       ) : (
         <div className="space-y-4">
@@ -3720,20 +3720,20 @@ function AdminCartManagement() {
                     {(user.name ?? user.email).charAt(0).toUpperCase()}
                   </div>
                   <div>
-                    <div className="font-semibold text-sm">{user.name ?? "(이름 없음)"}</div>
+                    <div className="font-semibold text-sm">{user.name ?? "(名前なし)"}</div>
                     <div className="text-xs text-muted-foreground">{user.email}</div>
                   </div>
                 </div>
                 <div className="flex items-center gap-3 text-sm">
-                  <span className="text-muted-foreground">{items.length}개 상품</span>
-                  <span className="font-semibold text-primary">{totalAmount.toLocaleString()}원</span>
-                  <span className="text-xs text-muted-foreground">{new Date(lastUpdated).toLocaleDateString("ko-KR")}</span>
+                  <span className="text-muted-foreground">{items.length}点の商品</span>
+                  <span className="font-semibold text-primary">{totalAmount.toLocaleString()}円</span>
+                  <span className="text-xs text-muted-foreground">{new Date(lastUpdated).toLocaleDateString("ja-JP")}</span>
                   <Link href={`/admin/users/${user.id}`}>
-                    <Button variant="ghost" size="sm" className="h-7 text-xs">회원 보기</Button>
+                    <Button variant="ghost" size="sm" className="h-7 text-xs">会員を見る</Button>
                   </Link>
                   <Button size="sm" className="h-7 text-xs bg-primary text-primary-foreground"
                     onClick={() => setConvertTarget({ userId: user.id, userName: user.name, userEmail: user.email, items })}>
-                    주문으로 전환
+                    注文に変換
                   </Button>
                 </div>
               </div>
@@ -3748,16 +3748,16 @@ function AdminCartManagement() {
                       )}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <div className="text-sm font-medium truncate">{item.product?.name ?? `상품 #${item.productId}`}</div>
+                      <div className="text-sm font-medium truncate">{item.product?.name ?? `商品 #${item.productId}`}</div>
                       {item.options && Object.keys(item.options).length > 0 && (
                         <div className="text-xs text-muted-foreground mt-0.5">
                           {Object.entries(item.options as Record<string, string>).map(([k, v]) => `${k}: ${v}`).join(" / ")}
                         </div>
                       )}
                     </div>
-                    <div className="text-sm text-muted-foreground shrink-0">수량 {item.quantity}</div>
+                    <div className="text-sm text-muted-foreground shrink-0">数量 {item.quantity}</div>
                     <div className="text-sm font-semibold shrink-0 w-28 text-right">
-                      {item.product ? ((item.product.salePrice ?? 0) * item.quantity).toLocaleString() + "원" : "-"}
+                      {item.product ? ((item.product.salePrice ?? 0) * item.quantity).toLocaleString() + "円" : "-"}
                     </div>
                   </div>
                 ))}
@@ -3787,7 +3787,7 @@ function AdminCartManagement() {
           items={convertTarget.items}
           onClose={() => setConvertTarget(null)}
           onSuccess={(orderNumber) => {
-            toast.success(`주문이 생성됐습니다. 주문번호: ${orderNumber}`);
+            toast.success(`注文を作成しました。注文番号: ${orderNumber}`);
             setConvertTarget(null);
             utils.cart.adminCarts.invalidate();
           }}
@@ -3822,9 +3822,9 @@ function AdminUsers() {
   const { data: statusCounts } = trpc.admin.userStatusCounts.useQuery();
   const utils = trpc.useUtils();
 
-  const updateUser = trpc.admin.updateUser.useMutation({ onSuccess: () => { utils.admin.users.invalidate(); toast.success("권한이 변경되었습니다."); } });
+  const updateUser = trpc.admin.updateUser.useMutation({ onSuccess: () => { utils.admin.users.invalidate(); toast.success("権限を変更しました。"); } });
   const updateMailReceive = trpc.admin.updateUserMailReceive.useMutation({ onSuccess: () => { utils.admin.users.invalidate(); } });
-  const updateBlocked = trpc.admin.updateUserBlocked.useMutation({ onSuccess: () => { utils.admin.users.invalidate(); utils.admin.userStatusCounts.invalidate(); toast.success("접근차단 상태가 변경되었습니다."); } });
+  const updateBlocked = trpc.admin.updateUserBlocked.useMutation({ onSuccess: () => { utils.admin.users.invalidate(); utils.admin.userStatusCounts.invalidate(); toast.success("アクセス遮断の状態を変更しました。"); } });
 
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
   const toggleSelectAll = () => {
@@ -3852,39 +3852,39 @@ function AdminUsers() {
   const totalPages = Math.ceil((data?.total ?? 0) / 20);
 
   const statusBadge = (status: string) => {
-    if (status === "withdrawn") return <Badge variant="secondary" className="text-[10px] bg-muted text-muted-foreground">탈퇴</Badge>;
-    if (status === "blocked") return <Badge variant="destructive" className="text-[10px]">차단</Badge>;
-    return <Badge variant="default" className="text-[10px] bg-emerald-100 text-emerald-700 hover:bg-emerald-100">정상</Badge>;
+    if (status === "withdrawn") return <Badge variant="secondary" className="text-[10px] bg-muted text-muted-foreground">退会</Badge>;
+    if (status === "blocked") return <Badge variant="destructive" className="text-[10px]">遮断</Badge>;
+    return <Badge variant="default" className="text-[10px] bg-emerald-100 text-emerald-700 hover:bg-emerald-100">正常</Badge>;
   };
 
   return (
     <div>
-      <h1 className="text-2xl font-bold mb-6">회원 관리</h1>
+      <h1 className="text-2xl font-bold mb-6">会員管理</h1>
 
       {/* 회원 현황 */}
       <div className="bg-card border rounded-xl p-5 mb-4">
-        <h2 className="text-base font-semibold mb-1">회원 현황</h2>
-        <p className="text-sm text-muted-foreground mb-4">회원 검색, 상태 확인 및 관리를 할 수 있습니다.</p>
+        <h2 className="text-base font-semibold mb-1">会員状況</h2>
+        <p className="text-sm text-muted-foreground mb-4">会員の検索、状態確認、管理ができます。</p>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           <div className="rounded-lg border bg-primary/5 p-4">
-            <p className="text-xs text-muted-foreground mb-1">검색된 회원</p>
-            <p className="text-xl font-bold text-primary">{(data?.total ?? 0).toLocaleString()}<span className="text-sm font-normal ml-0.5">명</span></p>
+            <p className="text-xs text-muted-foreground mb-1">検索された会員</p>
+            <p className="text-xl font-bold text-primary">{(data?.total ?? 0).toLocaleString()}<span className="text-sm font-normal ml-0.5">名</span></p>
           </div>
           <button
             type="button"
             className={`text-left rounded-lg border p-4 transition-colors ${statusFilter === "blocked" ? "bg-rose-100 border-rose-300" : "bg-rose-50 hover:bg-rose-100"}`}
             onClick={() => { setStatusFilter(statusFilter === "blocked" ? "all" : "blocked"); setPage(1); }}
           >
-            <p className="text-xs text-muted-foreground mb-1">차단 회원</p>
-            <p className="text-xl font-bold text-rose-600">{(statusCounts?.blocked ?? 0).toLocaleString()}<span className="text-sm font-normal ml-0.5">명</span></p>
+            <p className="text-xs text-muted-foreground mb-1">遮断会員</p>
+            <p className="text-xl font-bold text-rose-600">{(statusCounts?.blocked ?? 0).toLocaleString()}<span className="text-sm font-normal ml-0.5">名</span></p>
           </button>
           <button
             type="button"
             className={`text-left rounded-lg border p-4 transition-colors ${statusFilter === "withdrawn" ? "bg-secondary border-foreground/20" : "bg-secondary/40 hover:bg-secondary"}`}
             onClick={() => { setStatusFilter(statusFilter === "withdrawn" ? "all" : "withdrawn"); setPage(1); }}
           >
-            <p className="text-xs text-muted-foreground mb-1">탈퇴 회원</p>
-            <p className="text-xl font-bold">{(statusCounts?.withdrawn ?? 0).toLocaleString()}<span className="text-sm font-normal ml-0.5">명</span></p>
+            <p className="text-xs text-muted-foreground mb-1">退会会員</p>
+            <p className="text-xl font-bold">{(statusCounts?.withdrawn ?? 0).toLocaleString()}<span className="text-sm font-normal ml-0.5">名</span></p>
           </button>
         </div>
       </div>
@@ -3892,64 +3892,64 @@ function AdminUsers() {
       {/* 검색 */}
       <div className="bg-card border rounded-xl p-5 mb-4 space-y-3">
         <div className="flex flex-wrap items-center gap-2">
-          <span className="text-xs text-muted-foreground w-16">검색어</span>
+          <span className="text-xs text-muted-foreground w-16">検索語</span>
           <select className="border rounded-md px-2 py-2 text-sm bg-background" value={searchField} onChange={e => setSearchField(e.target.value)}>
-            <option value="id">회원아이디</option>
-            <option value="name">이름</option>
-            <option value="nick">닉네임</option>
-            <option value="phone">휴대폰</option>
+            <option value="id">会員ID</option>
+            <option value="name">氏名</option>
+            <option value="nick">ニックネーム</option>
+            <option value="phone">携帯電話</option>
           </select>
-          <Input className="max-w-xs" placeholder="검색어 입력" value={searchInput} onChange={e => setSearchInput(e.target.value)} onKeyDown={e => e.key === "Enter" && handleSearch()} />
+          <Input className="max-w-xs" placeholder="検索語を入力" value={searchInput} onChange={e => setSearchInput(e.target.value)} onKeyDown={e => e.key === "Enter" && handleSearch()} />
         </div>
         <div className="flex flex-wrap items-center gap-2">
-          <span className="text-xs text-muted-foreground w-16">날짜</span>
+          <span className="text-xs text-muted-foreground w-16">日付</span>
           <select className="border rounded-md px-2 py-2 text-sm bg-background" value={dateField} onChange={e => setDateField(e.target.value)}>
-            <option value="createdAt">가입일</option>
-            <option value="lastLogin">최종접속일</option>
+            <option value="createdAt">登録日</option>
+            <option value="lastLogin">最終アクセス日</option>
           </select>
           <Input type="date" className="w-[150px]" value={dateFrom} onChange={e => { setDateFrom(e.target.value); setPage(1); }} />
           <span className="text-muted-foreground text-sm">~</span>
           <Input type="date" className="w-[150px]" value={dateTo} onChange={e => { setDateTo(e.target.value); setPage(1); }} />
-          <Button size="sm" variant="outline" onClick={() => applyQuickRange(1)}>오늘</Button>
-          <Button size="sm" variant="outline" onClick={() => applyQuickRange(7)}>7일</Button>
-          <Button size="sm" variant="outline" onClick={() => applyQuickRange(14)}>14일</Button>
-          <Button size="sm" variant="outline" onClick={() => applyQuickRange(30)}>1개월</Button>
-          <Button size="sm" variant="outline" onClick={() => applyQuickRange(90)}>3개월</Button>
-          <Button size="sm" variant="outline" onClick={() => applyQuickRange(null)}>전체</Button>
+          <Button size="sm" variant="outline" onClick={() => applyQuickRange(1)}>今日</Button>
+          <Button size="sm" variant="outline" onClick={() => applyQuickRange(7)}>7日</Button>
+          <Button size="sm" variant="outline" onClick={() => applyQuickRange(14)}>14日</Button>
+          <Button size="sm" variant="outline" onClick={() => applyQuickRange(30)}>1か月</Button>
+          <Button size="sm" variant="outline" onClick={() => applyQuickRange(90)}>3か月</Button>
+          <Button size="sm" variant="outline" onClick={() => applyQuickRange(null)}>すべて</Button>
           <select className="border rounded-md px-2 py-2 text-sm bg-background ml-auto" value={sortBy} onChange={e => { setSortBy(e.target.value); setPage(1); }}>
-            <option value="createdAt">가입일 최신순</option>
-            <option value="createdAt_asc">가입일 오래된순</option>
-            <option value="lastSignedIn">최종접속 최신순</option>
-            <option value="name">이름순</option>
-            <option value="orderCount">주문건수순</option>
-            <option value="totalPaid">결제금액순</option>
-            <option value="points">포인트순</option>
+            <option value="createdAt">登録日 新しい順</option>
+            <option value="createdAt_asc">登録日 古い順</option>
+            <option value="lastSignedIn">最終アクセス 新しい順</option>
+            <option value="name">氏名順</option>
+            <option value="orderCount">注文件数順</option>
+            <option value="totalPaid">決済金額順</option>
+            <option value="points">ポイント順</option>
           </select>
-          <Button size="sm" onClick={handleSearch}><Search className="w-4 h-4 mr-1" />검색</Button>
+          <Button size="sm" onClick={handleSearch}><Search className="w-4 h-4 mr-1" />検索</Button>
         </div>
       </div>
 
-      <p className="text-xs text-muted-foreground mb-3">회원자료 삭제 시 다른 회원이 기존 회원아이디를 사용하지 못하도록, 회원아이디·이름·닉네임은 삭제하지 않고 영구 보관합니다.</p>
+      <p className="text-xs text-muted-foreground mb-3">会員データを削除した際に、他の会員が既存の会員IDを使用できないよう、会員ID・氏名・ニックネームは削除せず永久に保管します。</p>
 
       <div className="bg-card border rounded-xl overflow-hidden elegant-shadow">
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead><tr className="bg-secondary/50 text-xs text-muted-foreground">
               <th className="text-center py-3 px-3 w-10"><input type="checkbox" checked={selectedIds.length === (data?.users ?? []).length && (data?.users ?? []).length > 0} onChange={toggleSelectAll} /></th>
-              <th className="text-left py-3 px-3">아이디</th>
-              <th className="text-left py-3 px-3">이름</th>
-              <th className="text-left py-3 px-3">휴대폰</th>
-              <th className="text-center py-3 px-3">권한</th>
-              <th className="text-right py-3 px-3">잔여포인트</th>
-              <th className="text-center py-3 px-3">주문건수</th>
-              <th className="text-right py-3 px-3">누적주문금액</th>
-              <th className="text-center py-3 px-3">상태</th>
-              <th className="text-left py-3 px-3">최종접속</th>
-              <th className="text-center py-3 px-3">메일인증</th>
-              <th className="text-center py-3 px-3">메일수신</th>
-              <th className="text-center py-3 px-3">접근차단</th>
-              <th className="text-left py-3 px-3">가입일</th>
-              <th className="text-center py-3 px-3">관리</th>
+              <th className="text-left py-3 px-3">ID</th>
+              <th className="text-left py-3 px-3">氏名</th>
+              <th className="text-left py-3 px-3">携帯電話</th>
+              <th className="text-center py-3 px-3">権限</th>
+              <th className="text-right py-3 px-3">ポイント残高</th>
+              <th className="text-center py-3 px-3">注文件数</th>
+              <th className="text-right py-3 px-3">累計注文金額</th>
+              <th className="text-center py-3 px-3">ステータス</th>
+              <th className="text-left py-3 px-3">最終アクセス</th>
+              <th className="text-center py-3 px-3">メール認証</th>
+              <th className="text-center py-3 px-3">メール受信</th>
+              <th className="text-center py-3 px-3">アクセス遮断</th>
+              <th className="text-left py-3 px-3">登録日</th>
+              <th className="text-center py-3 px-3">操作</th>
             </tr></thead>
             <tbody className="divide-y">
               {(data?.users ?? []).map((u: any) => (
@@ -3964,12 +3964,12 @@ function AdminUsers() {
                       value={u.role}
                       onChange={e => updateUser.mutate({ id: u.id, role: e.target.value })}
                     >
-                      <option value="user">회원</option>
-                      <option value="admin">관리자</option>
+                      <option value="user">会員</option>
+                      <option value="admin">管理者</option>
                     </select>
                   </td>
                   <td className="py-2.5 px-3 text-right price-text">{(u.points ?? 0).toLocaleString()}P</td>
-                  <td className="py-2.5 px-3 text-center">{(u.orderCount ?? 0).toLocaleString()}건</td>
+                  <td className="py-2.5 px-3 text-center">{(u.orderCount ?? 0).toLocaleString()}件</td>
                   <td className="py-2.5 px-3 text-right price-text">{formatPrice(u.totalPaid ?? 0)}</td>
                   <td className="py-2.5 px-3 text-center">{statusBadge(u.status)}</td>
                   <td className="py-2.5 px-3 text-muted-foreground text-xs">{u.lastSignedIn ? formatDate(u.lastSignedIn) : "-"}</td>
@@ -3984,14 +3984,14 @@ function AdminUsers() {
                   </td>
                   <td className="py-2.5 px-3 text-muted-foreground text-xs">{formatDate(u.createdAt)}</td>
                   <td className="py-2.5 px-3 text-center">
-                    <Link href={`/admin/users/${u.id}`}><Button variant="outline" size="sm" className="h-7 px-2 text-xs">수정</Button></Link>
+                    <Link href={`/admin/users/${u.id}`}><Button variant="outline" size="sm" className="h-7 px-2 text-xs">編集</Button></Link>
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
-        {(data?.users ?? []).length === 0 && <p className="text-center py-8 text-sm text-muted-foreground">회원이 없습니다</p>}
+        {(data?.users ?? []).length === 0 && <p className="text-center py-8 text-sm text-muted-foreground">会員がいません</p>}
       </div>
 
       <Paginator page={page} totalPages={totalPages} onPageChange={setPage} className="mt-4" />
@@ -4007,30 +4007,30 @@ function AdminBoards() {
   const [editItem, setEditItem] = useState<any>(null);
   const [form, setForm] = useState({ slug: "", name: "", description: "", boardType: "free" as "free" | "review" | "qna" | "notice", isActive: 1, sortOrder: 0 });
 
-  const createMut = trpc.admin.createBoard.useMutation({ onSuccess: () => { utils.admin.boards.invalidate(); setDialogOpen(false); toast.success("게시판이 생성되었습니다."); } });
-  const updateMut = trpc.admin.updateBoard.useMutation({ onSuccess: () => { utils.admin.boards.invalidate(); setDialogOpen(false); toast.success("게시판이 수정되었습니다."); } });
-  const deleteMut = trpc.admin.deleteBoard.useMutation({ onSuccess: () => { utils.admin.boards.invalidate(); toast.success("게시판이 삭제되었습니다."); } });
+  const createMut = trpc.admin.createBoard.useMutation({ onSuccess: () => { utils.admin.boards.invalidate(); setDialogOpen(false); toast.success("掲示板を作成しました。"); } });
+  const updateMut = trpc.admin.updateBoard.useMutation({ onSuccess: () => { utils.admin.boards.invalidate(); setDialogOpen(false); toast.success("掲示板を更新しました。"); } });
+  const deleteMut = trpc.admin.deleteBoard.useMutation({ onSuccess: () => { utils.admin.boards.invalidate(); toast.success("掲示板を削除しました。"); } });
 
   const openCreate = () => { setEditItem(null); setForm({ slug: "", name: "", description: "", boardType: "free", isActive: 1, sortOrder: 0 }); setDialogOpen(true); };
   const openEdit = (b: any) => { setEditItem(b); setForm({ slug: b.slug, name: b.name, description: b.description ?? "", boardType: b.boardType, isActive: b.isActive, sortOrder: b.sortOrder }); setDialogOpen(true); };
   const handleSave = () => {
-    if (!form.slug || !form.name) { toast.error("슬러그와 이름을 입력해주세요."); return; }
+    if (!form.slug || !form.name) { toast.error("スラッグと名前を入力してください。"); return; }
     if (editItem) { updateMut.mutate({ id: editItem.id, ...form }); }
     else { createMut.mutate(form); }
   };
 
-  const boardTypeLabel: Record<string, string> = { free: "자유게시판", review: "고객 리뷰", qna: "Q&A", notice: "공지사항" };
+  const boardTypeLabel: Record<string, string> = { free: "自由掲示板", review: "お客様レビュー", qna: "Q&A", notice: "お知らせ" };
 
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold">게시판 관리</h1>
-        <Button onClick={openCreate} size="sm"><Plus className="w-4 h-4 mr-1" /> 게시판 추가</Button>
+        <h1 className="text-2xl font-bold">掲示板管理</h1>
+        <Button onClick={openCreate} size="sm"><Plus className="w-4 h-4 mr-1" /> 掲示板を追加</Button>
       </div>
       <div className="bg-card border rounded-xl overflow-hidden elegant-shadow">
         <table className="w-full">
           <thead><tr className="bg-secondary/50 text-xs text-muted-foreground">
-            <th className="text-left py-3 px-4">ID</th><th className="text-left py-3 px-4">이름</th><th className="text-left py-3 px-4">슬러그</th><th className="text-center py-3 px-4">유형</th><th className="text-center py-3 px-4">순서</th><th className="text-center py-3 px-4">상태</th><th className="text-center py-3 px-4">관리</th>
+            <th className="text-left py-3 px-4">ID</th><th className="text-left py-3 px-4">名前</th><th className="text-left py-3 px-4">スラッグ</th><th className="text-center py-3 px-4">種類</th><th className="text-center py-3 px-4">順序</th><th className="text-center py-3 px-4">ステータス</th><th className="text-center py-3 px-4">操作</th>
           </tr></thead>
           <tbody className="divide-y">
             {(boardsList ?? []).map((b: any) => (
@@ -4040,43 +4040,43 @@ function AdminBoards() {
                 <td className="py-3 px-4 text-sm text-muted-foreground font-mono">{b.slug}</td>
                 <td className="py-3 px-4 text-center"><Badge variant="secondary" className="text-[10px]">{boardTypeLabel[b.boardType] ?? b.boardType}</Badge></td>
                 <td className="py-3 px-4 text-sm text-center">{b.sortOrder}</td>
-                <td className="py-3 px-4 text-center"><Badge variant={b.isActive ? "default" : "secondary"} className="text-[10px]">{b.isActive ? "활성" : "비활성"}</Badge></td>
+                <td className="py-3 px-4 text-center"><Badge variant={b.isActive ? "default" : "secondary"} className="text-[10px]">{b.isActive ? "有効" : "無効"}</Badge></td>
                 <td className="py-3 px-4 text-center">
                   <div className="flex items-center justify-center gap-1">
                     <Button variant="ghost" size="sm" onClick={() => openEdit(b)}><Pencil className="w-3.5 h-3.5" /></Button>
-                    <Button variant="ghost" size="sm" className="text-destructive" onClick={() => { if (confirm("삭제하시겠습니까? 관련 게시글도 함께 삭제됩니다.")) deleteMut.mutate({ id: b.id }); }}><Trash2 className="w-3.5 h-3.5" /></Button>
+                    <Button variant="ghost" size="sm" className="text-destructive" onClick={() => { if (confirm("削除しますか？関連する投稿も一緒に削除されます。")) deleteMut.mutate({ id: b.id }); }}><Trash2 className="w-3.5 h-3.5" /></Button>
                   </div>
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
-        {(boardsList ?? []).length === 0 && <p className="text-center py-8 text-sm text-muted-foreground">게시판이 없습니다</p>}
+        {(boardsList ?? []).length === 0 && <p className="text-center py-8 text-sm text-muted-foreground">掲示板がありません</p>}
       </div>
 
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent className="sm:max-w-md">
-          <DialogHeader><DialogTitle>{editItem ? "게시판 수정" : "게시판 추가"}</DialogTitle><DialogDescription>게시판 정보를 입력하세요.</DialogDescription></DialogHeader>
+          <DialogHeader><DialogTitle>{editItem ? "掲示板の編集" : "掲示板の追加"}</DialogTitle><DialogDescription>掲示板の情報を入力してください。</DialogDescription></DialogHeader>
           <div className="space-y-3">
-            <div><label className="text-sm font-medium">이름 *</label><Input value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} placeholder="게시판 이름" /></div>
-            <div><label className="text-sm font-medium">슬러그 *</label><Input value={form.slug} onChange={e => setForm(f => ({ ...f, slug: e.target.value }))} placeholder="board-slug" /></div>
-            <div><label className="text-sm font-medium">설명</label><Input value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} placeholder="게시판 설명" /></div>
+            <div><label className="text-sm font-medium">名前 *</label><Input value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} placeholder="掲示板名" /></div>
+            <div><label className="text-sm font-medium">スラッグ *</label><Input value={form.slug} onChange={e => setForm(f => ({ ...f, slug: e.target.value }))} placeholder="board-slug" /></div>
+            <div><label className="text-sm font-medium">説明</label><Input value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} placeholder="掲示板の説明" /></div>
             <div className="grid grid-cols-2 gap-3">
-              <div><label className="text-sm font-medium">유형</label>
+              <div><label className="text-sm font-medium">種類</label>
                 <select className="w-full border rounded-lg px-3 py-2 text-sm bg-background" value={form.boardType} onChange={e => setForm(f => ({ ...f, boardType: e.target.value as any }))}>
-                  <option value="free">자유게시판</option><option value="review">고객 리뷰</option><option value="qna">Q&A</option><option value="notice">공지사항</option>
+                  <option value="free">自由掲示板</option><option value="review">お客様レビュー</option><option value="qna">Q&A</option><option value="notice">お知らせ</option>
                 </select>
               </div>
-              <div><label className="text-sm font-medium">정렬 순서</label><Input type="number" value={form.sortOrder} onChange={e => setForm(f => ({ ...f, sortOrder: Number(e.target.value) }))} /></div>
+              <div><label className="text-sm font-medium">表示順</label><Input type="number" value={form.sortOrder} onChange={e => setForm(f => ({ ...f, sortOrder: Number(e.target.value) }))} /></div>
             </div>
             <div className="flex items-center gap-2">
               <input type="checkbox" checked={form.isActive === 1} onChange={e => setForm(f => ({ ...f, isActive: e.target.checked ? 1 : 0 }))} />
-              <label className="text-sm">활성화</label>
+              <label className="text-sm">有効化</label>
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setDialogOpen(false)}>취소</Button>
-            <Button onClick={handleSave} disabled={createMut.isPending || updateMut.isPending}>{editItem ? "수정" : "생성"}</Button>
+            <Button variant="outline" onClick={() => setDialogOpen(false)}>キャンセル</Button>
+            <Button onClick={handleSave} disabled={createMut.isPending || updateMut.isPending}>{editItem ? "更新" : "作成"}</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -4089,7 +4089,7 @@ function AdminBanners() {
   const { data: bannersList } = trpc.admin.banners.useQuery();
   const { data: topBannerData } = trpc.admin.getTopBannerText.useQuery();
   const [topBannerText, setTopBannerText] = useState("");
-  const setTopBannerMut = trpc.admin.setTopBannerText.useMutation({ onSuccess: () => toast.success("상단 배너 텍스트가 저장되었습니다.") });
+  const setTopBannerMut = trpc.admin.setTopBannerText.useMutation({ onSuccess: () => toast.success("上部バナーのテキストを保存しました。") });
 
   useEffect(() => {
     if (topBannerData?.text !== undefined) setTopBannerText(topBannerData.text);
@@ -4100,15 +4100,15 @@ function AdminBanners() {
   const [editItem, setEditItem] = useState<any>(null);
   const [form, setForm] = useState({ title: "", imageUrl: "", linkUrl: "", isActive: 1, sortOrder: 0 });
 
-  const createMut = trpc.admin.createBanner.useMutation({ onSuccess: () => { utils.admin.banners.invalidate(); setDialogOpen(false); toast.success("배너가 생성되었습니다."); } });
-  const updateMut = trpc.admin.updateBanner.useMutation({ onSuccess: () => { utils.admin.banners.invalidate(); setDialogOpen(false); toast.success("배너가 수정되었습니다."); } });
-  const deleteMut = trpc.admin.deleteBanner.useMutation({ onSuccess: () => { utils.admin.banners.invalidate(); toast.success("배너가 삭제되었습니다."); } });
+  const createMut = trpc.admin.createBanner.useMutation({ onSuccess: () => { utils.admin.banners.invalidate(); setDialogOpen(false); toast.success("バナーを作成しました。"); } });
+  const updateMut = trpc.admin.updateBanner.useMutation({ onSuccess: () => { utils.admin.banners.invalidate(); setDialogOpen(false); toast.success("バナーを更新しました。"); } });
+  const deleteMut = trpc.admin.deleteBanner.useMutation({ onSuccess: () => { utils.admin.banners.invalidate(); toast.success("バナーを削除しました。"); } });
   const toggleActive = trpc.admin.updateBanner.useMutation({ onSuccess: () => { utils.admin.banners.invalidate(); } });
 
   const openCreate = () => { setEditItem(null); setForm({ title: "", imageUrl: "", linkUrl: "", isActive: 1, sortOrder: 0 }); setDialogOpen(true); };
   const openEdit = (b: any) => { setEditItem(b); setForm({ title: b.title, imageUrl: b.imageUrl, linkUrl: b.linkUrl ?? "", isActive: b.isActive, sortOrder: b.sortOrder }); setDialogOpen(true); };
   const handleSave = () => {
-    if (!form.title || !form.imageUrl) { toast.error("제목과 이미지 URL을 입력해주세요."); return; }
+    if (!form.title || !form.imageUrl) { toast.error("タイトルと画像URLを入力してください。"); return; }
     if (editItem) { updateMut.mutate({ id: editItem.id, ...form }); }
     else { createMut.mutate(form); }
   };
@@ -4116,29 +4116,29 @@ function AdminBanners() {
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold">배너 관리</h1>
-        <Button onClick={openCreate} size="sm"><Plus className="w-4 h-4 mr-1" /> 배너 추가</Button>
+        <h1 className="text-2xl font-bold">バナー管理</h1>
+        <Button onClick={openCreate} size="sm"><Plus className="w-4 h-4 mr-1" /> バナーを追加</Button>
       </div>
 
       {/* 상단 공지 배너 텍스트 */}
       <div className="bg-card border rounded-xl p-5 mb-6 elegant-shadow">
-        <h2 className="text-base font-semibold mb-3">상단 공지 배너 텍스트</h2>
-        <p className="text-xs text-muted-foreground mb-3">사이트 최상단에 표시되는 공지 문구입니다. 이모지 포함 가능.</p>
+        <h2 className="text-base font-semibold mb-3">上部お知らせバナーのテキスト</h2>
+        <p className="text-xs text-muted-foreground mb-3">サイトの最上部に表示されるお知らせ文です。絵文字も使用できます。</p>
         <div className="flex gap-2">
           <Input
             value={topBannerText}
             onChange={e => setTopBannerText(e.target.value)}
-            placeholder="🌿 인도 직배송 해외직구 전문 쇼핑몰 · 탈모학교"
+            placeholder="🌿 インド直送 海外直送専門ショップ · ソウルモノ"
             className="flex-1"
           />
-          <Button onClick={() => setTopBannerMut.mutate({ text: topBannerText })} disabled={setTopBannerMut.isPending}>저장</Button>
+          <Button onClick={() => setTopBannerMut.mutate({ text: topBannerText })} disabled={setTopBannerMut.isPending}>保存</Button>
         </div>
-        <div className="mt-2 text-xs text-muted-foreground">미리보기: <span className="bg-[#3b2a1a] text-[#e8d5b0] px-3 py-1 rounded text-xs">{topBannerText || "🌿 인도 직배송 해외직구 전문 쇼핑몰 · 탈모학교"}</span></div>
+        <div className="mt-2 text-xs text-muted-foreground">プレビュー: <span className="bg-[#3b2a1a] text-[#e8d5b0] px-3 py-1 rounded text-xs">{topBannerText || "🌿 インド直送 海外直送専門ショップ · ソウルモノ"}</span></div>
       </div>
       <div className="bg-card border rounded-xl overflow-hidden elegant-shadow">
         <table className="w-full">
           <thead><tr className="bg-secondary/50 text-xs text-muted-foreground">
-            <th className="text-left py-3 px-4">ID</th><th className="text-left py-3 px-4">제목</th><th className="text-left py-3 px-4">이미지</th><th className="text-center py-3 px-4">순서</th><th className="text-center py-3 px-4">상태</th><th className="text-center py-3 px-4">관리</th>
+            <th className="text-left py-3 px-4">ID</th><th className="text-left py-3 px-4">タイトル</th><th className="text-left py-3 px-4">画像</th><th className="text-center py-3 px-4">順序</th><th className="text-center py-3 px-4">ステータス</th><th className="text-center py-3 px-4">操作</th>
           </tr></thead>
           <tbody className="divide-y">
             {(bannersList ?? []).map((b: any) => (
@@ -4149,41 +4149,41 @@ function AdminBanners() {
                 <td className="py-3 px-4 text-sm text-center">{b.sortOrder}</td>
                 <td className="py-3 px-4 text-center">
                   <button onClick={() => toggleActive.mutate({ id: b.id, isActive: b.isActive ? 0 : 1 })}>
-                    <Badge variant={b.isActive ? "default" : "secondary"} className="text-[10px] cursor-pointer">{b.isActive ? "활성" : "비활성"}</Badge>
+                    <Badge variant={b.isActive ? "default" : "secondary"} className="text-[10px] cursor-pointer">{b.isActive ? "有効" : "無効"}</Badge>
                   </button>
                 </td>
                 <td className="py-3 px-4 text-center">
                   <div className="flex items-center justify-center gap-1">
                     <Button variant="ghost" size="sm" onClick={() => openEdit(b)}><Pencil className="w-3.5 h-3.5" /></Button>
-                    <Button variant="ghost" size="sm" className="text-destructive" onClick={() => { if (confirm("삭제하시겠습니까?")) deleteMut.mutate({ id: b.id }); }}><Trash2 className="w-3.5 h-3.5" /></Button>
+                    <Button variant="ghost" size="sm" className="text-destructive" onClick={() => { if (confirm("削除しますか？")) deleteMut.mutate({ id: b.id }); }}><Trash2 className="w-3.5 h-3.5" /></Button>
                   </div>
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
-        {(bannersList ?? []).length === 0 && <p className="text-center py-8 text-sm text-muted-foreground">배너가 없습니다</p>}
+        {(bannersList ?? []).length === 0 && <p className="text-center py-8 text-sm text-muted-foreground">バナーがありません</p>}
       </div>
 
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent className="sm:max-w-md">
-          <DialogHeader><DialogTitle>{editItem ? "배너 수정" : "배너 추가"}</DialogTitle><DialogDescription>배너 정보를 입력하세요.</DialogDescription></DialogHeader>
+          <DialogHeader><DialogTitle>{editItem ? "バナーの編集" : "バナーの追加"}</DialogTitle><DialogDescription>バナーの情報を入力してください。</DialogDescription></DialogHeader>
           <div className="space-y-3">
-            <div><label className="text-sm font-medium">제목 *</label><Input value={form.title} onChange={e => setForm(f => ({ ...f, title: e.target.value }))} placeholder="배너 제목" /></div>
-            <div><label className="text-sm font-medium">이미지 URL *</label><Input value={form.imageUrl} onChange={e => setForm(f => ({ ...f, imageUrl: e.target.value }))} placeholder="https://..." /></div>
-            {form.imageUrl && <img src={form.imageUrl} alt="미리보기" className="w-full h-32 object-cover rounded-lg border" onError={(e) => (e.currentTarget.style.display = "none")} />}
-            <div><label className="text-sm font-medium">링크 URL</label><Input value={form.linkUrl} onChange={e => setForm(f => ({ ...f, linkUrl: e.target.value }))} placeholder="클릭 시 이동할 URL" /></div>
+            <div><label className="text-sm font-medium">タイトル *</label><Input value={form.title} onChange={e => setForm(f => ({ ...f, title: e.target.value }))} placeholder="バナーのタイトル" /></div>
+            <div><label className="text-sm font-medium">画像URL *</label><Input value={form.imageUrl} onChange={e => setForm(f => ({ ...f, imageUrl: e.target.value }))} placeholder="https://..." /></div>
+            {form.imageUrl && <img src={form.imageUrl} alt="プレビュー" className="w-full h-32 object-cover rounded-lg border" onError={(e) => (e.currentTarget.style.display = "none")} />}
+            <div><label className="text-sm font-medium">リンクURL</label><Input value={form.linkUrl} onChange={e => setForm(f => ({ ...f, linkUrl: e.target.value }))} placeholder="クリック時の遷移先URL" /></div>
             <div className="grid grid-cols-2 gap-3">
-              <div><label className="text-sm font-medium">정렬 순서</label><Input type="number" value={form.sortOrder} onChange={e => setForm(f => ({ ...f, sortOrder: Number(e.target.value) }))} /></div>
+              <div><label className="text-sm font-medium">表示順</label><Input type="number" value={form.sortOrder} onChange={e => setForm(f => ({ ...f, sortOrder: Number(e.target.value) }))} /></div>
               <div className="flex items-center gap-2 pt-6">
                 <input type="checkbox" checked={form.isActive === 1} onChange={e => setForm(f => ({ ...f, isActive: e.target.checked ? 1 : 0 }))} />
-                <label className="text-sm">활성화</label>
+                <label className="text-sm">有効化</label>
               </div>
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setDialogOpen(false)}>취소</Button>
-            <Button onClick={handleSave} disabled={createMut.isPending || updateMut.isPending}>{editItem ? "수정" : "생성"}</Button>
+            <Button variant="outline" onClick={() => setDialogOpen(false)}>キャンセル</Button>
+            <Button onClick={handleSave} disabled={createMut.isPending || updateMut.isPending}>{editItem ? "更新" : "作成"}</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -4202,9 +4202,9 @@ function AdminKeywords() {
   const [newCount, setNewCount] = useState(0);
   const [newSort, setNewSort] = useState(0);
 
-  const updateMut = trpc.admin.updateKeyword.useMutation({ onSuccess: () => { utils.admin.keywords.invalidate(); setEditingId(null); toast.success("수정되었습니다."); } });
-  const addMut = trpc.admin.addKeyword.useMutation({ onSuccess: () => { utils.admin.keywords.invalidate(); setNewKeyword(""); setNewCount(0); setNewSort(0); toast.success("키워드가 추가되었습니다."); } });
-  const deleteMut = trpc.admin.deleteKeyword.useMutation({ onSuccess: () => { utils.admin.keywords.invalidate(); toast.success("삭제되었습니다."); } });
+  const updateMut = trpc.admin.updateKeyword.useMutation({ onSuccess: () => { utils.admin.keywords.invalidate(); setEditingId(null); toast.success("更新しました。"); } });
+  const addMut = trpc.admin.addKeyword.useMutation({ onSuccess: () => { utils.admin.keywords.invalidate(); setNewKeyword(""); setNewCount(0); setNewSort(0); toast.success("キーワードを追加しました。"); } });
+  const deleteMut = trpc.admin.deleteKeyword.useMutation({ onSuccess: () => { utils.admin.keywords.invalidate(); toast.success("削除しました。"); } });
   const batchSortMut = trpc.admin.batchUpdateKeywordsSortOrder.useMutation({ onSuccess: () => utils.admin.keywords.invalidate() });
 
   const startEdit = (k: any) => { setEditingId(k.id); setEditCount(k.searchCount); setEditSort(k.sortOrder ?? 0); };
@@ -4241,7 +4241,7 @@ function AdminKeywords() {
     setLocalKeywords(reordered.map((k, i) => ({ ...k, sortOrder: (n - i) * 10 })));
     setDragIdx(null); setDragOverIdx(null);
     batchSortMut.mutate(updates);
-    toast.success("검색어 순서가 저장되었습니다");
+    toast.success("検索キーワードの順序を保存しました");
   };
   const onDragEnd = () => { setDragIdx(null); setDragOverIdx(null); };
 
@@ -4249,22 +4249,22 @@ function AdminKeywords() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold mb-6">검색어 통계</h1>
+      <h1 className="text-2xl font-bold mb-6">検索キーワード統計</h1>
       <div className="mb-4 flex items-center gap-2 flex-wrap">
-        <Input className="max-w-[200px]" placeholder="새 키워드" value={newKeyword} onChange={e => setNewKeyword(e.target.value)} />
-        <Input className="w-20" type="number" placeholder="횟수" value={newCount} onChange={e => setNewCount(Number(e.target.value))} />
-        <Input className="w-20" type="number" placeholder="순위" value={newSort} onChange={e => setNewSort(Number(e.target.value))} />
-        <Button size="sm" onClick={() => { if (!newKeyword.trim()) return; addMut.mutate({ keyword: newKeyword, searchCount: newCount, sortOrder: newSort }); }}><Plus className="w-4 h-4 mr-1" />추가</Button>
+        <Input className="max-w-[200px]" placeholder="新しいキーワード" value={newKeyword} onChange={e => setNewKeyword(e.target.value)} />
+        <Input className="w-20" type="number" placeholder="回数" value={newCount} onChange={e => setNewCount(Number(e.target.value))} />
+        <Input className="w-20" type="number" placeholder="順位" value={newSort} onChange={e => setNewSort(Number(e.target.value))} />
+        <Button size="sm" onClick={() => { if (!newKeyword.trim()) return; addMut.mutate({ keyword: newKeyword, searchCount: newCount, sortOrder: newSort }); }}><Plus className="w-4 h-4 mr-1" />追加</Button>
       </div>
       <div className="mb-2 flex items-center gap-2 text-xs text-muted-foreground bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800 rounded-lg px-3 py-2">
         <GripVertical className="w-3.5 h-3.5 text-amber-600 flex-shrink-0" />
-        <span>행을 드래그해서 검색어 노출 순서를 조절하세요. 드롭 즉시 자동 저장됩니다.</span>
+        <span>行をドラッグして検索キーワードの表示順を調整してください。ドロップ時に自動保存されます。</span>
       </div>
       <div className="bg-card border rounded-xl overflow-hidden elegant-shadow">
         <table className="w-full">
           <thead><tr className="bg-secondary/50 text-xs text-muted-foreground">
             <th className="py-3 px-2 w-8"></th>
-            <th className="text-center py-3 px-4">순위</th><th className="text-left py-3 px-4">검색어</th><th className="text-right py-3 px-4">검색 횟수</th><th className="text-right py-3 px-4">수동순위</th><th className="text-center py-3 px-4">관리</th>
+            <th className="text-center py-3 px-4">順位</th><th className="text-left py-3 px-4">検索キーワード</th><th className="text-right py-3 px-4">検索回数</th><th className="text-right py-3 px-4">手動順位</th><th className="text-center py-3 px-4">操作</th>
           </tr></thead>
           <tbody className="divide-y">
             {displayList.map((k: any, i: number) => (
@@ -4290,19 +4290,19 @@ function AdminKeywords() {
                     <td className="py-3 px-4 text-right"><Input className="w-20 ml-auto text-right" type="number" value={editSort} onChange={e => setEditSort(Number(e.target.value))} /></td>
                     <td className="py-3 px-4 text-center">
                       <div className="flex items-center justify-center gap-1">
-                        <Button variant="ghost" size="sm" onClick={() => updateMut.mutate({ id: k.id, searchCount: editCount, sortOrder: editSort })}>저장</Button>
-                        <Button variant="ghost" size="sm" onClick={() => setEditingId(null)}>취소</Button>
+                        <Button variant="ghost" size="sm" onClick={() => updateMut.mutate({ id: k.id, searchCount: editCount, sortOrder: editSort })}>保存</Button>
+                        <Button variant="ghost" size="sm" onClick={() => setEditingId(null)}>キャンセル</Button>
                       </div>
                     </td>
                   </>
                 ) : (
                   <>
-                    <td className="py-3 px-4 text-sm text-right">{k.searchCount.toLocaleString()}회</td>
+                    <td className="py-3 px-4 text-sm text-right">{k.searchCount.toLocaleString()}回</td>
                     <td className="py-3 px-4 text-sm text-right font-mono">{k.sortOrder ?? 0}</td>
                     <td className="py-3 px-4 text-center">
                       <div className="flex items-center justify-center gap-1">
                         <Button variant="ghost" size="sm" onClick={() => startEdit(k)}><Pencil className="w-3.5 h-3.5" /></Button>
-                        <Button variant="ghost" size="sm" className="text-destructive" onClick={() => { if (confirm("삭제하시겠습니까?")) deleteMut.mutate({ id: k.id }); }}><Trash2 className="w-3.5 h-3.5" /></Button>
+                        <Button variant="ghost" size="sm" className="text-destructive" onClick={() => { if (confirm("削除しますか？")) deleteMut.mutate({ id: k.id }); }}><Trash2 className="w-3.5 h-3.5" /></Button>
                       </div>
                     </td>
                   </>
@@ -4311,7 +4311,7 @@ function AdminKeywords() {
             ))}
           </tbody>
         </table>
-        {displayList.length === 0 && <p className="text-center py-8 text-sm text-muted-foreground">검색어 데이터가 없습니다</p>}
+        {displayList.length === 0 && <p className="text-center py-8 text-sm text-muted-foreground">検索キーワードのデータがありません</p>}
       </div>
     </div>
   );
@@ -4324,7 +4324,7 @@ function AdminReviewSettings() {
   const updateMut = trpc.admin.updateReviewPointSettings.useMutation({
     onSuccess: () => {
       utils.admin.getReviewPointSettings.invalidate();
-      toast.success("리뷰 포인트 설정이 저장되었습니다.");
+      toast.success("レビューポイント設定を保存しました。");
     },
     onError: (err) => toast.error(err.message),
   });
@@ -4363,7 +4363,7 @@ function AdminReviewSettings() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold mb-6">리뷰 포인트 설정</h1>
+      <h1 className="text-2xl font-bold mb-6">レビューポイント設定</h1>
 
       <div className="bg-card border rounded-xl p-6 elegant-shadow max-w-xl">
         <div className="flex items-center gap-3 mb-6 pb-4 border-b">
@@ -4371,8 +4371,8 @@ function AdminReviewSettings() {
             <Gift className="w-5 h-5 text-amber-600 dark:text-amber-400" />
           </div>
           <div>
-            <h2 className="font-semibold">리뷰 작성 포인트</h2>
-            <p className="text-sm text-muted-foreground">고객이 리뷰 작성 시 자동으로 적립되는 포인트를 설정합니다</p>
+            <h2 className="font-semibold">レビュー投稿ポイント</h2>
+            <p className="text-sm text-muted-foreground">お客様がレビューを投稿した際に自動で付与されるポイントを設定します</p>
           </div>
         </div>
 
@@ -4380,7 +4380,7 @@ function AdminReviewSettings() {
 
               {/* Text review points */}
               <div>
-                <label className="block text-sm font-medium mb-1.5">텍스트 리뷰 포인트</label>
+                <label className="block text-sm font-medium mb-1.5">テキストレビューポイント</label>
                 <div className="flex items-center gap-2">
                   <Input
                     type="number"
@@ -4391,12 +4391,12 @@ function AdminReviewSettings() {
                   />
                   <span className="text-sm text-muted-foreground">P</span>
                 </div>
-                <p className="text-xs text-muted-foreground mt-1">글만 작성한 리뷰에 지급되는 기본 포인트</p>
+                <p className="text-xs text-muted-foreground mt-1">文章のみのレビューに付与される基本ポイント</p>
               </div>
 
               {/* Photo review points */}
               <div>
-                <label className="block text-sm font-medium mb-1.5">포토 리뷰 추가 포인트</label>
+                <label className="block text-sm font-medium mb-1.5">フォトレビュー追加ポイント</label>
                 <div className="flex items-center gap-2">
                   <Input
                     type="number"
@@ -4407,12 +4407,12 @@ function AdminReviewSettings() {
                   />
                   <span className="text-sm text-muted-foreground">P</span>
                 </div>
-                <p className="text-xs text-muted-foreground mt-1">사진을 첨부한 리뷰에 추가로 지급되는 포인트</p>
+                <p className="text-xs text-muted-foreground mt-1">写真付きレビューに追加で付与されるポイント</p>
               </div>
 
               {/* Minimum rating */}
               <div>
-                <label className="block text-sm font-medium mb-1.5">최소 별점</label>
+                <label className="block text-sm font-medium mb-1.5">最低評価</label>
                 <div className="flex items-center gap-2">
                   <Input
                     type="number"
@@ -4422,17 +4422,17 @@ function AdminReviewSettings() {
                     min={1}
                     max={5}
                   />
-                  <span className="text-sm text-muted-foreground">점</span>
+                  <span className="text-sm text-muted-foreground">点</span>
                 </div>
-                <p className="text-xs text-muted-foreground mt-1">포인트 적립을 위한 최소 별점 (1~5점)</p>
+                <p className="text-xs text-muted-foreground mt-1">ポイント付与のための最低評価 (1〜5点)</p>
               </div>
 
               {/* Preview */}
               <div className="bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded-lg p-4 mt-4">
-                <p className="text-sm font-medium text-amber-900 dark:text-amber-200 mb-2">적립 예시</p>
+                <p className="text-sm font-medium text-amber-900 dark:text-amber-200 mb-2">付与例</p>
                 <div className="text-sm text-amber-700 dark:text-amber-400 space-y-1">
-                  <p>• 텍스트 리뷰 (별점 {minRatingForPoints}점 이상): <strong>{pointsPerReview}P</strong></p>
-                  <p>• 포토 리뷰 (별점 {minRatingForPoints}점 이상 + 사진): <strong>{pointsPerReview + pointsPerPhotoReview}P</strong></p>
+                  <p>• テキストレビュー (評価{minRatingForPoints}点以上): <strong>{pointsPerReview}P</strong></p>
+                  <p>• フォトレビュー (評価{minRatingForPoints}点以上 + 写真): <strong>{pointsPerReview + pointsPerPhotoReview}P</strong></p>
                 </div>
               </div>
 
@@ -4441,9 +4441,9 @@ function AdminReviewSettings() {
         <div className="mt-6 pt-4 border-t flex justify-end">
           <Button onClick={handleSave} disabled={updateMut.isPending}>
             {updateMut.isPending ? (
-              <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> 저장 중...</>
+              <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> 保存中...</>
             ) : (
-              "설정 저장"
+              "設定を保存"
             )}
           </Button>
         </div>
@@ -4479,11 +4479,11 @@ function AdminCoupons() {
     assignUserIds: [] as number[],
   };
   const [form, setForm] = useState(defaultForm);
-  const createMut = trpc.coupon.adminCreate.useMutation({ onSuccess: () => { utils.coupon.adminList.invalidate(); setShowDialog(false); toast.success("쿠폰이 생성되었습니다"); } });
-  const updateMut = trpc.coupon.adminUpdate.useMutation({ onSuccess: () => { utils.coupon.adminList.invalidate(); setShowDialog(false); toast.success("쿠폰이 수정되었습니다"); } });
-  const deleteMut = trpc.coupon.adminDelete.useMutation({ onSuccess: () => { utils.coupon.adminList.invalidate(); toast.success("쿠폰이 삭제되었습니다"); } });
-  const issueMut = trpc.coupon.adminIssueCoupon.useMutation({ onSuccess: (d) => { toast.success(`${d.issued}명에게 쿠폰이 발급되었습니다`); } });
-  const issueToAllMut = trpc.coupon.adminIssueToAll.useMutation({ onSuccess: (d) => { toast.success(`전체 회원 ${d.total}명 중 ${d.issued}명에게 발급 완료 (기발급 제외)`); } });
+  const createMut = trpc.coupon.adminCreate.useMutation({ onSuccess: () => { utils.coupon.adminList.invalidate(); setShowDialog(false); toast.success("クーポンを作成しました"); } });
+  const updateMut = trpc.coupon.adminUpdate.useMutation({ onSuccess: () => { utils.coupon.adminList.invalidate(); setShowDialog(false); toast.success("クーポンを更新しました"); } });
+  const deleteMut = trpc.coupon.adminDelete.useMutation({ onSuccess: () => { utils.coupon.adminList.invalidate(); toast.success("クーポンを削除しました"); } });
+  const issueMut = trpc.coupon.adminIssueCoupon.useMutation({ onSuccess: (d) => { toast.success(`${d.issued}名にクーポンを発行しました`); } });
+  const issueToAllMut = trpc.coupon.adminIssueToAll.useMutation({ onSuccess: (d) => { toast.success(`全会員${d.total}名のうち${d.issued}名に発行完了 (発行済みは除く)`); } });
 
   const parseIds = (s: string | null | undefined): number[] => s ? s.split(",").map(Number).filter(Boolean) : [];
 
@@ -4517,7 +4517,7 @@ function AdminCoupons() {
     setShowDialog(true);
   };
   const handleSave = () => {
-    if (!form.code || !form.name) { toast.error("쿠폰 코드와 이름을 입력해주세요"); return; }
+    if (!form.code || !form.name) { toast.error("クーポンコードと名前を入力してください"); return; }
     const payload = {
       ...form,
       discountValue: Number(form.discountValue),
@@ -4536,31 +4536,31 @@ function AdminCoupons() {
   };
 
   const targetLabel = (c: any) => {
-    if (c.targetType === "product") return `상품 ${parseIds(c.targetProductIds).length}개`;
-    if (c.targetType === "category") return `카테고리 ${parseIds(c.targetCategoryIds).length}개`;
-    return "전체 상품";
+    if (c.targetType === "product") return `商品 ${parseIds(c.targetProductIds).length}点`;
+    if (c.targetType === "category") return `カテゴリー ${parseIds(c.targetCategoryIds).length}件`;
+    return "全商品";
   };
   const assignLabel = (c: any) => {
-    if (c.assignType === "specific") return `회원 ${parseIds(c.assignUserIds).length}명`;
-    return "전체 회원";
+    if (c.assignType === "specific") return `会員 ${parseIds(c.assignUserIds).length}名`;
+    return "全会員";
   };
 
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl font-bold">쿠폰 관리</h2>
-        <Button onClick={openCreate} size="sm"><Plus className="w-4 h-4 mr-1" /> 쿠폰 생성</Button>
+        <h2 className="text-2xl font-bold">クーポン管理</h2>
+        <Button onClick={openCreate} size="sm"><Plus className="w-4 h-4 mr-1" /> クーポン作成</Button>
       </div>
       <div className="bg-card border rounded-xl overflow-hidden overflow-x-auto">
         <table className="w-full text-sm">
           <thead className="bg-secondary/30"><tr>
-            <th className="p-3 text-left">코드</th><th className="p-3 text-left">이름</th>
-            <th className="p-3 text-left">할인</th><th className="p-3 text-left">적용대상</th>
-            <th className="p-3 text-left">발급대상</th><th className="p-3 text-left">기간</th>
-            <th className="p-3 text-center">사용/전체</th>
-            <th className="p-3 text-center">1인당 한도</th>
-            <th className="p-3 text-center">상태</th>
-            <th className="p-3 text-center">관리</th>
+            <th className="p-3 text-left">コード</th><th className="p-3 text-left">名前</th>
+            <th className="p-3 text-left">割引</th><th className="p-3 text-left">適用対象</th>
+            <th className="p-3 text-left">発行対象</th><th className="p-3 text-left">期間</th>
+            <th className="p-3 text-center">使用/全体</th>
+            <th className="p-3 text-center">1人あたりの上限</th>
+            <th className="p-3 text-center">ステータス</th>
+            <th className="p-3 text-center">操作</th>
           </tr></thead>
           <tbody className="divide-y">
             {data?.coupons.map(c => (
@@ -4570,62 +4570,62 @@ function AdminCoupons() {
                 <td className="p-3">{c.discountType === "percent" ? `${c.discountValue}%` : formatPrice(c.discountValue)}</td>
                 <td className="p-3 text-xs"><Badge variant="outline">{targetLabel(c)}</Badge></td>
                 <td className="p-3 text-xs"><Badge variant="outline">{assignLabel(c)}</Badge></td>
-                <td className="p-3 text-xs">{new Date(c.startDate).toLocaleString("ko-KR", { year:"numeric", month:"2-digit", day:"2-digit", hour:"2-digit", minute:"2-digit", hour12:false })} ~ {new Date(c.endDate).toLocaleString("ko-KR", { year:"numeric", month:"2-digit", day:"2-digit", hour:"2-digit", minute:"2-digit", hour12:false })}</td>
+                <td className="p-3 text-xs">{new Date(c.startDate).toLocaleString("ja-JP", { year:"numeric", month:"2-digit", day:"2-digit", hour:"2-digit", minute:"2-digit", hour12:false })} ~ {new Date(c.endDate).toLocaleString("ja-JP", { year:"numeric", month:"2-digit", day:"2-digit", hour:"2-digit", minute:"2-digit", hour12:false })}</td>
                 <td className="p-3 text-center">{c.usedCount}/{c.totalQuantity === -1 ? "∞" : c.totalQuantity}</td>
-                <td className="p-3 text-center text-sm">{c.perUserLimit != null ? `${c.perUserLimit}회` : "∞"}</td>
-                <td className="p-3 text-center"><Badge variant={c.isActive ? "default" : "secondary"}>{c.isActive ? "활성" : "비활성"}</Badge></td>
+                <td className="p-3 text-center text-sm">{c.perUserLimit != null ? `${c.perUserLimit}回` : "∞"}</td>
+                <td className="p-3 text-center"><Badge variant={c.isActive ? "default" : "secondary"}>{c.isActive ? "有効" : "無効"}</Badge></td>
                 <td className="p-3 text-center">
                   <div className="flex gap-1 justify-center">
                     <Button variant="outline" size="sm" className="h-7 text-xs px-2 text-primary border-primary/40 hover:bg-primary/10"
                       disabled={issueToAllMut.isPending}
-                      onClick={() => { if (confirm(`"${c.name}" 쿠폰을 전체 회원에게 발급하시겠습니까?\n이미 발급받은 회원은 제외됩니다.`)) issueToAllMut.mutate({ couponId: c.id }); }}>
-                      <Users className="w-3 h-3 mr-1" />전체 발급
+                      onClick={() => { if (confirm(`「${c.name}」クーポンを全会員に発行しますか？\n発行済みの会員は除外されます。`)) issueToAllMut.mutate({ couponId: c.id }); }}>
+                      <Users className="w-3 h-3 mr-1" />全員に発行
                     </Button>
                     <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => openEdit(c)}><Pencil className="w-3.5 h-3.5" /></Button>
-                    <Button variant="ghost" size="icon" className="h-7 w-7 text-destructive" onClick={() => { if (confirm("삭제하시겠습니까?")) deleteMut.mutate({ id: c.id }); }}><Trash2 className="w-3.5 h-3.5" /></Button>
+                    <Button variant="ghost" size="icon" className="h-7 w-7 text-destructive" onClick={() => { if (confirm("削除しますか？")) deleteMut.mutate({ id: c.id }); }}><Trash2 className="w-3.5 h-3.5" /></Button>
                   </div>
                 </td>
               </tr>
             ))}
             {(!data?.coupons || data.coupons.length === 0) && !isLoading && (
-              <tr><td colSpan={9} className="p-8 text-center text-muted-foreground">등록된 쿠폰이 없습니다</td></tr>
+              <tr><td colSpan={9} className="p-8 text-center text-muted-foreground">登録されたクーポンはありません</td></tr>
             )}
           </tbody>
         </table>
       </div>
       <Dialog open={showDialog} onOpenChange={setShowDialog}>
         <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto">
-          <DialogHeader><DialogTitle>{editId ? "쿠폰 수정" : "쿠폰 생성"}</DialogTitle><DialogDescription>쿠폰 정보를 입력하세요</DialogDescription></DialogHeader>
+          <DialogHeader><DialogTitle>{editId ? "クーポンの編集" : "クーポンの作成"}</DialogTitle><DialogDescription>クーポン情報を入力してください</DialogDescription></DialogHeader>
           <div className="space-y-4">
             <div className="grid grid-cols-2 gap-3">
-              <div><label className="text-sm font-medium">쿠폰 코드 *</label><Input value={form.code} onChange={e => setForm(f => ({ ...f, code: e.target.value }))} placeholder="WELCOME10" /></div>
-              <div><label className="text-sm font-medium">쿠폰명 *</label><Input value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} placeholder="신규회원 10% 할인" /></div>
+              <div><label className="text-sm font-medium">クーポンコード *</label><Input value={form.code} onChange={e => setForm(f => ({ ...f, code: e.target.value }))} placeholder="WELCOME10" /></div>
+              <div><label className="text-sm font-medium">クーポン名 *</label><Input value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} placeholder="新規会員10%割引" /></div>
             </div>
-            <div><label className="text-sm font-medium">설명</label><Input value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} placeholder="쿠폰 설명" /></div>
+            <div><label className="text-sm font-medium">説明</label><Input value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} placeholder="クーポンの説明" /></div>
             <div className="grid grid-cols-2 gap-3">
-              <div><label className="text-sm font-medium">할인 유형</label>
+              <div><label className="text-sm font-medium">割引タイプ</label>
                 <select className="w-full border rounded-md p-2 text-sm" value={form.discountType} onChange={e => setForm(f => ({ ...f, discountType: e.target.value as any }))}>
-                  <option value="percent">비율 (%)</option><option value="fixed">정액 (원)</option>
+                  <option value="percent">割合 (%)</option><option value="fixed">定額 (円)</option>
                 </select>
               </div>
-              <div><label className="text-sm font-medium">할인값</label><Input type="number" value={form.discountValue} onChange={e => setForm(f => ({ ...f, discountValue: Number(e.target.value) }))} /></div>
+              <div><label className="text-sm font-medium">割引値</label><Input type="number" value={form.discountValue} onChange={e => setForm(f => ({ ...f, discountValue: Number(e.target.value) }))} /></div>
             </div>
             <div className="grid grid-cols-2 gap-3">
-              <div><label className="text-sm font-medium">최소 주문금액</label><Input type="number" value={form.minOrderAmount} onChange={e => setForm(f => ({ ...f, minOrderAmount: Number(e.target.value) }))} /></div>
-              <div><label className="text-sm font-medium">최대 할인액</label><Input type="number" value={form.maxDiscountAmount} onChange={e => setForm(f => ({ ...f, maxDiscountAmount: e.target.value }))} placeholder="무제한" /></div>
+              <div><label className="text-sm font-medium">最低注文金額</label><Input type="number" value={form.minOrderAmount} onChange={e => setForm(f => ({ ...f, minOrderAmount: Number(e.target.value) }))} /></div>
+              <div><label className="text-sm font-medium">最大割引額</label><Input type="number" value={form.maxDiscountAmount} onChange={e => setForm(f => ({ ...f, maxDiscountAmount: e.target.value }))} placeholder="無制限" /></div>
             </div>
             <div className="grid grid-cols-2 gap-3">
-              <div><label className="text-sm font-medium">시작일시</label><Input type="datetime-local" value={form.startDate} onChange={e => setForm(f => ({ ...f, startDate: e.target.value }))} /></div>
-              <div><label className="text-sm font-medium">종료일시</label><Input type="datetime-local" value={form.endDate} onChange={e => setForm(f => ({ ...f, endDate: e.target.value }))} /></div>
+              <div><label className="text-sm font-medium">開始日時</label><Input type="datetime-local" value={form.startDate} onChange={e => setForm(f => ({ ...f, startDate: e.target.value }))} /></div>
+              <div><label className="text-sm font-medium">終了日時</label><Input type="datetime-local" value={form.endDate} onChange={e => setForm(f => ({ ...f, endDate: e.target.value }))} /></div>
             </div>
             <div className="grid grid-cols-3 gap-3">
               <div>
-                <label className="text-sm font-medium">발급 수량</label>
+                <label className="text-sm font-medium">発行数量</label>
                 <Input type="number" value={form.totalQuantity} onChange={e => setForm(f => ({ ...f, totalQuantity: Number(e.target.value) }))} />
-                <p className="text-xs text-muted-foreground mt-1">-1 = 무제한</p>
+                <p className="text-xs text-muted-foreground mt-1">-1 = 無制限</p>
               </div>
               <div>
-                <label className="text-sm font-medium">1인당 사용 횟수</label>
+                <label className="text-sm font-medium">1人あたりの使用回数</label>
                 <div className="flex items-center gap-2 mt-1">
                   <input
                     type="checkbox"
@@ -4634,7 +4634,7 @@ function AdminCoupons() {
                     onChange={e => setForm(f => ({ ...f, perUserLimit: e.target.checked ? 1 : null }))}
                     className="rounded"
                   />
-                  <label htmlFor="perUserLimitCheck" className="text-sm text-muted-foreground">제한 설정</label>
+                  <label htmlFor="perUserLimitCheck" className="text-sm text-muted-foreground">上限を設定</label>
                 </div>
                 {form.perUserLimit != null && (
                   <Input
@@ -4643,23 +4643,23 @@ function AdminCoupons() {
                     value={form.perUserLimit}
                     onChange={e => setForm(f => ({ ...f, perUserLimit: Math.max(1, Number(e.target.value)) }))}
                     className="mt-1"
-                    placeholder="예: 1"
+                    placeholder="例: 1"
                   />
                 )}
-                {form.perUserLimit == null && <p className="text-xs text-muted-foreground mt-1">무제한</p>}
+                {form.perUserLimit == null && <p className="text-xs text-muted-foreground mt-1">無制限</p>}
               </div>
               <div className="flex items-end gap-2 pb-5">
-                <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={form.isActive === 1} onChange={e => setForm(f => ({ ...f, isActive: e.target.checked ? 1 : 0 }))} /> 활성화</label>
+                <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={form.isActive === 1} onChange={e => setForm(f => ({ ...f, isActive: e.target.checked ? 1 : 0 }))} /> 有効化</label>
               </div>
             </div>
 
             <div className="border-t pt-4">
-              <h3 className="text-sm font-semibold mb-3">적용 대상 (상품)</h3>
+              <h3 className="text-sm font-semibold mb-3">適用対象 (商品)</h3>
               <div className="flex gap-2 mb-3">
                 {(["all", "category", "product"] as const).map(t => (
                   <button key={t} type="button" className={`px-3 py-1.5 text-xs rounded-full border transition-colors ${form.targetType === t ? "bg-primary text-primary-foreground border-primary" : "bg-secondary/50 border-border hover:bg-secondary"}`}
                     onClick={() => setForm(f => ({ ...f, targetType: t }))}>
-                    {t === "all" ? "전체 상품" : t === "category" ? "특정 카테고리" : "특정 상품"}
+                    {t === "all" ? "全商品" : t === "category" ? "特定のカテゴリー" : "特定の商品"}
                   </button>
                 ))}
               </div>
@@ -4674,12 +4674,12 @@ function AdminCoupons() {
                       </label>
                     ))}
                   </div>
-                  {form.targetCategoryIds.length > 0 && <p className="text-xs text-muted-foreground">{form.targetCategoryIds.length}개 카테고리 선택됨</p>}
+                  {form.targetCategoryIds.length > 0 && <p className="text-xs text-muted-foreground">{form.targetCategoryIds.length}件のカテゴリーを選択中</p>}
                 </div>
               )}
               {form.targetType === "product" && (
                 <div className="space-y-2">
-                  <Input placeholder="상품 검색..." value={productSearch} onChange={e => setProductSearch(e.target.value)} className="text-sm" />
+                  <Input placeholder="商品を検索..." value={productSearch} onChange={e => setProductSearch(e.target.value)} className="text-sm" />
                   <div className="max-h-40 overflow-y-auto border rounded-lg">
                     {(productsQuery.data?.products ?? []).map((p: any) => (
                       <label key={p.id} className={`flex items-center gap-2 px-3 py-2 text-xs border-b last:border-0 cursor-pointer hover:bg-secondary/30 ${form.targetProductIds.includes(p.id) ? "bg-primary/5" : ""}`}>
@@ -4690,24 +4690,24 @@ function AdminCoupons() {
                       </label>
                     ))}
                   </div>
-                  {form.targetProductIds.length > 0 && <p className="text-xs text-muted-foreground">{form.targetProductIds.length}개 상품 선택됨</p>}
+                  {form.targetProductIds.length > 0 && <p className="text-xs text-muted-foreground">{form.targetProductIds.length}件の商品を選択中</p>}
                 </div>
               )}
             </div>
 
             <div className="border-t pt-4">
-              <h3 className="text-sm font-semibold mb-3">발급 대상 (회원)</h3>
+              <h3 className="text-sm font-semibold mb-3">発行対象 (会員)</h3>
               <div className="flex gap-2 mb-3">
                 {(["all", "specific"] as const).map(t => (
                   <button key={t} type="button" className={`px-3 py-1.5 text-xs rounded-full border transition-colors ${form.assignType === t ? "bg-primary text-primary-foreground border-primary" : "bg-secondary/50 border-border hover:bg-secondary"}`}
                     onClick={() => setForm(f => ({ ...f, assignType: t }))}>
-                    {t === "all" ? "전체 회원" : "특정 회원"}
+                    {t === "all" ? "全会員" : "特定の会員"}
                   </button>
                 ))}
               </div>
               {form.assignType === "specific" && (
                 <div className="space-y-2">
-                  <Input placeholder="회원 검색 (이름/아이디)..." value={userSearch} onChange={e => setUserSearch(e.target.value)} className="text-sm" />
+                  <Input placeholder="会員を検索 (氏名/ID)..." value={userSearch} onChange={e => setUserSearch(e.target.value)} className="text-sm" />
                   <div className="max-h-40 overflow-y-auto border rounded-lg">
                     {(usersQuery.data?.users ?? []).map((u: any) => (
                       <label key={u.id} className={`flex items-center gap-2 px-3 py-2 text-xs border-b last:border-0 cursor-pointer hover:bg-secondary/30 ${form.assignUserIds.includes(u.id) ? "bg-primary/5" : ""}`}>
@@ -4718,14 +4718,14 @@ function AdminCoupons() {
                       </label>
                     ))}
                   </div>
-                  {form.assignUserIds.length > 0 && <p className="text-xs text-muted-foreground">{form.assignUserIds.length}명 선택됨</p>}
+                  {form.assignUserIds.length > 0 && <p className="text-xs text-muted-foreground">{form.assignUserIds.length}名を選択中</p>}
                 </div>
               )}
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setShowDialog(false)}>취소</Button>
-            <Button onClick={handleSave} disabled={createMut.isPending || updateMut.isPending}>저장</Button>
+            <Button variant="outline" onClick={() => setShowDialog(false)}>キャンセル</Button>
+            <Button onClick={handleSave} disabled={createMut.isPending || updateMut.isPending}>保存</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -4756,9 +4756,9 @@ function AdminPromoCodes() {
     targetCategoryIds: [] as number[],
   };
   const [form, setForm] = useState(defaultForm);
-  const createMut = trpc.promoCode.adminCreate.useMutation({ onSuccess: () => { utils.promoCode.adminList.invalidate(); setShowDialog(false); toast.success("프로모코드가 생성되었습니다"); } });
-  const updateMut = trpc.promoCode.adminUpdate.useMutation({ onSuccess: () => { utils.promoCode.adminList.invalidate(); setShowDialog(false); toast.success("프로모코드가 수정되었습니다"); } });
-  const deleteMut = trpc.promoCode.adminDelete.useMutation({ onSuccess: () => { utils.promoCode.adminList.invalidate(); toast.success("프로모코드가 삭제되었습니다"); } });
+  const createMut = trpc.promoCode.adminCreate.useMutation({ onSuccess: () => { utils.promoCode.adminList.invalidate(); setShowDialog(false); toast.success("プロモコードを作成しました"); } });
+  const updateMut = trpc.promoCode.adminUpdate.useMutation({ onSuccess: () => { utils.promoCode.adminList.invalidate(); setShowDialog(false); toast.success("プロモコードを更新しました"); } });
+  const deleteMut = trpc.promoCode.adminDelete.useMutation({ onSuccess: () => { utils.promoCode.adminList.invalidate(); toast.success("プロモコードを削除しました"); } });
 
   const parseIds = (s: string | null | undefined): number[] => s ? s.split(",").map(Number).filter(Boolean) : [];
 
@@ -4791,7 +4791,7 @@ function AdminPromoCodes() {
     setShowDialog(true);
   };
   const handleSave = () => {
-    if (!form.code || !form.name) { toast.error("코드와 이름을 입력해주세요"); return; }
+    if (!form.code || !form.name) { toast.error("コードと名前を入力してください"); return; }
     const payload = {
       ...form,
       discountValue: Number(form.discountValue),
@@ -4811,19 +4811,19 @@ function AdminPromoCodes() {
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl font-bold">프로모코드 관리</h2>
-        <Button onClick={openCreate} size="sm"><Plus className="w-4 h-4 mr-1" /> 프로모코드 생성</Button>
+        <h2 className="text-2xl font-bold">プロモコード管理</h2>
+        <Button onClick={openCreate} size="sm"><Plus className="w-4 h-4 mr-1" /> プロモコード作成</Button>
       </div>
       <div className="bg-card border rounded-xl overflow-hidden overflow-x-auto">
         <table className="w-full text-sm">
           <thead className="bg-secondary/30"><tr>
-            <th className="p-3 text-left">코드</th><th className="p-3 text-left">이름</th>
-            <th className="p-3 text-left">할인</th><th className="p-3 text-left">적용대상</th>
-            <th className="p-3 text-left">기간</th>
-            <th className="p-3 text-center">사용/전체</th>
-            <th className="p-3 text-center">1인당 한도</th>
-            <th className="p-3 text-center">상태</th>
-            <th className="p-3 text-center">관리</th>
+            <th className="p-3 text-left">コード</th><th className="p-3 text-left">名前</th>
+            <th className="p-3 text-left">割引</th><th className="p-3 text-left">適用対象</th>
+            <th className="p-3 text-left">期間</th>
+            <th className="p-3 text-center">使用/全体</th>
+            <th className="p-3 text-center">1人あたりの上限</th>
+            <th className="p-3 text-center">ステータス</th>
+            <th className="p-3 text-center">操作</th>
           </tr></thead>
           <tbody className="divide-y">
             {data?.map((c: any) => (
@@ -4831,72 +4831,72 @@ function AdminPromoCodes() {
                 <td className="p-3 font-mono text-xs">{c.code}</td>
                 <td className="p-3">{c.name}</td>
                 <td className="p-3">{c.discountType === "percent" ? `${c.discountValue}%` : formatPrice(c.discountValue)}</td>
-                <td className="p-3 text-xs"><Badge variant="outline">{c.targetProductIds ? `상품 ${parseIds(c.targetProductIds).length}개` : c.targetCategoryIds ? `카테고리 ${parseIds(c.targetCategoryIds).length}개` : "전체 상품"}</Badge></td>
-                <td className="p-3 text-xs">{new Date(c.startDate).toLocaleString("ko-KR", { year:"numeric", month:"2-digit", day:"2-digit", hour:"2-digit", minute:"2-digit", hour12:false })} ~ {new Date(c.endDate).toLocaleString("ko-KR", { year:"numeric", month:"2-digit", day:"2-digit", hour:"2-digit", minute:"2-digit", hour12:false })}</td>
+                <td className="p-3 text-xs"><Badge variant="outline">{c.targetProductIds ? `商品 ${parseIds(c.targetProductIds).length}点` : c.targetCategoryIds ? `カテゴリー ${parseIds(c.targetCategoryIds).length}件` : "全商品"}</Badge></td>
+                <td className="p-3 text-xs">{new Date(c.startDate).toLocaleString("ja-JP", { year:"numeric", month:"2-digit", day:"2-digit", hour:"2-digit", minute:"2-digit", hour12:false })} ~ {new Date(c.endDate).toLocaleString("ja-JP", { year:"numeric", month:"2-digit", day:"2-digit", hour:"2-digit", minute:"2-digit", hour12:false })}</td>
                 <td className="p-3 text-center">{c.usedCount}/{c.totalUsageLimit === -1 ? "∞" : c.totalUsageLimit}</td>
-                <td className="p-3 text-center text-sm">{c.perUserLimit}회</td>
-                <td className="p-3 text-center"><Badge variant={c.isActive ? "default" : "secondary"}>{c.isActive ? "활성" : "비활성"}</Badge></td>
+                <td className="p-3 text-center text-sm">{c.perUserLimit}回</td>
+                <td className="p-3 text-center"><Badge variant={c.isActive ? "default" : "secondary"}>{c.isActive ? "有効" : "無効"}</Badge></td>
                 <td className="p-3 text-center">
                   <div className="flex gap-1 justify-center">
                     <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => openEdit(c)}><Pencil className="w-3.5 h-3.5" /></Button>
-                    <Button variant="ghost" size="icon" className="h-7 w-7 text-destructive" onClick={() => { if (confirm("삭제하시겠습니까?")) deleteMut.mutate({ id: c.id }); }}><Trash2 className="w-3.5 h-3.5" /></Button>
+                    <Button variant="ghost" size="icon" className="h-7 w-7 text-destructive" onClick={() => { if (confirm("削除しますか？")) deleteMut.mutate({ id: c.id }); }}><Trash2 className="w-3.5 h-3.5" /></Button>
                   </div>
                 </td>
               </tr>
             ))}
             {(!data || data.length === 0) && !isLoading && (
-              <tr><td colSpan={9} className="p-8 text-center text-muted-foreground">등록된 프로모코드가 없습니다</td></tr>
+              <tr><td colSpan={9} className="p-8 text-center text-muted-foreground">登録されたプロモコードはありません</td></tr>
             )}
           </tbody>
         </table>
       </div>
       <Dialog open={showDialog} onOpenChange={setShowDialog}>
         <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto">
-          <DialogHeader><DialogTitle>{editId ? "프로모코드 수정" : "프로모코드 생성"}</DialogTitle><DialogDescription>프로모코드 정보를 입력하세요</DialogDescription></DialogHeader>
+          <DialogHeader><DialogTitle>{editId ? "プロモコードの編集" : "プロモコードの作成"}</DialogTitle><DialogDescription>プロモコード情報を入力してください</DialogDescription></DialogHeader>
           <div className="space-y-4">
             <div className="grid grid-cols-2 gap-3">
-              <div><label className="text-sm font-medium">코드 *</label><Input value={form.code} onChange={e => setForm(f => ({ ...f, code: e.target.value }))} placeholder="SUMMER20" /></div>
-              <div><label className="text-sm font-medium">이름 *</label><Input value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} placeholder="여름 할인 20%" /></div>
+              <div><label className="text-sm font-medium">コード *</label><Input value={form.code} onChange={e => setForm(f => ({ ...f, code: e.target.value }))} placeholder="SUMMER20" /></div>
+              <div><label className="text-sm font-medium">名前 *</label><Input value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} placeholder="夏の割引20%" /></div>
             </div>
-            <div><label className="text-sm font-medium">설명</label><Input value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} placeholder="프로모코드 설명" /></div>
+            <div><label className="text-sm font-medium">説明</label><Input value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} placeholder="プロモコードの説明" /></div>
             <div className="grid grid-cols-2 gap-3">
-              <div><label className="text-sm font-medium">할인 유형</label>
+              <div><label className="text-sm font-medium">割引タイプ</label>
                 <select className="w-full border rounded-md p-2 text-sm" value={form.discountType} onChange={e => setForm(f => ({ ...f, discountType: e.target.value as any }))}>
-                  <option value="percent">비율 (%)</option><option value="fixed">정액 (원)</option>
+                  <option value="percent">割合 (%)</option><option value="fixed">定額 (円)</option>
                 </select>
               </div>
-              <div><label className="text-sm font-medium">할인값</label><Input type="number" value={form.discountValue} onChange={e => setForm(f => ({ ...f, discountValue: Number(e.target.value) }))} /></div>
+              <div><label className="text-sm font-medium">割引値</label><Input type="number" value={form.discountValue} onChange={e => setForm(f => ({ ...f, discountValue: Number(e.target.value) }))} /></div>
             </div>
             <div className="grid grid-cols-2 gap-3">
-              <div><label className="text-sm font-medium">최소 주문금액</label><Input type="number" value={form.minOrderAmount} onChange={e => setForm(f => ({ ...f, minOrderAmount: Number(e.target.value) }))} /></div>
-              <div><label className="text-sm font-medium">최대 할인액</label><Input type="number" value={form.maxDiscountAmount} onChange={e => setForm(f => ({ ...f, maxDiscountAmount: e.target.value }))} placeholder="무제한" /></div>
+              <div><label className="text-sm font-medium">最低注文金額</label><Input type="number" value={form.minOrderAmount} onChange={e => setForm(f => ({ ...f, minOrderAmount: Number(e.target.value) }))} /></div>
+              <div><label className="text-sm font-medium">最大割引額</label><Input type="number" value={form.maxDiscountAmount} onChange={e => setForm(f => ({ ...f, maxDiscountAmount: e.target.value }))} placeholder="無制限" /></div>
             </div>
             <div className="grid grid-cols-2 gap-3">
-              <div><label className="text-sm font-medium">시작일시</label><Input type="datetime-local" value={form.startDate} onChange={e => setForm(f => ({ ...f, startDate: e.target.value }))} /></div>
-              <div><label className="text-sm font-medium">종료일시</label><Input type="datetime-local" value={form.endDate} onChange={e => setForm(f => ({ ...f, endDate: e.target.value }))} /></div>
+              <div><label className="text-sm font-medium">開始日時</label><Input type="datetime-local" value={form.startDate} onChange={e => setForm(f => ({ ...f, startDate: e.target.value }))} /></div>
+              <div><label className="text-sm font-medium">終了日時</label><Input type="datetime-local" value={form.endDate} onChange={e => setForm(f => ({ ...f, endDate: e.target.value }))} /></div>
             </div>
             <div className="grid grid-cols-3 gap-3">
               <div>
-                <label className="text-sm font-medium">최대 사용 횟수</label>
+                <label className="text-sm font-medium">最大使用回数</label>
                 <Input type="number" value={form.totalUsageLimit} onChange={e => setForm(f => ({ ...f, totalUsageLimit: Number(e.target.value) }))} />
-                <p className="text-xs text-muted-foreground mt-1">-1 = 무제한</p>
+                <p className="text-xs text-muted-foreground mt-1">-1 = 無制限</p>
               </div>
               <div>
-                <label className="text-sm font-medium">1인당 사용 횟수</label>
+                <label className="text-sm font-medium">1人あたりの使用回数</label>
                 <Input type="number" min={1} value={form.perUserLimit} onChange={e => setForm(f => ({ ...f, perUserLimit: Math.max(1, Number(e.target.value)) }))} />
               </div>
               <div className="flex items-end gap-2 pb-5">
-                <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={form.isActive === 1} onChange={e => setForm(f => ({ ...f, isActive: e.target.checked ? 1 : 0 }))} /> 활성화</label>
+                <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={form.isActive === 1} onChange={e => setForm(f => ({ ...f, isActive: e.target.checked ? 1 : 0 }))} /> 有効化</label>
               </div>
             </div>
             <div className="border-t pt-4">
-              <h3 className="text-sm font-semibold mb-3">적용 대상 (상품)</h3>
+              <h3 className="text-sm font-semibold mb-3">適用対象 (商品)</h3>
               <div className="flex gap-2 mb-3">
                 {(["all", "category", "product"] as const).map(t => (
                   <button key={t} type="button"
                     className={`px-3 py-1.5 text-xs rounded-full border transition-colors ${form.targetMode === t ? "bg-primary text-primary-foreground border-primary" : "bg-secondary/50 border-border hover:bg-secondary"}`}
                     onClick={() => setForm(f => ({ ...f, targetMode: t, targetCategoryIds: t === "category" ? f.targetCategoryIds : [], targetProductIds: t === "product" ? f.targetProductIds : [] }))}>
-                    {t === "all" ? "전체 상품" : t === "category" ? "특정 카테고리" : "특정 상품"}
+                    {t === "all" ? "全商品" : t === "category" ? "特定のカテゴリー" : "特定の商品"}
                   </button>
                 ))}
               </div>
@@ -4911,12 +4911,12 @@ function AdminPromoCodes() {
                       </label>
                     ))}
                   </div>
-                  {form.targetCategoryIds.length > 0 && <p className="text-xs text-muted-foreground">{form.targetCategoryIds.length}개 카테고리 선택됨</p>}
+                  {form.targetCategoryIds.length > 0 && <p className="text-xs text-muted-foreground">{form.targetCategoryIds.length}件のカテゴリーを選択中</p>}
                 </div>
               )}
               {form.targetMode === "product" && (
                 <div className="space-y-2">
-                  <Input placeholder="상품 검색..." value={productSearch} onChange={e => setProductSearch(e.target.value)} className="text-sm" />
+                  <Input placeholder="商品を検索..." value={productSearch} onChange={e => setProductSearch(e.target.value)} className="text-sm" />
                   <div className="max-h-40 overflow-y-auto border rounded-lg">
                     {(productsQuery.data?.products ?? []).map((p: any) => (
                       <label key={p.id} className={`flex items-center gap-2 px-3 py-2 text-xs border-b last:border-0 cursor-pointer hover:bg-secondary/30 ${form.targetProductIds.includes(p.id) ? "bg-primary/5" : ""}`}>
@@ -4927,14 +4927,14 @@ function AdminPromoCodes() {
                       </label>
                     ))}
                   </div>
-                  {form.targetProductIds.length > 0 && <p className="text-xs text-muted-foreground">{form.targetProductIds.length}개 상품 선택됨</p>}
+                  {form.targetProductIds.length > 0 && <p className="text-xs text-muted-foreground">{form.targetProductIds.length}件の商品を選択中</p>}
                 </div>
               )}
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setShowDialog(false)}>취소</Button>
-            <Button onClick={handleSave} disabled={createMut.isPending || updateMut.isPending}>저장</Button>
+            <Button variant="outline" onClick={() => setShowDialog(false)}>キャンセル</Button>
+            <Button onClick={handleSave} disabled={createMut.isPending || updateMut.isPending}>保存</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -4967,7 +4967,7 @@ function AdminQnAItem({ post, onInvalidate }: { post: QnAPost; onInvalidate: () 
 
   const answerQnA = trpc.community.answerQnA.useMutation({
     onSuccess: () => {
-      toast.success("답변이 등록되었습니다");
+      toast.success("回答を登録しました");
       setAnswerContent("");
       onInvalidate();
       utils.community.comments.invalidate({ postId: post.id });
@@ -4985,7 +4985,7 @@ function AdminQnAItem({ post, onInvalidate }: { post: QnAPost; onInvalidate: () 
       >
         <div className="shrink-0">
           {post.productThumbnail ? (
-            <img src={proxyImage(post.productThumbnail)} alt={post.productName ?? "상품"} className="w-12 h-12 object-cover rounded-lg border" />
+            <img src={proxyImage(post.productThumbnail)} alt={post.productName ?? "商品"} className="w-12 h-12 object-cover rounded-lg border" />
           ) : (
             <div className="w-12 h-12 bg-muted rounded-lg border flex items-center justify-center">
               <ShoppingBag className="w-5 h-5 text-muted-foreground/40" />
@@ -5000,12 +5000,12 @@ function AdminQnAItem({ post, onInvalidate }: { post: QnAPost; onInvalidate: () 
             <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-primary text-primary-foreground text-[10px] font-bold shrink-0">Q</span>
             <p className="font-medium text-sm">{post.title}</p>
             <Badge className={`text-[10px] px-1.5 py-0 shrink-0 ${isAnswered ? "bg-emerald-100 text-emerald-700 border-emerald-200" : "bg-rose-100 text-rose-600 border-rose-200"}`}>
-              {isAnswered ? "답변완료" : "미답변"}
+              {isAnswered ? "回答済み" : "未回答"}
             </Badge>
           </div>
           <p className="text-xs text-muted-foreground mt-1 line-clamp-1">{post.content}</p>
           <p className="text-xs text-muted-foreground mt-0.5">
-            {post.userName ?? "익명"} · {formatDate(post.createdAt)}
+            {post.userName ?? "匿名"} · {formatDate(post.createdAt)}
           </p>
         </div>
         <div className="shrink-0 text-muted-foreground">
@@ -5016,7 +5016,7 @@ function AdminQnAItem({ post, onInvalidate }: { post: QnAPost; onInvalidate: () 
       {isExpanded && (
         <div className="border-t bg-muted/20 p-4 space-y-4">
           <div className="bg-card rounded-lg p-3 border">
-            <p className="text-xs font-semibold text-muted-foreground mb-1">질문 내용</p>
+            <p className="text-xs font-semibold text-muted-foreground mb-1">質問内容</p>
             <p className="text-sm whitespace-pre-wrap">{post.content}</p>
           </div>
 
@@ -5028,7 +5028,7 @@ function AdminQnAItem({ post, onInvalidate }: { post: QnAPost; onInvalidate: () 
                     {c.isAdmin ? "A" : "U"}
                   </span>
                   <div className="flex-1 min-w-0">
-                    {c.isAdmin && <p className="text-[11px] font-semibold text-emerald-700 dark:text-emerald-400 mb-0.5">관리자 답변</p>}
+                    {c.isAdmin && <p className="text-[11px] font-semibold text-emerald-700 dark:text-emerald-400 mb-0.5">管理者の回答</p>}
                     <p className="text-sm whitespace-pre-wrap">{c.content}</p>
                     <p className="text-xs text-muted-foreground mt-1">{formatDateTime(c.createdAt)}</p>
                   </div>
@@ -5038,11 +5038,11 @@ function AdminQnAItem({ post, onInvalidate }: { post: QnAPost; onInvalidate: () 
           )}
 
           <div className="space-y-2">
-            <p className="text-xs font-semibold text-muted-foreground">관리자 답변 작성</p>
+            <p className="text-xs font-semibold text-muted-foreground">管理者の回答を作成</p>
             <textarea
               className="w-full border rounded-lg p-3 text-sm bg-background resize-none focus:outline-none focus:ring-2 focus:ring-primary/30"
               rows={4}
-              placeholder="답변 내용을 입력하세요"
+              placeholder="回答内容を入力してください"
               value={answerContent}
               onChange={e => setAnswerContent(e.target.value)}
             />
@@ -5053,7 +5053,7 @@ function AdminQnAItem({ post, onInvalidate }: { post: QnAPost; onInvalidate: () 
                 onClick={() => answerQnA.mutate({ postId: post.id, content: answerContent.trim() })}
               >
                 <Check className="w-3.5 h-3.5 mr-1" />
-                답변 등록
+                回答を登録
               </Button>
             </div>
           </div>
@@ -5093,22 +5093,22 @@ function AdminProductQnA() {
     <div>
       <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
         <HelpCircle className="w-6 h-6 text-primary" />
-        상품 Q&A 관리
+        商品Q&A管理
       </h2>
       <div className="flex items-center justify-between mb-6 gap-4">
         <div className="flex gap-2">
           <Button size="sm" variant={!onlyUnanswered ? "default" : "outline"} onClick={() => { setOnlyUnanswered(false); setPage(1); }}>
-            전체 {!onlyUnanswered && data && <span className="ml-1 bg-white/20 text-white px-1.5 py-0.5 rounded text-xs">{data.total}</span>}
+            すべて {!onlyUnanswered && data && <span className="ml-1 bg-white/20 text-white px-1.5 py-0.5 rounded text-xs">{data.total}</span>}
           </Button>
           <Button size="sm" variant={onlyUnanswered ? "default" : "outline"} onClick={() => { setOnlyUnanswered(true); setPage(1); }}>
-            미답변
+            未回答
             {onlyUnanswered && data && <span className="ml-1 bg-white/20 text-white px-1.5 py-0.5 rounded text-xs">{data.total}</span>}
           </Button>
         </div>
         <div className="relative w-64">
           <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
           <Input
-            placeholder="상품명, 제목, 작성자 검색"
+            placeholder="商品名、タイトル、投稿者で検索"
             value={search}
             onChange={e => setSearch(e.target.value)}
             className="pl-9 h-9 text-sm"
@@ -5121,7 +5121,7 @@ function AdminProductQnA() {
       ) : filteredPosts.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-20 gap-3 text-muted-foreground">
           <HelpCircle className="w-12 h-12 opacity-20" />
-          <p className="text-lg font-medium">{search.trim() ? "검색 결과가 없습니다" : onlyUnanswered ? "미답변 Q&A가 없습니다" : "Q&A가 없습니다"}</p>
+          <p className="text-lg font-medium">{search.trim() ? "検索結果がありません" : onlyUnanswered ? "未回答のQ&Aはありません" : "Q&Aがありません"}</p>
         </div>
       ) : (
         <div className="space-y-3">
@@ -5157,7 +5157,7 @@ function AdminReviews() {
   );
   const createReply = trpc.community.createReviewReply.useMutation({
     onSuccess: () => {
-      toast.success("답변이 등록되었습니다");
+      toast.success("回答を登録しました");
       setReplyContent("");
       utils.community.reviewReplies.invalidate();
       utils.community.adminReviews.invalidate();
@@ -5166,7 +5166,7 @@ function AdminReviews() {
   });
   const deleteReply = trpc.community.deleteReviewReply.useMutation({
     onSuccess: () => {
-      toast.success("답변이 삭제되었습니다");
+      toast.success("回答を削除しました");
       utils.community.reviewReplies.invalidate();
       utils.community.adminReviews.invalidate();
     },
@@ -5189,12 +5189,12 @@ function AdminReviews() {
 
   return (
     <div>
-      <h2 className="text-2xl font-bold mb-6">리뷰 관리</h2>
+      <h2 className="text-2xl font-bold mb-6">レビュー管理</h2>
       <div className="flex items-center justify-between mb-4 gap-4">
         <div className="relative w-64">
           <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
           <Input
-            placeholder="상품명, 제목, 작성자 검색"
+            placeholder="商品名、タイトル、投稿者で検索"
             value={search}
             onChange={e => setSearch(e.target.value)}
             className="pl-9 h-9 text-sm"
@@ -5204,10 +5204,10 @@ function AdminReviews() {
       <div className="bg-card border rounded-xl overflow-hidden">
         <table className="w-full text-sm">
           <thead className="bg-secondary/30"><tr>
-            <th className="p-3 text-left">ID</th><th className="p-3 text-left">상품</th><th className="p-3 text-left">제목</th>
-            <th className="p-3 text-left">작성자</th><th className="p-3 text-center">별점</th>
-            <th className="p-3 text-center">답변</th><th className="p-3 text-left">작성일</th>
-            <th className="p-3 text-center">관리</th>
+            <th className="p-3 text-left">ID</th><th className="p-3 text-left">商品</th><th className="p-3 text-left">タイトル</th>
+            <th className="p-3 text-left">投稿者</th><th className="p-3 text-center">評価</th>
+            <th className="p-3 text-center">回答</th><th className="p-3 text-left">投稿日</th>
+            <th className="p-3 text-center">操作</th>
           </tr></thead>
           <tbody className="divide-y">
             {filteredReviews.map(r => (
@@ -5215,24 +5215,24 @@ function AdminReviews() {
                 <td className="p-3">{r.id}</td>
                 <td className="p-3">
                   {r.productThumbnail ? (
-                    <img src={proxyImage(r.productThumbnail)} alt={r.productName ?? "상품"} className="w-12 h-12 object-cover rounded border" />
+                    <img src={proxyImage(r.productThumbnail)} alt={r.productName ?? "商品"} className="w-12 h-12 object-cover rounded border" />
                   ) : (
                     <div className="w-12 h-12 bg-muted rounded border flex items-center justify-center"><ShoppingBag className="w-5 h-5 text-muted-foreground/40" /></div>
                   )}
                 </td>
                 <td className="p-3 font-medium">{r.title}</td>
                 <td className="p-3">
-                  <div className="font-medium">{r.userName ?? "익명"}</div>
+                  <div className="font-medium">{r.userName ?? "匿名"}</div>
                   {r.userEmail && <div className="text-xs text-muted-foreground">{r.userEmail}</div>}
                 </td>
                 <td className="p-3 text-center">{r.rating ? `${"★".repeat(r.rating)}` : "-"}</td>
-                <td className="p-3 text-center"><Badge variant={r.replyCount > 0 ? "default" : "outline"}>{r.replyCount > 0 ? `${r.replyCount}건` : "미답변"}</Badge></td>
+                <td className="p-3 text-center"><Badge variant={r.replyCount > 0 ? "default" : "outline"}>{r.replyCount > 0 ? `${r.replyCount}件` : "未回答"}</Badge></td>
                 <td className="p-3 text-xs">{formatDate(r.createdAt)}</td>
                 <td className="p-3 text-center"><Button variant="ghost" size="sm" onClick={(e) => { e.stopPropagation(); setSelectedReview(r); }}><Eye className="w-4 h-4" /></Button></td>
               </tr>
             ))}
             {filteredReviews.length === 0 && !isLoading && (
-              <tr><td colSpan={8} className="p-8 text-center text-muted-foreground">{search.trim() ? "검색 결과가 없습니다" : "리뷰가 없습니다"}</td></tr>
+              <tr><td colSpan={8} className="p-8 text-center text-muted-foreground">{search.trim() ? "検索結果がありません" : "レビューがありません"}</td></tr>
             )}
           </tbody>
         </table>
@@ -5240,27 +5240,27 @@ function AdminReviews() {
 
       <Dialog open={!!selectedReview} onOpenChange={(open) => { if (!open) setSelectedReview(null); }}>
         <DialogContent className="max-w-lg max-h-[80vh] overflow-y-auto">
-          <DialogHeader><DialogTitle>리뷰 상세 / 답변</DialogTitle><DialogDescription>리뷰에 관리자 답변을 달 수 있습니다</DialogDescription></DialogHeader>
+          <DialogHeader><DialogTitle>レビュー詳細 / 回答</DialogTitle><DialogDescription>レビューに管理者の回答を投稿できます</DialogDescription></DialogHeader>
           {selectedReview && (
             <div className="space-y-4">
               {/* 상품 정보 */}
               <div className="flex items-center gap-3 p-3 bg-secondary/20 rounded-lg">
                 {selectedReview.productThumbnail ? (
-                  <img src={proxyImage(selectedReview.productThumbnail)} alt={selectedReview.productName ?? "상품"} className="w-14 h-14 object-cover rounded-lg border shrink-0" />
+                  <img src={proxyImage(selectedReview.productThumbnail)} alt={selectedReview.productName ?? "商品"} className="w-14 h-14 object-cover rounded-lg border shrink-0" />
                 ) : (
                   <div className="w-14 h-14 bg-muted rounded-lg border flex items-center justify-center shrink-0">
                     <ShoppingBag className="w-6 h-6 text-muted-foreground/40" />
                   </div>
                 )}
                 <div className="min-w-0">
-                  <p className="text-sm font-semibold truncate">{selectedReview.productName ?? "상품명 없음"}</p>
-                  <p className="text-xs text-muted-foreground">상품 리뷰</p>
+                  <p className="text-sm font-semibold truncate">{selectedReview.productName ?? "商品名なし"}</p>
+                  <p className="text-xs text-muted-foreground">商品レビュー</p>
                 </div>
               </div>
 
               <div className="bg-secondary/20 rounded-lg p-4">
                 <div className="flex items-center justify-between mb-2">
-                  <span className="font-medium">{selectedReview.userName ?? "익명"}</span>
+                  <span className="font-medium">{selectedReview.userName ?? "匿名"}</span>
                   <span className="text-xs text-muted-foreground">{formatDate(selectedReview.createdAt)}</span>
                 </div>
                 <h3 className="font-semibold mb-1">{selectedReview.title}</h3>
@@ -5271,11 +5271,11 @@ function AdminReviews() {
               {/* Existing replies */}
               {replies && replies.length > 0 && (
                 <div className="space-y-2">
-                  <p className="text-sm font-medium">답변 ({replies.length})</p>
+                  <p className="text-sm font-medium">回答 ({replies.length})</p>
                   {replies.map(reply => (
                     <div key={reply.id} className="bg-primary/5 border border-primary/10 rounded-lg p-3">
                       <div className="flex items-center justify-between mb-1">
-                        <span className="text-xs font-medium text-primary">관리자 답변</span>
+                        <span className="text-xs font-medium text-primary">管理者の回答</span>
                         <div className="flex items-center gap-2">
                           <span className="text-xs text-muted-foreground">{formatDate(reply.createdAt)}</span>
                           <Button variant="ghost" size="icon" className="h-6 w-6 text-destructive" onClick={() => deleteReply.mutate({ id: reply.id })}><Trash2 className="w-3 h-3" /></Button>
@@ -5289,11 +5289,11 @@ function AdminReviews() {
 
               {/* Write reply */}
               <div>
-                <label className="text-sm font-medium block mb-1.5">답변 작성</label>
-                <Textarea value={replyContent} onChange={e => setReplyContent(e.target.value)} placeholder="리뷰에 대한 답변을 작성하세요..." rows={3} />
+                <label className="text-sm font-medium block mb-1.5">回答を作成</label>
+                <Textarea value={replyContent} onChange={e => setReplyContent(e.target.value)} placeholder="レビューへの回答を入力してください..." rows={3} />
                 <div className="flex justify-end mt-2">
                   <Button size="sm" disabled={!replyContent.trim() || createReply.isPending} onClick={() => createReply.mutate({ postId: selectedReview.id, content: replyContent.trim() })}>
-                    {createReply.isPending ? "등록 중..." : "답변 등록"}
+                    {createReply.isPending ? "登録中..." : "回答を登録"}
                   </Button>
                 </div>
               </div>
@@ -5331,7 +5331,7 @@ function AdminShipping() {
 
   const registerShipment = trpc.shipping.adminCreateShipment.useMutation({
     onSuccess: () => {
-      toast.success("운송장이 등록되었습니다.");
+      toast.success("追跡番号を登録しました。");
       setSingleDialogOpen(false);
       setTrackingNumber("");
       setDeliveryMemo("");
@@ -5344,7 +5344,7 @@ function AdminShipping() {
 
   const bulkRegister = trpc.shipping.adminBulkCreateShipment.useMutation({
     onSuccess: (data: any) => {
-      toast.success(`${data.successCount}건의 운송장이 등록되었습니다.`);
+      toast.success(`${data.successCount}件の追跡番号を登録しました。`);
       setBulkDialogOpen(false);
       setBulkEntries([]);
       utils.shipping.adminShipments.invalidate();
@@ -5356,7 +5356,7 @@ function AdminShipping() {
 
   const updateStatus = trpc.shipping.adminUpdateShipmentStatus.useMutation({
     onSuccess: () => {
-      toast.success("배송 상태가 변경되었습니다.");
+      toast.success("配送ステータスを変更しました。");
       utils.shipping.adminShipments.invalidate();
       utils.shipping.adminShippingStats.invalidate();
     },
@@ -5370,9 +5370,9 @@ function AdminShipping() {
     onSuccess: (data: any) => {
       setBulkRefreshProgress({ total: data.total, done: data.total, running: false });
       if (data.failCount > 0) {
-        toast.warning(`${data.successCount}건 성공, ${data.failCount}건 실패`);
+        toast.warning(`${data.successCount}件成功、${data.failCount}件失敗`);
       } else {
-        toast.success(`${data.successCount}건의 배송 정보가 업데이트되었습니다.`);
+        toast.success(`${data.successCount}件の配送情報を更新しました。`);
       }
       setSelectedShipmentIds([]);
       utils.shipping.adminShipments.invalidate();
@@ -5399,7 +5399,7 @@ function AdminShipping() {
 
   const handleBulkRefresh = () => {
     if (selectedShipmentIds.length === 0) {
-      toast.error("새로고침할 배송건을 선택해주세요.");
+      toast.error("再読み込みする配送案件を選択してください。");
       return;
     }
     setBulkRefreshProgress({ total: selectedShipmentIds.length, done: 0, running: true });
@@ -5407,40 +5407,40 @@ function AdminShipping() {
   };
 
   const shipmentStatusLabels: Record<string, string> = {
-    ready: "배송 준비", picked_up: "상품 수거", in_transit: "배송 중",
-    out_for_delivery: "배달 출발", delivered: "배달 완료", failed: "배송 실패",
-    import_customs: "통관검사", customs_departure: "통관 출발", customs_arrival: "통관 도착",
+    ready: "配送準備", picked_up: "集荷", in_transit: "配送中",
+    out_for_delivery: "配達に出発", delivered: "配達完了", failed: "配送失敗",
+    import_customs: "通関検査", customs_departure: "通関出発", customs_arrival: "通関到着",
   };
 
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold">배송 관리</h2>
+        <h2 className="text-2xl font-bold">配送管理</h2>
         <div className="flex gap-2">
-          <Button variant="outline" onClick={() => setBulkDialogOpen(true)} className="gap-2"><Upload className="w-4 h-4" />일괄 등록</Button>
+          <Button variant="outline" onClick={() => setBulkDialogOpen(true)} className="gap-2"><Upload className="w-4 h-4" />一括登録</Button>
         </div>
       </div>
 
       {/* Stats Cards */}
       <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
         <div className="bg-card border rounded-xl p-4">
-          <div className="flex items-center gap-2 text-muted-foreground text-sm mb-1"><Clock className="w-4 h-4" />발송 대기</div>
+          <div className="flex items-center gap-2 text-muted-foreground text-sm mb-1"><Clock className="w-4 h-4" />発送待ち</div>
           <p className="text-2xl font-bold">{stats?.pending ?? 0}</p>
         </div>
         <div className="bg-card border rounded-xl p-4">
-          <div className="flex items-center gap-2 text-blue-600 text-sm mb-1"><Truck className="w-4 h-4" />배송 중</div>
+          <div className="flex items-center gap-2 text-blue-600 text-sm mb-1"><Truck className="w-4 h-4" />配送中</div>
           <p className="text-2xl font-bold text-blue-600">{stats?.shipping ?? 0}</p>
         </div>
         <div className="bg-card border border-rose-200 dark:border-rose-800 rounded-xl p-4">
-          <div className="flex items-center gap-2 text-rose-600 text-sm mb-1"><AlertCircle className="w-4 h-4" />통관검사</div>
+          <div className="flex items-center gap-2 text-rose-600 text-sm mb-1"><AlertCircle className="w-4 h-4" />通関検査</div>
           <p className="text-2xl font-bold text-rose-600">{stats?.customsHold ?? 0}</p>
         </div>
         <div className="bg-card border rounded-xl p-4">
-          <div className="flex items-center gap-2 text-emerald-600 text-sm mb-1"><CheckCircle2 className="w-4 h-4" />배달 완료</div>
+          <div className="flex items-center gap-2 text-emerald-600 text-sm mb-1"><CheckCircle2 className="w-4 h-4" />配達完了</div>
           <p className="text-2xl font-bold text-emerald-600">{stats?.delivered ?? 0}</p>
         </div>
         <div className="bg-card border rounded-xl p-4">
-          <div className="flex items-center gap-2 text-destructive text-sm mb-1"><AlertCircle className="w-4 h-4" />배송 실패</div>
+          <div className="flex items-center gap-2 text-destructive text-sm mb-1"><AlertCircle className="w-4 h-4" />配送失敗</div>
           <p className="text-2xl font-bold text-destructive">{stats?.failed ?? 0}</p>
         </div>
       </div>
@@ -5448,7 +5448,7 @@ function AdminShipping() {
       {/* Pending Orders */}
       {(pendingData?.orders ?? []).length > 0 && (
         <div className="bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800 rounded-xl p-4">
-          <h3 className="font-semibold text-amber-800 dark:text-amber-200 mb-3 flex items-center gap-2"><Clock className="w-4 h-4" />발송 대기 주문 ({pendingData?.orders.length}건)</h3>
+          <h3 className="font-semibold text-amber-800 dark:text-amber-200 mb-3 flex items-center gap-2"><Clock className="w-4 h-4" />発送待ちの注文 ({pendingData?.orders.length}件)</h3>
           <div className="space-y-2">
             {pendingData!.orders.slice(0, 5).map(order => (
               <div key={order.id} className="flex items-center justify-between bg-background rounded-lg p-3">
@@ -5457,11 +5457,11 @@ function AdminShipping() {
                   <span className="text-xs text-muted-foreground ml-2">{formatDate(order.createdAt)}</span>
                 </div>
                 <Button size="sm" onClick={() => { setSelectedOrderId(order.id); setSingleDialogOpen(true); }} className="gap-1">
-                  <Truck className="w-3 h-3" />운송장 등록
+                  <Truck className="w-3 h-3" />追跡番号を登録
                 </Button>
               </div>
             ))}
-            {(pendingData?.orders.length ?? 0) > 5 && <p className="text-xs text-muted-foreground text-center">외 {(pendingData?.orders.length ?? 0) - 5}건</p>}
+            {(pendingData?.orders.length ?? 0) > 5 && <p className="text-xs text-muted-foreground text-center">ほか{(pendingData?.orders.length ?? 0) - 5}件</p>}
           </div>
         </div>
       )}
@@ -5469,7 +5469,7 @@ function AdminShipping() {
       {/* Shipments List */}
       <div>
         <div className="flex items-center gap-2 mb-4 flex-wrap">
-          <h3 className="font-semibold">배송 목록</h3>
+          <h3 className="font-semibold">配送一覧</h3>
           {selectedShipmentIds.length > 0 && (
             <Button
               size="sm"
@@ -5480,14 +5480,14 @@ function AdminShipping() {
             >
               <RotateCcw className={`w-3.5 h-3.5 ${bulkRefreshProgress.running ? 'animate-spin' : ''}`} />
               {bulkRefreshProgress.running
-                ? `새로고침 중... (${selectedShipmentIds.length}건)`
-                : `선택한 ${selectedShipmentIds.length}건 새로고침`}
+                ? `再読み込み中... (${selectedShipmentIds.length}件)`
+                : `選択した${selectedShipmentIds.length}件を再読み込み`}
             </Button>
           )}
           <div className="flex gap-1 ml-auto">
             {["all", "ready", "in_transit", "import_customs", "out_for_delivery", "delivered", "failed"].map(s => (
               <button key={s} onClick={() => { setStatusFilter(s); setPage(1); setSelectedShipmentIds([]); }} className={`px-2.5 py-1 rounded-full text-xs font-medium ${statusFilter === s ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground hover:bg-accent"}`}>
-                {s === "all" ? "전체" : shipmentStatusLabels[s] || s}
+                {s === "all" ? "すべて" : shipmentStatusLabels[s] || s}
               </button>
             ))}
           </div>
@@ -5498,8 +5498,8 @@ function AdminShipping() {
           <div className="mb-4 bg-blue-50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-800 rounded-lg p-3">
             <div className="flex items-center gap-2 mb-2">
               <RotateCcw className="w-4 h-4 text-blue-600 animate-spin" />
-              <span className="text-sm font-medium text-blue-700 dark:text-blue-300">배송 정보 일괄 새로고침 중...</span>
-              <span className="text-xs text-blue-500 ml-auto">{bulkRefreshProgress.total}건 처리 중</span>
+              <span className="text-sm font-medium text-blue-700 dark:text-blue-300">配送情報を一括再読み込み中...</span>
+              <span className="text-xs text-blue-500 ml-auto">{bulkRefreshProgress.total}件処理中</span>
             </div>
             <div className="w-full bg-blue-200 dark:bg-blue-800 rounded-full h-1.5">
               <div className="bg-blue-600 h-1.5 rounded-full animate-pulse" style={{ width: '100%' }} />
@@ -5519,7 +5519,7 @@ function AdminShipping() {
                     className="rounded"
                   />
                 </th>
-                <th className="p-3 text-left">주문번호</th><th className="p-3 text-left">택배사</th><th className="p-3 text-left">운송장번호</th><th className="p-3 text-center">상태</th><th className="p-3 text-center">등록일</th><th className="p-3 text-center">작업</th>
+                <th className="p-3 text-left">注文番号</th><th className="p-3 text-left">配送業者</th><th className="p-3 text-left">追跡番号</th><th className="p-3 text-center">ステータス</th><th className="p-3 text-center">登録日</th><th className="p-3 text-center">操作</th>
               </tr>
             </thead>
             <tbody>
@@ -5534,7 +5534,7 @@ function AdminShipping() {
                     />
                   </td>
                   <td className="p-3 font-mono text-xs">#{s.orderId}</td>
-                  <td className="p-3">국제배송</td>
+                  <td className="p-3">国際配送</td>
                   <td className="p-3 text-xs">{s.trackingNumber}</td>
                   <td className="p-3 text-center">
                     <span className={`text-xs px-2 py-0.5 rounded-full ${s.status === "delivered" ? "bg-emerald-100 text-emerald-700" : s.status === "failed" ? "bg-red-100 text-red-700" : s.status === "import_customs" ? "bg-rose-100 text-rose-700" : "bg-blue-100 text-blue-700"}`}>
@@ -5554,7 +5554,7 @@ function AdminShipping() {
                   </td>
                 </tr>
               ))}
-              {(shipmentsData?.shipments ?? []).length === 0 && <tr><td colSpan={7} className="p-8 text-center text-muted-foreground">배송 데이터가 없습니다</td></tr>}
+              {(shipmentsData?.shipments ?? []).length === 0 && <tr><td colSpan={7} className="p-8 text-center text-muted-foreground">配送データがありません</td></tr>}
             </tbody>
           </table>
         </div>
@@ -5563,19 +5563,19 @@ function AdminShipping() {
       {/* Single Register Dialog */}
       <Dialog open={singleDialogOpen} onOpenChange={setSingleDialogOpen}>
         <DialogContent>
-          <DialogHeader><DialogTitle>운송장 등록</DialogTitle></DialogHeader>
+          <DialogHeader><DialogTitle>追跡番号の登録</DialogTitle></DialogHeader>
           <div className="space-y-4">
             <div className="bg-blue-50 dark:bg-blue-950/20 rounded-lg p-3 text-sm text-blue-700 dark:text-blue-300 flex items-center gap-2">
               <Truck className="w-4 h-4" />
-              국제배송으로 자동 등록됩니다.
+              国際配送として自動登録されます。
             </div>
             <div>
-              <label className="text-sm font-medium mb-1.5 block">운송장 번호</label>
-              <Input value={trackingNumber} onChange={(e) => setTrackingNumber(e.target.value)} placeholder="운송장 번호 입력 (예: EE123456789KR)" />
+              <label className="text-sm font-medium mb-1.5 block">追跡番号</label>
+              <Input value={trackingNumber} onChange={(e) => setTrackingNumber(e.target.value)} placeholder="追跡番号を入力 (例: EE123456789JP)" />
             </div>
             <Button className="w-full" disabled={!trackingNumber || registerShipment.isPending}
               onClick={() => selectedOrderId && registerShipment.mutate({ orderId: selectedOrderId, trackingNumber })}>
-              {registerShipment.isPending ? "등록 중..." : "운송장 등록"}
+              {registerShipment.isPending ? "登録中..." : "追跡番号を登録"}
             </Button>
           </div>
         </DialogContent>
@@ -5584,11 +5584,11 @@ function AdminShipping() {
       {/* Bulk Register Dialog */}
       <Dialog open={bulkDialogOpen} onOpenChange={setBulkDialogOpen}>
         <DialogContent className="max-w-2xl">
-          <DialogHeader><DialogTitle>일괄 운송장 등록</DialogTitle><DialogDescription>발송 대기 중인 주문에 운송장을 일괄 등록합니다.</DialogDescription></DialogHeader>
+          <DialogHeader><DialogTitle>追跡番号の一括登録</DialogTitle><DialogDescription>発送待ちの注文に追跡番号を一括で登録します。</DialogDescription></DialogHeader>
           <div className="space-y-4">
             <div className="bg-blue-50 dark:bg-blue-950/20 rounded-lg p-3 text-sm text-blue-700 dark:text-blue-300 flex items-center gap-2">
               <Truck className="w-4 h-4" />
-              모든 주문이 국제배송으로 자동 등록됩니다.
+              すべての注文が国際配送として自動登録されます。
             </div>
             <div className="max-h-60 overflow-y-auto space-y-2">
               {(pendingData?.orders ?? []).map(order => {
@@ -5596,7 +5596,7 @@ function AdminShipping() {
                 return (
                   <div key={order.id} className="flex items-center gap-3 bg-muted/50 rounded-lg p-2">
                     <span className="text-xs font-mono w-20 shrink-0">#{String(order.id).padStart(6, '0')}</span>
-                    <Input placeholder="운송장 번호" className="h-8 text-xs" value={entry?.trackingNumber ?? ""}
+                    <Input placeholder="追跡番号" className="h-8 text-xs" value={entry?.trackingNumber ?? ""}
                       onChange={(e) => {
                         const val = e.target.value;
                         setBulkEntries(prev => {
@@ -5608,14 +5608,14 @@ function AdminShipping() {
                   </div>
                 );
               })}
-              {(pendingData?.orders ?? []).length === 0 && <p className="text-sm text-muted-foreground text-center py-4">발송 대기 주문이 없습니다</p>}
+              {(pendingData?.orders ?? []).length === 0 && <p className="text-sm text-muted-foreground text-center py-4">発送待ちの注文はありません</p>}
             </div>
             <Button className="w-full" disabled={bulkEntries.filter(e => e.trackingNumber).length === 0 || bulkRegister.isPending}
               onClick={() => {
                 const entries = bulkEntries.filter(e => e.trackingNumber);
                 bulkRegister.mutate({ shipments: entries });
               }}>
-              {bulkRegister.isPending ? "등록 중..." : `${bulkEntries.filter(e => e.trackingNumber).length}건 일괄 등록`}
+              {bulkRegister.isPending ? "登録中..." : `${bulkEntries.filter(e => e.trackingNumber).length}件を一括登録`}
             </Button>
           </div>
         </DialogContent>
@@ -5635,7 +5635,7 @@ function AdminReturns() {
 
   const updateReturn = trpc.shipping.adminUpdateReturnRequest.useMutation({
     onSuccess: () => {
-      toast.success("상태가 변경되었습니다.");
+      toast.success("ステータスを変更しました。");
       setSelectedReturn(null);
       utils.shipping.adminReturnRequests.invalidate();
     },
@@ -5643,19 +5643,19 @@ function AdminReturns() {
   });
 
   const returnStatusLabels: Record<string, string> = {
-    requested: "접수됨", approved: "승인", collecting: "수거 중",
-    collected: "수거 완료", completed: "처리 완료", rejected: "거부",
+    requested: "受付済み", approved: "承認", collecting: "回収中",
+    collected: "回収完了", completed: "処理完了", rejected: "拒否",
   };
-  const returnTypeLabels: Record<string, string> = { return: "반품", exchange: "교환" };
+  const returnTypeLabels: Record<string, string> = { return: "返品", exchange: "交換" };
 
   return (
     <div className="space-y-6">
-      <h2 className="text-2xl font-bold">반품/교환 관리</h2>
+      <h2 className="text-2xl font-bold">返品/交換管理</h2>
 
       <div className="flex gap-1 mb-4">
         {["all", "requested", "approved", "collecting", "collected", "completed", "rejected"].map(s => (
           <button key={s} onClick={() => { setStatusFilter(s); setPage(1); }} className={`px-2.5 py-1 rounded-full text-xs font-medium ${statusFilter === s ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground hover:bg-accent"}`}>
-            {s === "all" ? "전체" : returnStatusLabels[s] || s}
+            {s === "all" ? "すべて" : returnStatusLabels[s] || s}
           </button>
         ))}
       </div>
@@ -5663,7 +5663,7 @@ function AdminReturns() {
       <div className="border rounded-xl overflow-hidden">
         <table className="w-full text-sm">
           <thead className="bg-muted/50">
-            <tr><th className="p-3 text-left">ID</th><th className="p-3 text-left">유형</th><th className="p-3 text-left">주문번호</th><th className="p-3 text-left">사유</th><th className="p-3 text-center">상태</th><th className="p-3 text-center">신청일</th><th className="p-3 text-center">작업</th></tr>
+            <tr><th className="p-3 text-left">ID</th><th className="p-3 text-left">種類</th><th className="p-3 text-left">注文番号</th><th className="p-3 text-left">理由</th><th className="p-3 text-center">ステータス</th><th className="p-3 text-center">申請日</th><th className="p-3 text-center">操作</th></tr>
           </thead>
           <tbody>
             {(data?.requests ?? []).map(r => (
@@ -5677,7 +5677,7 @@ function AdminReturns() {
                 <td className="p-3 text-center"><Button variant="ghost" size="sm" onClick={() => { setSelectedReturn(r); setAdminMemo((r as any).adminMemo || ""); }}><Eye className="w-4 h-4" /></Button></td>
               </tr>
             ))}
-            {(data?.requests ?? []).length === 0 && <tr><td colSpan={7} className="p-8 text-center text-muted-foreground">반품/교환 요청이 없습니다</td></tr>}
+            {(data?.requests ?? []).length === 0 && <tr><td colSpan={7} className="p-8 text-center text-muted-foreground">返品/交換の申請はありません</td></tr>}
           </tbody>
         </table>
       </div>
@@ -5685,22 +5685,22 @@ function AdminReturns() {
       {/* Return Detail Dialog */}
       <Dialog open={!!selectedReturn} onOpenChange={() => setSelectedReturn(null)}>
         <DialogContent>
-          <DialogHeader><DialogTitle>반품/교환 상세</DialogTitle></DialogHeader>
+          <DialogHeader><DialogTitle>返品/交換の詳細</DialogTitle></DialogHeader>
           {selectedReturn && (
             <div className="space-y-4">
               <div className="grid grid-cols-2 gap-3 text-sm">
-                <div><span className="text-muted-foreground">유형</span><p className="font-medium">{returnTypeLabels[selectedReturn.type]}</p></div>
-                <div><span className="text-muted-foreground">주문번호</span><p className="font-medium">#{selectedReturn.orderId}</p></div>
-                <div className="col-span-2"><span className="text-muted-foreground">사유</span><p className="font-medium">{selectedReturn.reason}</p></div>
-                {selectedReturn.detailReason && <div className="col-span-2"><span className="text-muted-foreground">상세 사유</span><p className="text-sm">{selectedReturn.detailReason}</p></div>}
+                <div><span className="text-muted-foreground">種類</span><p className="font-medium">{returnTypeLabels[selectedReturn.type]}</p></div>
+                <div><span className="text-muted-foreground">注文番号</span><p className="font-medium">#{selectedReturn.orderId}</p></div>
+                <div className="col-span-2"><span className="text-muted-foreground">理由</span><p className="font-medium">{selectedReturn.reason}</p></div>
+                {selectedReturn.detailReason && <div className="col-span-2"><span className="text-muted-foreground">詳細な理由</span><p className="text-sm">{selectedReturn.detailReason}</p></div>}
               </div>
               <Separator />
               <div>
-                <label className="text-sm font-medium mb-1.5 block">관리자 메모</label>
+                <label className="text-sm font-medium mb-1.5 block">管理者メモ</label>
                 <Textarea value={adminMemo} onChange={(e) => setAdminMemo(e.target.value)} rows={2} />
               </div>
               <div>
-                <label className="text-sm font-medium mb-1.5 block">상태 변경</label>
+                <label className="text-sm font-medium mb-1.5 block">ステータス変更</label>
                 <div className="flex gap-2 flex-wrap">
                   {["approved", "collecting", "collected", "completed", "rejected"].map(s => (
                     <Button key={s} size="sm" variant={selectedReturn.status === s ? "default" : "outline"}
@@ -5722,7 +5722,7 @@ function AdminReturns() {
 // ─── Admin Shipping Policy ───
 function AdminShippingPolicy() {
   const { data: settingsData, isLoading } = trpc.admin.getSettings.useQuery();
-  const updateSetting = trpc.admin.upsertSetting.useMutation({ onSuccess: () => toast.success("배송비 정책이 저장되었습니다."), onError: (e) => toast.error(e.message) });
+  const updateSetting = trpc.admin.upsertSetting.useMutation({ onSuccess: () => toast.success("送料ポリシーを保存しました。"), onError: (e) => toast.error(e.message) });
 
   const getVal = (key: string, fallback: string) =>
     settingsData?.find((s: any) => s.key === key)?.value ?? fallback;
@@ -5736,11 +5736,11 @@ function AdminShippingPolicy() {
 
   useEffect(() => {
     if (settingsData && !loaded) {
-      setMethod(getVal("shippingMethod", "국제배송"));
+      setMethod(getVal("shippingMethod", "国際配送"));
       setFee(getVal("shippingFee", "0"));
       setAdditionalFee(getVal("shippingAdditionalFee", "590"));
-      setDays(getVal("shippingDays", "10~14일 (영업일기준)"));
-      setNote(getVal("shippingNote", "모든 주문은 국제배송으로 발송되며, 배송비는 전액 무료입니다. 배송 추적은 17track을 통해 제공됩니다."));
+      setDays(getVal("shippingDays", "10〜14日 (営業日基準)"));
+      setNote(getVal("shippingNote", "すべての注文は国際配送で発送され、送料は全額無料です。配送追跡は17trackを通じて提供されます。"));
       setLoaded(true);
     }
   }, [settingsData, loaded]);
@@ -5759,100 +5759,100 @@ function AdminShippingPolicy() {
 
   return (
     <div className="space-y-5">
-      <h1 className="text-2xl font-bold mb-6">배송비 정책</h1>
+      <h1 className="text-2xl font-bold mb-6">送料ポリシー</h1>
 
       <div className="bg-card border rounded-xl p-5 space-y-4">
         <h2 className="text-base font-semibold flex items-center gap-2">
           <Truck className="w-4 h-4 text-emerald-600" />
-          배송 정책 설정
+          配送ポリシー設定
         </h2>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label className="text-sm font-medium block mb-1">배송 방법</label>
+            <label className="text-sm font-medium block mb-1">配送方法</label>
             <input
               className="w-full border rounded-lg px-3 py-2 text-sm bg-background"
               value={method}
               onChange={(e) => setMethod(e.target.value)}
-              placeholder="예: 국제배송"
+              placeholder="例: 国際配送"
             />
           </div>
           <div>
-            <label className="text-sm font-medium block mb-1">배송비</label>
+            <label className="text-sm font-medium block mb-1">送料</label>
             <div className="flex items-center gap-2">
               <input
                 className="w-full border rounded-lg px-3 py-2 text-sm bg-background"
                 value={fee}
                 onChange={(e) => setFee(e.target.value)}
-                placeholder="예: 0 또는 무료"
+                placeholder="例: 0 または 無料"
               />
             </div>
-            <p className="text-xs text-muted-foreground mt-1">0 또는 '무료' 입력 시 무료배송으로 표시됩니다.</p>
+            <p className="text-xs text-muted-foreground mt-1">0 または「無料」と入力すると、送料無料として表示されます。</p>
           </div>
           <div>
-            <label className="text-sm font-medium block mb-1">추가 수량당 배송비 (2번째 상품부터)</label>
+            <label className="text-sm font-medium block mb-1">追加数量あたりの送料 (2点目から)</label>
             <input
               className="w-full border rounded-lg px-3 py-2 text-sm bg-background"
               value={additionalFee}
               onChange={(e) => setAdditionalFee(e.target.value)}
-              placeholder="예: 590"
+              placeholder="例: 590"
             />
-            <p className="text-xs text-muted-foreground mt-1">주문 상품 수량이 2개 이상일 때, 2번째 상품부터 1개당 추가되는 배송비입니다.</p>
+            <p className="text-xs text-muted-foreground mt-1">注文商品の数量が2点以上の場合、2点目から1点ごとに加算される送料です。</p>
           </div>
           <div>
-            <label className="text-sm font-medium block mb-1">예상 배송일</label>
+            <label className="text-sm font-medium block mb-1">配送予定日</label>
             <input
               className="w-full border rounded-lg px-3 py-2 text-sm bg-background"
               value={days}
               onChange={(e) => setDays(e.target.value)}
-              placeholder="예: 10~14일 (영업일기준)"
+              placeholder="例: 10〜14日 (営業日基準)"
             />
           </div>
         </div>
 
         <div>
-          <label className="text-sm font-medium block mb-1">배송 안내 문구</label>
+          <label className="text-sm font-medium block mb-1">配送案内文</label>
           <textarea
             className="w-full border rounded-lg px-3 py-2 text-sm bg-background resize-none"
             rows={3}
             value={note}
             onChange={(e) => setNote(e.target.value)}
-            placeholder="배송 안내 메시지를 입력하세요."
+            placeholder="配送案内メッセージを入力してください。"
           />
         </div>
 
         <Button size="sm" onClick={handleSave} disabled={updateSetting.isPending}>
           {updateSetting.isPending ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Save className="w-4 h-4 mr-2" />}
-          설정 저장
+          設定を保存
         </Button>
       </div>
 
       {/* 미리보기 */}
       <div className="bg-card border rounded-xl p-5">
-        <h2 className="text-base font-semibold mb-3">미리보기</h2>
+        <h2 className="text-base font-semibold mb-3">プレビュー</h2>
         <div className="bg-card border rounded-xl p-4 ring-2 ring-primary">
           <div className="flex items-center gap-3 mb-3">
             <div className="w-10 h-10 rounded-full bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center">
               <Truck className="w-5 h-5 text-emerald-600" />
             </div>
             <div>
-              <h3 className="text-base font-bold">{fee === "0" || fee.toLowerCase() === "무료" ? "전 상품 무료배송" : `배송비 ${fee}원`}</h3>
+              <h3 className="text-base font-bold">{fee === "0" || ["무료", "無料"].includes(fee.trim()) ? "全商品送料無料" : `送料 ${fee}円`}</h3>
               <p className="text-xs text-muted-foreground">{method}</p>
             </div>
           </div>
           <div className="grid grid-cols-3 gap-3 text-sm mb-3">
             <div className="bg-muted/50 rounded-lg p-2.5">
-              <span className="text-xs text-muted-foreground">배송 방법</span>
+              <span className="text-xs text-muted-foreground">配送方法</span>
               <p className="font-semibold mt-0.5 text-sm">{method}</p>
             </div>
             <div className="bg-muted/50 rounded-lg p-2.5">
-              <span className="text-xs text-muted-foreground">배송비 (1개 / 추가 1개당)</span>
-              <p className={`font-semibold mt-0.5 text-sm ${fee === "0" || fee.toLowerCase() === "무료" ? "text-emerald-600" : ""}`}>
-                {fee === "0" || fee.toLowerCase() === "무료" ? "무료" : `${Number(fee).toLocaleString()}원 / +${Number(additionalFee || 0).toLocaleString()}원`}
+              <span className="text-xs text-muted-foreground">送料 (1点 / 追加1点ごと)</span>
+              <p className={`font-semibold mt-0.5 text-sm ${fee === "0" || ["무료", "無料"].includes(fee.trim()) ? "text-emerald-600" : ""}`}>
+                {fee === "0" || ["무료", "無料"].includes(fee.trim()) ? "無料" : `${Number(fee).toLocaleString()}円 / +${Number(additionalFee || 0).toLocaleString()}円`}
               </p>
             </div>
             <div className="bg-muted/50 rounded-lg p-2.5">
-              <span className="text-xs text-muted-foreground">예상 배송일</span>
+              <span className="text-xs text-muted-foreground">配送予定日</span>
               <p className="font-semibold mt-0.5 text-sm">{days}</p>
             </div>
           </div>
@@ -5874,6 +5874,7 @@ function OrderDetailWrapper() {
 
 function AdminRefundManagement() {
   const CLAIM_STATUSES = ["접수", "처리중", "승인", "반려", "완료"];
+  const CLAIM_STATUS_LABELS: Record<string, string> = { "접수": "受付", "처리중": "処理中", "승인": "承認", "반려": "却下", "완료": "完了" };
   const CLAIM_STATUS_COLORS: Record<string, { color: string; bg: string }> = {
     접수: { color: "#f59e0b", bg: "#fffbeb" },
     처리중: { color: "#3b82f6", bg: "#eff6ff" },
@@ -5888,7 +5889,7 @@ function AdminRefundManagement() {
   const updateClaim = trpc.order.adminUpdateClaim.useMutation({
     onSuccess: () => {
       utils.order.adminClaimList.invalidate();
-      toast.success("저장되었습니다");
+      toast.success("保存しました");
     },
     onError: (e) => toast.error(e.message),
   });
@@ -5899,7 +5900,7 @@ function AdminRefundManagement() {
       <div className="flex items-center justify-between mb-6 flex-wrap gap-3">
         <h1 className="text-2xl font-bold flex items-center gap-2">
           <RotateCcw className="w-6 h-6 text-rose-500" />
-          환불 관리
+          返金管理
         </h1>
         <div className="flex gap-2 flex-wrap">
           {["전체", ...CLAIM_STATUSES].map((s) => (
@@ -5909,7 +5910,7 @@ function AdminRefundManagement() {
               variant={statusFilter === s ? "default" : "outline"}
               onClick={() => { setStatusFilter(s); setPage(1); }}
             >
-              {s}
+              {s === "전체" ? "すべて" : (CLAIM_STATUS_LABELS[s] ?? s)}
             </Button>
           ))}
         </div>
@@ -5920,7 +5921,7 @@ function AdminRefundManagement() {
       ) : !data || data.items.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-20 gap-3 text-muted-foreground">
           <CheckCircle2 className="w-12 h-12 text-emerald-400" />
-          <p className="text-lg font-medium">{statusFilter === "전체" ? "요청 내역이 없습니다" : `'${statusFilter}' 상태인 요청이 없습니다`}</p>
+          <p className="text-lg font-medium">{statusFilter === "전체" ? "申請履歴はありません" : `「${CLAIM_STATUS_LABELS[statusFilter] ?? statusFilter}」状態の申請はありません`}</p>
         </div>
       ) : (
         <div className="space-y-3">
@@ -5940,7 +5941,7 @@ function AdminRefundManagement() {
                       className="text-xs font-bold px-2.5 py-0.5 rounded-full"
                       style={{ color: sc.color, background: sc.bg, border: `1px solid ${sc.color}30` }}
                     >
-                      {c.status}
+                      {CLAIM_STATUS_LABELS[c.status] ?? c.status}
                     </span>
                   </div>
                   <p className="text-sm font-medium truncate">{c.itemName}</p>
@@ -5948,16 +5949,16 @@ function AdminRefundManagement() {
                     {c.userName}{c.userPhone ? ` · ${c.userPhone}` : ""}{c.userEmail ? ` (${c.userEmail})` : ""}
                   </p>
                   <div className="text-xs text-muted-foreground bg-muted/50 rounded px-2 py-1 mt-1">
-                    <span className="font-medium">요청사유: </span>{c.reason}
+                    <span className="font-medium">申請理由: </span>{c.reason}
                   </div>
                   <p className="text-xs text-muted-foreground">
-                    접수일: {formatDateTime(c.createdAt)}
-                    {c.updatedAt && new Date(c.updatedAt).getTime() !== new Date(c.createdAt).getTime() ? ` · 수정일: ${formatDateTime(c.updatedAt)}` : ""}
+                    受付日: {formatDateTime(c.createdAt)}
+                    {c.updatedAt && new Date(c.updatedAt).getTime() !== new Date(c.createdAt).getTime() ? ` · 更新日: ${formatDateTime(c.updatedAt)}` : ""}
                   </p>
                   <div className="mt-2">
                     <textarea
                       className="w-full text-xs border rounded px-2 py-1.5 min-h-[52px] resize-y bg-background"
-                      placeholder="관리자 메모 (고객에게는 보이지 않음)"
+                      placeholder="管理者メモ (お客様には表示されません)"
                       value={memoDraft}
                       onChange={(e) => setMemoDrafts((prev) => ({ ...prev, [c.id]: e.target.value }))}
                     />
@@ -5968,7 +5969,7 @@ function AdminRefundManagement() {
                           disabled={updateClaim.isPending}
                           onClick={() => updateClaim.mutate({ id: c.id, adminMemo: memoDraft })}
                         >
-                          메모 저장
+                          メモを保存
                         </Button>
                       </div>
                     )}
@@ -5976,7 +5977,7 @@ function AdminRefundManagement() {
                 </div>
                 <div className="flex flex-row sm:flex-col items-center sm:items-end gap-2 sm:gap-3 shrink-0">
                   <div className="text-right">
-                    <p className="text-xs text-muted-foreground">주문금액</p>
+                    <p className="text-xs text-muted-foreground">注文金額</p>
                     <p className="text-lg font-bold text-rose-600">{formatPrice(c.totalAmount)}</p>
                   </div>
                   <select
@@ -6052,7 +6053,7 @@ export default function AdminDashboard() {
         <Route path="/admin/api-settings" component={AdminApiSettings} />
         <Route path="/admin/action-logs" component={AdminActionLogs} />
         <Route path="/admin/visitor-stats" component={AdminVisitorStats} />
-        <Route>{() => <div className="flex flex-col items-center justify-center py-20 gap-4"><AlertCircle className="w-12 h-12 text-muted-foreground" /><h2 className="text-xl font-bold">페이지를 찾을 수 없습니다</h2><p className="text-muted-foreground">요청하신 관리자 페이지가 존재하지 않습니다.</p><Link href="/admin"><Button variant="outline"><ArrowLeft className="w-4 h-4 mr-2" />대시보드로</Button></Link></div>}</Route>
+        <Route>{() => <div className="flex flex-col items-center justify-center py-20 gap-4"><AlertCircle className="w-12 h-12 text-muted-foreground" /><h2 className="text-xl font-bold">ページが見つかりません</h2><p className="text-muted-foreground">お探しの管理ページは存在しません。</p><Link href="/admin"><Button variant="outline"><ArrowLeft className="w-4 h-4 mr-2" />ダッシュボードへ</Button></Link></div>}</Route>
       </Switch>
     </AdminLayout>
   );

@@ -79,7 +79,7 @@ export default function AdminChatbotConversations() {
                           <Badge variant="outline">商品ID: {conv.productId}</Badge>
                         )}
                       </div>
-                      <span>{new Date(conv.createdAt).toLocaleString('ko-KR')}</span>
+                      <span>{new Date(conv.createdAt).toLocaleString('ja-JP')}</span>
                     </div>
                     
                     <div className="space-y-2">

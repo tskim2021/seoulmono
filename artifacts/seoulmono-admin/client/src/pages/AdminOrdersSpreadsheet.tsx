@@ -177,7 +177,7 @@ function TrackingTimelinePopover({ shipmentId, orderId, trackingNumber }: { ship
                   <div className="text-[11px] text-gray-700 leading-snug break-words">{h.description}</div>
                   {h.location && <div className="text-[10px] text-gray-500 mt-0.5 break-words">{h.location}</div>}
                   <div className="text-[9px] text-gray-400 mt-0.5">
-                    {h.occurredAt ? new Date(h.occurredAt).toLocaleString("ko-KR", { month:"2-digit", day:"2-digit", hour:"2-digit", minute:"2-digit", hour12: false }) : ""}
+                    {h.occurredAt ? new Date(h.occurredAt).toLocaleString("ja-JP", { month:"2-digit", day:"2-digit", hour:"2-digit", minute:"2-digit", hour12: false }) : ""}
                   </div>
                 </div>
               </div>
@@ -351,7 +351,7 @@ export default function AdminOrdersSpreadsheet() {
           idx === 0 ? (o.userEmail || "") : "",
           idx === 0 ? (o.adminNotes || "") : "",
           idx === 0 ? (o.memo || "") : "",
-          idx === 0 ? new Date(o.createdAt).toLocaleString("ko-KR") : "",
+          idx === 0 ? new Date(o.createdAt).toLocaleString("ja-JP") : "",
           idx === 0 ? (o.recipientNameEn || "") : "",
           idx === 0 ? [o.addressEn1, o.addressEn2].filter(Boolean).join(" ") : "",
         ]);
@@ -406,7 +406,7 @@ export default function AdminOrdersSpreadsheet() {
       case "userEmail":     return itemIdx === 0 ? (order.userEmail || "-") : "";
       case "adminNotes":    return itemIdx === 0 ? (order.adminNotes || "") : "";
       case "memo":          return itemIdx === 0 ? (order.memo || "-") : "";
-      case "orderDate":     return itemIdx === 0 ? new Date(order.createdAt).toLocaleString("ko-KR", {month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit"}) : "";
+      case "orderDate":     return itemIdx === 0 ? new Date(order.createdAt).toLocaleString("ja-JP", {month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit"}) : "";
       case "nameEn":        return order.recipientNameEn || "-";
       case "addressEn":     return [order.addressEn1, order.addressEn2].filter(Boolean).join(" ") || "-";
       default: return "";
@@ -608,7 +608,7 @@ export default function AdminOrdersSpreadsheet() {
         return <span className="text-[11px] text-gray-500 truncate block">{cleanMemo || "-"}</span>;
       }
       case "orderDate":
-        return <span className="text-[11px]">{new Date(order.createdAt).toLocaleString("ko-KR", { year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit", hour12: false })}</span>;
+        return <span className="text-[11px]">{new Date(order.createdAt).toLocaleString("ja-JP", { year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit", hour12: false })}</span>;
       case "nameEn":
         return <span className="text-[11px] font-mono">{order.recipientNameEn || "-"}</span>;
       case "addressEn":

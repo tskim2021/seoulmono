@@ -67,7 +67,7 @@ export default function NewsList() {
     if (hours < 24) return `${hours}時間前`;
     const days = Math.floor(hours / 24);
     if (days < 7) return `${days}日前`;
-    return d.toLocaleDateString("ko-KR", { year: "numeric", month: "short", day: "numeric" });
+    return d.toLocaleDateString("ja-JP", { year: "numeric", month: "short", day: "numeric" });
   };
 
   const stripMarkdown = (text: string) => {

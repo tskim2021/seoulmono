@@ -143,7 +143,7 @@ export default function AdminNewsManagement() {
   };
 
   const totalPages = Math.ceil((data?.total ?? 0) / 20);
-  const formatDate = (d: string | Date) => new Date(d).toLocaleDateString("ko-KR", { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" });
+  const formatDate = (d: string | Date) => new Date(d).toLocaleDateString("ja-JP", { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" });
 
   return (
     <div className="p-6">

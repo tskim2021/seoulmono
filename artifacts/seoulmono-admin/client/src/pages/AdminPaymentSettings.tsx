@@ -241,7 +241,7 @@ export function AdminPaymentSettings() {
                                 size="sm"
                                 className="text-red-600 border-red-200 hover:bg-red-50"
                                 onClick={() => {
-                                  if (confirm("Stripe 키를 삭제하시겠습니까? 결제가 비활성화됩니다.")) {
+                                  if (confirm("Stripeキーを削除しますか？決済が無効になります。")) {
                                     deleteKeys.mutate();
                                   }
                                 }}

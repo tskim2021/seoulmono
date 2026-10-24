@@ -18,7 +18,7 @@ function TimeAgo({ iso }: { iso: string | null }) {
   else if (diff < 3600) label = `${Math.floor(diff / 60)}分前`;
   else if (diff < 86400) label = `${Math.floor(diff / 3600)}時間前`;
   else label = `${Math.floor(diff / 86400)}日前`;
-  return <span className="text-xs text-muted-foreground" title={d.toLocaleString("ko-KR")}>{label} ({d.toLocaleString("ko-KR")})</span>;
+  return <span className="text-xs text-muted-foreground" title={d.toLocaleString("ja-JP")}>{label} ({d.toLocaleString("ja-JP")})</span>;
 }
 
 export default function AdminGnuApiSync() {

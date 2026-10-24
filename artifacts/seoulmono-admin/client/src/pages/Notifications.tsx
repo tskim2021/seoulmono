@@ -9,6 +9,10 @@ import { toast } from "sonner";
 
 const iconMap: Record<string, any> = { order: Package, comment: MessageCircle, point: Star, system: Info, review: Star, inquiry: HelpCircle, discussion: MessageCircle };
 
+// 通関検査の通知 (旧データの韓国語タイトルも判定)
+const isCustomsNotice = (title: string) =>
+  title === "통관검사 안내" || title.includes("通関検査");
+
 export default function Notifications() {
   useAuth({ redirectOnUnauthenticated: true });
   const { data } = trpc.user.notifications.useQuery();
@@ -46,17 +50,17 @@ export default function Notifications() {
                   key={n.id}
                   onClick={() => { if (!n.isRead) markRead.mutate({ id: n.id }); }}
                   className={`flex gap-3 p-4 rounded-xl border transition-colors cursor-pointer ${
-                    n.title === "통관검사 안내"
+                    isCustomsNotice(n.title)
                       ? (n.isRead ? "bg-rose-50/50 border-rose-200" : "bg-rose-50 border-rose-300")
                       : (n.isRead ? "bg-card" : "bg-primary/5 border-primary/20")
                   }`}
                 >
                   <div className={`w-9 h-9 rounded-full flex items-center justify-center shrink-0 ${
-                    n.title === "통관검사 안내"
+                    isCustomsNotice(n.title)
                       ? "bg-rose-100"
                       : (n.isRead ? "bg-secondary" : "bg-primary/10")
                   }`}>
-                    {n.title === "통관검사 안내"
+                    {isCustomsNotice(n.title)
                       ? <ShieldAlert className="w-4 h-4 text-rose-600" />
                       : <Icon className={`w-4 h-4 ${n.isRead ? "text-muted-foreground" : "text-primary"}`} />
                     }

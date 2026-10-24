@@ -7,7 +7,7 @@ import { useSEO } from "@/hooks/useSEO";
 
 function formatDate(d: string | Date | null | undefined) {
   if (!d) return "";
-  return new Date(d).toLocaleDateString("ko-KR", { year: "numeric", month: "2-digit", day: "2-digit" })
+  return new Date(d).toLocaleDateString("ja-JP", { year: "numeric", month: "2-digit", day: "2-digit" })
     .replace(/\. /g, ".").replace(/\.$/, "");
 }
 

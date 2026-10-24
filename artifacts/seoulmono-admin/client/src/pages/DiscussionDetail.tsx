@@ -118,7 +118,7 @@ export default function DiscussionDetail() {
 
   const formatDate = (date: Date | string) => {
     const d = new Date(date);
-    return d.toLocaleDateString("ko-KR", { year: "numeric", month: "long", day: "numeric", hour: "2-digit", minute: "2-digit" });
+    return d.toLocaleDateString("ja-JP", { year: "numeric", month: "long", day: "numeric", hour: "2-digit", minute: "2-digit" });
   };
 
   const formatRelative = (date: Date | string) => {
@@ -132,7 +132,7 @@ export default function DiscussionDetail() {
     if (minutes < 60) return `${minutes}分前`;
     if (hours < 24) return `${hours}時間前`;
     if (days < 7) return `${days}日前`;
-    return d.toLocaleDateString("ko-KR");
+    return d.toLocaleDateString("ja-JP");
   };
 
   // 스레드 구조 빌드

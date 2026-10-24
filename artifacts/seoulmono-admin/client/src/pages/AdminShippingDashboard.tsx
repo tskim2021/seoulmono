@@ -416,7 +416,7 @@ export default function AdminShippingDashboard() {
               <Clock className="w-4 h-4 text-muted-foreground" />
               <span className="text-muted-foreground">最終実行:</span>
               <span className="font-medium">
-                {new Date(schedulerConfig.lastRunAt).toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' })}
+                {new Date(schedulerConfig.lastRunAt).toLocaleString('ja-JP', { timeZone: 'Asia/Seoul' })}
               </span>
               {lastRunResult && (
                 <span className="text-xs text-muted-foreground ml-2">

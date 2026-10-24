@@ -146,7 +146,7 @@ export default function QnAList() {
                 posts.map((post: any, idx: number) => {
                   const rowNum = (data?.total ?? 0) - ((page - 1) * LIMIT) - idx;
                   const dateStr = post.createdAt
-                    ? new Date(post.createdAt).toLocaleDateString("ko-KR", { year: "numeric", month: "2-digit", day: "2-digit" }).replace(/\. /g, ".").replace(/\.$/, "")
+                    ? new Date(post.createdAt).toLocaleDateString("ja-JP", { year: "numeric", month: "2-digit", day: "2-digit" }).replace(/\. /g, ".").replace(/\.$/, "")
                     : "";
                   return (
                     <tr key={post.id} className="hover:bg-accent/30 transition-colors cursor-pointer" onClick={() => navigate(`/community/qna/${post.id}`)}>
