@@ -26,27 +26,27 @@
   var IMG = function (id) { return "/api/product-image/" + id + "/" + id + ".jpg"; };
   var SLIDES = [
     {
-      eyebrow: "SEOULMONO SUPPLEMENT WEEK",
-      title: ["毎日の「いい習慣」を", "韓国サプリで"],
+      eyebrow: "ソウルモノ セレクション",
+      title: ["韓国のいいもの。", "毎日の定番に。"],
       text: ["人気のサプリメントを", "ランキング上位からまとめました。"],
       cta: "サプリメントを見る", href: "/list?ca_id=200",
-      bg: "linear-gradient(120deg,#F1E9FB 0%,#E4DAF7 55%,#D6CBF2 100%)",
+      bg: "#0758E8",
       imgs: ["1785119643", "1785119646", "1785119648"]
     },
     {
-      eyebrow: "SEOULMONO VITAMIN PICK",
+      eyebrow: "毎日のビタミン習慣",
       title: ["忙しい日こそ、", "ビタミンでチャージ"],
       text: ["続けやすい、ビタミン・ミネラルの", "定番アイテムをセレクト。"],
       cta: "ビタミンを見る", href: "/list?ca_id=190",
-      bg: "linear-gradient(120deg,#FFF1E4 0%,#FFE3D1 55%,#FBD3C4 100%)",
+      bg: "#1047BD",
       imgs: ["1785119101", "1785119099", "1785119103"]
     },
     {
-      eyebrow: "SEOULMONO INNER CARE",
+      eyebrow: "内側から、すこやかに",
       title: ["内側から整える、", "韓国のインナーケア"],
       text: ["乳酸菌とスリミングサポートの", "人気アイテムを集めました。"],
       cta: "乳酸菌を見る", href: "/list?ca_id=210",
-      bg: "linear-gradient(120deg,#E5F4EF 0%,#D3EBE3 55%,#C2E2D8 100%)",
+      bg: "#083E97",
       imgs: ["1785120600", "1785120605", "1785120932"]
     }
   ];
@@ -309,77 +309,11 @@
     return a + '<a href="/notice" data-moa>お知らせ</a>';
   }
 
-  /* ---------- animated logo (wordmark + mascot with moving eyes) ---------- */
-  var CW = 2100, CH = 667;           // virtual canvas (px of the original artwork)
-  var WORD = { x: 115, y: 262, w: 1372 };
-  var MAS = { x: 1498, y: 121.5, w: 529, h: 499 };      // mascot drawn at 1.3x
-  var MSRC = { w: 407, h: 384 };                         // mascot image size at original scale
-  var EYES = [{ cx: 128, cy: 191, rx: 25, ry: 27 }, { cx: 209, cy: 199, rx: 24, ry: 27 }];
-  var PUP = { rx: 14, ry: 15.5, rest: [5, 3], max: [10.5, 11] };
-  function pc(v, t) { return (v / t * 100).toFixed(3) + "%"; }
-  function starPath(r) { return "M0," + -r + " C" + r * .1 + "," + -r * .35 + " " + r * .35 + "," + -r * .1 + " " + r + ",0 C" + r * .35 + "," + r * .1 + " " + r * .1 + "," + r * .35 + " 0," + r + " C" + -r * .1 + "," + r * .35 + " " + -r * .35 + "," + r * .1 + " " + -r + ",0 C" + -r * .35 + "," + -r * .1 + " " + -r * .1 + "," + -r * .35 + " 0," + -r + "Z"; }
-
-  function logoHtml(uid) {
-    uid = uid || "d";
-    var eyes = EYES.map(function (e, i) {
-      return '<g class="moa-eye" transform="translate(' + e.cx + ' ' + e.cy + ')"><g class="moa-blink">' +
-        '<ellipse rx="' + e.rx + '" ry="' + e.ry + '" fill="url(#moa-sclera-' + uid + ')" stroke="rgba(40,75,110,.28)" stroke-width="2.4"/>' +
-        '<g class="moa-pupil" data-i="' + i + '"><ellipse rx="' + PUP.rx + '" ry="' + PUP.ry + '" fill="#235063"/><circle cx="-5" cy="-6" r="5.2" fill="#fff" opacity=".92"/><circle cx="4.5" cy="5" r="2.2" fill="#fff" opacity=".55"/></g>' +
-        '</g></g>';
-    }).join("");
-    return '<span class="moa-logo-art">' +
-      '<img class="moa-lw" src="/seoulmono-logo-word.png" alt="seoulmono" style="position:absolute!important;left:' + pc(WORD.x, CW) + ';top:' + pc(WORD.y, CH) + ';width:' + pc(WORD.w, CW) + '!important;height:' + pc(282, CH) + '!important;max-width:none!important;margin:0!important">' +
-      '<svg class="moa-stars" viewBox="0 0 ' + CW + ' ' + CH + '" aria-hidden="true"><defs><linearGradient id="moa-star-' + uid + '" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#A688F2"/><stop offset="1" stop-color="#7650D6"/></linearGradient></defs>' +
-        '<g transform="translate(1975 86)"><path class="moa-star s1" d="' + starPath(54) + '" fill="url(#moa-star-' + uid + ')"/></g>' +
-        '<g transform="translate(2044 170)"><path class="moa-star s2" d="' + starPath(38) + '" fill="url(#moa-star-' + uid + ')"/></g></svg>' +
-      '<span class="moa-mascot" style="left:' + pc(MAS.x, CW) + ';top:' + pc(MAS.y, CH) + ';width:' + pc(MAS.w, CW) + ';height:' + pc(MAS.h, CH) + '"><span class="moa-mascot-in">' +
-        '<img src="/sorosoro-mascot.webp" alt="" draggable="false" style="display:block!important;width:100%!important;height:100%!important;max-width:none!important;max-height:none!important;margin:0!important;padding:0!important;position:static!important;transform:none!important">' +
-        '<svg class="moa-eyes" viewBox="0 0 ' + MSRC.w + ' ' + MSRC.h + '" aria-hidden="true"><defs><radialGradient id="moa-sclera-' + uid + '" cx=".4" cy=".35" r=".8"><stop offset="0" stop-color="#fff"/><stop offset=".7" stop-color="#fff"/><stop offset="1" stop-color="#E3EDF4"/></radialGradient></defs>' + eyes + '</svg>' +
-      '</span></span></span>';
+  /* Original Seoulmono bag mascot; typography remains sharp at every size. */
+  function logoHtml() {
+    return '<span class="moa-logo-art sm-brand"><img class="sm-bag" src="/seoulmono-bag.png" alt="" width="72" height="72"><span class="sm-word">ソウルモノ<small>SEOULMONO</small></span></span>';
   }
-
-  var mascotState = { idleTimer: null, lastMove: 0, bound: false };
-  function setPupils(dx, dy, fast) {
-    [].forEach.call(document.querySelectorAll(".moa-pupil"), function (p) {
-      p.style.transition = fast ? "transform .08s linear" : "transform .35s cubic-bezier(.3,.7,.3,1)";
-      p.style.transform = "translate(" + dx.toFixed(2) + "px," + dy.toFixed(2) + "px)";
-    });
-  }
-  function tiltMascot(tx, ty, rot) {
-    [].forEach.call(document.querySelectorAll(".moa-mascot-in"), function (m) {
-      m.style.transform = "translate(" + tx.toFixed(2) + "%," + ty.toFixed(2) + "%) rotate(" + rot.toFixed(2) + "deg)";
-    });
-  }
-  function wander() {
-    clearTimeout(mascotState.idleTimer);
-    mascotState.idleTimer = setTimeout(function () {
-      if (Date.now() - mascotState.lastMove > 2500 && !document.hidden) {
-        var rx = (Math.random() * 2 - 1), ry = (Math.random() * 1.6 - .8);
-        setPupils(rx * PUP.max[0], ry * PUP.max[1], false);
-        tiltMascot(rx * 4.5, 0, rx * 7);
-      }
-      wander();
-    }, 1500 + Math.random() * 2200);
-  }
-  function initMascot() {
-    if (mascotState.bound || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    mascotState.bound = true;
-    setPupils(PUP.rest[0], PUP.rest[1], false);
-    var last = 0;
-    window.addEventListener("mousemove", function (e) {
-      var now = Date.now(); if (now - last < 40) return; last = now;
-      var m = qs(".moa-mascot"); if (!m) return;
-      var r = m.getBoundingClientRect(); if (!r.width) return;
-      var cx = r.left + r.width / 2, cy = r.top + r.height / 2;
-      var vx = e.clientX - cx, vy = e.clientY - cy, d = Math.sqrt(vx * vx + vy * vy) || 1;
-      var k = Math.min(1, d / 260);
-      var ux = vx / d, uy = vy / d;
-      mascotState.lastMove = now;
-      setPupils(PUP.max[0] * ux * k, PUP.max[1] * uy * k, true);
-      tiltMascot(ux * k * 5, 0, ux * k * 9);
-    }, { passive: true });
-    wander();
-  }
+  function initMascot() {}
 
   function buildHeader() {
     var anchor = qs("header.sticky[data-ssr-header-border]") || qs("header.sticky");
@@ -479,6 +413,8 @@
     setTimeout(finishIntro, 980);
   }
   function startIntro() {
+    return; // Keep shopping immediately accessible; no blocking brand animation.
+
     if (!introEligible()) return;
     try { sessionStorage.setItem(INTRO_KEY, "1"); } catch (e) {}
     var ov = el("div");
@@ -582,9 +518,7 @@
           '<div class="moa-ctrl"><b id="moa-cur">01</b><span>/ ' + String(total).padStart(2, "0") + '</span>' +
           '<button type="button" data-d="-1" aria-label="前へ">' + ICON.prev + '</button><button type="button" data-d="1" aria-label="次へ">' + ICON.chev + '</button>' +
           '<button type="button" data-play aria-label="自動再生の切り替え">' + ICON.pause + '</button></div></div>' +
-        '<div class="moa-side">' + CARDS.map(function (c) {
-          return '<a class="moa-card" href="' + c.href + '" data-moa style="background:' + c.bg + '"><p class="moa-eyebrow">' + c.eyebrow + '</p><h3>' + c.title.join("<br>") + '</h3><span class="moa-lnk">' + c.link + ' ' + ICON.out + '</span>' + tile(c.img) + '</a>';
-        }).join("") + '</div>' +
+        '<a class="sm-side-banner" href="/products?sort=new" data-moa><span class="sm-side-tag">ソウルから、毎日。</span><h3>いいものに、<br>出会おう。</h3><p>韓国のとっておきを<br>あなたの暮らしへ。</p><img src="/seoulmono-bag.png" alt="ソウルモノのショッピングバッグキャラクター"><span class="sm-side-cta">新着商品を見る ' + ICON.chev + '</span></a>' +
       '</div>' + quickHtml() + '</div>';
     first.parentNode.insertBefore(sec, first);
     first.style.display = "none";

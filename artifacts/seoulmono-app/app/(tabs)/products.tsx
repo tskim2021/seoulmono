@@ -160,7 +160,7 @@ export default function ProductsScreen() {
 
   return (
     <View style={[styles.root, { backgroundColor: colors.background }]}>
-      <View style={[styles.header, { paddingTop: insets.top + 10, backgroundColor: "#5C3D2E" }]}>
+      <View style={[styles.header, { paddingTop: insets.top + 10, backgroundColor: "#0758E8" }]}>
         <View style={styles.searchRow}>
           <Feather name="search" size={16} color="rgba(255,255,255,0.7)" />
           <TextInput
@@ -192,8 +192,8 @@ export default function ProductsScreen() {
             return (
               <Pressable
                 style={[styles.catChip, {
-                  backgroundColor: active ? "#5C3D2E" : colors.secondary,
-                  borderColor: active ? "#5C3D2E" : colors.border,
+                  backgroundColor: active ? "#0758E8" : colors.secondary,
+                  borderColor: active ? "#0758E8" : colors.border,
                 }]}
                 onPress={() => setSelCat(item.ca_id)}
               >

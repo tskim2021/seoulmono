@@ -78,7 +78,7 @@ function RootLayoutNav() {
 const styles = StyleSheet.create({
   splash: {
     flex: 1,
-    backgroundColor: "#FDF6EE",
+    backgroundColor: "#FFFFFF",
     alignItems: "center",
     justifyContent: "center",
     gap: 12,

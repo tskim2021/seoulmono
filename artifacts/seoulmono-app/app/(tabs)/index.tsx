@@ -202,7 +202,7 @@ function BannerCarousel({ banners }: { banners: any[] }) {
               {imgUrl ? (
                 <Image source={{ uri: imgUrl }} style={{ width: W, height: 200 }} contentFit="cover" />
               ) : (
-                <LinearGradient colors={["#8B5E3C", "#5C3317"]} style={{ width: W, height: 200, alignItems: "center", justifyContent: "center" }}>
+                <LinearGradient colors={["#0758E8", "#003EAC"]} style={{ width: W, height: 200, alignItems: "center", justifyContent: "center" }}>
                   <Text style={{ color: "#fff", fontSize: 24, fontWeight: "700" }}>ソウルモノ</Text>
                 </LinearGradient>
               )}
@@ -266,8 +266,8 @@ export default function HomeScreen() {
 
   return (
     <View style={[styles.root, { backgroundColor: colors.background }]}>
-      <View style={[styles.header, { paddingTop: insets.top + 10, backgroundColor: "#5C3D2E" }]}>
-        <Text style={styles.logo}>ソウルモノ</Text>
+      <View style={[styles.header, { paddingTop: insets.top + 10, backgroundColor: "#0758E8" }]}>
+        <Image source={require("@/assets/images/seoulmono-bag.png")} style={{ width: 34, height: 42 }} contentFit="contain" /><Text style={styles.logo}>ソウルモノ</Text>
         <Pressable onPress={() => router.push("/(tabs)/products")} style={styles.searchBtn}>
           <Feather name="search" size={16} color="rgba(255,255,255,0.7)" />
           <Text style={styles.searchPlaceholder}>商品を検索...</Text>
@@ -325,15 +325,15 @@ const styles = StyleSheet.create({
   dot: { width: 6, height: 6, borderRadius: 3 },
   section: { marginTop: 20 },
   sectionHeader: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingHorizontal: 16, marginBottom: 12 },
-  sectionTitle: { fontSize: 16, fontWeight: "700" },
+  sectionTitle: { fontSize: 22, fontWeight: "900" },
   moreBtn: { flexDirection: "row", alignItems: "center", gap: 2 },
   moreText: { fontSize: 12 },
   catChip: { paddingHorizontal: 14, paddingVertical: 7, borderRadius: 20, borderWidth: 1 },
   catText: { fontSize: 13, fontWeight: "500" },
 
-  card: { width: 158, borderRadius: 12, borderWidth: 1, overflow: "hidden" },
+  card: { width: 184, borderRadius: 12, borderWidth: 1, overflow: "hidden" },
   cardImgWrap: { position: "relative" },
-  cardImg: { width: 158, height: 158 },
+  cardImg: { width: 184, height: 184 },
 
   rankGradient: { position: "absolute", bottom: 0, left: 0, right: 0, height: 56 },
   rankText: {
@@ -355,12 +355,12 @@ const styles = StyleSheet.create({
   soldoutText: { color: "#fff", fontWeight: "700", fontSize: 13 },
 
   cardBody: { padding: 10, gap: 2 },
-  cardName: { fontSize: 12, fontWeight: "500", lineHeight: 17, minHeight: 34 },
+  cardName: { fontSize: 14, fontWeight: "600", lineHeight: 21, minHeight: 42 },
   priceRow: { marginTop: 2, gap: 1 },
   priceInner: { flexDirection: "row", alignItems: "baseline", gap: 4 },
   origPrice: { fontSize: 10, textDecorationLine: "line-through" },
   discPct: { fontSize: 13, fontWeight: "700", color: "#EF4444" },
-  price: { fontSize: 14, fontWeight: "700" },
+  price: { fontSize: 20, fontWeight: "900" },
   ratingRow: { flexDirection: "row", alignItems: "center", gap: 3, marginTop: 2 },
   star: { color: "#F59E0B", fontSize: 11 },
   ratingText: { fontSize: 10 },

@@ -9,15 +9,15 @@
   var timer = null;
 
   var CSS = [
-    "#sl-root{position:fixed;inset:0;z-index:99990;overflow:auto;background:#F6F5FB;color:#17142B;-webkit-font-smoothing:antialiased}",
+    "#sl-root{position:fixed;inset:0;z-index:99990;overflow:auto;background:#F5F8FC;color:#17142B;-webkit-font-smoothing:antialiased}",
     "#sl-root *{box-sizing:border-box}",
     "#sl-root .sl-wrap{min-height:100%;display:flex;flex-direction:column;max-width:1840px;margin:0 auto;padding:0 clamp(16px,5vw,96px) 32px}",
     "#sl-root .sl-top{display:flex;align-items:center;justify-content:space-between;height:84px}",
     "#sl-root .sl-top img{height:44px;width:auto;display:block}#sl-root .sl-top .moa-logo-art{height:44px}",
     "#sl-root .sl-top a{color:#4A4760;text-decoration:none;font-size:15px}",
-    "#sl-root .sl-top a:hover{color:#6E48D9}",
+    "#sl-root .sl-top a:hover{color:#0758E8}",
     "#sl-root .sl-card{margin:auto 0;display:grid;grid-template-columns:1.16fr 1fr;min-height:min(540px,calc(100vh - 140px));background:#fff;border-radius:28px;overflow:hidden;box-shadow:0 14px 48px rgba(60,40,130,.10)}",
-    "#sl-root .sl-banner{position:relative;overflow:hidden;background:linear-gradient(150deg,#3B2A86 0%,#6E48D9 60%,#9D7BF0 100%);min-height:260px}",
+    "#sl-root .sl-banner{position:relative;overflow:hidden;background:linear-gradient(150deg,#002F87 0%,#0758E8 60%,#3985FF 100%);min-height:260px}",
     "#sl-root .sl-slide{position:absolute;inset:0;opacity:0;transition:opacity .6s ease;pointer-events:none;display:block}",
     "#sl-root .sl-slide.on{opacity:1;pointer-events:auto}",
     "#sl-root .sl-slide img{width:100%;height:100%;object-fit:cover;display:block}",
@@ -34,20 +34,20 @@
     "#sl-root .sl-form h1{margin:0;font-size:clamp(24px,2.2vw,32px);font-weight:800;letter-spacing:-.01em;color:#17142B}",
     "#sl-root .sl-sub{margin:10px 0 28px;color:#7A7690;font-size:14.5px;line-height:1.7}",
     "#sl-root label.sl-l{display:block;margin:0 0 8px;font-size:14px;font-weight:700}",
-    "#sl-root input.sl-in{width:100%;height:50px;border:1px solid #E3DDF5;background:#F1EDFC;border-radius:13px;padding:0 18px;font-size:15px;color:#17142B;outline:none;margin-bottom:16px;font-family:inherit;transition:border-color .15s,box-shadow .15s}",
-    "#sl-root input.sl-in:focus{border-color:#6E48D9;box-shadow:0 0 0 4px rgba(110,72,217,.15);background:#fff}",
+    "#sl-root input.sl-in{width:100%;height:50px;border:1px solid #DCE4EF;background:#F2F6FC;border-radius:13px;padding:0 18px;font-size:15px;color:#17142B;outline:none;margin-bottom:16px;font-family:inherit;transition:border-color .15s,box-shadow .15s}",
+    "#sl-root input.sl-in:focus{border-color:#0758E8;box-shadow:0 0 0 4px rgba(7,88,232,.15);background:#fff}",
     "#sl-root .sl-err{display:none;margin:-6px 0 16px;padding:12px 14px;border-radius:10px;background:#FFF1F2;border:1px solid #FFCDD2;color:#C62828;font-size:14px}",
     "#sl-root .sl-err.on{display:block}",
-    "#sl-root button.sl-btn{width:100%;height:52px;border:0;border-radius:14px;background:linear-gradient(135deg,#6E48D9,#5632B8);color:#fff;font-size:16px;font-weight:700;cursor:pointer;font-family:inherit;box-shadow:0 10px 24px rgba(110,72,217,.28);transition:transform .12s,opacity .15s}",
+    "#sl-root button.sl-btn{width:100%;height:52px;border:0;border-radius:14px;background:linear-gradient(135deg,#0758E8,#003EAC);color:#fff;font-size:16px;font-weight:700;cursor:pointer;font-family:inherit;box-shadow:0 10px 24px rgba(7,88,232,.28);transition:transform .12s,opacity .15s}",
     "#sl-root button.sl-btn:hover{transform:translateY(-1px)}",
     "#sl-root button.sl-btn:disabled{opacity:.6;cursor:default;transform:none}",
     "#sl-root .sl-row{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:16px 0 20px;font-size:13.5px}",
     "#sl-root .sl-chk{display:flex;align-items:center;gap:8px;color:#4A4760;cursor:pointer}",
-    "#sl-root .sl-chk input{width:18px;height:18px;accent-color:#6E48D9}",
+    "#sl-root .sl-chk input{width:18px;height:18px;accent-color:#0758E8}",
     "#sl-root .sl-row a{color:#17142B;text-decoration:none;font-weight:600}",
-    "#sl-root .sl-row a:hover{color:#6E48D9}",
+    "#sl-root .sl-row a:hover{color:#0758E8}",
     "#sl-root .sl-foot{border-top:1px solid #ECE9F4;padding-top:20px;text-align:center;color:#7A7690;font-size:14px}",
-    "#sl-root .sl-foot a{margin-left:8px;color:#6E48D9;font-weight:800;text-decoration:none}",
+    "#sl-root .sl-foot a{margin-left:8px;color:#0758E8;font-weight:800;text-decoration:none}",
     "@media (max-width:900px){",
     "#sl-root .sl-top{height:64px}#sl-root .sl-top img{height:32px}#sl-root .sl-top .moa-logo-art{height:32px}#sl-root .sl-top a{font-size:13px}",
     "#sl-root .sl-card{grid-template-columns:1fr;border-radius:24px;min-height:0}",
@@ -96,7 +96,7 @@
     '<h2>あなたの毎日に、<br>もうひとつ上の満足を。</h2>',
     '<p>気に入った商品を集めて、<br>あなただけのお買い物を続けましょう。</p>',
     '<div class="sl-mas" id="sl-mas"><div class="sl-mas-bob"><div class="sl-mas-tilt">',
-    '<img src="/sorosoro-mascot.webp" alt="" draggable="false">',
+    '<img src="/seoulmono-bag.png" alt="" draggable="false">',
     '<svg class="sl-eyes" viewBox="0 0 407 384" aria-hidden="true"><defs><radialGradient id="sl-sclera" cx=".4" cy=".35" r=".8"><stop offset="0" stop-color="#fff"/><stop offset=".7" stop-color="#fff"/><stop offset="1" stop-color="#E3EDF4"/></radialGradient></defs>' + eyesSvg() + '</svg>',
     '</div>',
     '<svg class="sl-stars" viewBox="0 0 407 384" aria-hidden="true"><defs><linearGradient id="sl-starg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#FFE08A"/></linearGradient></defs>',
@@ -121,6 +121,8 @@
     if (t) t.style.transform = "translate(" + tx.toFixed(2) + "%,0) rotate(" + rot.toFixed(2) + "deg)";
   }
   function startMascot(root) {
+    return; // Upright, static brand character.
+
     var m = root.querySelector("#sl-mas");
     if (!m) return;
     m.addEventListener("click", function () {
