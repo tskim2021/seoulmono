@@ -5,6 +5,8 @@
   if (window.__moaLayout) return;
   window.__moaLayout = true;
 
+  window.__seoulmonoLogoHtml = logoHtml;
+
   var TOKEN_KEY = "allddaom_token";
   var CATEGORIES = [
     { id: "200", name: "サプリメント", sub: "毎日の健康習慣に" },

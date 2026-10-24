@@ -13,7 +13,7 @@
     "#sl-root *{box-sizing:border-box}",
     "#sl-root .sl-wrap{min-height:100%;display:flex;flex-direction:column;max-width:1840px;margin:0 auto;padding:0 clamp(16px,5vw,96px) 32px}",
     "#sl-root .sl-top{display:flex;align-items:center;justify-content:space-between;height:84px}",
-    "#sl-root .sl-top img{height:44px;width:auto;display:block}",
+    "#sl-root .sl-top img{height:44px;width:auto;display:block}#sl-root .sl-top .moa-logo-art{height:44px}",
     "#sl-root .sl-top a{color:#4A4760;text-decoration:none;font-size:15px}",
     "#sl-root .sl-top a:hover{color:#6E48D9}",
     "#sl-root .sl-card{margin:auto 0;display:grid;grid-template-columns:1.16fr 1fr;min-height:min(540px,calc(100vh - 140px));background:#fff;border-radius:28px;overflow:hidden;box-shadow:0 14px 48px rgba(60,40,130,.10)}",
@@ -49,7 +49,7 @@
     "#sl-root .sl-foot{border-top:1px solid #ECE9F4;padding-top:20px;text-align:center;color:#7A7690;font-size:14px}",
     "#sl-root .sl-foot a{margin-left:8px;color:#6E48D9;font-weight:800;text-decoration:none}",
     "@media (max-width:900px){",
-    "#sl-root .sl-top{height:64px}#sl-root .sl-top img{height:32px}#sl-root .sl-top a{font-size:13px}",
+    "#sl-root .sl-top{height:64px}#sl-root .sl-top img{height:32px}#sl-root .sl-top .moa-logo-art{height:32px}#sl-root .sl-top a{font-size:13px}",
     "#sl-root .sl-card{grid-template-columns:1fr;border-radius:24px;min-height:0}",
     "#sl-root .sl-banner{min-height:0;height:clamp(212px,58vw,300px)}",
     "#sl-root .sl-def{padding:22px}#sl-root .sl-def h2{margin:14px 0 8px;font-size:22px}#sl-root .sl-def p{font-size:13px;line-height:1.7}#sl-root .sl-mas{width:clamp(78px,24vw,112px);right:5%;bottom:10%}#sl-root .sl-def h2,#sl-root .sl-def p{max-width:66%}#sl-root .sl-def h2{font-size:18px;margin:12px 0 8px}#sl-root .sl-def p{font-size:12px}#sl-root .sl-def .f{display:none}#sl-root .sl-def .k{font-size:11px}",
@@ -60,7 +60,7 @@
 
   var HTML = [
     '<div class="sl-wrap">',
-    '<div class="sl-top"><a href="/" data-go aria-label="seoulmono"><img src="/sorosoro-logo.webp" alt="seoulmono"></a><a href="/" data-go>ショッピングを続ける ↗</a></div>',
+    '<div class="sl-top"><a href="/" data-go aria-label="seoulmono">' + (window.__seoulmonoLogoHtml ? window.__seoulmonoLogoHtml('sl') : '<img src="/seoulmono-logo-word.png" alt="ソウルモノ">') + '</a><a href="/" data-go>ショッピングを続ける ↗</a></div>',
     '<div class="sl-card">',
     '<div class="sl-banner" id="sl-banner" aria-label="イベント"></div>',
     '<div class="sl-form">',
