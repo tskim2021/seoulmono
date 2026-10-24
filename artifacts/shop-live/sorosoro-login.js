@@ -95,7 +95,7 @@
     '<div class="k">YOUR EVERYDAY, BETTER</div>',
     '<h2>あなたの毎日に、<br>もうひとつ上の満足を。</h2>',
     '<p>気に入った商品を集めて、<br>あなただけのお買い物を続けましょう。</p>',
-    '<div class="sl-mas" id="sl-mas"><div class="sl-mas-bob"><div class="sl-mas-tilt">',
+    '<div class="sl-mas" id="sl-mas" role="button" tabindex="0" aria-label="子犬と遊ぶ"><div class="sl-mas-bob"><div class="sl-mas-tilt">',
     '<img src="/seoulmono-puppy.png" alt="" draggable="false">',
     '<svg class="sl-eyes" viewBox="0 0 407 384" aria-hidden="true"><defs><radialGradient id="sl-sclera" cx=".4" cy=".35" r=".8"><stop offset="0" stop-color="#fff"/><stop offset=".7" stop-color="#fff"/><stop offset="1" stop-color="#E3EDF4"/></radialGradient></defs>' + eyesSvg() + '</svg>',
     '</div>',

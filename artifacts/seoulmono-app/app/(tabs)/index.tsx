@@ -19,6 +19,7 @@ import { Feather } from "@expo/vector-icons";
 
 import { useColors } from "@/hooks/useColors";
 import { api, ShopItem, getImageUrl, discountRate } from "@/lib/api";
+import PuppyMascot from "@/components/PuppyMascot";
 import PurchaseSheet from "@/components/PurchaseSheet";
 
 const { width: W } = Dimensions.get("window");
@@ -267,7 +268,7 @@ export default function HomeScreen() {
   return (
     <View style={[styles.root, { backgroundColor: colors.background }]}>
       <View style={[styles.header, { paddingTop: insets.top + 10, backgroundColor: "#DEEFF8" }]}>
-        <Image source={require("@/assets/images/seoulmono-puppy.png")} style={{ width: 44, height: 44 }} contentFit="contain" /><Text style={styles.logo}>ソウルモノ</Text>
+        <PuppyMascot /><Text style={styles.logo}>ソウルモノ</Text>
         <Pressable onPress={() => router.push("/(tabs)/products")} style={styles.searchBtn}>
           <Feather name="search" size={16} color="#47667C" />
           <Text style={styles.searchPlaceholder}>商品を検索...</Text>
