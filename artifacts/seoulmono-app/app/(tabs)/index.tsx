@@ -19,6 +19,7 @@ import { Feather } from "@expo/vector-icons";
 
 import { useColors } from "@/hooks/useColors";
 import { api, ShopItem, getImageUrl, discountRate } from "@/lib/api";
+import StorefrontHero from "@/components/StorefrontHero";
 import PuppyMascot from "@/components/PuppyMascot";
 import PurchaseSheet from "@/components/PurchaseSheet";
 
@@ -54,7 +55,7 @@ function ProductCard({ item, rank }: { item: ShopItem; rank?: number }) {
     >
       <View style={styles.cardImgWrap}>
         {imgUrl ? (
-          <Image source={{ uri: imgUrl }} style={styles.cardImg} contentFit="cover" />
+          <Image source={{ uri: imgUrl }} style={styles.cardImg} contentFit="contain" />
         ) : (
           <View style={[styles.cardImg, { backgroundColor: colors.muted, alignItems: "center", justifyContent: "center" }]}>
             <Feather name="image" size={32} color={colors.mutedForeground} />
@@ -152,7 +153,7 @@ function ProductCard({ item, rank }: { item: ShopItem; rank?: number }) {
   );
 }
 
-function Section({ title, items }: { title: string; items: ShopItem[]; onMore?: () => void }) {
+function Section({ title, items, onMore }: { title: string; items: ShopItem[]; onMore?: () => void }) {
   const colors = useColors();
   const router = useRouter();
   if (!items?.length) return null;
@@ -160,7 +161,7 @@ function Section({ title, items }: { title: string; items: ShopItem[]; onMore?: 
     <View style={styles.section}>
       <View style={styles.sectionHeader}>
         <Text style={[styles.sectionTitle, { color: colors.foreground }]}>{title}</Text>
-        <Pressable onPress={() => router.push("/(tabs)/products")} style={styles.moreBtn}>
+        <Pressable onPress={onMore || (() => router.push("/(tabs)/products"))} style={styles.moreBtn}>
           <Text style={[styles.moreText, { color: colors.mutedForeground }]}>もっと見る</Text>
           <Feather name="chevron-right" size={14} color={colors.mutedForeground} />
         </Pressable>
@@ -173,49 +174,6 @@ function Section({ title, items }: { title: string; items: ShopItem[]; onMore?: 
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={{ paddingHorizontal: 16, gap: 12 }}
       />
-    </View>
-  );
-}
-
-function BannerCarousel({ banners }: { banners: any[] }) {
-  const [active, setActive] = useState(0);
-  const ref = useRef<FlatList>(null);
-  if (!banners?.length) return null;
-
-  return (
-    <View style={styles.bannerWrap}>
-      <FlatList
-        ref={ref}
-        data={banners}
-        keyExtractor={(_, i) => String(i)}
-        horizontal
-        pagingEnabled
-        showsHorizontalScrollIndicator={false}
-        onMomentumScrollEnd={(e) => {
-          setActive(Math.round(e.nativeEvent.contentOffset.x / W));
-        }}
-        renderItem={({ item }) => {
-          // アプリ専用画像 → なければ image_url → なければ pc_img の順にフォールバック
-          const raw = item.app_img || item.image_url || item.pc_img || item.mo_img || "";
-          const imgUrl = raw.startsWith("http") ? raw : raw ? `https://seoulmono.com${raw}` : "";
-          return (
-            <View style={{ width: W, height: 200 }}>
-              {imgUrl ? (
-                <Image source={{ uri: imgUrl }} style={{ width: W, height: 200 }} contentFit="cover" />
-              ) : (
-                <LinearGradient colors={["#EAF5FB", "#CCE5F3"]} style={{ width: W, height: 200, alignItems: "center", justifyContent: "center" }}>
-                  <Text style={{ color: "#294E66", fontSize: 24, fontWeight: "700" }}>ソウルモノ</Text>
-                </LinearGradient>
-              )}
-            </View>
-          );
-        }}
-      />
-      <View style={styles.dots}>
-        {banners.map((_, i) => (
-          <View key={i} style={[styles.dot, { opacity: i === active ? 1 : 0.4, backgroundColor: "#fff" }]} />
-        ))}
-      </View>
     </View>
   );
 }
@@ -248,22 +206,17 @@ export default function HomeScreen() {
   const colors = useColors();
   const router = useRouter();
 
-  const { data, isLoading, refetch, isRefetching } = useQuery({
+  const { data, isLoading, error, refetch, isRefetching } = useQuery({
     queryKey: ["home"],
     queryFn: () => api.get<any>("/shop/home"),
-  });
-  const { data: bannerData } = useQuery({
-    queryKey: ["banners"],
-    queryFn: () => api.get<any>("/shop/banners"),
   });
   const { data: catData } = useQuery({
     queryKey: ["categories"],
     queryFn: () => api.get<any>("/shop/categories"),
   });
 
-  const banners: any[] = bannerData?.banners ?? [];
   const categories: any[] = (catData?.categories ?? [])
-    .filter((c: any) => c.ca_id && c.ca_id.length <= 2 && c.ca_id !== "ZZ");
+    .filter((c: any) => c.ca_id && c.ca_id !== "ZZ");
 
   return (
     <View style={[styles.root, { backgroundColor: colors.background }]}>
@@ -282,15 +235,17 @@ export default function HomeScreen() {
           <RefreshControl refreshing={isRefetching} onRefresh={refetch} tintColor={colors.primary} />
         }
       >
-        <BannerCarousel banners={banners} />
+        <StorefrontHero />
         <CategoryBar categories={categories} />
 
         {isLoading ? (
           <ActivityIndicator color={colors.primary} style={{ marginTop: 40 }} />
+        ) : error ? (
+          <Pressable onPress={() => refetch()} style={{ padding: 24 }}><Text style={{ color: colors.foreground }}>商品を読み込めませんでした。タップして再試行</Text></Pressable>
         ) : (
           <>
             <Section title="🏆 ベスト商品" items={data?.best ?? []} />
-            <Section title="✨ 新商品" items={data?.newItems ?? []} />
+            <Section title="✨ 新商品" items={data?.newItems ?? []} onMore={() => router.push({ pathname: "/(tabs)/products", params: { sort: "new" } })} />
             <Section title="🎁 ブランド" items={data?.brand ?? []} />
             <Section title="🍱 食品" items={data?.food ?? []} />
           </>
@@ -332,7 +287,7 @@ const styles = StyleSheet.create({
   catChip: { paddingHorizontal: 14, paddingVertical: 7, borderRadius: 20, borderWidth: 1 },
   catText: { fontSize: 13, fontWeight: "500" },
 
-  card: { width: 184, borderRadius: 12, borderWidth: 1, overflow: "hidden" },
+  card: { width: 184, borderRadius: 6, borderWidth: 1, overflow: "hidden" },
   cardImgWrap: { position: "relative" },
   cardImg: { width: 184, height: 184 },
 

@@ -31,8 +31,26 @@ export default function RegisterScreen() {
   const [pwConfirm, setPwConfirm] = useState("");
   const [showPw, setShowPw] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [loginId, setLoginId] = useState('');
+  const [email, setEmail] = useState('');
+  const [code, setCode] = useState('');
+  const [verifiedEmail, setVerifiedEmail] = useState('');
+  const [verifying, setVerifying] = useState(false);
+  const normalizedEmail = email.trim().toLowerCase();
+  const verifyEmail = async (send: boolean) => {
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalizedEmail)) { Alert.alert('お知らせ', '正しいメールアドレスを入力してください。'); return; }
+    setVerifying(true);
+    try {
+      await api.post(send ? '/auth/email-send-code' : '/auth/email-verify-code', { email: normalizedEmail, ...(send ? {} : { code }) });
+      if (!send) setVerifiedEmail(normalizedEmail);
+      Alert.alert('メール認証', send ? '認証コードを送信しました。' : 'メール認証が完了しました。');
+    } catch (error: any) { Alert.alert('メール認証', error.message); }
+    finally { setVerifying(false); }
+  };
 
   const handleRegister = async () => {
+    if (!/^[a-z0-9]{4,16}$/.test(loginId)) { Alert.alert('お知らせ', 'IDは半角英小文字・数字4〜16文字で入力してください。'); return; }
+    if (verifiedEmail !== normalizedEmail || !verifiedEmail) { Alert.alert('お知らせ', 'メール認証を完了してください。'); return; }
     if (!name.trim() || !hp.trim() || !pw) {
       Alert.alert("お知らせ", "お名前、携帯電話番号、パスワードをすべて入力してください。"); return;
     }
@@ -50,6 +68,8 @@ export default function RegisterScreen() {
     setLoading(true);
     try {
       const res = await api.post<any>("/auth/register-shop", {
+        mb_id: loginId,
+        mb_email: normalizedEmail,
         mb_name: name.trim(),
         mb_nick: name.trim(),
         mb_hp: hp.trim(),
@@ -93,11 +113,22 @@ export default function RegisterScreen() {
         <View style={[styles.infoBox, { backgroundColor: colors.secondary, borderColor: colors.border }]}>
           <Feather name="smartphone" size={15} color={colors.primary} />
           <Text style={[styles.infoText, { color: colors.primary }]}>
-            携帯電話番号がログインIDとして使用されます
+            ウェブと同じID・メール認証で登録できます
           </Text>
         </View>
 
         <View style={styles.form}>
+          <View style={styles.field}>
+            <Text style={[styles.label, { color: colors.foreground }]}>ログインID *</Text>
+            <TextInput style={inp} value={loginId} onChangeText={setLoginId} placeholder="半角英小文字・数字4〜16文字" autoCapitalize="none" autoCorrect={false} />
+          </View>
+          <View style={styles.field}>
+            <Text style={[styles.label, { color: colors.foreground }]}>メールアドレス *</Text>
+            <TextInput style={inp} value={email} onChangeText={value => { setEmail(value); setVerifiedEmail(''); }} placeholder="メールアドレス" keyboardType="email-address" autoCapitalize="none" autoCorrect={false} />
+            <Pressable disabled={verifying} onPress={() => verifyEmail(true)} style={[styles.submitBtn, { backgroundColor: colors.primary }]}><Text style={styles.submitBtnText}>認証コードを送信</Text></Pressable>
+            <TextInput style={inp} value={code} onChangeText={setCode} placeholder="6桁の認証コード" keyboardType="number-pad" maxLength={6} />
+            <Pressable disabled={verifying || code.length !== 6} onPress={() => verifyEmail(false)} style={[styles.submitBtn, { backgroundColor: colors.primary }]}><Text style={styles.submitBtnText}>{verifiedEmail === normalizedEmail && verifiedEmail ? '認証済み' : 'メールを認証する'}</Text></Pressable>
+          </View>
 
           {/* お名前 */}
           <View style={styles.field}>

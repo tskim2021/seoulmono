@@ -1,4 +1,3 @@
-import { BlurView } from "expo-blur";
 import { Tabs } from "expo-router";
 import { Feather } from "@expo/vector-icons";
 import React from "react";
@@ -39,7 +38,7 @@ export default function TabLayout() {
         headerShown: false,
         tabBarStyle: {
           position: "absolute",
-          backgroundColor: isIOS ? "transparent" : colors.background,
+          backgroundColor: '#FFFFFF',
           borderTopWidth: 1,
           borderTopColor: colors.border,
           elevation: 0,
@@ -47,19 +46,10 @@ export default function TabLayout() {
           paddingBottom: insets.bottom > 0 ? insets.bottom : 6,
         },
         tabBarLabelStyle: {
-          fontSize: 10,
-          fontFamily: "Inter_500Medium",
+          fontSize: 12,
+          fontWeight: '700',
         },
-        tabBarBackground: () =>
-          isIOS ? (
-            <BlurView
-              intensity={95}
-              tint={isDark ? "dark" : "light"}
-              style={StyleSheet.absoluteFill}
-            />
-          ) : (
-            <View style={[StyleSheet.absoluteFill, { backgroundColor: colors.background }]} />
-          ),
+        tabBarBackground: () => <View style={[StyleSheet.absoluteFill, { backgroundColor: "#FFFFFF" }]} />,
       }}
     >
       <Tabs.Screen

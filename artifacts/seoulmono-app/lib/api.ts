@@ -1,5 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Constants from "expo-constants";
+import { normalizeCatalog } from './catalog';
 
 const DOMAIN: string =
   (process.env.EXPO_PUBLIC_DOMAIN as string) ||
@@ -7,6 +8,17 @@ const DOMAIN: string =
   "seoulmono.com";
 
 export const BASE_URL = `https://${DOMAIN}/api`;
+
+function errorMessage(message: string, status: number) {
+  if (!/[가-힣]/.test(message)) return message;
+  if (status === 401) return 'ログインIDまたはパスワードをご確認ください。';
+  if (status === 403) return 'この操作を行う権限がありません。';
+  if (status === 404) return '情報が見つかりませんでした。';
+  if (/이메일 인증/.test(message)) return 'メール認証を完了してください。';
+  if (/이미.*아이디/.test(message)) return 'このIDはすでに使用されています。';
+  if (/이미.*이메일/.test(message)) return 'このメールアドレスはすでに登録されています。';
+  return '処理に失敗しました。入力内容をご確認のうえ、もう一度お試しください。';
+}
 
 export function getImageUrl(src: string | undefined | null, w?: number): string | null {
   if (!src) return null;
@@ -35,12 +47,12 @@ async function request<T>(
 
   if (!res.ok) {
     const err = await res.json().catch(() => ({ message: res.statusText }));
-    throw new Error(err.message || `HTTP ${res.status}`);
+    throw new Error(errorMessage(err.message || err.error || '通信に失敗しました。', res.status));
   }
 
   const text = await res.text();
   if (!text) return {} as T;
-  return JSON.parse(text) as T;
+  return normalizeCatalog(JSON.parse(text)) as T;
 }
 
 export const api = {
@@ -55,6 +67,7 @@ export const api = {
 export type ShopItem = {
   it_id: string | number;
   it_name: string;
+  it_name_ja?: string;
   it_price: number;
   it_cust_price?: number;
   it_sale_price?: number;

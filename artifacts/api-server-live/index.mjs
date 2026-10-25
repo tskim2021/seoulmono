@@ -89274,16 +89274,19 @@ function imgUrl(img1, base = CAFE24_IMG_BASE) {
   }
   return `${base}/${img1}`;
 }
+function japaneseCategoryName(name) {
+  return ({ '비타민': 'ビタミン', '영양제': 'サプリメント', '유산균': '乳酸菌', '슬리밍/이너뷰티': 'スリミング・インナービューティー' })[name] || name || '';
+}
 function mapProduct(r) {
   return {
     it_id: r.it_id,
-    it_name: r.it_name,
+    it_name: r.it_name_ja || r.it_name,
     it_name_ja: r.it_name_ja || "",
     it_price: Number(r.it_price) || 0,
     it_cust_price: Number(r.it_cust_price) || 0,
     it_img1: imgUrl(r.it_img1 || ""),
     ca_id: r.ca_id || "",
-    ca_name: r.ca_name || "",
+    ca_name: japaneseCategoryName(r.ca_name),
     it_soldout: r.it_soldout || "0",
     it_hit: Number(r.it_hit) || 0,
     it_use_cnt: Number(r.it_use_cnt) || 0,
@@ -89612,13 +89615,14 @@ router11.get("/shop/categories", async (_req, res) => {
       `SELECT c.ca_id, c.ca_name, c.ca_order, COALESCE(ci.image_url, '') AS ca_img
        FROM g5_shop_category c
        LEFT JOIN allddaom_category_images ci ON c.ca_id = ci.ca_id
-       WHERE c.ca_use = '1' AND LENGTH(c.ca_id) = 2 AND c.ca_id != 'ZZ'
+       WHERE c.ca_use = '1' AND c.ca_id != 'ZZ'
+         AND NOT EXISTS (SELECT 1 FROM g5_shop_category parent WHERE parent.ca_use='1' AND parent.ca_id<>c.ca_id AND c.ca_id LIKE CONCAT(parent.ca_id, '%'))
        ORDER BY c.ca_order, c.ca_id`
     );
     res.json({
       categories: rows.map((r) => ({
         ca_id: r.ca_id,
-        ca_name: r.ca_name,
+        ca_name: japaneseCategoryName(r.ca_name),
         ca_order: r.ca_order,
         ca_img: r.ca_img || ""
       }))
@@ -89745,11 +89749,11 @@ router11.get("/shop/items/:id", async (req, res) => {
     res.json({
       item: {
         it_id: r.it_id,
-        it_name: r.it_name,
+        it_name: r.it_name_ja || r.it_name,
         it_name_ja: r.it_name_ja || "",
         it_price: Number(r.it_price) || 0,
         it_cust_price: Number(r.it_cust_price) || 0,
-        it_sale_price: Number(r.it_cust_price) || 0,
+        it_sale_price: Number(r.it_price) || 0,
         it_stock_qty: Number(r.it_stock_qty) || 0,
         it_soldout: r.it_soldout || "0",
         it_img1: images[0] || "",
@@ -89761,7 +89765,7 @@ router11.get("/shop/items/:id", async (req, res) => {
         it_shelf_life: r.it_1 || "",
         box_qty: Number(r.it_2) || 0,
         ca_id: r.ca_id || "",
-        ca_name: r.ca_name || "",
+        ca_name: japaneseCategoryName(r.ca_name),
         it_use_cnt: Number(r.it_use_cnt) || 0,
         it_use_avg: Number(r.it_use_avg) || 0,
         filter1: r.filter1 || "",

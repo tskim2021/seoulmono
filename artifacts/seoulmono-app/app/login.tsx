@@ -30,7 +30,7 @@ export default function LoginScreen() {
 
   const handleLogin = async () => {
     if (!phone.trim() || !password.trim()) {
-      Alert.alert("お知らせ", "携帯電話番号とパスワードを入力してください。");
+      Alert.alert("お知らせ", "ログインIDとパスワードを入力してください。");
       return;
     }
     setLoading(true);
@@ -38,7 +38,7 @@ export default function LoginScreen() {
       await login(phone.trim(), password);
       router.back();
     } catch (e: any) {
-      Alert.alert("ログイン失敗", e.message ?? "携帯電話番号またはパスワードをご確認ください。");
+      Alert.alert("ログイン失敗", e.message ?? "ログインIDまたはパスワードをご確認ください。");
     } finally {
       setLoading(false);
     }
@@ -67,22 +67,22 @@ export default function LoginScreen() {
         <View style={[styles.infoBox, { backgroundColor: colors.secondary, borderColor: colors.border }]}>
           <Feather name="smartphone" size={15} color={colors.primary} />
           <Text style={[styles.infoText, { color: colors.primary }]}>
-            携帯電話番号がIDです
+            ウェブと同じIDでログインできます
           </Text>
         </View>
 
         <View style={styles.form}>
           <View style={styles.field}>
-            <Text style={[styles.label, { color: colors.foreground }]}>携帯電話番号</Text>
+            <Text style={[styles.label, { color: colors.foreground }]}>ログインID</Text>
             <View style={[styles.inputWrap, { borderColor: colors.border, backgroundColor: colors.card }]}>
               <Feather name="smartphone" size={16} color={colors.mutedForeground} />
               <TextInput
                 style={[styles.input, { color: colors.foreground }]}
-                placeholder="090-0000-0000"
+                placeholder="ログインIDを入力してください"
                 placeholderTextColor={colors.mutedForeground}
                 value={phone}
                 onChangeText={setPhone}
-                keyboardType="phone-pad"
+                autoCapitalize="none"
                 autoCorrect={false}
                 returnKeyType="next"
               />

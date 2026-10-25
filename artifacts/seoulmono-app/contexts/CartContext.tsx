@@ -8,6 +8,7 @@ import React, {
 } from "react";
 
 import { CartItem, ShopItem } from "@/lib/api";
+import { normalizeCatalog, sellingPrice, availableQuantity } from '@/lib/catalog';
 
 const CART_KEY = "jigu_cart";
 
@@ -16,7 +17,7 @@ export function lineKey(c: { it_id: string | number; option?: string }) {
 }
 
 export function unitPrice(c: CartItem) {
-  return (c.it_sale_price ?? c.it_price) + (c.option_price ?? 0);
+  return sellingPrice(c);
 }
 
 type ItemOptionChoice = { option: string; option_price: number };
@@ -51,7 +52,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     AsyncStorage.getItem(CART_KEY).then((raw) => {
-      if (raw) setItems(JSON.parse(raw));
+      if (raw) { try { setItems(normalizeCatalog(JSON.parse(raw))); } catch { setItems([]); } }
     });
   }, []);
 
@@ -74,7 +75,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         const next =
           idx >= 0
             ? prev.map((c, i) =>
-                i === idx ? { ...c, quantity: c.quantity + qty } : c
+                i === idx ? { ...c, ...incoming, quantity: Math.min(c.quantity + qty, availableQuantity(item)) } : c
               )
             : [...prev, incoming];
         AsyncStorage.setItem(CART_KEY, JSON.stringify(next));
@@ -96,7 +97,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       if (qty <= 0) {
         persist(items.filter((c) => lineKey(c) !== key));
       } else {
-        persist(items.map((c) => (lineKey(c) === key ? { ...c, quantity: qty } : c)));
+        persist(items.map((c) => (lineKey(c) === key ? { ...c, quantity: Math.min(qty, availableQuantity(c)) } : c)));
       }
     },
     [items, persist]

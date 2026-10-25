@@ -19,6 +19,7 @@ import { useColors } from "@/hooks/useColors";
 import { useAuth } from "@/contexts/AuthContext";
 import { useCart } from "@/contexts/CartContext";
 import { api, CartItem, ItemOption, ShopItem, getImageUrl } from "@/lib/api";
+import { sellingPrice, availableQuantity } from '@/lib/catalog';
 
 type Mode = "cart" | "buy";
 
@@ -60,20 +61,19 @@ export default function PurchaseSheet({
   const item: DetailItem | undefined = data?.item ?? data;
   const options = item?.options ?? [];
   const chosen = options.find((o) => o.io_id === selected);
-  const basePrice = item ? item.it_sale_price ?? item.it_price : 0;
-  const unit = basePrice + (chosen?.io_price ?? 0);
+  const basePrice = item ? sellingPrice(item) : 0;
+  const unit = chosen ? chosen.io_price : basePrice;
   const soldOut = item?.it_soldout === "1";
   const preparing = item?.it_soldout === "2";
-  const stockCap = chosen?.io_stock_qty ?? item?.it_stock_qty;
-  const maxQty = stockCap && stockCap > 0 ? Math.min(stockCap, 99) : 99;
+  const maxQty = item ? availableQuantity(item, chosen) : 0;
   const needsOption = options.length > 0 && !chosen;
-  const canConfirm = !!item && !soldOut && !preparing && !needsOption;
+  const canConfirm = !!item && !soldOut && !preparing && !needsOption && maxQty > 0;
 
   const imgUrl = item ? getImageUrl(item.it_img1 || item.images?.[0]) : null;
 
   const buildCartItem = (): ShopItem => {
     const rawImg = item!.it_img1 || item!.images?.[0] || "";
-    return { ...item!, it_img1: getImageUrl(rawImg) || rawImg };
+    return { ...item!, it_stock_qty: maxQty, it_img1: getImageUrl(rawImg) || rawImg };
   };
 
   const confirm = () => {
@@ -109,7 +109,7 @@ export default function PurchaseSheet({
     router.push({ pathname: "/checkout", params: { buy: "1" } });
   };
 
-  const confirmLabel = soldOut
+  const confirmLabel = soldOut || (item && maxQty === 0)
     ? "品切れ"
     : preparing
     ? "販売準備中"
@@ -193,7 +193,7 @@ export default function PurchaseSheet({
                               {optionLabel(o.io_id)}
                             </Text>
                             <Text style={{ fontSize: 12, color: colors.mutedForeground }}>
-                              {out ? "品切れ" : formatPrice(basePrice + o.io_price)}
+                              {out ? "品切れ" : formatPrice(o.io_price)}
                             </Text>
                           </Pressable>
                         );

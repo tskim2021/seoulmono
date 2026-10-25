@@ -39,8 +39,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setUser(null);
         return;
       }
-      const me = await api.get<{ user: User }>("/auth/me");
-      setUser(me.user);
+      const me = await api.get<User | { user: User }>("/auth/me");
+      setUser('user' in me ? me.user : me);
     } catch {
       setUser(null);
       await AsyncStorage.removeItem("auth_token");

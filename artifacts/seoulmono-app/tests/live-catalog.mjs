@@ -1,0 +1,33 @@
+import assert from 'node:assert/strict';
+const origin = process.env.AUDIT_ORIGIN || 'https://seoulmono.com';
+const results = [];
+async function get(path, expected = 200) {
+  const response = await fetch(origin + '/api' + path, { signal: AbortSignal.timeout(20000) });
+  assert.equal(response.status, expected, path);
+  const body = await response.json();
+  results.push({ path, status: response.status });
+  return body;
+}
+const home = await get('/shop/home');
+assert.ok(home.best.length > 0);
+assert.ok(home.best.every(item => item.it_name === item.it_name_ja));
+const categories = await get('/shop/categories');
+assert.deepEqual(categories.categories.map(item => item.ca_id), ['190', '200', '210', '220']);
+assert.ok(categories.categories.every(item => !/[가-힣]/.test(item.ca_name)));
+const rice = (await get('/shop/items/1748658986')).item;
+assert.equal(rice.it_price, 230); assert.equal(rice.it_sale_price, 230);
+assert.equal(rice.it_name, rice.it_name_ja);
+const search = await get('/shop/items?search=' + encodeURIComponent('オットギ') + '&limit=2');
+assert.ok(search.items.some(item => item.it_id === rice.it_id));
+const one = await get('/shop/items?category=190&limit=20&page=1');
+const two = await get('/shop/items?category=190&limit=20&page=2');
+assert.ok(one.items.length && two.items.length);
+assert.ok(!two.items.some(item => one.items.some(first => first.it_id === item.it_id)));
+const vitamin = (await get('/shop/items/1785119103')).item;
+assert.match(vitamin.it_explan_ja, /ご購入前/);
+const shipping = await get('/shop/shipping-config');
+assert.equal(shipping.fee, 890); assert.equal(shipping.additionalFee, 490);
+await get('/shop/items/this-product-does-not-exist', 404);
+await get('/auth/me', 401);
+await get('/shop/my-orders', 401);
+console.log(JSON.stringify({ checkedAt: new Date().toISOString(), origin, passed: true, results, limits: ['No purchase or real payment submitted', 'Missing source descriptions and broken source images remain content gaps', 'Authenticated account and device push delivery need separate verification'] }, null, 2));

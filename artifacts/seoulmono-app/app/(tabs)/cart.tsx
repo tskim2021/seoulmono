@@ -16,6 +16,8 @@ import { useColors } from "@/hooks/useColors";
 import { lineKey, unitPrice, useCart } from "@/contexts/CartContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { CartItem, getImageUrl } from "@/lib/api";
+import { useShipping } from '@/hooks/useShipping';
+import { shippingFee, productName } from '@/lib/catalog';
 
 function formatPrice(n: number) {
   return n.toLocaleString("ja-JP") + "円";
@@ -47,7 +49,7 @@ function CartRow({ item }: { item: CartItem }) {
         )}
       </View>
       <View style={styles.rowBody}>
-        <Text style={[styles.rowName, { color: colors.foreground }]} numberOfLines={2}>{item.it_name}</Text>
+        <Text style={[styles.rowName, { color: colors.foreground }]} numberOfLines={2}>{productName(item)}</Text>
         {item.option ? (
           <Text style={{ fontSize: 12, color: colors.mutedForeground }} numberOfLines={1}>オプション：{item.option.split("\u001e").join(" / ")}</Text>
         ) : null}
@@ -85,8 +87,9 @@ export default function CartScreen() {
   const { items, totalPrice, totalCount, clearCart } = useCart();
   const { user } = useAuth();
 
-  const deliveryFee = totalPrice >= 40000 ? 0 : 3000;
-  const finalPrice = totalPrice + deliveryFee;
+  const shipping = useShipping();
+  const deliveryFee = shipping.data ? shippingFee(items, shipping.data) : null;
+  const finalPrice = deliveryFee === null ? null : totalPrice + deliveryFee;
 
   return (
     <View style={[styles.root, { backgroundColor: colors.background }]}>
@@ -128,24 +131,26 @@ export default function CartScreen() {
                 <View style={styles.summaryRow}>
                   <Text style={[styles.summaryLabel, { color: colors.mutedForeground }]}>送料</Text>
                   <Text style={[styles.summaryValue, { color: deliveryFee === 0 ? colors.success : colors.foreground }]}>
-                    {deliveryFee === 0 ? "無料" : formatPrice(deliveryFee)}
+                    {deliveryFee === null ? '送料を確認中' : deliveryFee === 0 ? "無料" : formatPrice(deliveryFee)}
                   </Text>
                 </View>
-                {deliveryFee > 0 && (
+                {shipping.isError && <Pressable onPress={() => shipping.refetch()}><Text style={{ color: colors.primary }}>送料を取得できませんでした。再試行</Text></Pressable>}
+                {shipping.data && (
                   <Text style={[styles.freeShipNote, { color: colors.mutedForeground }]}>
-                    あと{formatPrice(40000 - totalPrice)}で送料無料！
+                    送料は商品の種類数に応じて計算されます。
                   </Text>
                 )}
                 <View style={[styles.summaryDivider, { backgroundColor: colors.border }]} />
                 <View style={styles.summaryRow}>
                   <Text style={[styles.totalLabel, { color: colors.foreground }]}>お支払い合計</Text>
-                  <Text style={[styles.totalValue, { color: colors.primary }]}>{formatPrice(finalPrice)}</Text>
+                  <Text style={[styles.totalValue, { color: colors.primary }]}>{finalPrice === null ? '送料を確認中' : formatPrice(finalPrice)}</Text>
                 </View>
               </View>
             }
           />
           <View style={[styles.footer, { backgroundColor: colors.background, paddingBottom: insets.bottom + 8, borderTopColor: colors.border }]}>
             <Pressable
+              disabled={finalPrice === null}
               style={[styles.orderBtn, { backgroundColor: colors.primary }]}
               onPress={() => {
                 if (!user) {
@@ -162,7 +167,7 @@ export default function CartScreen() {
                 router.push("/checkout");
               }}
             >
-              <Text style={styles.orderBtnText}>注文する（{totalCount}点） — {formatPrice(finalPrice)}</Text>
+              <Text style={styles.orderBtnText}>注文する（{totalCount}点） — {finalPrice === null ? '送料を確認中' : formatPrice(finalPrice)}</Text>
             </Pressable>
           </View>
         </>

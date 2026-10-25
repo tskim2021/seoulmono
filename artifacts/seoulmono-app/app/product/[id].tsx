@@ -18,6 +18,8 @@ import { Feather } from "@expo/vector-icons";
 import { useColors } from "@/hooks/useColors";
 import { api, ShopItem, getImageUrl } from "@/lib/api";
 import PurchaseSheet from "@/components/PurchaseSheet";
+import ProductDescription from '@/components/ProductDescription';
+import { useShipping } from '@/hooks/useShipping';
 
 const { width: W } = Dimensions.get("window");
 
@@ -32,8 +34,9 @@ export default function ProductDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const [sheetMode, setSheetMode] = useState<"cart" | "buy" | null>(null);
   const [imgIdx, setImgIdx] = useState(0);
+  const shipping = useShipping();
 
-  type DetailItem = ShopItem & { images?: string[]; it_explan?: string; it_cust_price?: number; item?: any };
+  type DetailItem = ShopItem & { images?: string[]; it_explan?: string; it_explan_ja?: string; it_cust_price?: number; item?: any };
 
   const { data, isLoading, error } = useQuery({
     queryKey: ["item", id],
@@ -59,7 +62,7 @@ export default function ProductDetailScreen() {
 
   const soldOut = item?.it_soldout === "1";
   const preparing = item?.it_soldout === "2";
-  const canBuy = !soldOut && !preparing;
+  const canBuy = !soldOut && !preparing && item?.it_stock_qty !== 0;
 
   if (isLoading) {
     return (
@@ -92,7 +95,7 @@ export default function ProductDetailScreen() {
         </Pressable>
       </View>
 
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 120 }}>
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingTop: insets.top + 48, paddingBottom: 120 }}>
         {images.length > 0 ? (
           <>
             <FlatList
@@ -103,7 +106,7 @@ export default function ProductDetailScreen() {
               showsHorizontalScrollIndicator={false}
               onMomentumScrollEnd={(e) => setImgIdx(Math.round(e.nativeEvent.contentOffset.x / W))}
               renderItem={({ item: imgUri }) => (
-                <Image source={{ uri: imgUri }} style={{ width: W, height: W }} contentFit="cover" />
+                <Image source={{ uri: imgUri }} style={{ width: W, height: W }} contentFit="contain" />
               )}
             />
             {images.length > 1 && (
@@ -151,9 +154,14 @@ export default function ProductDetailScreen() {
           <View style={[styles.deliveryBox, { backgroundColor: colors.secondary }]}>
             <Feather name="truck" size={16} color={colors.primary} />
             <Text style={[styles.deliveryText, { color: colors.foreground }]}>
-              40,000円以上で送料無料・通常配送3,000円
+              {shipping.data ? `送料 ${formatPrice(shipping.data.fee)}・別商品を追加するごとに ${formatPrice(shipping.data.additionalFee)}` : '送料は注文画面でご確認ください'}
             </Text>
           </View>
+        </View>
+
+        <View style={{ padding: 20, backgroundColor: '#fff' }}>
+          <Text style={{ fontSize: 24, fontWeight: '800', marginBottom: 20, color: '#172b3a' }}>商品詳細</Text>
+          <ProductDescription key={String(id)} html={item.it_explan_ja || item.it_explan} />
         </View>
 
         {relatedData?.items && relatedData.items.length > 0 && (
@@ -184,7 +192,7 @@ export default function ProductDetailScreen() {
                       <View style={[styles.relImg, { backgroundColor: colors.muted }]} />
                     )}
                     <Text style={[styles.relName, { color: colors.foreground }]} numberOfLines={2}>{rel.it_name}</Text>
-                    <Text style={[styles.relPrice, { color: colors.primary }]}>{formatPrice(rel.it_sale_price ?? rel.it_price)}</Text>
+                    <Text style={[styles.relPrice, { color: colors.primary }]}>{formatPrice(rel.it_price)}</Text>
                   </Pressable>
                 );
               }}

@@ -1,8 +1,8 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useInfiniteQuery } from "@tanstack/react-query";
 import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   ActivityIndicator,
   Dimensions,
@@ -132,31 +132,37 @@ function ProductGrid({ item }: { item: ShopItem }) {
 export default function ProductsScreen() {
   const insets = useSafeAreaInsets();
   const colors = useColors();
-  const params = useLocalSearchParams<{ ca_id?: string }>();
+  const params = useLocalSearchParams<{ ca_id?: string; sort?: string; type?: string }>();
   const [search, setSearch] = useState("");
   const [query, setQuery] = useState("");
   const [selCat, setSelCat] = useState(params.ca_id ?? "");
+  useEffect(() => { setSelCat(params.ca_id ?? ''); setSearch(''); setQuery(''); }, [params.ca_id]);
 
   const { data: catData } = useQuery({
     queryKey: ["categories"],
     queryFn: () => api.get<any>("/shop/categories"),
   });
 
-  const { data, isLoading, isFetching } = useQuery({
-    queryKey: ["items", selCat, query],
-    queryFn: () =>
+  const { data, isLoading, error, refetch, isFetchingNextPage, fetchNextPage, hasNextPage } = useInfiniteQuery({
+    queryKey: ["items", selCat, query, params.sort, params.type],
+    initialPageParam: 1,
+    getNextPageParam: (last: any) => last.page * last.limit < last.total ? last.page + 1 : undefined,
+    queryFn: ({ pageParam }) =>
       api.get<any>(
         `/shop/items?${new URLSearchParams({
           ...(selCat ? { category: selCat } : {}),
           ...(query ? { search: query } : {}),
+          ...(params.sort ? { sort: params.sort } : {}),
+          ...(params.type ? { type: params.type } : {}),
+          page: String(pageParam),
           limit: "20",
         })}`
       ),
   });
 
-  const items: ShopItem[] = data?.items ?? [];
+  const items: ShopItem[] = data?.pages.flatMap(page => page.items ?? []) ?? [];
   const categories: any[] = (catData?.categories ?? [])
-    .filter((c: any) => c.ca_id && c.ca_id.length <= 2 && c.ca_id !== "ZZ");
+    .filter((c: any) => c.ca_id && c.ca_id !== "ZZ");
 
   return (
     <View style={[styles.root, { backgroundColor: colors.background }]}>
@@ -169,7 +175,7 @@ export default function ProductsScreen() {
             placeholderTextColor="#47667C"
             value={search}
             onChangeText={setSearch}
-            onSubmitEditing={() => setQuery(search)}
+            onSubmitEditing={() => setQuery(search.trim())}
             returnKeyType="search"
           />
           {search.length > 0 && (
@@ -211,6 +217,8 @@ export default function ProductsScreen() {
 
       {isLoading ? (
         <ActivityIndicator color={colors.primary} style={{ marginTop: 40 }} />
+      ) : error ? (
+        <Pressable onPress={() => refetch()} style={styles.empty}><Text>商品を読み込めませんでした。タップして再試行</Text></Pressable>
       ) : items.length === 0 ? (
         <View style={styles.empty}>
           <Feather name="package" size={48} color={colors.mutedForeground} />
@@ -225,7 +233,9 @@ export default function ProductsScreen() {
           columnWrapperStyle={{ gap: 12 }}
           contentContainerStyle={{ padding: 16, gap: 12, paddingBottom: 100 }}
           showsVerticalScrollIndicator={false}
-          ListFooterComponent={isFetching && !isLoading ? <ActivityIndicator color={colors.primary} /> : null}
+          onEndReached={() => { if (hasNextPage && !isFetchingNextPage) fetchNextPage(); }}
+          onEndReachedThreshold={0.4}
+          ListFooterComponent={isFetchingNextPage ? <ActivityIndicator color={colors.primary} /> : null}
         />
       )}
     </View>
@@ -257,10 +267,10 @@ const styles = StyleSheet.create({
   soldoutText: { color: "#fff", fontWeight: "700", fontSize: 13 },
 
   body: { padding: 10, gap: 1 },
-  name: { fontSize: 12, fontWeight: "500", lineHeight: 17, minHeight: 34 },
+  name: { fontSize: 14, fontWeight: "700", lineHeight: 21, minHeight: 42 },
   orig: { fontSize: 10, textDecorationLine: "line-through" },
   discPct: { fontSize: 13, fontWeight: "700", color: "#EF4444" },
-  price: { fontSize: 14, fontWeight: "700" },
+  price: { fontSize: 20, fontWeight: "900" },
 
   cartBtn: { borderTopWidth: 1, paddingVertical: 8, flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 5 },
   cartBtnText: { fontSize: 11, fontWeight: "600" },
