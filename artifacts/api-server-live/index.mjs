@@ -83670,18 +83670,7 @@ router2.get("/auth/me", authMiddleware, async (req, res) => {
       [user.mb_id]
     );
     if (rows.length === 0) {
-      res.json({
-        mb_id: user.mb_id,
-        mb_name: user.mb_name || "",
-        mb_email: "",
-        mb_hp: "",
-        mb_level: user.mb_level || 2,
-        mb_point: 0,
-        company_name: "",
-        business_number: "",
-        is_admin: (user.mb_level || 2) >= 10,
-        is_approved: (user.mb_level || 2) >= 2
-      });
+      res.status(401).json({ error: "ユーザーが見つかりません。もう一度ログインしてください。" });
       return;
     }
     const member = rows[0];
