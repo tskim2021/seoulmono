@@ -14,7 +14,7 @@ test('app code has no embedded browser imports or website screen', () => {
 test('embedded browser packages are not installed or configured', () => {
   const pkg=JSON.parse(fs.readFileSync(path.join(root,'package.json'),'utf8'));
   const config=JSON.parse(fs.readFileSync(path.join(root,'app.json'),'utf8'));
-  for (const name of ['react-native-webview','expo-web-browser']) {
+  for (const name of ['react-native-webview','expo-web-browser','@react-native-seoul/kakao-login','@react-native-seoul/naver-login']) {
     assert.equal(pkg.dependencies[name],undefined);
     assert.equal(fs.existsSync(path.join(root,'node_modules',name)),false);
     assert.equal(config.expo.plugins.includes(name),false);
