@@ -1,5 +1,7 @@
 # Seoulmono app delivery and push
 
+Push resources are dedicated to Seoulmono: Firebase project `seoulmono-43c89`, Android package `com.seoulmono.app`, and APNs key `P8VY2HHCYD` with production topic restriction `com.seoulmono.app` on team `L89UNHMAA6`. The API rejects Firebase service-account files from other projects. Never reuse MOA Talk credentials. App Store Connect app ID is `6826719948`; distribution provisioning profile is `Seoulmono AppStore 2026`. These identifiers are not private keys. Private files remain outside Git and the public web root.
+
 The production API source is `artifacts/api-server-live/index.mjs`, with `push-routes.mjs` and `push-transport.mjs` alongside it. Copy all three to `artifacts/api-server/dist/` before restarting `seoulmono-api`. Do not replace the production API with the older generic source build.
 
 Push uses native APNs and FCM, independently of EAS. The app requests permission only from My Page → 通知設定, after login and after the respective provider is configured. Tokens are persisted in `sm_push_devices`; campaigns and delivery attempts use separate `sm_push_*` tables. Logout disables the token before dropping the app session. The administrator route `/admin/push` embeds `/push-admin.html`; the API accepts the existing g5 administrator session or bearer login, rechecks current administrator status and checks the Origin on writes. No new administrator account is created.

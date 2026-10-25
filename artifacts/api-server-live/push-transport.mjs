@@ -9,7 +9,7 @@ export function createPushTransport(config = loadPushConfig()) {
   let googleToken, appleToken, account, appleKey;
   try { account = JSON.parse(fs.readFileSync(config.fcm?.serviceAccountFile, 'utf8')); crypto.createPrivateKey(account.private_key); } catch { account = null; }
   try { appleKey = fs.readFileSync(config.apns?.keyFile, 'utf8'); crypto.createPrivateKey(appleKey); } catch { appleKey = null; }
-  const ready = { android: !!(account?.project_id && account?.client_email), ios: !!(appleKey && config.apns?.keyId && config.apns?.teamId && config.apns?.topic === 'com.seoulmono.app') };
+  const ready = { android: !!(account?.project_id === 'seoulmono-43c89' && account?.client_email), ios: !!(appleKey && config.apns?.keyId && config.apns?.teamId && config.apns?.topic === 'com.seoulmono.app') };
   async function send(device, payload) {
     if (!ready[device.platform]) return { ok: false, retry: false, code: 'provider-not-configured' };
     const now = Math.floor(Date.now() / 1000);

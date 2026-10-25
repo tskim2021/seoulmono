@@ -1,5 +1,9 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
+import crypto from 'node:crypto';
 import { safePushPath, validDevice, installPushRoutes } from './push-routes.mjs';
 import { createPushTransport } from './push-transport.mjs';
 
@@ -15,6 +19,17 @@ test('native push tokens are validated by platform', () => {
 test('missing provider credentials fail closed', async () => {
   const t=createPushTransport({}); assert.deepEqual(t.ready,{android:false,ios:false});
   assert.equal((await t.send({platform:'ios'},{})).ok,false);
+});
+test('Firebase credentials cannot cross the Seoulmono project boundary', () => {
+  const dir=fs.mkdtempSync(path.join(os.tmpdir(),'seoulmono-push-test-'));
+  try {
+    const file=path.join(dir,'account.json');
+    const {privateKey}=crypto.generateKeyPairSync('rsa',{modulusLength:2048,privateKeyEncoding:{type:'pkcs8',format:'pem'},publicKeyEncoding:{type:'spki',format:'pem'}});
+    for(const [project_id,expected] of [['unrelated-project',false],['seoulmono-43c89',true]]) {
+      fs.writeFileSync(file,JSON.stringify({project_id,client_email:'test@example.invalid',private_key:privateKey}),{mode:0o600});
+      assert.equal(createPushTransport({fcm:{serviceAccountFile:file}}).ready.android,expected);
+    }
+  } finally { fs.rmSync(dir,{recursive:true,force:true}); }
 });
 async function fixture({ devices=[], admin=true, ready={android:false,ios:false} }={}) {
   const routes=new Map(),writes=[];
