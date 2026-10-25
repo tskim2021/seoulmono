@@ -37,7 +37,6 @@ export default function TabLayout() {
         tabBarInactiveTintColor: colors.mutedForeground,
         headerShown: false,
         tabBarStyle: {
-          position: "absolute",
           backgroundColor: '#FFFFFF',
           borderTopWidth: 1,
           borderTopColor: colors.border,

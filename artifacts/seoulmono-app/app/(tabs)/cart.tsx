@@ -148,7 +148,7 @@ export default function CartScreen() {
               </View>
             }
           />
-          <View style={[styles.footer, { backgroundColor: colors.background, paddingBottom: insets.bottom + 8, borderTopColor: colors.border }]}>
+          <View style={[styles.footer, { backgroundColor: colors.background, paddingBottom: 8, borderTopColor: colors.border }]}>
             <Pressable
               disabled={finalPrice === null}
               style={[styles.orderBtn, { backgroundColor: colors.primary }]}
