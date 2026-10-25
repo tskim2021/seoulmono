@@ -158,7 +158,6 @@ export default function MyScreen() {
             <MenuItem icon="file-text" label="お知らせ" onPress={() => router.push("/notices")} />
             <MenuItem icon="help-circle" label="イベント" onPress={() => router.push("/events")} />
             <MenuItem icon="message-circle" label="1:1お問い合わせ" onPress={() => router.push("/inquiry")} />
-            <MenuItem icon="globe" label="ウェブサイトを見る" onPress={() => router.push("/webshop")} />
           </MenuSection>
 
           <MenuSection title="アカウント">

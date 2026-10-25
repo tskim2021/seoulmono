@@ -1,21 +1,42 @@
-import React, { useState } from 'react';
-import { Text, View } from 'react-native';
-import { WebView } from 'react-native-webview';
+import React, { useMemo, useState } from 'react';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Image } from 'expo-image';
+import { descriptionBlocks } from '@/lib/description';
 
-// Product HTML is inert content. Only our size observer can run scripts.
-export default function ProductDescription({ html }: { html?: string }) {
-  const [height, setHeight] = useState(360);
-  const [nonce] = useState(() => 'sm' + Math.random().toString(36).slice(2) + Math.random().toString(36).slice(2));
-  const clean = (html || '').replace(/<(script|iframe|object|embed|form)\b[^>]*>[\s\S]*?<\/\1\s*>/gi, '')
-    .replace(/\son\w+\s*=\s*("[^"]*"|'[^']*'|[^\s>]+)/gi, '')
-    .replace(/javascript\s*:/gi, '');
-  if (!clean.trim()) return <Text style={{ color: '#526b7d', padding: 20 }}>商品説明は準備中です。</Text>;
-  const document = `<!doctype html><html lang="ja"><head><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src https: data:; style-src 'unsafe-inline'; script-src 'nonce-${nonce}'"><style>html,body{margin:0;padding:0;color:#172b3a;font:16px/1.7 -apple-system,sans-serif;overflow:hidden}img{max-width:100%!important;height:auto!important;display:block}table{max-width:100%;width:100%!important}*{box-sizing:border-box}p{margin:0 0 12px}a{color:#397aa3}</style></head><body><div id="content">${clean}</div><script nonce="${nonce}">function missing(img){img.style.display='none';const note=document.createElement('p');note.textContent='詳細画像を読み込めませんでした。';img.after(note);size();}document.querySelectorAll('img').forEach(img=>{img.addEventListener('error',()=>missing(img));if(img.complete&&!img.naturalWidth)missing(img);});function size(){window.ReactNativeWebView.postMessage(JSON.stringify({height:document.getElementById('content').scrollHeight}));}new ResizeObserver(size).observe(document.getElementById('content'));window.addEventListener('load',size);size();</script></body></html>`;
-  return <View style={{ minHeight: height }}><WebView
-    source={{ html: document, baseUrl: 'https://seoulmono.com/' }}
-    style={{ height, backgroundColor: '#fff' }} scrollEnabled={false}
-    originWhitelist={['https://seoulmono.com', 'about:blank']}
-    onShouldStartLoadWithRequest={request => request.url === 'about:blank' || request.url === 'https://seoulmono.com/'}
-    onMessage={event => { try { const n = Number(JSON.parse(event.nativeEvent.data).height); if (Number.isFinite(n) && n > 0) setHeight(Math.min(n + 16, 60000)); } catch {} }}
-  /></View>;
+function DetailImage({ uri, alt, ratio: initialRatio }: { uri: string; alt: string; ratio?: number }) {
+  const [ratio, setRatio] = useState(initialRatio || 1);
+  const [failed, setFailed] = useState(false);
+  if (failed) return <Text style={styles.notice}>詳細画像を読み込めませんでした。</Text>;
+  return <Image source={{ uri }} accessibilityLabel={alt} contentFit="contain" cachePolicy="memory-disk"
+    style={{ width: '100%', aspectRatio: ratio, backgroundColor: '#f5f8fa' }}
+    onLoad={({ source }) => { if (source.width > 0 && source.height > 0) setRatio(source.width / source.height); }}
+    onError={() => setFailed(true)} />;
 }
+
+export default function ProductDescription({ html }: { html?: string }) {
+  const blocks = useMemo(() => descriptionBlocks(html || ''), [html]);
+  if (!blocks.length) return <Text style={styles.notice}>商品説明は準備中です。</Text>;
+  return <View testID="native-product-description" style={styles.root}>
+    {blocks.map((block, index) => {
+      if (block.type === 'image') return <DetailImage key={`${index}:${block.uri}`} {...block} />;
+      if (block.type === 'table') return <ScrollView horizontal key={index} contentContainerStyle={styles.table}>
+        <View>{block.rows.map((row, r) => <View key={r} style={styles.row}>
+          {row.map((cell, c) => <Text selectable key={c} style={[styles.cell, r === 0 && styles.tableHeading]}>{cell}</Text>)}
+        </View>)}</View>
+      </ScrollView>;
+      return <Text selectable key={index} style={[styles.text, block.heading && styles.heading, block.bold && styles.bold]}>{block.text}</Text>;
+    })}
+  </View>;
+}
+
+const styles = StyleSheet.create({
+  root: { gap: 12 },
+  text: { color: '#172b3a', fontSize: 16, lineHeight: 27 },
+  heading: { fontSize: 21, lineHeight: 31, fontWeight: '800', marginTop: 8 },
+  bold: { fontWeight: '700' },
+  notice: { color: '#526b7d', paddingVertical: 20, fontSize: 15 },
+  table: { paddingVertical: 6 },
+  row: { flexDirection: 'row' },
+  cell: { width: 165, padding: 12, borderWidth: 0.5, borderColor: '#d5e1e9', color: '#172b3a', fontSize: 14, lineHeight: 23 },
+  tableHeading: { backgroundColor: '#edf5fa', fontWeight: '700' },
+});

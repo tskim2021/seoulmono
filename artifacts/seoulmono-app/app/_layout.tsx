@@ -68,10 +68,6 @@ function RootLayoutNav() {
         name="order-history"
         options={{ presentation: "card", headerShown: false }}
       />
-      <Stack.Screen
-        name="webshop"
-        options={{ presentation: "card", headerShown: false }}
-      />
     </Stack>
   );
 }

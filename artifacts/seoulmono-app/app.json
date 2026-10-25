@@ -2,7 +2,7 @@
   "expo": {
     "name": "ソウルモノ",
     "slug": "seoulmono-app",
-    "version": "1.0.5",
+    "version": "1.0.6",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "seoulmono",
@@ -21,7 +21,7 @@
         "CFBundleDevelopmentRegion": "ja",
         "CFBundleAllowMixedLocalizations": true
       },
-      "buildNumber": "5",
+      "buildNumber": "6",
       "appleTeamId": "L89UNHMAA6",
       "entitlements": {
         "aps-environment": "production"
@@ -33,7 +33,7 @@
         "backgroundColor": "#E8F4FF"
       },
       "package": "com.seoulmono.app",
-      "versionCode": 5,
+      "versionCode": 6,
       "googleServicesFile": "./secrets/google-services.json"
     },
     "web": {
@@ -50,7 +50,6 @@
         }
       ],
       "expo-font",
-      "expo-web-browser",
       "expo-updates",
       [
         "expo-notifications",
