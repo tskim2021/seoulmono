@@ -15,6 +15,7 @@ config.resolver.nodeModulesPaths = [
 // Block pnpm virtual-store tmp directories so Metro's FallbackWatcher
 // does not crash when those paths disappear between crawl and watch().
 config.resolver.blockList = [
+  /[/\\]seoulmono-app[/\\](build|ios|android)[/\\].*/,
   /node_modules[/\\]\.pnpm[/\\].*_tmp_.*[/\\].*/,
   /local-maven-repo[/\\].*/,
   /\.local[/\\].*/,

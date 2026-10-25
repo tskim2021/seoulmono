@@ -1,4 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useQueryClient } from '@tanstack/react-query';
 import React, {
   createContext,
   useCallback,
@@ -8,7 +9,7 @@ import React, {
 } from "react";
 
 import { disablePush } from "@/lib/push";
-import { api, User } from "@/lib/api";
+import { api, ApiError, User } from "@/lib/api";
 
 type AuthContextType = {
   user: User | null;
@@ -29,6 +30,7 @@ const AuthContext = createContext<AuthContextType>({
 });
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
+  const queryClient = useQueryClient();
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -41,9 +43,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
       const me = await api.get<User | { user: User }>("/auth/me");
       setUser('user' in me ? me.user : me);
-    } catch {
+    } catch (error) {
       setUser(null);
-      await AsyncStorage.removeItem("auth_token");
+      if (error instanceof ApiError && error.status === 401) {
+        await AsyncStorage.removeItem("auth_token");
+      }
     }
   }, []);
 
@@ -57,20 +61,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       mb_password,
     });
     await AsyncStorage.setItem("auth_token", res.token);
+    queryClient.clear();
     setUser(res.user);
-  }, []);
+  }, [queryClient]);
 
   const loginWithToken = useCallback(async (token: string, user: User) => {
     await AsyncStorage.setItem("auth_token", token);
+    queryClient.clear();
     setUser(user);
-  }, []);
+  }, [queryClient]);
 
   const logout = useCallback(async () => {
     await disablePush();
     await api.post("/auth/logout").catch(() => {});
     await AsyncStorage.removeItem("auth_token");
+    queryClient.clear();
     setUser(null);
-  }, []);
+  }, [queryClient]);
 
   return (
     <AuthContext.Provider value={{ user, loading, login, loginWithToken, logout, refresh }}>

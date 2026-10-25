@@ -201,6 +201,16 @@ function CategoryBar({ categories }: { categories: any[] }) {
   );
 }
 
+function CategorySection({ id, title }: { id: string; title: string }) {
+  const router = useRouter();
+  const { data } = useQuery({
+    queryKey: ['home-category', id],
+    queryFn: () => api.get<{ items: ShopItem[] }>(`/shop/items?category=${id}&limit=10`),
+  });
+  return <Section title={title} items={data?.items || []}
+    onMore={() => router.push({ pathname: '/(tabs)/products', params: { ca_id: id } })} />;
+}
+
 export default function HomeScreen() {
   const insets = useSafeAreaInsets();
   const colors = useColors();
@@ -246,8 +256,10 @@ export default function HomeScreen() {
           <>
             <Section title="🏆 ベスト商品" items={data?.best ?? []} />
             <Section title="✨ 新商品" items={data?.newItems ?? []} onMore={() => router.push({ pathname: "/(tabs)/products", params: { sort: "new" } })} />
-            <Section title="🎁 ブランド" items={data?.brand ?? []} />
-            <Section title="🍱 食品" items={data?.food ?? []} />
+            <CategorySection id="190" title="ビタミン" />
+            <CategorySection id="200" title="サプリメント" />
+            <CategorySection id="210" title="乳酸菌" />
+            <CategorySection id="220" title="インナービューティー" />
           </>
         )}
       </ScrollView>

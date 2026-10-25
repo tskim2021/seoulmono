@@ -54,6 +54,7 @@ export default function CheckoutScreen() {
       }));
       const script = `
         (function () {
+          if (window.location.origin !== ${JSON.stringify(`https://${DOMAIN}`)}) return;
           try {
             sessionStorage.setItem("allddaom_checkout", ${JSON.stringify(
               JSON.stringify(checkoutItems)
@@ -63,7 +64,7 @@ export default function CheckoutScreen() {
                 ? `localStorage.setItem("allddaom_token", ${JSON.stringify(
                     token
                   )});`
-                : ""
+                : 'localStorage.removeItem("allddaom_token"); localStorage.removeItem("allddaom_user");'
             }
           } catch (e) {}
         })();

@@ -9,6 +9,13 @@ const DOMAIN: string =
 
 export const BASE_URL = `https://${DOMAIN}/api`;
 
+export class ApiError extends Error {
+  constructor(message: string, readonly status: number) {
+    super(message);
+    this.name = 'ApiError';
+  }
+}
+
 function errorMessage(message: string, status: number) {
   if (!/[가-힣]/.test(message)) return message;
   if (status === 401) return 'ログインIDまたはパスワードをご確認ください。';
@@ -47,7 +54,7 @@ async function request<T>(
 
   if (!res.ok) {
     const err = await res.json().catch(() => ({ message: res.statusText }));
-    throw new Error(errorMessage(err.message || err.error || '通信に失敗しました。', res.status));
+    throw new ApiError(errorMessage(err.message || err.error || '通信に失敗しました。', res.status), res.status);
   }
 
   const text = await res.text();
