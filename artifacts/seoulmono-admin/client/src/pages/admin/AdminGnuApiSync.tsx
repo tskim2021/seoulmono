@@ -10,7 +10,7 @@ import {
 } from "lucide-react";
 
 function TimeAgo({ iso }: { iso: string | null }) {
-  if (!iso) return <span className="text-muted-foreground text-xs">なし</span>;
+  if (!iso) return <span className="text-muted-foreground text-xs">없음</span>;
   const d = new Date(iso);
   const diff = Math.floor((Date.now() - d.getTime()) / 1000);
   let label = "";
@@ -26,7 +26,7 @@ export default function AdminGnuApiSync() {
   const { data: status, isLoading: statusLoading, refetch: refetchStatus } = trpc.admin.getGnuApiSyncStatus.useQuery();
 
   const saveMut = trpc.admin.saveGnuApiConfig.useMutation({
-    onSuccess: () => { toast.success("設定を保存しました。"); refetchCfg(); refetchStatus(); },
+    onSuccess: () => { toast.success("설정이 저장되었습니다."); refetchCfg(); refetchStatus(); },
     onError: (e) => toast.error(e.message),
   });
   const syncOrdersMut = trpc.admin.syncGnuApiOrders.useMutation({
@@ -53,23 +53,23 @@ export default function AdminGnuApiSync() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold mb-6">ショップ(グヌボード) API連携設定</h1>
+      <h1 className="text-2xl font-bold mb-6">탈모1 API 연동 설정</h1>
 
       {/* 안내 배너 */}
       <div className="mb-5 p-4 bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-xl">
         <div className="flex items-start gap-3">
           <Link2 className="w-5 h-5 text-blue-600 mt-0.5 shrink-0" />
           <div className="text-sm">
-            <p className="font-semibold text-blue-800 dark:text-blue-300 mb-1">ショップ(グヌボード) ↔ 管理画面 API連携方式</p>
+            <p className="font-semibold text-blue-800 dark:text-blue-300 mb-1">탈모1(그누보드) ↔ 탈모2 API 연동 방식</p>
             <p className="text-blue-700 dark:text-blue-400 mb-2">
               MySQL 직접 연결 없이 PHP API 파일을 통해 주문·상품·회원을 동기화합니다.
               배송 처리 시 탈모1 그누보드에도 자동으로 역반영됩니다.
             </p>
             <ol className="list-decimal list-inside space-y-1 text-blue-700 dark:text-blue-400">
-              <li>下からPHPファイル4つをダウンロード</li>
-              <li>ショップサーバーの <code className="bg-blue-100 dark:bg-blue-900 px-1 rounded">/page/</code> 디렉토리에 업로드</li>
-              <li>ショップのPHP環境変数に <code className="bg-blue-100 dark:bg-blue-900 px-1 rounded">TALMO2_API_TOKEN</code> 決済管理</li>
-              <li>下のAPI URLと同じトークンを入力して保存</li>
+              <li>아래에서 PHP 파일 4개를 다운로드</li>
+              <li>탈모1 서버의 <code className="bg-blue-100 dark:bg-blue-900 px-1 rounded">/page/</code> 디렉토리에 업로드</li>
+              <li>탈모1 PHP 환경변수에 <code className="bg-blue-100 dark:bg-blue-900 px-1 rounded">TALMO2_API_TOKEN</code> 설정</li>
+              <li>아래 API URL과 동일 토큰을 입력 후 저장</li>
             </ol>
           </div>
         </div>
@@ -79,7 +79,7 @@ export default function AdminGnuApiSync() {
       <div className="bg-card border rounded-xl p-5 mb-4">
         <div className="flex items-center gap-2 mb-3">
           <Download className="w-4 h-4 text-primary" />
-          <h2 className="text-base font-semibold">ショップにアップロードするPHPファイル</h2>
+          <h2 className="text-base font-semibold">탈모1에 올릴 PHP 파일</h2>
         </div>
         <p className="text-sm text-muted-foreground mb-3">
           아래 4개 파일을 탈모1 서버 <strong>/page/</strong> 디렉토리에 업로드하세요.
@@ -109,35 +109,35 @@ export default function AdminGnuApiSync() {
       <div className="bg-card border rounded-xl p-5 mb-4">
         <div className="flex items-center gap-2 mb-4">
           <Settings2 className="w-4 h-4 text-primary" />
-          <h2 className="text-base font-semibold">API連携設定</h2>
+          <h2 className="text-base font-semibold">API 연동 설정</h2>
         </div>
 
         {!isConfigured && (
           <div className="mb-4 p-3 bg-amber-50 dark:bg-amber-950/30 border border-amber-200 rounded-lg flex items-start gap-2">
             <AlertCircle className="w-4 h-4 text-amber-600 mt-0.5 shrink-0" />
-            <p className="text-sm text-amber-700 dark:text-amber-400">API URLとトークンを設定しないと、同期を利用できません。</p>
+            <p className="text-sm text-amber-700 dark:text-amber-400">API URL과 토큰을 설정해야 동기화를 사용할 수 있습니다.</p>
           </div>
         )}
 
         <div className="space-y-4">
           <div>
-            <label className="text-sm font-medium block mb-1">ショップ API基本URL</label>
+            <label className="text-sm font-medium block mb-1">탈모1 API 기본 URL</label>
             <Input
               placeholder="https://talmoschool.com/page"
               value={form.baseUrl}
               onChange={e => setForm(f => ({ ...f, baseUrl: e.target.value }))}
             />
-            <p className="text-xs text-muted-foreground mt-1">PHPファイルがあるディレクトリのURL (末尾の / は除く)</p>
+            <p className="text-xs text-muted-foreground mt-1">PHP 파일들이 있는 디렉토리 URL (끝 / 제외)</p>
           </div>
           <div>
-            <label className="text-sm font-medium block mb-1">APIトークン (シークレットキー)</label>
+            <label className="text-sm font-medium block mb-1">API 토큰 (비밀 키)</label>
             <Input
               type="password"
-              placeholder="PHPファイルのTALMO2_API_TOKENと同じ値"
+              placeholder="PHP 파일의 TALMO2_API_TOKEN과 동일한 값"
               value={form.token}
               onChange={e => setForm(f => ({ ...f, token: e.target.value }))}
             />
-            <p className="text-xs text-muted-foreground mt-1">英数字32文字以上のランダムな文字列を推奨</p>
+            <p className="text-xs text-muted-foreground mt-1">영문·숫자 32자 이상의 무작위 문자열 권장</p>
           </div>
           <label className="flex items-center gap-2 text-sm">
             <input
@@ -170,7 +170,7 @@ export default function AdminGnuApiSync() {
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
             <RefreshCw className="w-4 h-4 text-primary" />
-            <h2 className="text-base font-semibold">同期状況</h2>
+            <h2 className="text-base font-semibold">동기화 현황</h2>
           </div>
           <Button size="sm" variant="outline" onClick={() => refetchStatus()} disabled={statusLoading}>
             <RefreshCw className={`w-3 h-3 mr-1 ${statusLoading ? "animate-spin" : ""}`} />
@@ -180,9 +180,9 @@ export default function AdminGnuApiSync() {
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
           {[
-            { icon: Package, label: "注文 最終同期", val: status?.lastOrderSync ?? null },
-            { icon: ShoppingBag, label: "商品 最終同期", val: status?.lastProductSync ?? null },
-            { icon: Users, label: "会員 最終同期", val: status?.lastMemberSync ?? null },
+            { icon: Package, label: "주문 마지막 동기화", val: status?.lastOrderSync ?? null },
+            { icon: ShoppingBag, label: "상품 마지막 동기화", val: status?.lastProductSync ?? null },
+            { icon: Users, label: "회원 마지막 동기화", val: status?.lastMemberSync ?? null },
           ].map(item => (
             <div key={item.label} className="p-3 border rounded-lg bg-muted/20">
               <div className="flex items-center gap-2 mb-1">
@@ -206,7 +206,7 @@ export default function AdminGnuApiSync() {
       <div className="bg-card border rounded-xl p-5">
         <div className="flex items-center gap-2 mb-3">
           <Upload className="w-4 h-4 text-primary" />
-          <h2 className="text-base font-semibold">手動同期</h2>
+          <h2 className="text-base font-semibold">수동 동기화</h2>
         </div>
         <p className="text-sm text-muted-foreground mb-4">
           설정 저장 후 수동으로 즉시 동기화할 수 있습니다. 주문은 마지막 동기화 이후 변경분만 가져옵니다.

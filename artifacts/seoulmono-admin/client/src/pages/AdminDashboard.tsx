@@ -67,8 +67,8 @@ function ImageUploader({ currentUrl, onUploaded }: { currentUrl: string; onUploa
   const uploadMut = trpc.admin.uploadImage.useMutation();
 
   const handleFile = useCallback(async (file: File) => {
-    if (!file.type.startsWith("image/")) { toast.error("画像ファイルのみアップロードできます。"); return; }
-    if (file.size > 5 * 1024 * 1024) { toast.error("ファイルサイズは5MB以下にしてください。"); return; }
+    if (!file.type.startsWith("image/")) { toast.error("이미지 파일만 업로드 가능합니다."); return; }
+    if (file.size > 5 * 1024 * 1024) { toast.error("파일 크기는 5MB 이하여야 합니다."); return; }
     setUploading(true);
     try {
       const reader = new FileReader();
@@ -82,9 +82,9 @@ function ImageUploader({ currentUrl, onUploaded }: { currentUrl: string; onUploa
       });
       const { url } = await uploadMut.mutateAsync({ base64, fileName: file.name, contentType: file.type });
       onUploaded(url);
-      toast.success("画像をアップロードしました。");
+      toast.success("이미지가 업로드되었습니다.");
     } catch (e) {
-      toast.error("画像のアップロードに失敗しました。");
+      toast.error("이미지 업로드에 실패했습니다.");
     } finally {
       setUploading(false);
     }
@@ -109,21 +109,21 @@ function ImageUploader({ currentUrl, onUploaded }: { currentUrl: string; onUploa
         {uploading ? (
           <div className="flex items-center justify-center gap-2 py-2">
             <Loader2 className="w-5 h-5 animate-spin text-primary" />
-            <span className="text-sm text-muted-foreground">アップロード中...</span>
+            <span className="text-sm text-muted-foreground">업로드 중...</span>
           </div>
         ) : currentUrl ? (
           <div className="flex items-center gap-3">
-            <img src={currentUrl} alt="プレビュー" className="w-16 h-16 object-cover rounded-lg border" />
+            <img src={currentUrl} alt="미리보기" className="w-16 h-16 object-cover rounded-lg border" />
             <div className="flex-1 text-left">
               <p className="text-sm font-medium truncate max-w-[300px]">{currentUrl.split("/").pop()}</p>
-              <p className="text-xs text-muted-foreground">クリックして変更</p>
+              <p className="text-xs text-muted-foreground">클릭하여 변경</p>
             </div>
           </div>
         ) : (
           <div className="py-2">
             <Upload className="w-8 h-8 mx-auto text-muted-foreground mb-2" />
-            <p className="text-sm text-muted-foreground">クリックまたはドラッグして画像をアップロード</p>
-            <p className="text-xs text-muted-foreground mt-1">JPG, PNG, WebP (5MB以下)</p>
+            <p className="text-sm text-muted-foreground">클릭 또는 드래그하여 이미지 업로드</p>
+            <p className="text-xs text-muted-foreground mt-1">JPG, PNG, WebP (5MB 이하)</p>
           </div>
         )}
         <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={(e) => { const f = e.target.files?.[0]; if (f) handleFile(f); e.target.value = ""; }} />
@@ -131,7 +131,7 @@ function ImageUploader({ currentUrl, onUploaded }: { currentUrl: string; onUploa
       <Input
         value={currentUrl}
         onChange={(e) => onUploaded(e.target.value)}
-        placeholder="または画像URLを直接入力してください"
+        placeholder="또는 이미지 URL을 직접 입력하세요"
         className="text-xs"
       />
     </div>
@@ -169,7 +169,7 @@ function MultiImageUploader({ images, onImagesChange }: { images: string[]; onIm
       onImagesChange([...images, ...newUrls]);
       toast.success(`${newUrls.length}개 이미지가 업로드되었습니다.`);
     } catch {
-      toast.error("画像のアップロードに失敗しました。");
+      toast.error("이미지 업로드에 실패했습니다.");
     } finally {
       setUploading(false);
     }
@@ -207,7 +207,7 @@ function MultiImageUploader({ images, onImagesChange }: { images: string[]; onIm
     <div className="space-y-3">
       <div className="flex items-center justify-between">
         <label className="text-sm font-medium">상품 이미지 ({images.length}개)</label>
-        <span className="text-xs text-muted-foreground">ドラッグして順序を変更 | 1枚目の画像がメイン画像</span>
+        <span className="text-xs text-muted-foreground">드래그하여 순서 변경 | 첫 번째 이미지가 대표 이미지</span>
       </div>
       {/* 기존 이미지 그리드 */}
       {images.length > 0 && (
@@ -225,19 +225,19 @@ function MultiImageUploader({ images, onImagesChange }: { images: string[]; onIm
             >
               <img src={url} alt={`상품 이미지 ${idx + 1}`} className="w-full h-full object-cover" />
               {idx === 0 && (
-                <div className="absolute top-0.5 left-0.5 bg-primary text-primary-foreground text-[10px] px-1.5 py-0.5 rounded font-medium">メイン</div>
+                <div className="absolute top-0.5 left-0.5 bg-primary text-primary-foreground text-[10px] px-1.5 py-0.5 rounded font-medium">메인</div>
               )}
               <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors flex items-center justify-center gap-1 opacity-0 group-hover:opacity-100">
                 {idx > 0 && (
-                  <button onClick={() => moveImage(idx, idx - 1)} className="w-6 h-6 rounded-full bg-white/90 flex items-center justify-center hover:bg-white" title="前へ">
+                  <button onClick={() => moveImage(idx, idx - 1)} className="w-6 h-6 rounded-full bg-white/90 flex items-center justify-center hover:bg-white" title="앞으로">
                     <ChevronLeft className="w-3.5 h-3.5" />
                   </button>
                 )}
-                <button onClick={() => removeImage(idx)} className="w-6 h-6 rounded-full bg-destructive text-white flex items-center justify-center hover:bg-destructive/80" title="削除">
+                <button onClick={() => removeImage(idx)} className="w-6 h-6 rounded-full bg-destructive text-white flex items-center justify-center hover:bg-destructive/80" title="삭제">
                   <X className="w-3.5 h-3.5" />
                 </button>
                 {idx < images.length - 1 && (
-                  <button onClick={() => moveImage(idx, idx + 1)} className="w-6 h-6 rounded-full bg-white/90 flex items-center justify-center hover:bg-white" title="後ろへ">
+                  <button onClick={() => moveImage(idx, idx + 1)} className="w-6 h-6 rounded-full bg-white/90 flex items-center justify-center hover:bg-white" title="뒤로">
                     <ChevronRight className="w-3.5 h-3.5" />
                   </button>
                 )}
@@ -257,13 +257,13 @@ function MultiImageUploader({ images, onImagesChange }: { images: string[]; onIm
         {uploading ? (
           <div className="flex items-center justify-center gap-2 py-2">
             <Loader2 className="w-5 h-5 animate-spin text-primary" />
-            <span className="text-sm text-muted-foreground">アップロード中...</span>
+            <span className="text-sm text-muted-foreground">업로드 중...</span>
           </div>
         ) : (
           <div className="py-1">
             <ImagePlus className="w-7 h-7 mx-auto text-muted-foreground mb-1.5" />
-            <p className="text-sm text-muted-foreground">クリックまたはドラッグして画像を追加 (複数選択可)</p>
-            <p className="text-xs text-muted-foreground mt-0.5">JPG, PNG, WebP (5MB以下)</p>
+            <p className="text-sm text-muted-foreground">클릭 또는 드래그하여 이미지 추가 (여러 장 선택 가능)</p>
+            <p className="text-xs text-muted-foreground mt-0.5">JPG, PNG, WebP (5MB 이하)</p>
           </div>
         )}
         <input ref={fileInputRef} type="file" accept="image/*" multiple className="hidden" onChange={(e) => { if (e.target.files) handleFiles(e.target.files); e.target.value = ""; }} />
@@ -284,7 +284,7 @@ function ContentAIGenerateButton({ productId, productName, productDescription, o
     onSuccess: (result) => {
       if (result.success && result.content) {
         onGenerated(result.content);
-        toast.success("AIが商品詳細説明を生成しました。");
+        toast.success("AI가 상품 상세 설명을 생성했습니다.");
       } else {
         toast.error(result.error || "AI 생성에 실패했습니다.");
       }
@@ -300,7 +300,7 @@ function ContentAIGenerateButton({ productId, productName, productDescription, o
       className="h-7 text-xs"
       disabled={disabled || generateMut.isPending}
       onClick={() => {
-        if (!productName.trim()) { toast.error("先に商品名を入力してください。"); return; }
+        if (!productName.trim()) { toast.error("상품명을 먼저 입력해주세요."); return; }
         generateMut.mutate({
           productId: productId ?? 0,
           productName,
@@ -342,9 +342,9 @@ export function AdminLayout({ children }: { children: ReactNode }) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="text-center">
-          <h2 className="text-xl font-bold mb-2">ログインが必要です</h2>
-          <p className="text-muted-foreground mb-4">ログインページへ移動します。</p>
-          <Button variant="outline" onClick={() => setLocation("/login")}>ログインへ</Button>
+          <h2 className="text-xl font-bold mb-2">로그인이 필요합니다</h2>
+          <p className="text-muted-foreground mb-4">로그인 페이지로 이동합니다.</p>
+          <Button variant="outline" onClick={() => setLocation("/login")}>로그인하러 가기</Button>
         </div>
       </div>
     );
@@ -354,11 +354,11 @@ export function AdminLayout({ children }: { children: ReactNode }) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="text-center">
-          <h2 className="text-xl font-bold mb-2">アクセス権限がありません</h2>
+          <h2 className="text-xl font-bold mb-2">접근 권한이 없습니다</h2>
           <p className="text-muted-foreground mb-4">
             관리자만 접근할 수 있습니다. (현재 계정: {user.name ?? "-"})
           </p>
-          <Button variant="outline" onClick={() => setLocation("/login")}>別のアカウントでログイン</Button>
+          <Button variant="outline" onClick={() => setLocation("/login")}>다른 계정으로 로그인</Button>
         </div>
       </div>
     );
@@ -366,58 +366,58 @@ export function AdminLayout({ children }: { children: ReactNode }) {
 
   const navGroups = [
     {
-      label: "メイン",
+      label: "메인",
       items: [
-        { href: "/admin", icon: LayoutDashboard, label: "ダッシュボード" },
+        { href: "/admin", icon: LayoutDashboard, label: "대시보드" },
       ]
     },
     {
-      label: "ショップ管理",
+      label: "쇼핑몰 관리",
       items: [
-        { href: "/admin/categories", icon: FolderTree, label: "カテゴリー管理" },
+        { href: "/admin/categories", icon: FolderTree, label: "카테고리 관리" },
         { href: "/admin/products", icon: ShoppingBag, label: "상품 관리" },
         { href: "/admin/fulfilment", icon: Truck, label: "주문 처리 (출고)" },
-        { href: "/admin/orders", icon: Package, label: "注文管理" },
-        { href: "/admin/orders/spreadsheet", icon: Package, label: "注文管理 (スプレッドシート)" },
+        { href: "/admin/orders", icon: Package, label: "주문 관리" },
+        { href: "/admin/orders/spreadsheet", icon: Package, label: "주문 관리 (스프레드시트)" },
         { href: "/admin/refunds", icon: RotateCcw, label: "환불 관리" },
-        { href: "/admin/carts", icon: ShoppingCart, label: "カート状況" },
-        { href: "/admin/banners", icon: Image, label: "バナー管理" },
+        { href: "/admin/carts", icon: ShoppingCart, label: "장바구니 현황" },
+        { href: "/admin/banners", icon: Image, label: "배너 관리" },
         { href: "/admin/exhibitions", icon: Gift, label: "기획전 관리" },
-        { href: "/admin/coupons", icon: Ticket, label: "クーポン管理" },
-        { href: "/admin/promo-codes", icon: Tag, label: "プロモコード管理" },
+        { href: "/admin/coupons", icon: Ticket, label: "쿠폰 관리" },
+        { href: "/admin/promo-codes", icon: Tag, label: "프로모코드 관리" },
       ]
     },
     {
-      label: "配送管理",
+      label: "배송 관리",
       items: [
-        { href: "/admin/shipping-dashboard", icon: BarChart3, label: "配送状況ダッシュボード" },
-        { href: "/admin/shipping-policy", icon: Settings2, label: "送料ポリシー" },
+        { href: "/admin/shipping-dashboard", icon: BarChart3, label: "배송 현황 대시보드" },
+        { href: "/admin/shipping-policy", icon: Settings2, label: "배송비 정책" },
       ]
     },
     {
-      label: "会員管理",
+      label: "회원 관리",
       items: [
-        { href: "/admin/users", icon: Users, label: "会員管理" },
-        { href: "/admin/point-history", icon: History, label: "ポイント履歴" },
-        { href: "/admin/point-settings", icon: Settings2, label: "ポイント設定" },
+        { href: "/admin/users", icon: Users, label: "회원 관리" },
+        { href: "/admin/point-history", icon: History, label: "포인트 내역" },
+        { href: "/admin/point-settings", icon: Settings2, label: "포인트 설정" },
       ]
     },
     {
-      label: "お問い合わせ",
+      label: "고객 문의",
       items: [
-        { href: "/admin/inquiries", icon: MessageSquareText, label: "お問い合わせ管理" },
+        { href: "/admin/inquiries", icon: MessageSquareText, label: "1:1 문의 관리" },
       ]
     },
     {
-      label: "コミュニティ管理",
+      label: "커뮤니티 관리",
       items: [
-        { href: "/admin/boards", icon: FileText, label: "掲示板管理" },
+        { href: "/admin/boards", icon: FileText, label: "게시판 관리" },
         { href: "/admin/product-qna", icon: HelpCircle, label: "상품 Q&A 관리" },
-        { href: "/admin/reviews", icon: MessageCircle, label: "レビュー管理" },
+        { href: "/admin/reviews", icon: MessageCircle, label: "리뷰 관리" },
       ]
     },
     {
-      label: "AIアシスタント",
+      label: "AI 상담사",
       items: [
 
         { href: "/admin/payment-settings", icon: CreditCard, label: "결제 수단 설정" },
@@ -425,24 +425,24 @@ export function AdminLayout({ children }: { children: ReactNode }) {
       ]
     },
     {
-      label: "決済管理",
+      label: "결제 관리",
       items: [
-        { href: "/admin/push", icon: Mail, label: "プッシュ通知" },
+        { href: "/admin/push", icon: Mail, label: "푸시 알림" },
         { href: "/admin/email-preview", icon: Mail, label: "이메일 미리보기" },
         { href: "/admin/faq", icon: HelpCircle, label: "FAQ 관리" },
         { href: "/admin/gnu-api-sync", icon: Globe, label: "외부 API 연동" },
       ]
     },
     {
-      label: "設定",
+      label: "설정",
       items: [
-        { href: "/admin/visitor-stats", icon: Eye, label: "アクセス統計" },
-        { href: "/admin/keywords", icon: BarChart3, label: "検索キーワード統計" },
+        { href: "/admin/visitor-stats", icon: Eye, label: "접속자 통계" },
+        { href: "/admin/keywords", icon: BarChart3, label: "검색어 통계" },
         { href: "/admin/action-logs", icon: ClipboardList, label: "관리자 처리 이력" },
       ]
     },
     {
-      label: "統計",
+      label: "통계",
       items: [
         { href: "/admin/excel-upload/products", icon: Upload, label: "상품 엑셀 업로드" },
       ]
@@ -472,7 +472,7 @@ export function AdminLayout({ children }: { children: ReactNode }) {
             <div className="w-6 h-6 rounded bg-primary flex items-center justify-center">
               <span className="text-primary-foreground font-bold text-[9px]">YC</span>
             </div>
-            <span className="font-serif font-semibold text-xs">管理パネル</span>
+            <span className="font-serif font-semibold text-xs">관리자 패널</span>
           </Link>
           <button className="lg:hidden p-0.5 hover:bg-accent rounded" onClick={() => setSidebarOpen(false)}>
             <X className="w-4 h-4" />
@@ -510,7 +510,7 @@ export function AdminLayout({ children }: { children: ReactNode }) {
           <div className="flex-1" />
           <a href="/" target="_blank" rel="noopener noreferrer" className="shrink-0 gap-1.5 px-2.5 py-1 rounded text-xs text-foreground bg-background border border-input hover:bg-accent transition-colors" style={{ display: 'inline-flex', alignItems: 'center', alignSelf: 'center' }}>
             <ExternalLink className="w-3 h-3" />
-            <span style={{ marginLeft: '6px' }}>ショップへ</span>
+            <span style={{ marginLeft: '6px' }}>쇼핑몰로 이동</span>
           </a>
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }} className="text-xs text-muted-foreground">
             <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center">
@@ -547,15 +547,15 @@ function DashboardHome() {
     setShowReport(true);
   };
   const statCards = [
-    { label: "総会員数", value: stats?.totalUsers ?? 0, icon: Users, color: "text-blue-600 bg-blue-50" },
-    { label: "総注文数", value: stats?.totalOrders ?? 0, icon: Package, color: "text-purple-600 bg-purple-50" },
-    { label: "総商品数", value: stats?.totalProducts ?? 0, icon: ShoppingBag, color: "text-emerald-600 bg-emerald-50" },
-    { label: "総売上", value: formatPrice(stats?.totalRevenue ?? 0), icon: DollarSign, color: "text-amber-600 bg-amber-50" },
+    { label: "총 회원", value: stats?.totalUsers ?? 0, icon: Users, color: "text-blue-600 bg-blue-50" },
+    { label: "총 주문", value: stats?.totalOrders ?? 0, icon: Package, color: "text-purple-600 bg-purple-50" },
+    { label: "총 상품", value: stats?.totalProducts ?? 0, icon: ShoppingBag, color: "text-emerald-600 bg-emerald-50" },
+    { label: "총 매출", value: formatPrice(stats?.totalRevenue ?? 0), icon: DollarSign, color: "text-amber-600 bg-amber-50" },
   ];
 
   return (
     <div>
-      <h1 className="text-2xl font-bold mb-6">ダッシュボード</h1>
+      <h1 className="text-2xl font-bold mb-6">대시보드</h1>
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
         {statCards.map(s => (
           <div key={s.label} className="bg-card border rounded-xl p-5 elegant-shadow">
@@ -577,13 +577,13 @@ function DashboardHome() {
           </h3>
           {(stats?.customsHoldCount ?? 0) > 0 ? (
             <div>
-              <p className="text-sm text-rose-600 font-medium mb-2">通関検査待ちの注文があります</p>
+              <p className="text-sm text-rose-600 font-medium mb-2">통관 검사 대기 중인 주문이 있습니다</p>
               <Link href="/admin/orders?status=customs_hold">
-                <Button variant="outline" size="sm" className="text-rose-600 border-rose-300 hover:bg-rose-50">通関検査の注文を見る</Button>
+                <Button variant="outline" size="sm" className="text-rose-600 border-rose-300 hover:bg-rose-50">통관검사 주문 보기</Button>
               </Link>
             </div>
           ) : (
-            <p className="text-sm text-muted-foreground">通関検査待ちの注文はありません</p>
+            <p className="text-sm text-muted-foreground">통관 검사 대기 건이 없습니다</p>
           )}
         </div>
 
@@ -602,7 +602,7 @@ function DashboardHome() {
               ))}
             </div>
           ) : (
-            <p className="text-sm text-muted-foreground">在庫不足の商品はありません</p>
+            <p className="text-sm text-muted-foreground">재고 부족 상품이 없습니다</p>
           )}
         </div>
 
@@ -623,7 +623,7 @@ function DashboardHome() {
               ))}
             </div>
           ) : (
-            <p className="text-sm text-muted-foreground">新規注文はありません</p>
+            <p className="text-sm text-muted-foreground">신규 주문이 없습니다</p>
           )}
         </div>
 
@@ -644,7 +644,7 @@ function DashboardHome() {
               ))}
             </div>
           ) : (
-            <p className="text-sm text-muted-foreground">新規のお問い合わせはありません</p>
+            <p className="text-sm text-muted-foreground">신규 문의가 없습니다</p>
           )}
         </div>
       </div>
@@ -680,9 +680,9 @@ function DashboardHome() {
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="daily">日次</SelectItem>
-                <SelectItem value="weekly">週次</SelectItem>
-                <SelectItem value="monthly">月次</SelectItem>
+                <SelectItem value="daily">일간</SelectItem>
+                <SelectItem value="weekly">주간</SelectItem>
+                <SelectItem value="monthly">월간</SelectItem>
               </SelectContent>
             </Select>
             <Button onClick={handleGenerateReport} disabled={generateReport.isPending}>
@@ -695,19 +695,19 @@ function DashboardHome() {
           <div className="space-y-4">
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
               <div className="bg-muted/50 rounded-lg p-4">
-                <div className="text-sm text-muted-foreground mb-1">総売上</div>
+                <div className="text-sm text-muted-foreground mb-1">총 매출</div>
                 <div className="text-xl font-bold price-text">{formatPrice(generateReport.data.totalRevenue)}</div>
               </div>
               <div className="bg-muted/50 rounded-lg p-4">
-                <div className="text-sm text-muted-foreground mb-1">総注文数</div>
+                <div className="text-sm text-muted-foreground mb-1">총 주문</div>
                 <div className="text-xl font-bold">{generateReport.data.totalOrders}건</div>
               </div>
               <div className="bg-muted/50 rounded-lg p-4">
-                <div className="text-sm text-muted-foreground mb-1">平均注文額</div>
+                <div className="text-sm text-muted-foreground mb-1">평균 주문액</div>
                 <div className="text-xl font-bold price-text">{formatPrice(generateReport.data.avgOrderValue)}</div>
               </div>
               <div className="bg-muted/50 rounded-lg p-4">
-                <div className="text-sm text-muted-foreground mb-1">完了率</div>
+                <div className="text-sm text-muted-foreground mb-1">완료율</div>
                 <div className="text-xl font-bold">{generateReport.data.totalOrders > 0 ? Math.round((generateReport.data.completedOrders / generateReport.data.totalOrders) * 100) : 0}%</div>
               </div>
             </div>
@@ -717,7 +717,7 @@ function DashboardHome() {
             </div>
             {generateReport.data.topProducts.length > 0 && (
               <div>
-                <h4 className="font-semibold mb-2">売れ筋商品</h4>
+                <h4 className="font-semibold mb-2">상위 판매 상품</h4>
                 <div className="space-y-2">
                   {generateReport.data.topProducts.map((p: any, idx: number) => (
                     <div key={idx} className="flex items-center justify-between p-3 bg-muted/30 rounded-lg">
@@ -742,9 +742,9 @@ function DashboardHome() {
 
       <div className="grid lg:grid-cols-2 gap-6 mt-6">
         <div className="bg-card border rounded-xl p-6 elegant-shadow">
-          <h3 className="font-semibold mb-4 flex items-center gap-2"><Package className="w-4 h-4" /> 最近の注文</h3>
+          <h3 className="font-semibold mb-4 flex items-center gap-2"><Package className="w-4 h-4" /> 최근 주문</h3>
           {(stats?.recentOrders ?? []).length === 0 ? (
-            <p className="text-sm text-muted-foreground text-center py-8">注文がありません</p>
+            <p className="text-sm text-muted-foreground text-center py-8">주문이 없습니다</p>
           ) : (
             <div className="space-y-2">
               {stats!.recentOrders.map((order: any) => (
@@ -754,7 +754,7 @@ function DashboardHome() {
                       <div className="flex items-center gap-1.5">
                         <p className="text-sm font-medium font-mono">{formatOrderNumber(order.orderNumber)}</p>
                         {order.source === "sorosoro" ? (
-                          <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-blue-100 text-blue-700 border border-blue-200">ショップ</span>
+                          <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-blue-100 text-blue-700 border border-blue-200">쇼핑몰</span>
                         ) : (
                           <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-orange-100 text-orange-700 border border-orange-200">{order.source ?? "기타"}</span>
                         )}
@@ -776,10 +776,10 @@ function DashboardHome() {
           <h3 className="font-semibold mb-4 flex items-center gap-2"><TrendingUp className="w-4 h-4" /> 빠른 링크</h3>
           <div className="grid grid-cols-2 gap-3">
             {[
-              { label: "商品を登録", href: "/admin/products?action=create", icon: Plus },
-              { label: "注文管理", href: "/admin/orders", icon: Package },
-              { label: "会員管理", href: "/admin/users", icon: Users },
-              { label: "掲示板管理", href: "/admin/boards", icon: FileText },
+              { label: "상품 등록", href: "/admin/products?action=create", icon: Plus },
+              { label: "주문 관리", href: "/admin/orders", icon: Package },
+              { label: "회원 관리", href: "/admin/users", icon: Users },
+              { label: "게시판 관리", href: "/admin/boards", icon: FileText },
             ].map(link => (
               <Link key={link.href} href={link.href}>
                 <div className="flex items-center gap-2 p-3 rounded-lg border hover:bg-accent/40 transition-colors text-sm">
@@ -901,9 +901,9 @@ function DashboardCharts() {
             <TrendingUp className="w-4 h-4" /> 매출 추이 (30일)
           </h3>
           <div className="flex gap-2">
-            <Button size="sm" variant={period === "daily" ? "default" : "outline"} onClick={() => setPeriod("daily")}>日別</Button>
-            <Button size="sm" variant={period === "weekly" ? "default" : "outline"} onClick={() => setPeriod("weekly")}>週別</Button>
-            <Button size="sm" variant={period === "monthly" ? "default" : "outline"} onClick={() => setPeriod("monthly")}>月別</Button>
+            <Button size="sm" variant={period === "daily" ? "default" : "outline"} onClick={() => setPeriod("daily")}>일별</Button>
+            <Button size="sm" variant={period === "weekly" ? "default" : "outline"} onClick={() => setPeriod("weekly")}>주별</Button>
+            <Button size="sm" variant={period === "monthly" ? "default" : "outline"} onClick={() => setPeriod("monthly")}>월별</Button>
           </div>
         </div>
         {(!salesTrend || salesTrend.length === 0) ? (
@@ -991,14 +991,14 @@ function AdminCategories() {
   const [editItem, setEditItem] = useState<any>(null);
   const [form, setForm] = useState({ name: "", slug: "", description: "", parentId: null as number | null, isActive: 1, sortOrder: 0 });
 
-  const createMut = trpc.admin.createCategory.useMutation({ onSuccess: () => { utils.admin.categories.invalidate(); setDialogOpen(false); toast.success("カテゴリーを作成しました。"); } });
-  const updateMut = trpc.admin.updateCategory.useMutation({ onSuccess: () => { utils.admin.categories.invalidate(); setDialogOpen(false); toast.success("カテゴリーを更新しました。"); } });
-  const deleteMut = trpc.admin.deleteCategory.useMutation({ onSuccess: () => { utils.admin.categories.invalidate(); toast.success("カテゴリーを削除しました。"); } });
+  const createMut = trpc.admin.createCategory.useMutation({ onSuccess: () => { utils.admin.categories.invalidate(); setDialogOpen(false); toast.success("카테고리가 생성되었습니다."); } });
+  const updateMut = trpc.admin.updateCategory.useMutation({ onSuccess: () => { utils.admin.categories.invalidate(); setDialogOpen(false); toast.success("카테고리가 수정되었습니다."); } });
+  const deleteMut = trpc.admin.deleteCategory.useMutation({ onSuccess: () => { utils.admin.categories.invalidate(); toast.success("카테고리가 삭제되었습니다."); } });
 
   const openCreate = () => { setEditItem(null); setForm({ name: "", slug: "", description: "", parentId: null, isActive: 1, sortOrder: 0 }); setDialogOpen(true); };
   const openEdit = (c: any) => { setEditItem(c); setForm({ name: c.name, slug: c.slug, description: c.description ?? "", parentId: c.parentId, isActive: c.isActive, sortOrder: c.sortOrder }); setDialogOpen(true); };
   const handleSave = () => {
-    if (!form.name || !form.slug) { toast.error("名前とスラッグを入力してください。"); return; }
+    if (!form.name || !form.slug) { toast.error("이름과 슬러그를 입력해주세요."); return; }
     if (editItem) { updateMut.mutate({ id: editItem.id, ...form }); }
     else { createMut.mutate(form); }
   };
@@ -1006,13 +1006,13 @@ function AdminCategories() {
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold">カテゴリー管理</h1>
-        <Button onClick={openCreate} size="sm"><Plus className="w-4 h-4 mr-1" /> カテゴリーの追加</Button>
+        <h1 className="text-2xl font-bold">카테고리 관리</h1>
+        <Button onClick={openCreate} size="sm"><Plus className="w-4 h-4 mr-1" /> 카테고리 추가</Button>
       </div>
       <div className="bg-card border rounded-xl overflow-hidden elegant-shadow">
         <table className="w-full">
           <thead><tr className="bg-secondary/50 text-xs text-muted-foreground">
-            <th className="text-left py-3 px-4">ID</th><th className="text-left py-3 px-4">氏名</th><th className="text-left py-3 px-4">スラッグ</th><th className="text-center py-3 px-4">親</th><th className="text-center py-3 px-4">順序</th><th className="text-center py-3 px-4">ステータス</th><th className="text-center py-3 px-4">操作</th>
+            <th className="text-left py-3 px-4">ID</th><th className="text-left py-3 px-4">이름</th><th className="text-left py-3 px-4">슬러그</th><th className="text-center py-3 px-4">상위</th><th className="text-center py-3 px-4">순서</th><th className="text-center py-3 px-4">상태</th><th className="text-center py-3 px-4">작업</th>
           </tr></thead>
           <tbody className="divide-y">
             {(cats ?? []).map((c: any) => (
@@ -1022,7 +1022,7 @@ function AdminCategories() {
                 <td className="py-3 px-4 text-sm text-muted-foreground font-mono">{c.slug}</td>
                 <td className="py-3 px-4 text-sm text-center">{c.parentId ? cats?.find((p: any) => p.id === c.parentId)?.name ?? c.parentId : "-"}</td>
                 <td className="py-3 px-4 text-sm text-center">{c.sortOrder}</td>
-                <td className="py-3 px-4 text-center"><Badge variant={c.isActive ? "default" : "secondary"} className="text-[10px]">{c.isActive ? "有効" : "無効"}</Badge></td>
+                <td className="py-3 px-4 text-center"><Badge variant={c.isActive ? "default" : "secondary"} className="text-[10px]">{c.isActive ? "활성" : "비활성"}</Badge></td>
                 <td className="py-3 px-4 text-center">
                   <div className="flex items-center justify-center gap-1">
                     <Button variant="ghost" size="sm" onClick={() => openEdit(c)}><Pencil className="w-3.5 h-3.5" /></Button>
@@ -1033,33 +1033,33 @@ function AdminCategories() {
             ))}
           </tbody>
         </table>
-        {(cats ?? []).length === 0 && <p className="text-center py-8 text-sm text-muted-foreground">カテゴリーがありません</p>}
+        {(cats ?? []).length === 0 && <p className="text-center py-8 text-sm text-muted-foreground">카테고리가 없습니다</p>}
       </div>
 
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent className="sm:max-w-md">
-          <DialogHeader><DialogTitle>{editItem ? "カテゴリーの編集" : "カテゴリーの追加"}</DialogTitle><DialogDescription>カテゴリー情報を入力してください。</DialogDescription></DialogHeader>
+          <DialogHeader><DialogTitle>{editItem ? "카테고리 수정" : "카테고리 추가"}</DialogTitle><DialogDescription>카테고리 정보를 입력하세요.</DialogDescription></DialogHeader>
           <div className="space-y-3">
-            <div><label className="text-sm font-medium">名前 *</label><Input value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} placeholder="カテゴリー名" /></div>
-            <div><label className="text-sm font-medium">スラッグ *</label><Input value={form.slug} onChange={e => setForm(f => ({ ...f, slug: e.target.value }))} placeholder="category-slug" /></div>
-            <div><label className="text-sm font-medium">説明</label><Input value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} placeholder="説明 (任意)" /></div>
+            <div><label className="text-sm font-medium">이름 *</label><Input value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} placeholder="카테고리 이름" /></div>
+            <div><label className="text-sm font-medium">슬러그 *</label><Input value={form.slug} onChange={e => setForm(f => ({ ...f, slug: e.target.value }))} placeholder="category-slug" /></div>
+            <div><label className="text-sm font-medium">설명</label><Input value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} placeholder="설명 (선택)" /></div>
             <div className="grid grid-cols-2 gap-3">
-              <div><label className="text-sm font-medium">親カテゴリー</label>
+              <div><label className="text-sm font-medium">상위 카테고리</label>
                 <select className="w-full border rounded-lg px-3 py-2 text-sm bg-background" value={form.parentId ?? ""} onChange={e => setForm(f => ({ ...f, parentId: e.target.value ? Number(e.target.value) : null }))}>
-                  <option value="">なし (最上位)</option>
+                  <option value="">없음 (최상위)</option>
                   {(cats ?? []).filter((c: any) => c.id !== editItem?.id).map((c: any) => <option key={c.id} value={c.id}>{c.name}</option>)}
                 </select>
               </div>
-              <div><label className="text-sm font-medium">表示順</label><Input type="number" value={form.sortOrder} onChange={e => setForm(f => ({ ...f, sortOrder: Number(e.target.value) }))} /></div>
+              <div><label className="text-sm font-medium">정렬 순서</label><Input type="number" value={form.sortOrder} onChange={e => setForm(f => ({ ...f, sortOrder: Number(e.target.value) }))} /></div>
             </div>
             <div className="flex items-center gap-2">
               <input type="checkbox" checked={form.isActive === 1} onChange={e => setForm(f => ({ ...f, isActive: e.target.checked ? 1 : 0 }))} />
-              <label className="text-sm">有効化</label>
+              <label className="text-sm">활성화</label>
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setDialogOpen(false)}>キャンセル</Button>
-            <Button onClick={handleSave} disabled={createMut.isPending || updateMut.isPending}>{editItem ? "更新" : "作成"}</Button>
+            <Button variant="outline" onClick={() => setDialogOpen(false)}>취소</Button>
+            <Button onClick={handleSave} disabled={createMut.isPending || updateMut.isPending}>{editItem ? "수정" : "생성"}</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -1105,11 +1105,11 @@ function RelatedProductsEditor({ productId }: { productId: number }) {
         <div className="flex gap-2">
           <Button type="button" variant="outline" size="sm" disabled={items.length === 0} onClick={() => { setItems([]); setDirty(true); }}>전체 비우기</Button>
           <Button type="button" size="sm" disabled={!dirty || saveMut.isPending} onClick={() => saveMut.mutate({ productId, relatedIds: items.map(x => x.id) })}>
-            {saveMut.isPending ? "保存中..." : "관련상품 저장"}
+            {saveMut.isPending ? "저장 중..." : "관련상품 저장"}
           </Button>
         </div>
       </div>
-      {isLoading ? <p className="text-sm text-muted-foreground">読み込み中...</p> : items.length === 0 ? (
+      {isLoading ? <p className="text-sm text-muted-foreground">불러오는 중...</p> : items.length === 0 ? (
         <p className="text-sm text-muted-foreground border border-dashed rounded-lg p-4 text-center">지정된 관련상품이 없습니다.</p>
       ) : (
         <ul className="space-y-2">
@@ -1132,7 +1132,7 @@ function RelatedProductsEditor({ productId }: { productId: number }) {
         <Input value={q} onChange={e => setQ(e.target.value)} placeholder="추가할 상품명 검색" />
         {term && (
           <div className="mt-2 border rounded-lg divide-y max-h-80 overflow-auto">
-            {isFetching && results.length === 0 ? <p className="text-sm text-muted-foreground p-3">検索中...</p> : results.length === 0 ? <p className="text-sm text-muted-foreground p-3">検索結果がありません。</p> : results.map((p: any) => {
+            {isFetching && results.length === 0 ? <p className="text-sm text-muted-foreground p-3">검색 중...</p> : results.length === 0 ? <p className="text-sm text-muted-foreground p-3">검색 결과가 없습니다。</p> : results.map((p: any) => {
               const added = items.some(x => x.id === p.id);
               return (
                 <div key={p.id} className="flex items-center gap-3 p-2">
@@ -1141,7 +1141,7 @@ function RelatedProductsEditor({ productId }: { productId: number }) {
                     <p className="text-sm truncate">{p.name}</p>
                     <p className="text-xs text-muted-foreground">{p.id}{p.status === "soldout" ? " · 품절" : ""}</p>
                   </div>
-                  <Button type="button" variant="outline" size="sm" disabled={added} onClick={() => add(p)}>{added ? "추가됨" : "追加"}</Button>
+                  <Button type="button" variant="outline" size="sm" disabled={added} onClick={() => add(p)}>{added ? "추가됨" : "추가"}</Button>
                 </div>
               );
             })}
@@ -1185,11 +1185,11 @@ function AdminProducts() {
   // 인라인 특가 편집
   const [inlineEditingId, setInlineEditingId] = useState<number | null>(null);
   const [inlineSalePrice, setInlineSalePrice] = useState<string>("");
-  const inlineUpdateMut = trpc.product.update.useMutation({ onSuccess: () => { utils.admin.products.invalidate(); setInlineEditingId(null); toast.success("特価を更新しました。"); } });
+  const inlineUpdateMut = trpc.product.update.useMutation({ onSuccess: () => { utils.admin.products.invalidate(); setInlineEditingId(null); toast.success("특가가 수정되었습니다."); } });
 
-  const bulkDeleteMut = trpc.bulkActions.deleteProducts.useMutation({ onSuccess: () => { utils.admin.products.invalidate(); setSelectedIds([]); toast.success("選択した商品を削除しました。"); } });
-  const bulkUpdateStatusMut = trpc.bulkActions.updateProductsStatus.useMutation({ onSuccess: () => { utils.admin.products.invalidate(); setSelectedIds([]); toast.success("ステータスを変更しました。"); } });
-  const bulkUpdateCategoryMut = trpc.bulkActions.updateProductsCategory.useMutation({ onSuccess: () => { utils.admin.products.invalidate(); setSelectedIds([]); toast.success("カテゴリーを変更しました。"); } });
+  const bulkDeleteMut = trpc.bulkActions.deleteProducts.useMutation({ onSuccess: () => { utils.admin.products.invalidate(); setSelectedIds([]); toast.success("선택된 상품이 삭제되었습니다."); } });
+  const bulkUpdateStatusMut = trpc.bulkActions.updateProductsStatus.useMutation({ onSuccess: () => { utils.admin.products.invalidate(); setSelectedIds([]); toast.success("상태가 변경되었습니다."); } });
+  const bulkUpdateCategoryMut = trpc.bulkActions.updateProductsCategory.useMutation({ onSuccess: () => { utils.admin.products.invalidate(); setSelectedIds([]); toast.success("카테고리가 변경되었습니다."); } });
   const bulkUpdatePointRateMut = trpc.bulkActions.updateProductsPointRate.useMutation({ onSuccess: (d) => { utils.admin.products.invalidate(); setSelectedIds([]); toast.success(`${d.count}개 상품의 포인트 적립률이 변경되었습니다.`); } });
   const bulkUpdateFlagsMut = trpc.bulkActions.updateProductsFlags.useMutation({ onSuccess: (d) => { utils.admin.products.invalidate(); setSelectedIds([]); toast.success(`${d.count}개 상품의 플래그가 변경되었습니다.`); } });
   const bulkUpdateSalePriceMut = trpc.bulkActions.updateProductsSalePrice.useMutation({ onSuccess: (d) => { utils.admin.products.invalidate(); setSelectedIds([]); setBulkSalePrice(""); toast.success(`${d.count}개 상품의 특가가 설정되었습니다.`); } });
@@ -1230,7 +1230,7 @@ function AdminProducts() {
     setLocalProducts(reordered.map((p, i) => ({ ...p, sortOrder: i * 10 })));
     setDragRowIdx(null); setDragOverIdx(null);
     batchSortMut.mutate(updates);
-    toast.success("表示順位を保存しました");
+    toast.success("노출순위가 저장되었습니다");
   };
   const handleRowDragEnd = () => { setDragRowIdx(null); setDragOverIdx(null); };
 
@@ -1243,7 +1243,7 @@ function AdminProducts() {
     else setSelectedIds([...selectedIds, id]);
   };
   const handleBulkAction = () => {
-    if (selectedIds.length === 0) { toast.error("商品を選択してください。"); return; }
+    if (selectedIds.length === 0) { toast.error("상품을 선택해주세요."); return; }
     if (bulkAction === "delete") bulkDeleteMut.mutate({ productIds: selectedIds });
     else if (bulkAction.startsWith("status:")) bulkUpdateStatusMut.mutate({ productIds: selectedIds, status: bulkAction.split(":")[1] as any });
     else if (bulkAction.startsWith("category:")) bulkUpdateCategoryMut.mutate({ productIds: selectedIds, categoryId: parseInt(bulkAction.split(":")[1]) });
@@ -1255,15 +1255,15 @@ function AdminProducts() {
       bulkUpdateFlagsMut.mutate({ productIds: selectedIds, flag: parts[1] as "isFeatured" | "isNew" | "isBest", value: parseInt(parts[2]) as 0 | 1 });
     } else if (bulkAction === "salePrice") {
       const price = bulkSalePrice ? Number(bulkSalePrice) : null;
-      if (price !== null && price < 0) { toast.error("特価は0円以上にしてください。"); return; }
+      if (price !== null && price < 0) { toast.error("특가는 0원 이상이어야 합니다."); return; }
       bulkUpdateSalePriceMut.mutate({ productIds: selectedIds, salePrice: price });
     }
     setBulkAction("");
   };
 
-  const createMut = trpc.product.create.useMutation({ onSuccess: () => { utils.admin.products.invalidate(); setPageMode("list"); toast.success("商品を登録しました。"); } });
-  const updateMut = trpc.product.update.useMutation({ onSuccess: () => { utils.admin.products.invalidate(); setPageMode("list"); toast.success("商品を更新しました。"); } });
-  const deleteMut = trpc.admin.deleteProduct.useMutation({ onSuccess: () => { utils.admin.products.invalidate(); toast.success("商品を削除しました。"); } });
+  const createMut = trpc.product.create.useMutation({ onSuccess: () => { utils.admin.products.invalidate(); setPageMode("list"); toast.success("상품이 등록되었습니다."); } });
+  const updateMut = trpc.product.update.useMutation({ onSuccess: () => { utils.admin.products.invalidate(); setPageMode("list"); toast.success("상품이 수정되었습니다."); } });
+  const deleteMut = trpc.admin.deleteProduct.useMutation({ onSuccess: () => { utils.admin.products.invalidate(); toast.success("상품이 삭제되었습니다."); } });
 
   const openCreate = () => {
     setEditItem(null);
@@ -1286,14 +1286,14 @@ function AdminProducts() {
     setPageMode("form");
   };
   const handleSave = () => {
-    if (!form.name || !form.slug || !form.categoryId) { toast.error("必須項目を入力してください。"); return; }
+    if (!form.name || !form.slug || !form.categoryId) { toast.error("필수 항목을 입력해주세요."); return; }
     // Validate options
     for (const og of optionGroups) {
-      if (!og.name.trim()) { toast.error("オプショングループ名を入力してください。"); return; }
+      if (!og.name.trim()) { toast.error("옵션 그룹명을 입력해주세요."); return; }
       if (og.values.length === 0) { toast.error(`"${og.name}" 옵션에 값을 추가해주세요.`); return; }
       for (const v of og.values) {
-        if (!v.value.trim()) { toast.error("オプション値を入力してください。"); return; }
-        if (v.price < 0) { toast.error("オプション販売金額は0以上にしてください。"); return; }
+        if (!v.value.trim()) { toast.error("옵션값을 입력해주세요."); return; }
+        if (v.price < 0) { toast.error("옵션 판매금액은 0 이상이어야 합니다."); return; }
       }
     }
     const options = optionGroups.length > 0 ? optionGroups.map((og, i) => ({ name: og.name, values: og.values, isRequired: og.isRequired, sortOrder: i })) : undefined;
@@ -1319,16 +1319,16 @@ function AdminProducts() {
     return (
       <div>
         <div className="flex items-center gap-3 mb-6">
-          <Button variant="ghost" size="sm" onClick={() => setPageMode("list")}><ArrowLeft className="w-4 h-4 mr-1" /> 一覧へ</Button>
-          <h1 className="text-2xl font-bold">{editItem ? "商品の編集" : "商品を登録"}</h1>
+          <Button variant="ghost" size="sm" onClick={() => setPageMode("list")}><ArrowLeft className="w-4 h-4 mr-1" /> 목록으로</Button>
+          <h1 className="text-2xl font-bold">{editItem ? "상품 수정" : "상품 등록"}</h1>
         </div>
         <div className="space-y-4 max-w-5xl">
 
           {/* ── 카테고리 ── */}
           <div className="border rounded-xl p-5 bg-card">
-            <label className="text-sm font-semibold block mb-3">カテゴリー</label>
+            <label className="text-sm font-semibold block mb-3">카테고리</label>
             <select className="w-full border rounded-lg px-3 py-2 text-sm bg-background" value={form.categoryId} onChange={e => setForm(f => ({ ...f, categoryId: Number(e.target.value) }))}>
-              <option value={0}>選択</option>
+              <option value={0}>선택</option>
               {(cats ?? []).map((c: any) => <option key={c.id} value={c.id}>{c.name}</option>)}
             </select>
           </div>
@@ -1338,43 +1338,43 @@ function AdminProducts() {
 
             {/* 왼쪽: 상품명·가격·재고 */}
             <div className="border rounded-xl p-5 bg-card space-y-4">
-              <p className="text-sm font-semibold text-muted-foreground border-b pb-2">商品名 · 価格 · 在庫</p>
+              <p className="text-sm font-semibold text-muted-foreground border-b pb-2">상품명 · 가격 · 재고</p>
 
               <div>
-                <label className="text-sm font-medium">商品名 *</label>
-                <Input value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} placeholder="商品名" />
+                <label className="text-sm font-medium">상품명 *</label>
+                <Input value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} placeholder="상품명" />
               </div>
               <div>
-                <label className="text-sm font-medium">スラッグ (英字・管理用) *</label>
+                <label className="text-sm font-medium">슬러그 (영문·관리용) *</label>
                 <Input value={form.slug} onChange={e => setForm(f => ({ ...f, slug: e.target.value }))} placeholder="product-slug" />
               </div>
               <div>
-                <label className="text-sm font-medium">簡易説明 (商品名の下に表示)</label>
-                <Input value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} placeholder="商品の簡易説明" />
+                <label className="text-sm font-medium">간단설명 (상품명 아래 표시)</label>
+                <Input value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} placeholder="상품 간단 설명" />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-sm font-medium">定価 (円 · 販売価格) *</label>
+                  <label className="text-sm font-medium">정가 (₩ · 판매가격) *</label>
                   <Input type="number" value={form.price} onChange={e => setForm(f => ({ ...f, price: Number(e.target.value) }))} />
                 </div>
                 <div>
-                  <label className="text-sm font-medium">割引価格 (円 · 販売価格)</label>
-                  <Input type="number" value={form.salePrice ?? ""} onChange={e => setForm(f => ({ ...f, salePrice: e.target.value ? Number(e.target.value) : null }))} placeholder="なければ空欄のままにしてください" />
+                  <label className="text-sm font-medium">할인가 (₩ · 판매가)</label>
+                  <Input type="number" value={form.salePrice ?? ""} onChange={e => setForm(f => ({ ...f, salePrice: e.target.value ? Number(e.target.value) : null }))} placeholder="없으면 비워두세요" />
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-sm font-medium">在庫</label>
+                  <label className="text-sm font-medium">재고</label>
                   <Input type="number" value={form.stock} onChange={e => setForm(f => ({ ...f, stock: Number(e.target.value) }))} />
                 </div>
                 <div>
-                  <label className="text-sm font-medium">ポイント付与</label>
+                  <label className="text-sm font-medium">포인트 적립</label>
                   <div className="flex items-center gap-1">
                     <select className="border rounded-lg px-2 py-2 text-sm bg-background w-16 shrink-0" value={form.pointRateType} onChange={e => setForm(f => ({ ...f, pointRateType: e.target.value as "percent" | "fixed" }))}>
                       <option value="percent">%</option>
-                      <option value="fixed">円</option>
+                      <option value="fixed">엔</option>
                     </select>
                     <Input type="number" min={0} max={form.pointRateType === "percent" ? 100 : 999999} value={form.pointRate} onChange={e => setForm(f => ({ ...f, pointRate: Number(e.target.value) }))} />
                   </div>
@@ -1383,44 +1383,44 @@ function AdminProducts() {
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-sm font-medium">ステータス</label>
+                  <label className="text-sm font-medium">상태</label>
                   <select className="w-full border rounded-lg px-3 py-2 text-sm bg-background" value={form.status} onChange={e => setForm(f => ({ ...f, status: e.target.value }))}>
-                    <option value="active">販売中</option><option value="inactive">無効</option><option value="soldout">品切れ</option>
+                    <option value="active">판매중</option><option value="inactive">비활성</option><option value="soldout">품절</option>
                   </select>
                 </div>
                 <div>
-                  <label className="text-sm font-medium">最低購入ランク</label>
+                  <label className="text-sm font-medium">최소 구매 등급</label>
                   <select className="w-full border rounded-lg px-3 py-2 text-sm bg-background" value={form.minGrade} onChange={e => setForm(f => ({ ...f, minGrade: e.target.value as any }))}>
-                    <option value="bronze">ブロンズ (全会員)</option>
-                    <option value="silver">シルバー以上</option>
-                    <option value="gold">ゴールド以上</option>
-                    <option value="vip">VIP以上</option>
-                    <option value="vvip">VVIP限定</option>
+                    <option value="bronze">브론즈 (모든 회원)</option>
+                    <option value="silver">실버 이상</option>
+                    <option value="gold">골드 이상</option>
+                    <option value="vip">VIP 이상</option>
+                    <option value="vvip">VVIP 전용</option>
                   </select>
                 </div>
               </div>
 
               <div>
-                <label className="text-sm font-medium block mb-2">商品バッジ</label>
+                <label className="text-sm font-medium block mb-2">상품 뱃지</label>
                 <div className="flex flex-wrap gap-4">
-                  <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={form.isFeatured === 1} onChange={e => setForm(f => ({ ...f, isFeatured: e.target.checked ? 1 : 0 }))} /> おすすめ</label>
-                  <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={form.isNew === 1} onChange={e => setForm(f => ({ ...f, isNew: e.target.checked ? 1 : 0 }))} /> 新商品</label>
-                  <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={form.isBest === 1} onChange={e => setForm(f => ({ ...f, isBest: e.target.checked ? 1 : 0 }))} /> ベスト</label>
+                  <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={form.isFeatured === 1} onChange={e => setForm(f => ({ ...f, isFeatured: e.target.checked ? 1 : 0 }))} /> 추천</label>
+                  <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={form.isNew === 1} onChange={e => setForm(f => ({ ...f, isNew: e.target.checked ? 1 : 0 }))} /> 신상품</label>
+                  <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={form.isBest === 1} onChange={e => setForm(f => ({ ...f, isBest: e.target.checked ? 1 : 0 }))} /> 베스트</label>
                   <label className="flex items-center gap-2 text-sm text-rose-600">
                     <input type="checkbox" className="accent-rose-600" checked={(form as any).noDiscount === 1} onChange={e => setForm(f => ({ ...f, noDiscount: e.target.checked ? 1 : 0 } as any))} />
                     할인 제외
-                    <span className="text-xs text-muted-foreground font-normal">(クーポン・特価が適用されません)</span>
+                    <span className="text-xs text-muted-foreground font-normal">(쿠폰·특가 적용 안 됨)</span>
                   </label>
                 </div>
               </div>
 
               <div>
-                <label className="text-sm font-medium">表示順位 <span className="font-normal text-muted-foreground text-xs">0が基本、正の数(10, 100...)ほど下位に表示</span></label>
+                <label className="text-sm font-medium">노출 순위 <span className="font-normal text-muted-foreground text-xs">0이 기본, 양수(10, 100...)일수록 하위 노출</span></label>
                 <Input type="number" value={form.sortOrder} onChange={e => setForm(f => ({ ...f, sortOrder: Number(e.target.value) }))} placeholder="0" />
               </div>
 
               <div>
-                <label className="text-sm font-medium">ハッシュタグ (Enterで追加)</label>
+                <label className="text-sm font-medium">해시태그 (엔터로 추가)</label>
                 <div className="space-y-2 mt-1">
                   <div className="flex flex-wrap gap-2">
                     {form.hashtags.map((tag, i) => (
@@ -1430,7 +1430,7 @@ function AdminProducts() {
                     ))}
                   </div>
                   <Input
-                    placeholder="ハッシュタグを入力してEnterを押してください"
+                    placeholder="해시태그를 입력하고 엔터를 누르세요"
                     onKeyDown={e => {
                       if (e.key === 'Enter') {
                         e.preventDefault();
@@ -1458,24 +1458,24 @@ function AdminProducts() {
           {/* ── 상품 옵션 ── */}
           <div className="border rounded-xl p-5 bg-card">
             <div className="flex items-center justify-between mb-3">
-              <label className="text-sm font-semibold">商品オプション</label>
+              <label className="text-sm font-semibold">상품 옵션</label>
               <Button type="button" variant="outline" size="sm" onClick={addOptionGroup}><Plus className="w-3.5 h-3.5 mr-1" /> 옵션 그룹 추가</Button>
             </div>
-            {optionGroups.length === 0 && <p className="text-xs text-muted-foreground">オプションがありません。サイズ、色などのオプションを追加すると、オプションごとに販売金額を設定できます。</p>}
+            {optionGroups.length === 0 && <p className="text-xs text-muted-foreground">옵션이 없습니다. 사이즈, 색상 등의 옵션을 추가하면 옵션별 판매금액을 설정할 수 있습니다.</p>}
             <div className="space-y-4">
               {optionGroups.map((group, gi) => (
                 <div key={gi} className="border rounded-lg p-3 bg-secondary/30">
                   <div className="flex items-center gap-2 mb-3">
-                    <Input className="flex-1 h-8 text-sm font-medium" placeholder="オプション名 (例: サイズ、色)" value={group.name} onChange={e => updateOptionGroupName(gi, e.target.value)} />
+                    <Input className="flex-1 h-8 text-sm font-medium" placeholder="옵션명 (예: 사이즈, 색상)" value={group.name} onChange={e => updateOptionGroupName(gi, e.target.value)} />
                     <Button type="button" variant="ghost" size="sm" className="text-destructive h-8 px-2" onClick={() => removeOptionGroup(gi)}><Trash2 className="w-3.5 h-3.5" /></Button>
                   </div>
                   <div className="space-y-2">
                     <div className="grid grid-cols-[1fr_1fr_100px_80px_32px] gap-2 text-[11px] text-muted-foreground font-medium px-1">
-                      <span>オプション値</span><span>英字値</span><span className="text-right">販売金額</span><span className="text-right">在庫</span><span></span>
+                      <span>옵션값</span><span>영문값</span><span className="text-right">판매금액</span><span className="text-right">재고</span><span></span>
                     </div>
                     {group.values.map((v, vi) => (
                       <div key={vi} className="grid grid-cols-[1fr_1fr_100px_80px_32px] gap-2 items-center">
-                        <Input className="h-8 text-sm" placeholder="オプション値 (例: S, M, L)" value={v.value} onChange={e => updateOptionValue(gi, vi, "value", e.target.value)} />
+                        <Input className="h-8 text-sm" placeholder="옵션값 (예: S, M, L)" value={v.value} onChange={e => updateOptionValue(gi, vi, "value", e.target.value)} />
                         <Input className="h-8 text-sm" placeholder="English (e.g. S, M, L)" value={v.englishValue ?? ""} onChange={e => updateOptionValue(gi, vi, "englishValue", e.target.value)} />
                         <Input className="h-8 text-sm text-right" type="number" min={0} value={v.price} onChange={e => updateOptionValue(gi, vi, "price", Number(e.target.value))} />
                         <Input className="h-8 text-sm text-right" type="number" min={0} value={v.stock ?? 100} onChange={e => updateOptionValue(gi, vi, "stock", Number(e.target.value))} />
@@ -1492,7 +1492,7 @@ function AdminProducts() {
           {/* ── 상세 설명 ── */}
           <div className="border rounded-xl p-5 bg-card">
             <div className="flex items-center justify-between mb-3">
-              <label className="text-sm font-semibold">詳細説明</label>
+              <label className="text-sm font-semibold">상세 설명</label>
               <ContentAIGenerateButton
                 productId={editItem?.id}
                 productName={form.name}
@@ -1521,8 +1521,8 @@ function AdminProducts() {
           )}
         </div>
         <div className="flex gap-2 mt-6 justify-end max-w-5xl">
-          <Button variant="outline" onClick={() => setPageMode("list")}>キャンセル</Button>
-          <Button onClick={handleSave} disabled={createMut.isPending || updateMut.isPending}>{editItem ? "更新を保存" : "商品を登録"}</Button>
+          <Button variant="outline" onClick={() => setPageMode("list")}>취소</Button>
+          <Button onClick={handleSave} disabled={createMut.isPending || updateMut.isPending}>{editItem ? "수정 저장" : "상품 등록"}</Button>
         </div>
       </div>
     );
@@ -1531,71 +1531,71 @@ function AdminProducts() {
   return (
     <div>
       <div className="flex items-center justify-between mb-6 flex-wrap gap-3">
-        <h1 className="text-2xl font-bold">商品管理 <span className="text-base font-normal text-muted-foreground">({data?.total ?? 0})</span></h1>
-        <Button onClick={openCreate} size="sm"><Plus className="w-4 h-4 mr-1" /> 商品を登録</Button>
+        <h1 className="text-2xl font-bold">상품 관리 <span className="text-base font-normal text-muted-foreground">({data?.total ?? 0})</span></h1>
+        <Button onClick={openCreate} size="sm"><Plus className="w-4 h-4 mr-1" /> 상품 등록</Button>
       </div>
 
       <div className="mb-4 flex items-center gap-3 flex-wrap">
         <div className="relative max-w-sm flex-1">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-          <Input className="pl-9" placeholder="商品名で検索..." value={search} onChange={e => { setSearch(e.target.value); setPage(1); }} />
+          <Input className="pl-9" placeholder="상품명 검색..." value={search} onChange={e => { setSearch(e.target.value); setPage(1); }} />
         </div>
         <select className="border rounded-lg px-3 py-2 text-sm bg-background" value={filterParentCategoryId ?? ""} onChange={e => { const v = e.target.value ? Number(e.target.value) : undefined; setFilterParentCategoryId(v); setFilterCategoryId(undefined); setPage(1); }}>
-          <option value="">第1カテゴリー (すべて)</option>
+          <option value="">1차 카테고리 (전체)</option>
           {parentCats.map((c: any) => <option key={c.id} value={c.id}>{c.name}</option>)}
         </select>
         <select className="border rounded-lg px-3 py-2 text-sm bg-background" value={filterCategoryId ?? ""} onChange={e => { setFilterCategoryId(e.target.value ? Number(e.target.value) : undefined); setPage(1); }} disabled={!filterParentCategoryId}>
-          <option value="">第2カテゴリー (すべて)</option>
+          <option value="">2차 카테고리 (전체)</option>
           {subCatsOf(filterParentCategoryId).map((c: any) => <option key={c.id} value={c.id}>{c.name}</option>)}
         </select>
         <select className="border rounded-lg px-3 py-2 text-sm bg-background" value={sort} onChange={e => { setSort(e.target.value); setPage(1); }}>
-          <option value="newest">登録順 (新しい順)</option>
-          <option value="sortOrder_asc">表示順位 (低い順、-100が最上位)</option>
-          <option value="sortOrder_desc">表示順位 (高い順)</option>
-          <option value="name_asc">名前順 ↑</option>
-          <option value="name_desc">名前順 ↓</option>
-          <option value="price_asc">価格の安い順</option>
-          <option value="price_desc">価格の高い順</option>
+          <option value="newest">등록순 (최신)</option>
+          <option value="sortOrder_asc">노출순위 (낮은순, -100이 최상위)</option>
+          <option value="sortOrder_desc">노출순위 (높은순)</option>
+          <option value="name_asc">이름순 ↑</option>
+          <option value="name_desc">이름순 ↓</option>
+          <option value="price_asc">가격 낮은순</option>
+          <option value="price_desc">가격 높은순</option>
         </select>
         <select className="border rounded-lg px-3 py-2 text-sm bg-background" value={limit} onChange={e => { setLimit(Number(e.target.value)); setPage(1); }}>
-          <option value={10}>10件</option>
-          <option value={20}>20件</option>
-          <option value={50}>50件</option>
-          <option value={100}>100件</option>
+          <option value={10}>10개</option>
+          <option value={20}>20개</option>
+          <option value={50}>50개</option>
+          <option value={100}>100개</option>
         </select>
         {selectedIds.length > 0 && (
           <div className="flex items-center gap-2">
             <span className="text-sm text-muted-foreground">{selectedIds.length}개 선택됨</span>
             <select className="border rounded px-3 py-2 text-sm" value={bulkAction} onChange={e => setBulkAction(e.target.value)}>
-              <option value="">一括操作を選択</option>
-              <option value="delete">削除</option>
-              <option value="status:active">販売中に変更</option>
-              <option value="status:inactive">無効に変更</option>
-              <option value="status:soldout">品切れに変更</option>
+              <option value="">일괄 작업 선택</option>
+              <option value="delete">삭제</option>
+              <option value="status:active">판매중으로 변경</option>
+              <option value="status:inactive">비활성으로 변경</option>
+              <option value="status:soldout">품절로 변경</option>
               <optgroup label="포인트 적립률 (%)">
-                <option value="pointRate:percent:0">付与 0%</option>
-                <option value="pointRate:percent:1">付与 1%</option>
-                <option value="pointRate:percent:2">付与 2%</option>
-                <option value="pointRate:percent:3">付与 3%</option>
-                <option value="pointRate:percent:5">付与 5%</option>
-                <option value="pointRate:percent:10">付与 10%</option>
+                <option value="pointRate:percent:0">적립 0%</option>
+                <option value="pointRate:percent:1">적립 1%</option>
+                <option value="pointRate:percent:2">적립 2%</option>
+                <option value="pointRate:percent:3">적립 3%</option>
+                <option value="pointRate:percent:5">적립 5%</option>
+                <option value="pointRate:percent:10">적립 10%</option>
               </optgroup>
               <optgroup label="포인트 적립 (고정금액)">
-                <option value="pointRate:fixed:500">付与 500円</option>
-                <option value="pointRate:fixed:1000">付与 1,000円</option>
-                <option value="pointRate:fixed:2000">付与 2,000円</option>
-                <option value="pointRate:fixed:5000">付与 5,000円</option>
+                <option value="pointRate:fixed:500">적립 500원</option>
+                <option value="pointRate:fixed:1000">적립 1,000원</option>
+                <option value="pointRate:fixed:2000">적립 2,000원</option>
+                <option value="pointRate:fixed:5000">적립 5,000원</option>
               </optgroup>
               <optgroup label="상품 플래그">
-                <option value="flag:isFeatured:1">おすすめ商品 ON</option>
-                <option value="flag:isFeatured:0">おすすめ商品 OFF</option>
-                <option value="flag:isNew:1">新商品 ON</option>
-                <option value="flag:isNew:0">新商品 OFF</option>
-                <option value="flag:isBest:1">ベスト ON</option>
-                <option value="flag:isBest:0">ベスト OFF</option>
+                <option value="flag:isFeatured:1">추천상품 ON</option>
+                <option value="flag:isFeatured:0">추천상품 OFF</option>
+                <option value="flag:isNew:1">신상품 ON</option>
+                <option value="flag:isNew:0">신상품 OFF</option>
+                <option value="flag:isBest:1">베스트 ON</option>
+                <option value="flag:isBest:0">베스트 OFF</option>
               </optgroup>
               <optgroup label="특가(할인가) 설정">
-                <option value="salePrice">特価を一括設定</option>
+                <option value="salePrice">특가가 일괄 설정</option>
               </optgroup>
               {cats?.map((c: any) => <option key={c.id} value={`category:${c.id}`}>{c.name}으로 이동</option>)}
             </select>
@@ -1604,15 +1604,15 @@ function AdminProducts() {
                 <Input
                   type="number"
                   min={0}
-                  placeholder="特価設定"
+                  placeholder="특가세팅"
                   value={bulkSalePrice}
                   onChange={e => setBulkSalePrice(e.target.value)}
                   className="w-28 h-8 text-sm"
                 />
-                <span className="text-xs text-muted-foreground">円</span>
+                <span className="text-xs text-muted-foreground">엔</span>
               </div>
             )}
-            <Button size="sm" onClick={handleBulkAction} disabled={!bulkAction || (bulkAction === "salePrice" && !bulkSalePrice)}>実行</Button>
+            <Button size="sm" onClick={handleBulkAction} disabled={!bulkAction || (bulkAction === "salePrice" && !bulkSalePrice)}>실행</Button>
           </div>
         )}
       </div>
@@ -1620,7 +1620,7 @@ function AdminProducts() {
       {isSortOrderMode && (
         <div className="mb-2 flex items-center gap-2 text-xs text-muted-foreground bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800 rounded-lg px-3 py-2">
           <GripVertical className="w-3.5 h-3.5 text-amber-600 flex-shrink-0" />
-          <span>行をドラッグして表示順位を調整してください。保存はドロップ時に自動で行われます。</span>
+          <span>행을 드래그해서 노출순위를 조절하세요. 저장은 드롭 즉시 자동으로 됩니다.</span>
         </div>
       )}
       <div className="bg-card border rounded-xl overflow-hidden elegant-shadow">
@@ -1629,7 +1629,7 @@ function AdminProducts() {
             <thead><tr className="bg-secondary/50 text-xs text-muted-foreground">
               {isSortOrderMode && <th className="py-3 px-2 w-8"></th>}
               <th className="text-center py-3 px-4 w-12"><input type="checkbox" checked={selectedIds.length === (data?.products ?? []).length && (data?.products ?? []).length > 0} onChange={toggleSelectAll} /></th>
-              <th className="text-left py-3 px-4">ID</th><th className="text-left py-3 px-4">商品番号</th><th className="text-center py-3 px-4 w-20">画像</th><th className="text-left py-3 px-4">商品名</th><th className="text-left py-3 px-4">第1カテゴリー</th><th className="text-left py-3 px-4">第2カテゴリー</th><th className="text-right py-3 px-4">価格</th><th className="text-right py-3 px-4">割引価格</th><th className="text-center py-3 px-4">付与</th><th className="text-center py-3 px-4">在庫</th><th className="text-center py-3 px-4">ステータス</th><th className="text-center py-3 px-4">表示順位</th><th className="text-center py-3 px-4">フラグ</th><th className="text-center py-3 px-4">操作</th>
+              <th className="text-left py-3 px-4">ID</th><th className="text-left py-3 px-4">상품번호</th><th className="text-center py-3 px-4 w-20">이미지</th><th className="text-left py-3 px-4">상품명</th><th className="text-left py-3 px-4">1차 카테고리</th><th className="text-left py-3 px-4">2차 카테고리</th><th className="text-right py-3 px-4">가격</th><th className="text-right py-3 px-4">할인가</th><th className="text-center py-3 px-4">적립</th><th className="text-center py-3 px-4">재고</th><th className="text-center py-3 px-4">상태</th><th className="text-center py-3 px-4">노출순위</th><th className="text-center py-3 px-4">플래그</th><th className="text-center py-3 px-4">작업</th>
             </tr></thead>
             <tbody className="divide-y">
               {(isSortOrderMode ? localProducts : (data?.products ?? [])).map((p: any, idx: number) => {
@@ -1661,7 +1661,7 @@ function AdminProducts() {
                     {p.thumbnail ? (
                       <img src={p.thumbnail} alt={p.name} className="w-12 h-12 object-cover rounded border mx-auto" />
                     ) : (
-                      <div className="w-12 h-12 bg-muted rounded border mx-auto flex items-center justify-center text-[10px] text-muted-foreground">なし</div>
+                      <div className="w-12 h-12 bg-muted rounded border mx-auto flex items-center justify-center text-[10px] text-muted-foreground">없음</div>
                     )}
                   </td>
                   <td className="py-3 px-4 text-sm font-medium max-w-[200px] truncate">{p.name}</td>
@@ -1679,7 +1679,7 @@ function AdminProducts() {
                           onKeyDown={e => {
                             if (e.key === 'Enter') {
                               const price = inlineSalePrice ? Number(inlineSalePrice) : null;
-                              if (price !== null && price < 0) { toast.error("特価は0円以上にしてください。"); return; }
+                              if (price !== null && price < 0) { toast.error("특가는 0원 이상이어야 합니다."); return; }
                               inlineUpdateMut.mutate({ id: p.id, salePrice: price });
                             } else if (e.key === 'Escape') {
                               setInlineEditingId(null);
@@ -1702,14 +1702,14 @@ function AdminProducts() {
                   </td>
                   <td className="py-3 px-4 text-sm text-center">{p.pointRateType === "fixed" ? `${(p.pointRate ?? 0).toLocaleString()}원` : `${p.pointRate ?? 0}%`}</td>
                   <td className="py-3 px-4 text-sm text-center">{p.stock}</td>
-                  <td className="py-3 px-4 text-center"><Badge variant={p.status === "active" ? "default" : "secondary"} className="text-[10px]">{p.status === "active" ? "販売中" : p.status === "soldout" ? "품절" : "비활성"}</Badge></td>
+                  <td className="py-3 px-4 text-center"><Badge variant={p.status === "active" ? "default" : "secondary"} className="text-[10px]">{p.status === "active" ? "판매중" : p.status === "soldout" ? "품절" : "비활성"}</Badge></td>
                   <td className="py-3 px-4 text-center text-xs text-muted-foreground font-mono">{p.sortOrder ?? 0}</td>
                   <td className="py-3 px-4 text-center">
                     <div className="flex items-center justify-center gap-1">
-                      {p.isFeatured ? <Badge variant="outline" className="text-[9px] px-1">おすすめ</Badge> : null}
-                      {p.isNew ? <Badge variant="outline" className="text-[9px] px-1">新着</Badge> : null}
-                      {p.isBest ? <Badge variant="outline" className="text-[9px] px-1">ベスト</Badge> : null}
-                      {(p as any).noDiscount ? <Badge variant="outline" className="text-[9px] px-1 border-rose-400 text-rose-600">割引対象外</Badge> : null}
+                      {p.isFeatured ? <Badge variant="outline" className="text-[9px] px-1">추천</Badge> : null}
+                      {p.isNew ? <Badge variant="outline" className="text-[9px] px-1">신상품</Badge> : null}
+                      {p.isBest ? <Badge variant="outline" className="text-[9px] px-1">베스트</Badge> : null}
+                      {(p as any).noDiscount ? <Badge variant="outline" className="text-[9px] px-1 border-rose-400 text-rose-600">할인제외</Badge> : null}
                     </div>
                   </td>
                   <td className="py-3 px-4 text-center">
@@ -1724,7 +1724,7 @@ function AdminProducts() {
             </tbody>
           </table>
         </div>
-        {(data?.products ?? []).length === 0 && <p className="text-center py-8 text-sm text-muted-foreground">{isLoading ? "読み込み中..." : "商品がありません"}</p>}
+        {(data?.products ?? []).length === 0 && <p className="text-center py-8 text-sm text-muted-foreground">{isLoading ? "불러오는 중..." : "상품이 없습니다"}</p>}
       </div>
 
       <Paginator page={page} totalPages={totalPages} onPageChange={setPage} className="mt-4" />
@@ -1819,7 +1819,7 @@ function AdminOrders() {
       setPendingDateFrom(""); setPendingDateTo("");
     }
   };
-  const updateStatus = trpc.admin.updateOrderStatus.useMutation({ onSuccess: () => { utils.admin.orders.invalidate(); utils.admin.orderTabCounts.invalidate(); toast.success("ステータスを変更しました。"); } });
+  const updateStatus = trpc.admin.updateOrderStatus.useMutation({ onSuccess: () => { utils.admin.orders.invalidate(); utils.admin.orderTabCounts.invalidate(); toast.success("상태가 변경되었습니다."); } });
   const statuses = ["pending", "paid", "preparing", "shipping", "delivered", "customs_hold", "cancelled"];
   const totalPages = Math.ceil((data?.total ?? 0) / pageSize);
 
@@ -1829,23 +1829,23 @@ function AdminOrders() {
   const [inlineCarrierId, setInlineCarrierId] = useState<number | undefined>(undefined);
   const { data: carriersData } = trpc.shipping.carriers.useQuery();
   const registerShipment = trpc.shipping.adminCreateShipment.useMutation({
-    onSuccess: () => { utils.admin.orders.invalidate(); utils.admin.orderTabCounts.invalidate(); setEditingKey(null); setInlineTrackingNumber(""); setInlineCarrierId(undefined); toast.success("追跡番号を登録しました。"); },
+    onSuccess: () => { utils.admin.orders.invalidate(); utils.admin.orderTabCounts.invalidate(); setEditingKey(null); setInlineTrackingNumber(""); setInlineCarrierId(undefined); toast.success("운송장이 등록되었습니다."); },
     onError: (e) => toast.error(e.message),
   });
   const updateShipmentInfo = trpc.shipping.adminUpdateShipmentInfo.useMutation({
-    onSuccess: () => { utils.admin.orders.invalidate(); utils.admin.orderTabCounts.invalidate(); setEditingKey(null); setInlineTrackingNumber(""); setInlineCarrierId(undefined); toast.success("追跡番号を更新しました。"); },
+    onSuccess: () => { utils.admin.orders.invalidate(); utils.admin.orderTabCounts.invalidate(); setEditingKey(null); setInlineTrackingNumber(""); setInlineCarrierId(undefined); toast.success("운송장이 수정되었습니다."); },
     onError: (e) => toast.error(e.message),
   });
   const confirmCustoms = trpc.shipping.adminConfirmCustoms.useMutation({
-    onSuccess: () => { utils.admin.orders.invalidate(); utils.admin.orderTabCounts.invalidate(); toast.success("通関検査を確認済みにしました。"); },
+    onSuccess: () => { utils.admin.orders.invalidate(); utils.admin.orderTabCounts.invalidate(); toast.success("통관검사를 확인 처리했습니다."); },
     onError: (e) => toast.error(e.message),
   });
   const confirmPaymentInList = trpc.payment.adminConfirmPayment.useMutation({
-    onSuccess: () => { utils.admin.orders.invalidate(); utils.admin.orderTabCounts.invalidate(); toast.success("入金を確認しました。"); },
+    onSuccess: () => { utils.admin.orders.invalidate(); utils.admin.orderTabCounts.invalidate(); toast.success("입금이 확인되었습니다."); },
     onError: (e) => toast.error(e.message),
   });
   const markOrderRefunded = trpc.order.adminMarkOrderRefunded.useMutation({
-    onSuccess: () => { utils.admin.orders.invalidate(); utils.admin.orderTabCounts.invalidate(); utils.order.adminRefundList.invalidate(); toast.success("返金完了として処理しました。"); },
+    onSuccess: () => { utils.admin.orders.invalidate(); utils.admin.orderTabCounts.invalidate(); utils.order.adminRefundList.invalidate(); toast.success("환불 완료 처리되었습니다."); },
     onError: (e) => toast.error(e.message),
   });
   const startEditTracking = (key: string, currentTracking?: string) => {
@@ -1854,7 +1854,7 @@ function AdminOrders() {
     setInlineCarrierId(undefined);
   };
   const saveItemTracking = (order: any, item: any) => {
-    if (!inlineTrackingNumber.trim()) { toast.error("追跡番号を入力してください。"); return; }
+    if (!inlineTrackingNumber.trim()) { toast.error("운송장 번호를 입력해주세요."); return; }
     if (item.shipment?.id) {
       updateShipmentInfo.mutate({ shipmentId: item.shipment.id, trackingNumber: inlineTrackingNumber.trim() });
     } else {
@@ -1875,8 +1875,8 @@ function AdminOrders() {
 
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
   const [bulkAction, setBulkAction] = useState<string>("");
-  const bulkUpdateStatusMut = trpc.bulkActions.updateOrdersStatus.useMutation({ onSuccess: () => { utils.admin.orders.invalidate(); utils.admin.orderTabCounts.invalidate(); setSelectedIds([]); toast.success("ステータスを変更しました。"); }, onError: (err) => { toast.error("상태 변경 오류: " + err.message); } });
-  const bulkDeleteMut = trpc.bulkActions.deleteOrders.useMutation({ onSuccess: () => { utils.admin.orders.invalidate(); utils.admin.orderTabCounts.invalidate(); setSelectedIds([]); toast.success("選択した注文を削除しました。"); }, onError: (err) => { toast.error("삭제 오류: " + err.message); } });
+  const bulkUpdateStatusMut = trpc.bulkActions.updateOrdersStatus.useMutation({ onSuccess: () => { utils.admin.orders.invalidate(); utils.admin.orderTabCounts.invalidate(); setSelectedIds([]); toast.success("상태가 변경되었습니다."); }, onError: (err) => { toast.error("상태 변경 오류: " + err.message); } });
+  const bulkDeleteMut = trpc.bulkActions.deleteOrders.useMutation({ onSuccess: () => { utils.admin.orders.invalidate(); utils.admin.orderTabCounts.invalidate(); setSelectedIds([]); toast.success("선택한 주문이 삭제되었습니다."); }, onError: (err) => { toast.error("삭제 오류: " + err.message); } });
 
   const toggleSelectAll = () => {
     if (selectedIds.length === (data?.orders ?? []).length) setSelectedIds([]);
@@ -1887,8 +1887,8 @@ function AdminOrders() {
     else setSelectedIds([...selectedIds, id]);
   };
   const handleBulkAction = () => {
-    if (selectedIds.length === 0) { toast.error("注文を選択してください。"); return; }
-    if (!bulkAction) { toast.error("操作を選択してください。"); return; }
+    if (selectedIds.length === 0) { toast.error("주문을 선택해주세요."); return; }
+    if (!bulkAction) { toast.error("작업을 선택해주세요."); return; }
     if (bulkAction === "delete") {
       if (confirm(`선택된 ${selectedIds.length}개 주문을 삭제하시겠습니까?`)) {
         bulkDeleteMut.mutate({ ids: selectedIds });
@@ -1920,7 +1920,7 @@ function AdminOrders() {
     onSuccess: (res: any) => {
       if (!res.success) { toast.info(res.message || "배송 정보를 아직 조회할 수 없습니다."); return; }
       if (res.eventsCount > 0) toast.success(`${res.eventsCount}개 이벤트 업데이트`);
-      else toast.info("最新の状態です。");
+      else toast.info("최신 상태입니다.");
       setTimeout(() => refetchListModal(), 1500);
     },
     onError: (e: any) => toast.error(e.message),
@@ -1937,7 +1937,7 @@ function AdminOrders() {
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold">注文管理 <span className="text-base font-normal text-muted-foreground">({data?.total ?? 0})</span></h1>
+        <h1 className="text-2xl font-bold">주문 관리 <span className="text-base font-normal text-muted-foreground">({data?.total ?? 0})</span></h1>
         <div className="flex items-center gap-2">
           <Button size="sm" variant="outline" className="h-8 text-xs gap-1" onClick={expandAllOrders}>
             <ChevronDown className="w-3.5 h-3.5" />펼치기
@@ -1956,7 +1956,7 @@ function AdminOrders() {
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
             <Input
               className="pl-9 h-8 text-sm"
-              placeholder="注文番号、受取人名、電話番号で検索..."
+              placeholder="주문번호, 수취인명, 전화번호 검색..."
               value={pendingSearch}
               onChange={e => setPendingSearch(e.target.value)}
               onKeyDown={e => e.key === "Enter" && applyFilters()}
@@ -1969,7 +1969,7 @@ function AdminOrders() {
 
         {/* 주문일자 */}
         <div className="flex items-center gap-0 border-b">
-          <div className="w-24 px-3 py-2.5 text-xs font-semibold text-muted-foreground bg-secondary/40 self-stretch flex items-center flex-shrink-0">注文日</div>
+          <div className="w-24 px-3 py-2.5 text-xs font-semibold text-muted-foreground bg-secondary/40 self-stretch flex items-center flex-shrink-0">주문일</div>
           <div className="flex items-center gap-2 px-3 py-2 flex-wrap">
             <input type="date" className="border rounded px-2 py-1 text-xs h-7 bg-background" value={pendingDateFrom} onChange={e => { setPendingDateFrom(e.target.value); setActiveDatePreset(""); }} />
             <span className="text-xs text-muted-foreground">~</span>
@@ -1982,19 +1982,19 @@ function AdminOrders() {
 
         {/* 입금/주문상태 */}
         <div className="flex items-center gap-0 border-b">
-          <div className="w-24 px-3 py-2.5 text-xs font-semibold text-muted-foreground bg-secondary/40 self-stretch flex items-center flex-shrink-0">入金/注文状態</div>
+          <div className="w-24 px-3 py-2.5 text-xs font-semibold text-muted-foreground bg-secondary/40 self-stretch flex items-center flex-shrink-0">입금/주문상태</div>
           <div className="flex flex-wrap gap-x-4 gap-y-1 px-3 py-2">
             {([
-              { label: "すべて", value: "", noTracking: false, count: tabCounts?.total },
-              { label: "入金前", value: "pending", noTracking: false, count: tabCounts?.pending },
-              { label: "支払い済み", value: "paid", noTracking: false, count: tabCounts?.paid },
-              { label: "商品準備中", value: "preparing", noTracking: false, count: tabCounts?.preparing },
-              { label: "配送中", value: "shipping", noTracking: false, count: tabCounts?.shipping },
-              { label: "配送完了", value: "delivered", noTracking: false, count: tabCounts?.delivered },
-              { label: "通関検査", value: "customs_hold", noTracking: false, count: tabCounts?.customs_hold },
-              { label: "キャンセル", value: "cancelled", noTracking: false, count: tabCounts?.cancelled },
-              { label: "一部キャンセル", value: "partial_cancel", noTracking: false, count: tabCounts?.partialCancelled },
-              { label: "配送遅延", value: "", noTracking: true, count: undefined },
+              { label: "전체", value: "", noTracking: false, count: tabCounts?.total },
+              { label: "입금전", value: "pending", noTracking: false, count: tabCounts?.pending },
+              { label: "결제 완료", value: "paid", noTracking: false, count: tabCounts?.paid },
+              { label: "상품준비중", value: "preparing", noTracking: false, count: tabCounts?.preparing },
+              { label: "배송 중", value: "shipping", noTracking: false, count: tabCounts?.shipping },
+              { label: "배송완료", value: "delivered", noTracking: false, count: tabCounts?.delivered },
+              { label: "통관검사", value: "customs_hold", noTracking: false, count: tabCounts?.customs_hold },
+              { label: "취소", value: "cancelled", noTracking: false, count: tabCounts?.cancelled },
+              { label: "부분 취소", value: "partial_cancel", noTracking: false, count: tabCounts?.partialCancelled },
+              { label: "배송지연", value: "", noTracking: true, count: undefined },
             ] as const).map(opt => {
               const isActive = opt.noTracking ? (noTrackingFilter && !refundFilter) : (statusFilter === opt.value && !noTrackingFilter && !refundFilter);
               return (
@@ -2012,7 +2012,7 @@ function AdminOrders() {
               <input type="radio" name="orderStatusFilter" className="accent-rose-600" checked={refundFilter}
                 onChange={() => { setRefundFilter(true); setStatusFilter(""); setNoTrackingFilter(false); setPage(1); }} />
               <span className={refundFilter ? "font-semibold text-rose-600" : "text-foreground"}>
-                返金{tabCounts?.refunded !== undefined ? <span className="text-muted-foreground ml-0.5 font-normal">{tabCounts.refunded}</span> : null}
+                환불{tabCounts?.refunded !== undefined ? <span className="text-muted-foreground ml-0.5 font-normal">{tabCounts.refunded}</span> : null}
               </span>
             </label>
           </div>
@@ -2020,9 +2020,9 @@ function AdminOrders() {
 
         {/* 결제수단 */}
         <div className="flex items-center gap-0 border-b">
-          <div className="w-24 px-3 py-2.5 text-xs font-semibold text-muted-foreground bg-secondary/40 self-stretch flex items-center flex-shrink-0">決済方法</div>
+          <div className="w-24 px-3 py-2.5 text-xs font-semibold text-muted-foreground bg-secondary/40 self-stretch flex items-center flex-shrink-0">결제수단</div>
           <div className="flex flex-wrap gap-x-4 px-3 py-2">
-            {([{ label: "すべて", value: "" }, { label: "カード決済", value: "card" }] as const).map(opt => (
+            {([{ label: "전체", value: "" }, { label: "카드결제", value: "card" }] as const).map(opt => (
               <label key={opt.value} className="flex items-center gap-1.5 cursor-pointer text-xs py-0.5">
                 <input type="radio" name="paymentMethodFilter" className="accent-rose-600" checked={pendingPaymentMethod === opt.value}
                   onChange={() => setPendingPaymentMethod(opt.value)} />
@@ -2034,7 +2034,7 @@ function AdminOrders() {
 
         {/* 표시 건수 */}
         <div className="flex items-center gap-0 border-b">
-          <div className="w-24 px-3 py-2.5 text-xs font-semibold text-muted-foreground bg-secondary/40 self-stretch flex items-center flex-shrink-0">表示件数</div>
+          <div className="w-24 px-3 py-2.5 text-xs font-semibold text-muted-foreground bg-secondary/40 self-stretch flex items-center flex-shrink-0">표시 건수</div>
           <div className="flex flex-wrap gap-x-4 px-3 py-2">
             {([20, 50, 100] as const).map(n => (
               <label key={n} className="flex items-center gap-1.5 cursor-pointer text-xs py-0.5">
@@ -2048,10 +2048,10 @@ function AdminOrders() {
 
         {/* 정렬 + 하단 버튼 */}
         <div className="flex items-center gap-0">
-          <div className="w-24 px-3 py-2.5 text-xs font-semibold text-muted-foreground bg-secondary/40 self-stretch flex items-center flex-shrink-0">並び替え</div>
+          <div className="w-24 px-3 py-2.5 text-xs font-semibold text-muted-foreground bg-secondary/40 self-stretch flex items-center flex-shrink-0">정렬</div>
           <div className="flex flex-1 items-center justify-between flex-wrap gap-2 px-3 py-2">
             <div className="flex flex-wrap gap-x-4 gap-y-1">
-              {([{ label: "注文日", value: "createdAt" }, { label: "金額", value: "totalAmount" }, { label: "ステータス", value: "status" }] as const).map(opt => (
+              {([{ label: "주문일", value: "createdAt" }, { label: "금액", value: "totalAmount" }, { label: "상태", value: "status" }] as const).map(opt => (
                 <label key={opt.value} className="flex items-center gap-1.5 cursor-pointer text-xs py-0.5">
                   <input type="radio" name="sortByFilter" className="accent-rose-600" checked={pendingSortBy === opt.value}
                     onChange={() => setPendingSortBy(opt.value)} />
@@ -2060,7 +2060,7 @@ function AdminOrders() {
               ))}
               <label className="flex items-center gap-1.5 cursor-pointer text-xs py-0.5">
                 <input type="checkbox" className="accent-rose-600" checked={pendingSortAsc} onChange={e => setPendingSortAsc(e.target.checked)} />
-                <span className={pendingSortAsc ? "font-semibold text-rose-600" : "text-foreground"}>昇順</span>
+                <span className={pendingSortAsc ? "font-semibold text-rose-600" : "text-foreground"}>오름차순</span>
               </label>
             </div>
             <div className="flex items-center gap-2">
@@ -2071,18 +2071,18 @@ function AdminOrders() {
                 <X className="w-3 h-3" />초기화
               </Button>
               <Button size="sm" variant="outline" className="h-7 text-xs gap-1"
-                onClick={() => { downloadOrdersExcel(data?.orders ?? []); toast.success("Excelをダウンロード中..."); }}>
+                onClick={() => { downloadOrdersExcel(data?.orders ?? []); toast.success("엑셀 다운로드 중..."); }}>
                 <Upload className="w-3.5 h-3.5" />엑셀
               </Button>
               {selectedIds.length > 0 && (
                 <div className="flex items-center gap-1.5">
                   <span className="text-xs text-muted-foreground">{selectedIds.length}개 선택</span>
                   <select className="border rounded px-2 py-1 text-xs h-7" value={bulkAction} onChange={e => setBulkAction(e.target.value)}>
-                    <option value="">一括操作</option>
-                    <option value="delete">削除</option>
+                    <option value="">일괄작업</option>
+                    <option value="delete">삭제</option>
                     {statuses.map(s => <option key={s} value={s}>{getOrderStatusLabel(s)}로 변경</option>)}
                   </select>
-                  <Button size="sm" className="h-7 text-xs" onClick={handleBulkAction} disabled={!bulkAction}>実行</Button>
+                  <Button size="sm" className="h-7 text-xs" onClick={handleBulkAction} disabled={!bulkAction}>실행</Button>
                 </div>
               )}
             </div>
@@ -2096,12 +2096,12 @@ function AdminOrders() {
             <thead>
               <tr className="bg-secondary/50 text-xs text-muted-foreground border-b">
                 <th className="text-center py-3 px-3 w-10"><input type="checkbox" checked={selectedIds.length === (data?.orders ?? []).length && (data?.orders ?? []).length > 0} onChange={toggleSelectAll} /></th>
-                <th className="text-left py-3 px-3">注文番号</th>
-                <th className="text-left py-3 px-3">注文商品</th>
-                <th className="text-right py-3 px-3">金額</th>
-                <th className="text-center py-3 px-3">ステータス</th>
-                <th className="text-left py-3 px-3 min-w-[180px]">追跡番号</th>
-                <th className="text-center py-3 px-3">操作</th>
+                <th className="text-left py-3 px-3">주문번호</th>
+                <th className="text-left py-3 px-3">주문 상품</th>
+                <th className="text-right py-3 px-3">금액</th>
+                <th className="text-center py-3 px-3">상태</th>
+                <th className="text-left py-3 px-3 min-w-[180px]">운송장 번호</th>
+                <th className="text-center py-3 px-3">작업</th>
               </tr>
             </thead>
             <tbody>
@@ -2132,10 +2132,10 @@ function AdminOrders() {
                             <span className="text-xs text-muted-foreground">{items.length}개 상품</span>
                             <span className="flex items-center gap-1">
                               {o.paymentMethod === "card" && (
-                                <span className="inline-flex items-center justify-center w-4 h-4 rounded text-[9px] font-bold bg-blue-100 text-blue-700 border border-blue-300 flex-shrink-0">カ</span>
+                                <span className="inline-flex items-center justify-center w-4 h-4 rounded text-[9px] font-bold bg-blue-100 text-blue-700 border border-blue-300 flex-shrink-0">카</span>
                               )}
                               {(o.paymentMethod === "bank_transfer" || o.paymentMethod === "virtual_account") && (
-                                <span className="inline-flex items-center justify-center w-4 h-4 rounded text-[9px] font-bold bg-emerald-100 text-emerald-700 border border-emerald-300 flex-shrink-0">振</span>
+                                <span className="inline-flex items-center justify-center w-4 h-4 rounded text-[9px] font-bold bg-emerald-100 text-emerald-700 border border-emerald-300 flex-shrink-0">무</span>
                               )}
                               <span className="text-xs font-semibold price-text">실결제: {formatPrice(o.totalAmount - (o.discountAmount ?? 0) - (o.pointsUsed ?? 0))}</span>
                               {(o.pointsUsed ?? 0) > 0 && (
@@ -2147,7 +2147,7 @@ function AdminOrders() {
                                 className="text-[11px] px-2 py-0.5 rounded-full font-semibold bg-amber-100 text-amber-700 dark:bg-amber-950/40 dark:text-amber-400 border border-amber-300 hover:bg-amber-200 transition-colors disabled:opacity-50"
                                 disabled={confirmPaymentInList.isPending}
                                 onClick={(e) => { e.stopPropagation(); confirmPaymentInList.mutate({ paymentId: o.paymentId }); }}
-                              >入金確認</button>
+                              >입금 확인</button>
                             )}
                           </div>
                           {/* 오른쪽: 수취인 연락처 정보 — 공간 부족 시 다음 줄 */}
@@ -2189,12 +2189,12 @@ function AdminOrders() {
                           <td colSpan={6} className="py-2 px-3">
                             <div className="flex items-center gap-4 flex-wrap">
                               <div className="flex items-center gap-1.5">
-                                <span className="text-xs text-muted-foreground">返金額</span>
-                                <span className={`text-sm font-bold ${allRefunded ? "text-emerald-600" : "text-rose-600"}`}>{(totalRefund).toLocaleString()}円</span>
+                                <span className="text-xs text-muted-foreground">환불 금액</span>
+                                <span className={`text-sm font-bold ${allRefunded ? "text-emerald-600" : "text-rose-600"}`}>{(totalRefund).toLocaleString()}엔</span>
                               </div>
                               {bankInfo && (
                                 <div className="flex items-center gap-1.5">
-                                  <span className="text-xs text-muted-foreground">返金先口座</span>
+                                  <span className="text-xs text-muted-foreground">환불 계좌</span>
                                   <span className="text-xs font-medium font-mono">{bankInfo}</span>
                                 </div>
                               )}
@@ -2203,7 +2203,7 @@ function AdminOrders() {
                                   className="ml-auto px-3 py-1 rounded text-xs font-semibold bg-emerald-100 text-emerald-700 border border-emerald-300 hover:bg-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-400 dark:border-emerald-700 transition-colors disabled:opacity-50"
                                   disabled={markOrderRefunded.isPending}
                                   onClick={() => markOrderRefunded.mutate({ orderId: o.id })}
-                                >返金完了</button>
+                                >환불 완료</button>
                               )}
                             </div>
                           </td>
@@ -2253,7 +2253,7 @@ function AdminOrders() {
                                 )}
                                 <div className="text-[11px] text-muted-foreground">{item.quantity}개 × {formatPrice(item.price)}</div>
                                 {item.product?.noDiscount === 1 && (
-                                  <span className="inline-block mt-0.5 text-[9px] px-1.5 py-0.5 rounded bg-amber-50 text-amber-700 border border-amber-300 font-medium">割引対象外商品</span>
+                                  <span className="inline-block mt-0.5 text-[9px] px-1.5 py-0.5 rounded bg-amber-50 text-amber-700 border border-amber-300 font-medium">할인 제외 상품</span>
                                 )}
                               </div>
                             </div>
@@ -2280,12 +2280,12 @@ function AdminOrders() {
                           {/* 상태 */}
                           <td className="py-3 px-3 text-center">
                             {itemCancelled ? (
-                              <span className="text-[11px] px-2 py-0.5 rounded-full font-medium bg-rose-100 text-rose-400 dark:bg-rose-950/40 dark:text-rose-400">キャンセル済み</span>
+                              <span className="text-[11px] px-2 py-0.5 rounded-full font-medium bg-rose-100 text-rose-400 dark:bg-rose-950/40 dark:text-rose-400">취소됨</span>
                             ) : (
                               <>
                                 <span className={`text-[11px] px-2 py-0.5 rounded-full font-medium ${getOrderStatusColor(item.itemStatus ?? o.status)}`}>{getOrderStatusLabel(item.itemStatus ?? o.status)}</span>
                                 {o.status === "customs_hold" && item.shipment?.customsConfirmed === 1 && (
-                                  <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-blue-50 text-blue-600 font-semibold border border-blue-200 ml-1">確認</span>
+                                  <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-blue-50 text-blue-600 font-semibold border border-blue-200 ml-1">확인</span>
                                 )}
                               </>
                             )}
@@ -2295,7 +2295,7 @@ function AdminOrders() {
                             <div className="flex items-center gap-1">
                               <Input
                                 className="h-7 !text-[11px] w-[110px] font-mono tracking-wide"
-                                placeholder="追跡番号"
+                                placeholder="운송장 번호"
                                 defaultValue={itemShipment?.trackingNumber ?? ""}
                                 key={`${itemKey}-${itemShipment?.trackingNumber ?? ""}`}
                                 disabled={["pending", "paid"].includes(o.status) || itemCancelled}
@@ -2326,7 +2326,7 @@ function AdminOrders() {
                                 <button
                                   className="text-muted-foreground hover:text-primary p-1 flex-shrink-0"
                                   onClick={() => setListTrackingItem({ ...item, _orderId: o.id })}
-                                  title="配送タイムライン"
+                                  title="배송 타임라인"
                                 >
                                   <Truck className="w-3.5 h-3.5" />
                                 </button>
@@ -2364,13 +2364,13 @@ function AdminOrders() {
                                 <button
                                   className={`px-1.5 py-0.5 rounded text-[10px] font-semibold border whitespace-nowrap transition-colors ${item.shipment.customsConfirmed === 1 ? "bg-blue-50 text-blue-600 border-blue-200 hover:bg-blue-100" : "bg-rose-50 text-rose-600 border-rose-200 hover:bg-rose-100"}`}
                                   onClick={() => confirmCustoms.mutate({ shipmentId: item.shipment.id, confirm: item.shipment.customsConfirmed !== 1 })}
-                                  title={item.shipment.customsConfirmed === 1 ? "通関検査の確認を解除" : "通関検査を確認"}
+                                  title={item.shipment.customsConfirmed === 1 ? "통관검사 확인 해제" : "통관검사 확인"}
                                   disabled={confirmCustoms.isPending}
                                 >
-                                  {item.shipment.customsConfirmed === 1 ? "確認済み" : "未確認"}
+                                  {item.shipment.customsConfirmed === 1 ? "확인완료" : "미확인"}
                                 </button>
                               )}
-                              <button className="text-muted-foreground hover:text-primary p-1" onClick={() => setLocation(`/admin/orders/${o.orderNumber}`)} title="注文詳細">
+                              <button className="text-muted-foreground hover:text-primary p-1" onClick={() => setLocation(`/admin/orders/${o.orderNumber}`)} title="주문 상세">
                                 <ExternalLink className="w-3.5 h-3.5" />
                               </button>
                             </div>
@@ -2385,7 +2385,7 @@ function AdminOrders() {
             </tbody>
           </table>
         </div>
-        {(data?.orders ?? []).length === 0 && <p className="text-center py-8 text-sm text-muted-foreground">注文がありません</p>}
+        {(data?.orders ?? []).length === 0 && <p className="text-center py-8 text-sm text-muted-foreground">주문이 없습니다</p>}
       </div>
 
       <Paginator page={page} totalPages={totalPages} onPageChange={setPage} className="mt-4" />
@@ -2405,7 +2405,7 @@ function AdminOrders() {
               <div>
                 <div className="flex items-center gap-2">
                   <Clock className="w-4 h-4 text-primary" />
-                  <span className="font-bold text-base">配送タイムライン</span>
+                  <span className="font-bold text-base">배송 타임라인</span>
                   {listModalData?.history && (
                     <span className="text-sm text-muted-foreground">{listModalData.history.length}건</span>
                   )}
@@ -2442,7 +2442,7 @@ function AdminOrders() {
               <p className="font-bold text-base">{listTrackingItem.shipment?.trackingNumber}</p>
               <div className="flex gap-2 mt-2 flex-wrap">
                 <Button size="sm" variant="outline" className="h-7 text-xs gap-1"
-                  onClick={() => { navigator.clipboard.writeText(listTrackingItem.shipment?.trackingNumber ?? ""); toast.success("コピーしました"); }}>
+                  onClick={() => { navigator.clipboard.writeText(listTrackingItem.shipment?.trackingNumber ?? ""); toast.success("복사됨"); }}>
                   <Copy className="w-3 h-3" />복사
                 </Button>
                 <Button size="sm" className="h-7 text-xs gap-1 bg-blue-600 hover:bg-blue-700 text-white" asChild>
@@ -2465,13 +2465,13 @@ function AdminOrders() {
               {!listModalData ? (
                 <div className="text-center py-8 text-muted-foreground">
                   <Loader2 className="w-8 h-8 mx-auto mb-2 animate-spin opacity-40" />
-                  <p className="text-sm">読み込み中...</p>
+                  <p className="text-sm">불러오는 중...</p>
                 </div>
               ) : !listModalData.history || listModalData.history.length === 0 ? (
                 <div className="text-center py-8 text-muted-foreground">
                   <Truck className="w-10 h-10 mx-auto mb-2 opacity-30" />
-                  <p className="text-sm">まだ配送履歴がありません</p>
-                  <p className="text-xs mt-1">再読み込みボタンで最新情報を取得してください</p>
+                  <p className="text-sm">아직 배송 이력이 없습니다</p>
+                  <p className="text-xs mt-1">새로고침 버튼으로 최신 정보를 불러오세요</p>
                 </div>
               ) : (
                 <div className="space-y-0">
@@ -2493,7 +2493,7 @@ function AdminOrders() {
                               {renderShippingDesc(entry.description || listShipmentStatusLabels[entry.status] || entry.status)}
                             </span>
                             {isFirst && (
-                              <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-semibold border ${isDelivered ? "bg-blue-50 text-blue-600 border-blue-200" : "bg-primary/10 text-primary border-primary/20"}`}>現在</span>
+                              <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-semibold border ${isDelivered ? "bg-blue-50 text-blue-600 border-blue-200" : "bg-primary/10 text-primary border-primary/20"}`}>현재</span>
                             )}
                           </div>
                           {entry.location && (
@@ -2513,9 +2513,9 @@ function AdminOrders() {
             {/* 푸터 */}
             <div className="flex items-center justify-between px-5 py-3 border-t flex-shrink-0">
               <span className="text-xs text-muted-foreground">
-                {listModalData?.updatedAt ? `최종동기: ${formatDateTime(listModalData.updatedAt)}` : "自動更新"}
+                {listModalData?.updatedAt ? `최종동기: ${formatDateTime(listModalData.updatedAt)}` : "자동 업데이트"}
               </span>
-              <Button size="sm" variant="outline" onClick={() => setListTrackingItem(null)} className="h-7 text-xs">閉じる</Button>
+              <Button size="sm" variant="outline" onClick={() => setListTrackingItem(null)} className="h-7 text-xs">닫기</Button>
             </div>
           </div>
         </div>
@@ -2531,13 +2531,13 @@ function AdminOrderDetail({ id }: { id: string }) {
   const { data: carriers } = trpc.shipping.adminCarriers.useQuery();
   const { data: paymentData, refetch: refetchPayment } = trpc.payment.adminGetPaymentByOrderId.useQuery({ orderId: Number(id) }, { enabled: !!order });
   const utils = trpc.useUtils();
-  const updateStatus = trpc.admin.updateOrderStatus.useMutation({ onSuccess: () => { utils.order.adminGetById.invalidate({ id }); utils.admin.orderTabCounts.invalidate(); toast.success("ステータスを変更しました。"); } });
+  const updateStatus = trpc.admin.updateOrderStatus.useMutation({ onSuccess: () => { utils.order.adminGetById.invalidate({ id }); utils.admin.orderTabCounts.invalidate(); toast.success("상태가 변경되었습니다."); } });
   const confirmPayment = trpc.payment.adminConfirmPayment.useMutation({
     onSuccess: () => {
       utils.order.adminGetById.invalidate({ id });
       utils.admin.orderTabCounts.invalidate();
       refetchPayment();
-      toast.success("入金を確認しました。");
+      toast.success("입금이 확인되었습니다.");
     },
     onError: (e) => toast.error(e.message),
   });
@@ -2546,7 +2546,7 @@ function AdminOrderDetail({ id }: { id: string }) {
       utils.order.adminGetById.invalidate({ id });
       utils.admin.orderTabCounts.invalidate();
       refetchPayment();
-      toast.success("入金確認を取り消しました。");
+      toast.success("입금확인이 취소되었습니다.");
     },
     onError: (e) => toast.error(e.message),
   });
@@ -2560,7 +2560,7 @@ function AdminOrderDetail({ id }: { id: string }) {
       utils.order.adminGetById.invalidate({ id });
       utils.shipping.adminTrackOrder.invalidate({ orderId: Number(id) });
       utils.admin.orderTabCounts.invalidate();
-      toast.success("追跡番号を登録しました。");
+      toast.success("운송장이 등록되었습니다.");
       setShowShipmentForm(false);
       setTrackingNumber("");
     },
@@ -2637,7 +2637,7 @@ function AdminOrderDetail({ id }: { id: string }) {
       utils.admin.orders.invalidate();
       utils.admin.orderTabCounts.invalidate();
       utils.order.adminRefundList.invalidate();
-      toast.success("商品のキャンセルを復元しました。");
+      toast.success("상품 취소가 복원되었습니다.");
     },
     onError: (e) => toast.error(e.message),
   });
@@ -2647,7 +2647,7 @@ function AdminOrderDetail({ id }: { id: string }) {
       utils.admin.orders.invalidate();
       utils.admin.orderTabCounts.invalidate();
       utils.order.adminRefundList.invalidate();
-      toast.success("返金完了として処理しました。");
+      toast.success("환불 완료 처리되었습니다.");
     },
     onError: (e) => toast.error(e.message),
   });
@@ -2657,7 +2657,7 @@ function AdminOrderDetail({ id }: { id: string }) {
       utils.admin.orders.invalidate();
       utils.admin.orderTabCounts.invalidate();
       utils.order.adminRefundList.invalidate();
-      toast.success("返金待ち状態に変更しました。");
+      toast.success("환불 대기 상태로 변경되었습니다.");
     },
     onError: (e) => toast.error(e.message),
   });
@@ -2665,7 +2665,7 @@ function AdminOrderDetail({ id }: { id: string }) {
     onSuccess: () => {
       utils.order.adminGetById.invalidate({ id });
       utils.admin.orderTabCounts.invalidate();
-      toast.success("商品のステータスを変更しました。");
+      toast.success("상품 상태가 변경되었습니다.");
     },
     onError: (e) => toast.error(e.message),
   });
@@ -2678,7 +2678,7 @@ function AdminOrderDetail({ id }: { id: string }) {
     onSuccess: () => {
       utils.order.adminGetById.invalidate({ id });
       utils.shipping.adminTrackOrder.invalidate({ orderId: Number(id) });
-      toast.success("配送情報を更新しました。");
+      toast.success("배송 정보가 수정되었습니다.");
       setShowEditShipmentDialog(false);
     },
     onError: (e) => toast.error(e.message),
@@ -2691,11 +2691,11 @@ function AdminOrderDetail({ id }: { id: string }) {
         return;
       }
       if (data.delivered) {
-        toast.success("配送が完了しました！");
+        toast.success("배송이 완료되었습니다!");
       } else if (data.eventsCount > 0) {
         toast.success(`배송 정보가 업데이트되었습니다. (${data.eventsCount}개 새 이벤트)`);
       } else {
-        toast.info("配送情報は最新の状態です。");
+        toast.info("배송 정보가 최신 상태입니다.");
       }
       utils.order.adminGetById.invalidate({ id });
       utils.shipping.adminTrackOrder.invalidate({ orderId: Number(id) });
@@ -2730,12 +2730,12 @@ function AdminOrderDetail({ id }: { id: string }) {
 
   // 국제배송 단계 정의
   const intlShipmentSteps = [
-    { key: "accepted", label: "受付", icon: Package },
-    { key: "export_customs", label: "発送国通関", icon: Shield },
-    { key: "in_transit_intl", label: "国際輸送", icon: Plane },
-    { key: "import_customs", label: "到着国通関", icon: Globe },
-    { key: "out_for_delivery", label: "現地配送", icon: Truck },
-    { key: "delivered", label: "配達完了", icon: CheckCircle2 },
+    { key: "accepted", label: "접수", icon: Package },
+    { key: "export_customs", label: "출발국 통관", icon: Shield },
+    { key: "in_transit_intl", label: "국제운송", icon: Plane },
+    { key: "import_customs", label: "도착국 통관", icon: Globe },
+    { key: "out_for_delivery", label: "현지배송", icon: Truck },
+    { key: "delivered", label: "배달 완료", icon: CheckCircle2 },
   ];
 
   function mapToIntlStep(status: string): number {
@@ -2751,13 +2751,13 @@ function AdminOrderDetail({ id }: { id: string }) {
     return mapping[status] ?? 0;
   }
 
-  if (!order) return <div className="text-center py-12 text-muted-foreground">読み込み中...</div>;
+  if (!order) return <div className="text-center py-12 text-muted-foreground">불러오는 중...</div>;
 
   return (
     <div>
       <div className="flex items-center gap-3 mb-6">
-        <Button variant="ghost" size="sm" onClick={() => window.history.back()}><ChevronLeft className="w-4 h-4 mr-1" /> 一覧</Button>
-        <h1 className="text-2xl font-bold">注文詳細</h1>
+        <Button variant="ghost" size="sm" onClick={() => window.history.back()}><ChevronLeft className="w-4 h-4 mr-1" /> 목록</Button>
+        <h1 className="text-2xl font-bold">주문 상세</h1>
         <div className="ml-auto">
           {order.status !== "cancelled" && (order.items ?? []).some((i: any) => !i.cancelledAt) && (
             <Button
@@ -2776,8 +2776,8 @@ function AdminOrderDetail({ id }: { id: string }) {
       <Dialog open={showPartialCancelDialog} onOpenChange={setShowPartialCancelDialog}>
         <DialogContent className="max-w-lg">
           <DialogHeader>
-            <DialogTitle>一部キャンセル</DialogTitle>
-            <DialogDescription>キャンセルする商品を選択してください。選択した商品の在庫が戻り、注文金額が再計算されます。</DialogDescription>
+            <DialogTitle>부분 취소</DialogTitle>
+            <DialogDescription>취소할 상품을 선택하세요. 선택한 상품의 재고가 복구되고 주문 금액이 재계산됩니다.</DialogDescription>
           </DialogHeader>
           {(() => {
             const activeItems = (order.items ?? []).filter((i: any) => !i.cancelledAt);
@@ -2826,7 +2826,7 @@ function AdminOrderDetail({ id }: { id: string }) {
                           <div className="flex items-center gap-2 mt-0.5 flex-wrap">
                             <span className="text-xs text-muted-foreground">수량 {item.quantity}개 · {formatPrice(itemTotal)}</span>
                             {isNoDiscount && (
-                              <span className="text-[10px] px-1.5 py-0.5 rounded bg-amber-50 text-amber-700 border border-amber-300 font-medium">割引対象外商品</span>
+                              <span className="text-[10px] px-1.5 py-0.5 rounded bg-amber-50 text-amber-700 border border-amber-300 font-medium">할인 제외 상품</span>
                             )}
                             {itemCoupon > 0 && (
                               <span className="text-xs text-rose-600 bg-rose-100 dark:bg-rose-950/30 px-1.5 py-0.5 rounded font-medium">쿠폰 -{formatPrice(itemCoupon)}</span>
@@ -2846,7 +2846,7 @@ function AdminOrderDetail({ id }: { id: string }) {
 
                 {cancelItemIds.length > 0 && (
                   <div className="rounded-lg bg-muted/50 border p-3 text-sm space-y-1.5">
-                    <p className="font-semibold text-sm mb-1">返金予定の内訳</p>
+                    <p className="font-semibold text-sm mb-1">환불 예상 내역</p>
                     <div className="flex justify-between text-muted-foreground">
                       <span>취소 상품 합계 ({cancelItemIds.length}개)</span>
                       <span>{formatPrice(selectedTotal)}</span>
@@ -2854,7 +2854,7 @@ function AdminOrderDetail({ id }: { id: string }) {
                     {couponReduction > 0 && (
                       <div className="flex justify-between text-rose-600">
                         <span className="flex items-center gap-1">
-                          <span className="text-xs px-1 py-0.5 bg-rose-100 text-rose-600 rounded font-semibold">クーポン</span>
+                          <span className="text-xs px-1 py-0.5 bg-rose-100 text-rose-600 rounded font-semibold">쿠폰</span>
                           차감
                         </span>
                         <span>-{formatPrice(couponReduction)}</span>
@@ -2862,35 +2862,35 @@ function AdminOrderDetail({ id }: { id: string }) {
                     )}
                     {discountReduction > 0 && (
                       <div className="flex justify-between text-orange-600">
-                        <span>商品割引の差引</span>
+                        <span>상품 할인 차감</span>
                         <span>-{formatPrice(discountReduction)}</span>
                       </div>
                     )}
                     <div className="flex justify-between font-bold border-t pt-1.5">
-                      <span>返金額</span>
+                      <span>환불 금액</span>
                       <span className="text-emerald-700 dark:text-emerald-400">{formatPrice(refundAmount)}</span>
                     </div>
                   </div>
                 )}
 
                 <div className="space-y-1.5">
-                  <label className="text-sm font-medium">キャンセル理由 (任意)</label>
+                  <label className="text-sm font-medium">취소 사유 (선택)</label>
                   <Input
                     className="h-8 text-sm"
-                    placeholder="お客様のご要望、在庫不足など..."
+                    placeholder="고객 요청, 재고 부족 등..."
                     value={cancelReason}
                     onChange={e => setCancelReason(e.target.value)}
                   />
                 </div>
                 <DialogFooter className="gap-2 mt-2">
-                  <Button variant="outline" size="sm" onClick={() => setShowPartialCancelDialog(false)}>閉じる</Button>
+                  <Button variant="outline" size="sm" onClick={() => setShowPartialCancelDialog(false)}>닫기</Button>
                   <Button
                     size="sm"
                     className="bg-rose-600 hover:bg-rose-700 text-white"
                     disabled={cancelItemIds.length === 0 || partialCancel.isPending}
                     onClick={() => partialCancel.mutate({ orderId: order.id, itemIds: cancelItemIds, reason: cancelReason || undefined })}
                   >
-                    {partialCancel.isPending ? "処理中..." : `${cancelItemIds.length}개 취소 (환불 ${formatPrice(refundAmount)})`}
+                    {partialCancel.isPending ? "처리 중..." : `${cancelItemIds.length}개 취소 (환불 ${formatPrice(refundAmount)})`}
                   </Button>
                 </DialogFooter>
               </>
@@ -2902,10 +2902,10 @@ function AdminOrderDetail({ id }: { id: string }) {
       <div className="grid lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 space-y-6">
           <div className="bg-card border rounded-xl p-6 elegant-shadow">
-            <h3 className="font-semibold mb-4">注文情報</h3>
+            <h3 className="font-semibold mb-4">주문 정보</h3>
             <div className="grid sm:grid-cols-2 gap-4 text-sm">
-              <div><span className="text-muted-foreground">注文番号:</span> <span className="font-mono font-medium">{formatOrderNumber(order.orderNumber)}</span></div>
-              <div><span className="text-muted-foreground">注文日:</span> {formatDateTime(order.createdAt)}</div>
+              <div><span className="text-muted-foreground">주문번호:</span> <span className="font-mono font-medium">{formatOrderNumber(order.orderNumber)}</span></div>
+              <div><span className="text-muted-foreground">주문일:</span> {formatDateTime(order.createdAt)}</div>
             </div>
           </div>
 
@@ -2923,7 +2923,7 @@ function AdminOrderDetail({ id }: { id: string }) {
                   </div>
                   <div className="flex items-center gap-3">
                     <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                      <span>追跡番号入力</span>
+                      <span>송장입력</span>
                       <div className="w-20 h-1.5 bg-muted rounded-full overflow-hidden">
                         <div className="h-full bg-primary rounded-full transition-all" style={{ width: `${allItems.length ? filledCount / allItems.length * 100 : 0}%` }} />
                       </div>
@@ -2932,7 +2932,7 @@ function AdminOrderDetail({ id }: { id: string }) {
                     {missingCount > 0 ? (
                       <span className="text-xs px-2.5 py-1 rounded-full bg-orange-100 text-orange-600 dark:bg-orange-950/30 dark:text-orange-400 font-semibold">{missingCount}개 미입력</span>
                     ) : (
-                      <span className="text-xs px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-600 dark:bg-emerald-950/30 dark:text-emerald-400 font-semibold">すべて入力済み</span>
+                      <span className="text-xs px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-600 dark:bg-emerald-950/30 dark:text-emerald-400 font-semibold">모두 입력됨</span>
                     )}
                   </div>
                 </div>
@@ -2969,7 +2969,7 @@ function AdminOrderDetail({ id }: { id: string }) {
                                     className="text-xs px-2 py-0.5 rounded-full font-medium bg-muted text-muted-foreground border hover:bg-accent flex items-center gap-1 disabled:opacity-50"
                                     disabled={markItemRefundPending.isPending}
                                     onClick={() => markItemRefundPending.mutate({ itemId: item.id })}
-                                  ><RotateCcw className="w-3 h-3" />返金取消</button>
+                                  ><RotateCcw className="w-3 h-3" />환불취소</button>
                                 </>
                               ) : (item.refundAmount ?? 0) > 0 ? (
                                 <button
@@ -3013,7 +3013,7 @@ function AdminOrderDetail({ id }: { id: string }) {
                                 return (
                                   <>
                                     {isNoDiscount && (
-                                      <span className="text-[10px] px-1.5 py-0.5 rounded bg-amber-50 text-amber-700 border border-amber-300 font-medium">割引対象外商品</span>
+                                      <span className="text-[10px] px-1.5 py-0.5 rounded bg-amber-50 text-amber-700 border border-amber-300 font-medium">할인 제외 상품</span>
                                     )}
                                     {itemCoupon > 0 && (
                                       <span className="text-xs text-rose-600 font-medium bg-rose-50 dark:bg-rose-950/30 px-2 py-0.5 rounded-full">쿠폰 -{formatPrice(itemCoupon)}</span>
@@ -3051,14 +3051,14 @@ function AdminOrderDetail({ id }: { id: string }) {
                               value={inputCarrierId ?? ""}
                               onChange={e => setItemInputs(prev => ({ ...prev, [item.id]: { tracking: inputTracking, carrierId: e.target.value ? Number(e.target.value) : undefined } }))}
                             >
-                              <option value="">配送業者を選択</option>
+                              <option value="">택배사 선택</option>
                               {(carriers ?? []).map((c: any) => (
                                 <option key={c.id} value={c.id}>{c.name}</option>
                               ))}
                             </select>
                             <Input
                               className="h-9 text-sm font-mono flex-1 min-w-[160px]"
-                              placeholder="追跡番号を入力"
+                              placeholder="송장번호 입력"
                               value={inputTracking}
                               onChange={e => setItemInputs(prev => ({ ...prev, [item.id]: { tracking: e.target.value, carrierId: inputCarrierId } }))}
                               onKeyDown={e => {
@@ -3077,7 +3077,7 @@ function AdminOrderDetail({ id }: { id: string }) {
                               <Save className="w-3.5 h-3.5" />저장
                             </Button>
                             {isEditing && (
-                              <Button size="sm" variant="ghost" className="h-9 text-xs" onClick={() => cancelEditItem(item.id)}>閉じる</Button>
+                              <Button size="sm" variant="ghost" className="h-9 text-xs" onClick={() => cancelEditItem(item.id)}>닫기</Button>
                             )}
                           </div>
                         ))}
@@ -3112,7 +3112,7 @@ function AdminOrderDetail({ id }: { id: string }) {
                               }}
                               disabled={updateStatus.isPending || partialCancel.isPending || uncancelItem.isPending || updateItemStatus.isPending}
                             >
-                              {isCancelled && itemStatus !== "cancelled" ? "復元" : "変更"}
+                              {isCancelled && itemStatus !== "cancelled" ? "복원" : "변경"}
                             </Button>
                           </div>
                         </div>
@@ -3127,24 +3127,24 @@ function AdminOrderDetail({ id }: { id: string }) {
 
         <div className="space-y-6">
           <div className="bg-card border rounded-xl p-6 elegant-shadow">
-            <h3 className="font-semibold mb-4">配送情報</h3>
+            <h3 className="font-semibold mb-4">배송 정보</h3>
             <div className="space-y-2 text-sm">
-              <div><span className="text-muted-foreground">受取人:</span> {order.recipientName}{(order as any).recipientNameEn ? ` (${(order as any).recipientNameEn})` : ""}</div>
-              <div><span className="text-muted-foreground">連絡先:</span> {order.recipientPhone ? order.recipientPhone.replace(/^0/, '+82-').replace(/(\+82-)(\d{1,2})(\d{3,4})(\d{4})$/, '+82-$2-$3-$4') : "-"}</div>
-              <div><span className="text-muted-foreground">郵便番号:</span> {order.zipCode}</div>
-              <div><span className="text-muted-foreground">住所:</span> {order.address1} {order.address2}</div>
+              <div><span className="text-muted-foreground">수령인:</span> {order.recipientName}{(order as any).recipientNameEn ? ` (${(order as any).recipientNameEn})` : ""}</div>
+              <div><span className="text-muted-foreground">연락처:</span> {order.recipientPhone ? order.recipientPhone.replace(/^0/, '+82-').replace(/(\+82-)(\d{1,2})(\d{3,4})(\d{4})$/, '+82-$2-$3-$4') : "-"}</div>
+              <div><span className="text-muted-foreground">우편번호:</span> {order.zipCode}</div>
+              <div><span className="text-muted-foreground">주소:</span> {order.address1} {order.address2}</div>
               {(order as any).addressEn1 && (
                 <div className="mt-1 p-2 bg-blue-50 dark:bg-blue-950/20 rounded text-xs text-blue-600 dark:text-blue-400">
-                  <span className="font-medium">英語住所:</span> {(order as any).addressEn2 ? `${(order as any).addressEn2}, ${(order as any).addressEn1}` : (order as any).addressEn1}
+                  <span className="font-medium">영문주소:</span> {(order as any).addressEn2 ? `${(order as any).addressEn2}, ${(order as any).addressEn1}` : (order as any).addressEn1}
                 </div>
               )}
-              {order.memo && <div><span className="text-muted-foreground">メモ:</span> {order.memo}</div>}
+              {order.memo && <div><span className="text-muted-foreground">메모:</span> {order.memo}</div>}
             </div>
           </div>
 
           <div className="bg-card border rounded-xl p-6 elegant-shadow">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="font-semibold">お支払い情報</h3>
+              <h3 className="font-semibold">결제 정보</h3>
               {paymentData && paymentData.status === "pending" && (
                 <Button
                   size="sm"
@@ -3153,7 +3153,7 @@ function AdminOrderDetail({ id }: { id: string }) {
                   onClick={() => confirmPayment.mutate({ paymentId: paymentData.id })}
                 >
                   <CheckCircle2 className="w-3.5 h-3.5" />
-                  {confirmPayment.isPending ? "処理中..." : "入金確認"}
+                  {confirmPayment.isPending ? "처리 중..." : "입금 확인"}
                 </Button>
               )}
               {paymentData && paymentData.status === "confirmed" && (
@@ -3165,17 +3165,17 @@ function AdminOrderDetail({ id }: { id: string }) {
                   onClick={() => { if (window.confirm("입금확인을 취소하시겠습니까? 주문 상태가 입금 대기로 돌아갑니다.")) cancelPaymentConfirmation.mutate({ paymentId: paymentData.id }); }}
                 >
                   <XCircle className="w-3.5 h-3.5" />
-                  {cancelPaymentConfirmation.isPending ? "処理中..." : "入金確認の取消"}
+                  {cancelPaymentConfirmation.isPending ? "처리 중..." : "입금확인 취소"}
                 </Button>
               )}
             </div>
             <div className="space-y-2 text-sm">
               <div className="flex justify-between"><span className="text-muted-foreground">상품 금액</span><span className="price-text">{formatPrice(order.totalAmount - (order.shippingFee ?? 0) + (order.discountAmount ?? 0))}</span></div>
-              <div className="flex justify-between"><span className="text-muted-foreground">送料</span><span className={order.shippingFee > 0 ? "price-text" : "text-emerald-600 font-medium"}>{order.shippingFee > 0 ? formatPrice(order.shippingFee) : "無料"}</span></div>
+              <div className="flex justify-between"><span className="text-muted-foreground">배송비</span><span className={order.shippingFee > 0 ? "price-text" : "text-emerald-600 font-medium"}>{order.shippingFee > 0 ? formatPrice(order.shippingFee) : "무료"}</span></div>
               {(order.couponDiscount ?? 0) > 0 && (
                 <div className="flex justify-between">
                   <span className="text-muted-foreground flex items-center gap-1 flex-wrap">
-                    <span className="text-xs px-1.5 py-0.5 bg-rose-100 text-rose-600 dark:bg-rose-950/30 rounded font-semibold">クーポン</span>
+                    <span className="text-xs px-1.5 py-0.5 bg-rose-100 text-rose-600 dark:bg-rose-950/30 rounded font-semibold">쿠폰</span>
                     할인
                     {(order as any).couponName && (
                       <span className="text-xs px-1.5 py-0.5 bg-rose-50 text-rose-600 border border-rose-200 rounded font-medium">{(order as any).couponName}</span>
@@ -3185,11 +3185,11 @@ function AdminOrderDetail({ id }: { id: string }) {
                 </div>
               )}
               {((order.discountAmount ?? 0) - (order.couponDiscount ?? 0)) > 0 && (
-                <div className="flex justify-between"><span className="text-muted-foreground">会員ランク割引</span><span className="text-rose-600">-{formatPrice((order.discountAmount ?? 0) - (order.couponDiscount ?? 0))}</span></div>
+                <div className="flex justify-between"><span className="text-muted-foreground">등급 할인</span><span className="text-rose-600">-{formatPrice((order.discountAmount ?? 0) - (order.couponDiscount ?? 0))}</span></div>
               )}
-              {order.pointsUsed > 0 && <div className="flex justify-between"><span className="text-muted-foreground">ポイント利用</span><span className="text-rose-600">-{formatPrice(order.pointsUsed)}</span></div>}
+              {order.pointsUsed > 0 && <div className="flex justify-between"><span className="text-muted-foreground">포인트 사용</span><span className="text-rose-600">-{formatPrice(order.pointsUsed)}</span></div>}
               <div className="flex justify-between border-t pt-2 font-bold">
-                <span>累計決済金額</span>
+                <span>총 결제금액</span>
                 <span className="price-text">{formatPrice(order.totalAmount)}</span>
               </div>
             </div>
@@ -3197,39 +3197,39 @@ function AdminOrderDetail({ id }: { id: string }) {
               <div className={`mt-4 rounded-lg p-3 text-sm space-y-1.5 ${paymentData.status === "confirmed" ? "bg-emerald-50 dark:bg-emerald-950/20" : paymentData.status === "pending" ? "bg-amber-50 dark:bg-amber-950/20" : "bg-muted/50"}`}>
                 <div className="flex items-center gap-2 font-medium mb-2">
                   {paymentData.status === "confirmed"
-                    ? <Fragment><CheckCircle2 className="w-4 h-4 text-emerald-600" /><span className="text-emerald-700 dark:text-emerald-400">入金確認完了</span></Fragment>
+                    ? <Fragment><CheckCircle2 className="w-4 h-4 text-emerald-600" /><span className="text-emerald-700 dark:text-emerald-400">입금 확인 완료</span></Fragment>
                     : paymentData.status === "pending"
-                    ? <Fragment><Clock className="w-4 h-4 text-amber-600" /><span className="text-amber-700 dark:text-amber-400">入金待ち</span></Fragment>
-                    : <Fragment><AlertCircle className="w-4 h-4 text-muted-foreground" /><span className="text-muted-foreground">キャンセル済み</span></Fragment>
+                    ? <Fragment><Clock className="w-4 h-4 text-amber-600" /><span className="text-amber-700 dark:text-amber-400">입금 대기</span></Fragment>
+                    : <Fragment><AlertCircle className="w-4 h-4 text-muted-foreground" /><span className="text-muted-foreground">취소됨</span></Fragment>
                   }
                 </div>
                 {paymentData.bankAccount && (
                   <div className="flex justify-between text-xs">
-                    <span className="text-muted-foreground">振込先口座</span>
+                    <span className="text-muted-foreground">입금 계좌</span>
                     <span className="font-medium">{paymentData.bankAccount.bankName} {paymentData.bankAccount.accountNumber}</span>
                   </div>
                 )}
                 {paymentData.depositorName && (
                   <div className="flex justify-between text-xs">
-                    <span className="text-muted-foreground">振込名義</span>
+                    <span className="text-muted-foreground">입금자명</span>
                     <span className="font-medium">{paymentData.depositorName}</span>
                   </div>
                 )}
                 {paymentData.depositAmount && (
                   <div className="flex justify-between text-xs">
-                    <span className="text-muted-foreground">振込金額</span>
+                    <span className="text-muted-foreground">입금 금액</span>
                     <span className="font-bold price-text">{formatPrice(paymentData.depositAmount)}</span>
                   </div>
                 )}
                 {paymentData.status === "pending" && paymentData.expiresAt && (
                   <div className="flex justify-between text-xs">
-                    <span className="text-muted-foreground">振込期限</span>
+                    <span className="text-muted-foreground">입금 기한</span>
                     <span className="font-medium text-rose-600">{formatDateTime(paymentData.expiresAt)}</span>
                   </div>
                 )}
                 {paymentData.status === "confirmed" && paymentData.confirmedAt && (
                   <div className="flex justify-between text-xs">
-                    <span className="text-muted-foreground">確認日時</span>
+                    <span className="text-muted-foreground">확인 시각</span>
                     <span className="font-medium text-emerald-600">{formatDateTime(paymentData.confirmedAt)}</span>
                   </div>
                 )}
@@ -3264,7 +3264,7 @@ function AdminOrderDetail({ id }: { id: string }) {
                 <div className="mt-4 rounded-lg p-3 text-sm space-y-1.5 bg-pink-50 dark:bg-pink-950/20 border border-pink-200 dark:border-pink-800/40">
                   <div className="flex items-center gap-2 font-medium mb-2">
                     <XCircle className="w-4 h-4 text-rose-500" />
-                    <span className="text-rose-700 dark:text-rose-400">キャンセル / 返金情報</span>
+                    <span className="text-rose-700 dark:text-rose-400">취소 / 환불 정보</span>
                   </div>
                   <div className="flex justify-between text-xs">
                     <span className="text-muted-foreground">취소 상품 ({cancelledItems.length}개)</span>
@@ -3272,24 +3272,24 @@ function AdminOrderDetail({ id }: { id: string }) {
                   </div>
                   {couponReduction > 0 && (
                     <div className="flex justify-between text-xs">
-                      <span className="text-muted-foreground">クーポン割引の差引</span>
+                      <span className="text-muted-foreground">쿠폰 할인 차감</span>
                       <span className="text-rose-500">-{formatPrice(couponReduction)}</span>
                     </div>
                   )}
                   {gradeReduction > 0 && (
                     <div className="flex justify-between text-xs">
-                      <span className="text-muted-foreground">会員ランク割引の差引</span>
+                      <span className="text-muted-foreground">등급 할인 차감</span>
                       <span className="text-rose-500">-{formatPrice(gradeReduction)}</span>
                     </div>
                   )}
                   <div className="flex justify-between text-xs border-t border-pink-200 dark:border-pink-800/40 pt-1.5 font-bold">
-                    <span className="text-rose-700 dark:text-rose-400">返金額</span>
+                    <span className="text-rose-700 dark:text-rose-400">환불 금액</span>
                     <span className="text-rose-600">{formatPrice(refundAmount)}</span>
                   </div>
                   {cancelledItems.some((i: any) => i.refundedAt) && (
                     <div className="mt-1.5 flex items-center gap-1.5 text-xs text-emerald-700 dark:text-emerald-400">
                       <CheckCircle2 className="w-3.5 h-3.5 flex-shrink-0" />
-                      <span className="font-medium">返金完了:</span>
+                      <span className="font-medium">환불 완료:</span>
                       <span>{formatDateTime(cancelledItems.find((i: any) => i.refundedAt)?.refundedAt)}</span>
                     </div>
                   )}
@@ -3299,13 +3299,13 @@ function AdminOrderDetail({ id }: { id: string }) {
                         <div key={idx} className="flex items-start gap-1.5 text-xs bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800/40 rounded px-2 py-1.5">
                           <CreditCard className="w-3.5 h-3.5 text-amber-600 flex-shrink-0 mt-0.5" />
                           <div className="flex-1 min-w-0">
-                            <span className="font-semibold text-amber-800 dark:text-amber-300">返金先口座</span>
+                            <span className="font-semibold text-amber-800 dark:text-amber-300">환불 계좌</span>
                             <span className="text-amber-900 dark:text-amber-200 ml-1">{r.bankInfo}</span>
                           </div>
                           <button
                             className="text-amber-600 hover:text-amber-800 flex-shrink-0"
-                            onClick={() => { navigator.clipboard.writeText(r.bankInfo); toast.success("口座番号をコピーしました"); }}
-                            title="コピー"
+                            onClick={() => { navigator.clipboard.writeText(r.bankInfo); toast.success("계좌번호 복사됨"); }}
+                            title="복사"
                           >
                             <Copy className="w-3.5 h-3.5" />
                           </button>
@@ -3320,11 +3320,11 @@ function AdminOrderDetail({ id }: { id: string }) {
 
           {order.user && (
             <div className="bg-card border rounded-xl p-6 elegant-shadow">
-              <h3 className="font-semibold mb-4">注文者情報</h3>
+              <h3 className="font-semibold mb-4">주문자 정보</h3>
               <div className="space-y-2 text-sm">
-                <div><span className="text-muted-foreground">氏名:</span> {order.user.name ?? "-"}</div>
+                <div><span className="text-muted-foreground">이름:</span> {order.user.name ?? "-"}</div>
                 <div><span className="text-muted-foreground">아이디:</span> {order.user.email ?? "-"}</div>
-                <div><span className="text-muted-foreground">会員ランク:</span> {getGradeLabel(order.user.grade)}</div>
+                <div><span className="text-muted-foreground">등급:</span> {getGradeLabel(order.user.grade)}</div>
               </div>
             </div>
           )}
@@ -3335,18 +3335,18 @@ function AdminOrderDetail({ id }: { id: string }) {
       <Dialog open={showEditShipmentDialog} onOpenChange={setShowEditShipmentDialog}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>配送情報の編集</DialogTitle>
+            <DialogTitle>배송 정보 수정</DialogTitle>
             <DialogDescription>
               운송장 번호를 수정할 수 있습니다. 운송장 번호가 변경되면 17track에 자동으로 재등록됩니다.
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
             <div>
-              <label className="text-sm font-medium mb-1.5 block">追跡番号</label>
+              <label className="text-sm font-medium mb-1.5 block">운송장 번호</label>
               <Input
                 value={editTrackingNumber}
                 onChange={(e) => setEditTrackingNumber(e.target.value)}
-                placeholder="追跡番号を入力 (例: EE123456789JP)"
+                placeholder="운송장 번호 입력 (예: EE123456789KR)"
               />
             </div>
           </div>
@@ -3363,7 +3363,7 @@ function AdminOrderDetail({ id }: { id: string }) {
                 });
               }}
             >
-              {updateShipmentInfo.isPending ? "更新中..." : "更新"}
+              {updateShipmentInfo.isPending ? "수정 중..." : "수정"}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -3384,7 +3384,7 @@ function AdminOrderDetail({ id }: { id: string }) {
               <div>
                 <div className="flex items-center gap-2">
                   <Clock className="w-4 h-4 text-primary" />
-                  <span className="font-bold text-base">配送タイムライン</span>
+                  <span className="font-bold text-base">배송 타임라인</span>
                   {modalTrackingData?.history && (
                     <span className="text-sm text-muted-foreground">{modalTrackingData.history.length}건</span>
                   )}
@@ -3434,7 +3434,7 @@ function AdminOrderDetail({ id }: { id: string }) {
                   size="sm"
                   variant="outline"
                   className="h-7 text-xs gap-1"
-                  onClick={() => { navigator.clipboard.writeText(trackingModalItem.shipment?.trackingNumber ?? ""); toast.success("コピーしました"); }}
+                  onClick={() => { navigator.clipboard.writeText(trackingModalItem.shipment?.trackingNumber ?? ""); toast.success("복사됨"); }}
                 >
                   <Copy className="w-3 h-3" />복사
                 </Button>
@@ -3481,13 +3481,13 @@ function AdminOrderDetail({ id }: { id: string }) {
               {!modalTrackingData ? (
                 <div className="text-center py-8 text-muted-foreground">
                   <Loader2 className="w-8 h-8 mx-auto mb-2 animate-spin opacity-40" />
-                  <p className="text-sm">読み込み中...</p>
+                  <p className="text-sm">불러오는 중...</p>
                 </div>
               ) : !modalTrackingData.history || modalTrackingData.history.length === 0 ? (
                 <div className="text-center py-8 text-muted-foreground">
                   <Truck className="w-10 h-10 mx-auto mb-2 opacity-30" />
-                  <p className="text-sm">まだ配送履歴がありません</p>
-                  <p className="text-xs mt-1">更新ボタンで最新情報を取得してください</p>
+                  <p className="text-sm">아직 배송 이력이 없습니다</p>
+                  <p className="text-xs mt-1">갱신 버튼으로 최신 정보를 불러오세요</p>
                 </div>
               ) : (
                 <div className="space-y-0">
@@ -3511,7 +3511,7 @@ function AdminOrderDetail({ id }: { id: string }) {
                               {renderShippingDesc(entry.description || shipmentStatusLabels[entry.status] || entry.status)}
                             </span>
                             {isFirst && (
-                              <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-semibold border ${isDelivered ? "bg-blue-50 text-blue-600 border-blue-200" : "bg-primary/10 text-primary border-primary/20"}`}>現在</span>
+                              <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-semibold border ${isDelivered ? "bg-blue-50 text-blue-600 border-blue-200" : "bg-primary/10 text-primary border-primary/20"}`}>현재</span>
                             )}
                           </div>
                           {entry.location && (
@@ -3533,7 +3533,7 @@ function AdminOrderDetail({ id }: { id: string }) {
               <span className="text-xs text-muted-foreground">
                 {modalTrackingData?.updatedAt
                   ? `최종동기: ${formatDateTime(modalTrackingData.updatedAt)} · 매일 자동업데이트`
-                  : "自動更新"}
+                  : "자동 업데이트"}
               </span>
               <Button
                 size="sm"
@@ -3607,7 +3607,7 @@ function CartConvertModal({ userId, userName, userEmail, items, onClose, onSucce
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!form.recipientName.trim() || !form.recipientPhone.trim() || !form.zipCode.trim() || !form.address1.trim()) {
-      toast.error("受取人、電話番号、郵便番号、住所は必須です。");
+      toast.error("수령인, 전화번호, 우편번호, 주소는 필수입니다.");
       return;
     }
     convertMut.mutate({ userId, ...form });
@@ -3619,7 +3619,7 @@ function CartConvertModal({ userId, userName, userEmail, items, onClose, onSucce
     <Dialog open onOpenChange={onClose}>
       <DialogContent className="sm:max-w-2xl w-full p-5 overflow-hidden">
         <DialogHeader className="pb-1">
-          <DialogTitle className="text-base">カート → 注文に変換</DialogTitle>
+          <DialogTitle className="text-base">장바구니 → 주문 전환</DialogTitle>
           <DialogDescription className="text-xs">{userName ?? userEmail} ({userEmail})</DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-2">
@@ -3634,78 +3634,78 @@ function CartConvertModal({ userId, userName, userEmail, items, onClose, onSucce
                 </div>
                 <div className="flex-1 min-w-0 text-xs truncate">{item.product?.name ?? `상품 #${item.productId}`}</div>
                 <div className="text-xs text-muted-foreground shrink-0">×{item.quantity}</div>
-                <div className="text-xs font-semibold shrink-0 text-right">{((item.product?.salePrice ?? 0) * item.quantity).toLocaleString()}円</div>
+                <div className="text-xs font-semibold shrink-0 text-right">{((item.product?.salePrice ?? 0) * item.quantity).toLocaleString()}엔</div>
               </div>
             ))}
             <div className="flex justify-between px-2 py-1 bg-muted/30">
-              <span className="text-xs font-semibold">合計</span>
-              <span className="text-xs font-bold text-primary">{totalAmount.toLocaleString()}円</span>
+              <span className="text-xs font-semibold">합계</span>
+              <span className="text-xs font-bold text-primary">{totalAmount.toLocaleString()}엔</span>
             </div>
           </div>
 
           {/* 수령인 / 영문이름 */}
           <div className="grid grid-cols-2 gap-x-3 gap-y-2">
             <div className="space-y-0.5 min-w-0">
-              <label className="text-[11px] font-medium text-muted-foreground">受取人 *</label>
+              <label className="text-[11px] font-medium text-muted-foreground">수령인 *</label>
               <div className="flex gap-1">
-                <Input className={inp + " min-w-0 flex-1"} value={form.recipientName} onChange={e => setForm(f => ({ ...f, recipientName: e.target.value }))} placeholder="山田 太郎" />
+                <Input className={inp + " min-w-0 flex-1"} value={form.recipientName} onChange={e => setForm(f => ({ ...f, recipientName: e.target.value }))} placeholder="홍길동" />
                 <Button type="button" size="sm" variant="outline" className="h-7 w-8 px-0 text-[10px] shrink-0" onClick={translateName} disabled={translatingName}>
                   {translatingName ? <Loader2 className="w-3 h-3 animate-spin" /> : "EN"}
                 </Button>
               </div>
             </div>
             <div className="space-y-0.5 min-w-0">
-              <label className="text-[11px] font-medium text-muted-foreground">英語氏名</label>
+              <label className="text-[11px] font-medium text-muted-foreground">영문 이름</label>
               <Input className={inp + " w-full"} value={form.recipientNameEn} onChange={e => setForm(f => ({ ...f, recipientNameEn: e.target.value }))} placeholder="Hong Gildong" />
             </div>
 
             {/* 전화번호 / 우편번호 */}
             <div className="space-y-0.5 min-w-0">
-              <label className="text-[11px] font-medium text-muted-foreground">電話番号 *</label>
+              <label className="text-[11px] font-medium text-muted-foreground">전화번호 *</label>
               <Input className={inp + " w-full"} value={form.recipientPhone} onChange={e => setForm(f => ({ ...f, recipientPhone: e.target.value }))} placeholder="010-0000-0000" />
             </div>
             <div className="space-y-0.5 min-w-0">
-              <label className="text-[11px] font-medium text-muted-foreground">郵便番号 *</label>
+              <label className="text-[11px] font-medium text-muted-foreground">우편번호 *</label>
               <Input className={inp + " w-full"} value={form.zipCode} onChange={e => setForm(f => ({ ...f, zipCode: e.target.value }))} placeholder="12345" />
             </div>
 
             {/* 주소 / 영문주소 */}
             <div className="space-y-0.5 min-w-0">
-              <label className="text-[11px] font-medium text-muted-foreground">住所 *</label>
+              <label className="text-[11px] font-medium text-muted-foreground">주소 *</label>
               <div className="flex gap-1">
-                <Input className={inp + " min-w-0 flex-1"} value={form.address1} onChange={e => setForm(f => ({ ...f, address1: e.target.value }))} placeholder="基本住所" />
+                <Input className={inp + " min-w-0 flex-1"} value={form.address1} onChange={e => setForm(f => ({ ...f, address1: e.target.value }))} placeholder="기본 주소" />
                 <Button type="button" size="sm" variant="outline" className="h-7 w-8 px-0 text-[10px] shrink-0" onClick={translateAddress} disabled={translatingAddr}>
                   {translatingAddr ? <Loader2 className="w-3 h-3 animate-spin" /> : "EN"}
                 </Button>
               </div>
             </div>
             <div className="space-y-0.5 min-w-0">
-              <label className="text-[11px] font-medium text-muted-foreground">英語住所</label>
+              <label className="text-[11px] font-medium text-muted-foreground">영문 주소</label>
               <Input className={inp + " w-full"} value={form.addressEn1} onChange={e => setForm(f => ({ ...f, addressEn1: e.target.value }))} placeholder="123 Main St" />
             </div>
 
             {/* 상세주소 / 영문상세 */}
             <div className="space-y-0.5 min-w-0">
-              <label className="text-[11px] font-medium text-muted-foreground">建物名・部屋番号</label>
-              <Input className={inp + " w-full"} value={form.address2} onChange={e => setForm(f => ({ ...f, address2: e.target.value }))} placeholder="建物名・部屋番号 (任意)" />
+              <label className="text-[11px] font-medium text-muted-foreground">상세 주소</label>
+              <Input className={inp + " w-full"} value={form.address2} onChange={e => setForm(f => ({ ...f, address2: e.target.value }))} placeholder="상세 주소 (선택)" />
             </div>
             <div className="space-y-0.5 min-w-0">
-              <label className="text-[11px] font-medium text-muted-foreground">英語 建物名・部屋番号</label>
-              <Input className={inp + " w-full"} value={form.addressEn2} onChange={e => setForm(f => ({ ...f, addressEn2: e.target.value }))} placeholder="Apt 101 (任意)" />
+              <label className="text-[11px] font-medium text-muted-foreground">영문 상세 주소</label>
+              <Input className={inp + " w-full"} value={form.addressEn2} onChange={e => setForm(f => ({ ...f, addressEn2: e.target.value }))} placeholder="Apt 101 (선택)" />
             </div>
 
             {/* 메모 / 결제상태 */}
             <div className="space-y-0.5 min-w-0">
-              <label className="text-[11px] font-medium text-muted-foreground">メモ</label>
-              <Input className={inp + " w-full"} value={form.memo} onChange={e => setForm(f => ({ ...f, memo: e.target.value }))} placeholder="配送メモ (任意)" />
+              <label className="text-[11px] font-medium text-muted-foreground">메모</label>
+              <Input className={inp + " w-full"} value={form.memo} onChange={e => setForm(f => ({ ...f, memo: e.target.value }))} placeholder="배송 메모 (선택)" />
             </div>
             <div className="space-y-0.5 min-w-0">
-              <label className="text-[11px] font-medium text-muted-foreground">支払い状況</label>
+              <label className="text-[11px] font-medium text-muted-foreground">결제 상태</label>
               <div className="flex gap-1">
                 <button type="button" className={`flex-1 h-7 rounded border text-[11px] font-medium transition-colors ${form.paymentStatus === "pending" ? "bg-yellow-50 border-yellow-400 text-yellow-700" : "border-muted text-muted-foreground"}`}
-                  onClick={() => setForm(f => ({ ...f, paymentStatus: "pending" }))}>入金待ち</button>
+                  onClick={() => setForm(f => ({ ...f, paymentStatus: "pending" }))}>입금 대기</button>
                 <button type="button" className={`flex-1 h-7 rounded border text-[11px] font-medium transition-colors ${form.paymentStatus === "paid" ? "bg-green-50 border-green-400 text-green-700" : "border-muted text-muted-foreground"}`}
-                  onClick={() => setForm(f => ({ ...f, paymentStatus: "paid" }))}>支払い済み</button>
+                  onClick={() => setForm(f => ({ ...f, paymentStatus: "paid" }))}>결제 완료</button>
               </div>
             </div>
           </div>
@@ -3717,7 +3717,7 @@ function CartConvertModal({ userId, userName, userEmail, items, onClose, onSucce
               주문 후 장바구니 비우기
             </label>
             <div className="flex gap-2">
-              <Button type="button" variant="outline" size="sm" onClick={onClose}>キャンセル</Button>
+              <Button type="button" variant="outline" size="sm" onClick={onClose}>취소</Button>
               <Button type="submit" size="sm" disabled={convertMut.isPending}>
                 {convertMut.isPending && <Loader2 className="w-3 h-3 animate-spin mr-1" />}
                 주문 생성
@@ -3753,15 +3753,15 @@ function AdminCartManagement() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold">カート状況</h1>
-          <p className="text-muted-foreground text-sm mt-1">お客様ごとのカートに入っている商品を確認します。</p>
+          <h1 className="text-2xl font-bold">장바구니 현황</h1>
+          <p className="text-muted-foreground text-sm mt-1">고객별 장바구니에 담긴 상품을 조회합니다.</p>
         </div>
-        {data && <Badge variant="secondary" className="text-sm">{data.total}名</Badge>}
+        {data && <Badge variant="secondary" className="text-sm">{data.total}명</Badge>}
       </div>
 
       <form onSubmit={handleSearch} className="flex gap-2 max-w-sm">
         <Input
-          placeholder="名前またはメールアドレスで検索"
+          placeholder="이름 또는 이메일 검색"
           value={searchInput}
           onChange={e => setSearchInput(e.target.value)}
           className="text-sm"
@@ -3779,7 +3779,7 @@ function AdminCartManagement() {
       ) : !data || data.rows.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-20 gap-3 text-muted-foreground">
           <ShoppingCart className="w-10 h-10" />
-          <p>カートに商品を入れているお客様はいません。</p>
+          <p>장바구니에 상품을 담은 고객이 없습니다.</p>
         </div>
       ) : (
         <div className="space-y-4">
@@ -3797,10 +3797,10 @@ function AdminCartManagement() {
                 </div>
                 <div className="flex items-center gap-3 text-sm">
                   <span className="text-muted-foreground">{items.length}개 상품</span>
-                  <span className="font-semibold text-primary">{totalAmount.toLocaleString()}円</span>
+                  <span className="font-semibold text-primary">{totalAmount.toLocaleString()}엔</span>
                   <span className="text-xs text-muted-foreground">{new Date(lastUpdated).toLocaleDateString("ko-KR")}</span>
                   <Link href={`/admin/users/${user.id}`}>
-                    <Button variant="ghost" size="sm" className="h-7 text-xs">会員を見る</Button>
+                    <Button variant="ghost" size="sm" className="h-7 text-xs">회원 보기</Button>
                   </Link>
                   <Button size="sm" className="h-7 text-xs bg-primary text-primary-foreground"
                     onClick={() => setConvertTarget({ userId: user.id, userName: user.name, userEmail: user.email, items })}>
@@ -3893,9 +3893,9 @@ function AdminUsers() {
   const { data: statusCounts } = trpc.admin.userStatusCounts.useQuery();
   const utils = trpc.useUtils();
 
-  const updateUser = trpc.admin.updateUser.useMutation({ onSuccess: () => { utils.admin.users.invalidate(); toast.success("権限を変更しました。"); } });
+  const updateUser = trpc.admin.updateUser.useMutation({ onSuccess: () => { utils.admin.users.invalidate(); toast.success("권한이 변경되었습니다."); } });
   const updateMailReceive = trpc.admin.updateUserMailReceive.useMutation({ onSuccess: () => { utils.admin.users.invalidate(); } });
-  const updateBlocked = trpc.admin.updateUserBlocked.useMutation({ onSuccess: () => { utils.admin.users.invalidate(); utils.admin.userStatusCounts.invalidate(); toast.success("アクセス遮断の状態を変更しました。"); } });
+  const updateBlocked = trpc.admin.updateUserBlocked.useMutation({ onSuccess: () => { utils.admin.users.invalidate(); utils.admin.userStatusCounts.invalidate(); toast.success("접근차단 상태가 변경되었습니다."); } });
 
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
   const toggleSelectAll = () => {
@@ -3923,39 +3923,39 @@ function AdminUsers() {
   const totalPages = Math.ceil((data?.total ?? 0) / 20);
 
   const statusBadge = (status: string) => {
-    if (status === "withdrawn") return <Badge variant="secondary" className="text-[10px] bg-muted text-muted-foreground">退会</Badge>;
-    if (status === "blocked") return <Badge variant="destructive" className="text-[10px]">遮断</Badge>;
-    return <Badge variant="default" className="text-[10px] bg-emerald-100 text-emerald-700 hover:bg-emerald-100">正常</Badge>;
+    if (status === "withdrawn") return <Badge variant="secondary" className="text-[10px] bg-muted text-muted-foreground">탈퇴</Badge>;
+    if (status === "blocked") return <Badge variant="destructive" className="text-[10px]">차단</Badge>;
+    return <Badge variant="default" className="text-[10px] bg-emerald-100 text-emerald-700 hover:bg-emerald-100">정상</Badge>;
   };
 
   return (
     <div>
-      <h1 className="text-2xl font-bold mb-6">会員管理</h1>
+      <h1 className="text-2xl font-bold mb-6">회원 관리</h1>
 
       {/* 회원 현황 */}
       <div className="bg-card border rounded-xl p-5 mb-4">
-        <h2 className="text-base font-semibold mb-1">会員状況</h2>
-        <p className="text-sm text-muted-foreground mb-4">会員の検索、状態確認、管理ができます。</p>
+        <h2 className="text-base font-semibold mb-1">회원 현황</h2>
+        <p className="text-sm text-muted-foreground mb-4">회원 검색, 상태 확인 및 관리를 할 수 있습니다.</p>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           <div className="rounded-lg border bg-primary/5 p-4">
-            <p className="text-xs text-muted-foreground mb-1">検索された会員</p>
-            <p className="text-xl font-bold text-primary">{(data?.total ?? 0).toLocaleString()}<span className="text-sm font-normal ml-0.5">名</span></p>
+            <p className="text-xs text-muted-foreground mb-1">검색된 회원</p>
+            <p className="text-xl font-bold text-primary">{(data?.total ?? 0).toLocaleString()}<span className="text-sm font-normal ml-0.5">명</span></p>
           </div>
           <button
             type="button"
             className={`text-left rounded-lg border p-4 transition-colors ${statusFilter === "blocked" ? "bg-rose-100 border-rose-300" : "bg-rose-50 hover:bg-rose-100"}`}
             onClick={() => { setStatusFilter(statusFilter === "blocked" ? "all" : "blocked"); setPage(1); }}
           >
-            <p className="text-xs text-muted-foreground mb-1">遮断会員</p>
-            <p className="text-xl font-bold text-rose-600">{(statusCounts?.blocked ?? 0).toLocaleString()}<span className="text-sm font-normal ml-0.5">名</span></p>
+            <p className="text-xs text-muted-foreground mb-1">차단 회원</p>
+            <p className="text-xl font-bold text-rose-600">{(statusCounts?.blocked ?? 0).toLocaleString()}<span className="text-sm font-normal ml-0.5">명</span></p>
           </button>
           <button
             type="button"
             className={`text-left rounded-lg border p-4 transition-colors ${statusFilter === "withdrawn" ? "bg-secondary border-foreground/20" : "bg-secondary/40 hover:bg-secondary"}`}
             onClick={() => { setStatusFilter(statusFilter === "withdrawn" ? "all" : "withdrawn"); setPage(1); }}
           >
-            <p className="text-xs text-muted-foreground mb-1">退会会員</p>
-            <p className="text-xl font-bold">{(statusCounts?.withdrawn ?? 0).toLocaleString()}<span className="text-sm font-normal ml-0.5">名</span></p>
+            <p className="text-xs text-muted-foreground mb-1">탈퇴 회원</p>
+            <p className="text-xl font-bold">{(statusCounts?.withdrawn ?? 0).toLocaleString()}<span className="text-sm font-normal ml-0.5">명</span></p>
           </button>
         </div>
       </div>
@@ -3963,44 +3963,44 @@ function AdminUsers() {
       {/* 검색 */}
       <div className="bg-card border rounded-xl p-5 mb-4 space-y-3">
         <div className="flex flex-wrap items-center gap-2">
-          <span className="text-xs text-muted-foreground w-16">検索キーワード</span>
+          <span className="text-xs text-muted-foreground w-16">검색어</span>
           <select className="border rounded-md px-2 py-2 text-sm bg-background" value={searchField} onChange={e => setSearchField(e.target.value)}>
-            <option value="id">会員ID</option>
-            <option value="name">氏名</option>
-            <option value="nick">ニックネーム</option>
-            <option value="phone">携帯電話</option>
+            <option value="id">회원아이디</option>
+            <option value="name">이름</option>
+            <option value="nick">닉네임</option>
+            <option value="phone">휴대폰</option>
           </select>
-          <Input className="max-w-xs" placeholder="検索語を入力" value={searchInput} onChange={e => setSearchInput(e.target.value)} onKeyDown={e => e.key === "Enter" && handleSearch()} />
+          <Input className="max-w-xs" placeholder="검색어 입력" value={searchInput} onChange={e => setSearchInput(e.target.value)} onKeyDown={e => e.key === "Enter" && handleSearch()} />
         </div>
         <div className="flex flex-wrap items-center gap-2">
-          <span className="text-xs text-muted-foreground w-16">日付</span>
+          <span className="text-xs text-muted-foreground w-16">날짜</span>
           <select className="border rounded-md px-2 py-2 text-sm bg-background" value={dateField} onChange={e => setDateField(e.target.value)}>
-            <option value="createdAt">登録日</option>
-            <option value="lastLogin">最終アクセス日</option>
+            <option value="createdAt">등록일</option>
+            <option value="lastLogin">최종접속일</option>
           </select>
           <Input type="date" className="w-[150px]" value={dateFrom} onChange={e => { setDateFrom(e.target.value); setPage(1); }} />
           <span className="text-muted-foreground text-sm">~</span>
           <Input type="date" className="w-[150px]" value={dateTo} onChange={e => { setDateTo(e.target.value); setPage(1); }} />
-          <Button size="sm" variant="outline" onClick={() => applyQuickRange(1)}>今日</Button>
-          <Button size="sm" variant="outline" onClick={() => applyQuickRange(7)}>7日</Button>
-          <Button size="sm" variant="outline" onClick={() => applyQuickRange(14)}>14日</Button>
-          <Button size="sm" variant="outline" onClick={() => applyQuickRange(30)}>1か月</Button>
-          <Button size="sm" variant="outline" onClick={() => applyQuickRange(90)}>3か月</Button>
-          <Button size="sm" variant="outline" onClick={() => applyQuickRange(null)}>すべて</Button>
+          <Button size="sm" variant="outline" onClick={() => applyQuickRange(1)}>오늘</Button>
+          <Button size="sm" variant="outline" onClick={() => applyQuickRange(7)}>7일</Button>
+          <Button size="sm" variant="outline" onClick={() => applyQuickRange(14)}>14일</Button>
+          <Button size="sm" variant="outline" onClick={() => applyQuickRange(30)}>1개월</Button>
+          <Button size="sm" variant="outline" onClick={() => applyQuickRange(90)}>3개월</Button>
+          <Button size="sm" variant="outline" onClick={() => applyQuickRange(null)}>전체</Button>
           <select className="border rounded-md px-2 py-2 text-sm bg-background ml-auto" value={sortBy} onChange={e => { setSortBy(e.target.value); setPage(1); }}>
-            <option value="createdAt">登録日 新しい順</option>
-            <option value="createdAt_asc">登録日 古い順</option>
-            <option value="lastSignedIn">最終アクセス 新しい順</option>
-            <option value="name">氏名順</option>
-            <option value="orderCount">注文件数順</option>
-            <option value="totalPaid">決済金額順</option>
-            <option value="points">ポイント順</option>
+            <option value="createdAt">가입일 최신순</option>
+            <option value="createdAt_asc">가입일 오래된순</option>
+            <option value="lastSignedIn">최종접속 최신순</option>
+            <option value="name">이름순</option>
+            <option value="orderCount">주문건수순</option>
+            <option value="totalPaid">결제금액순</option>
+            <option value="points">포인트순</option>
           </select>
-          <Button size="sm" onClick={handleSearch}><Search className="w-4 h-4 mr-1" />検索</Button>
+          <Button size="sm" onClick={handleSearch}><Search className="w-4 h-4 mr-1" />검색</Button>
         </div>
       </div>
 
-      <p className="text-xs text-muted-foreground mb-3">会員データを削除した際に、他の会員が既存の会員IDを使用できないよう、会員ID・氏名・ニックネームは削除せず永久に保管します。</p>
+      <p className="text-xs text-muted-foreground mb-3">회원자료 삭제 시 다른 회원이 기존 회원아이디를 사용하지 못하도록, 회원아이디·이름·닉네임은 삭제하지 않고 영구 보관합니다.</p>
 
       <div className="bg-card border rounded-xl overflow-hidden elegant-shadow">
         <div className="overflow-x-auto">
@@ -4008,19 +4008,19 @@ function AdminUsers() {
             <thead><tr className="bg-secondary/50 text-xs text-muted-foreground">
               <th className="text-center py-3 px-3 w-10"><input type="checkbox" checked={selectedIds.length === (data?.users ?? []).length && (data?.users ?? []).length > 0} onChange={toggleSelectAll} /></th>
               <th className="text-left py-3 px-3">아이디</th>
-              <th className="text-left py-3 px-3">氏名</th>
-              <th className="text-left py-3 px-3">携帯電話</th>
-              <th className="text-center py-3 px-3">権限</th>
-              <th className="text-right py-3 px-3">ポイント残高</th>
-              <th className="text-center py-3 px-3">注文件数</th>
-              <th className="text-right py-3 px-3">累計注文金額</th>
-              <th className="text-center py-3 px-3">ステータス</th>
-              <th className="text-left py-3 px-3">最終アクセス</th>
-              <th className="text-center py-3 px-3">メール認証</th>
-              <th className="text-center py-3 px-3">メール受信</th>
-              <th className="text-center py-3 px-3">アクセス遮断</th>
-              <th className="text-left py-3 px-3">登録日</th>
-              <th className="text-center py-3 px-3">操作</th>
+              <th className="text-left py-3 px-3">이름</th>
+              <th className="text-left py-3 px-3">휴대폰</th>
+              <th className="text-center py-3 px-3">권한</th>
+              <th className="text-right py-3 px-3">잔여포인트</th>
+              <th className="text-center py-3 px-3">주문건수</th>
+              <th className="text-right py-3 px-3">누적주문금액</th>
+              <th className="text-center py-3 px-3">상태</th>
+              <th className="text-left py-3 px-3">최종접속</th>
+              <th className="text-center py-3 px-3">메일인증</th>
+              <th className="text-center py-3 px-3">메일수신</th>
+              <th className="text-center py-3 px-3">접근차단</th>
+              <th className="text-left py-3 px-3">등록일</th>
+              <th className="text-center py-3 px-3">작업</th>
             </tr></thead>
             <tbody className="divide-y">
               {(data?.users ?? []).map((u: any) => (
@@ -4035,8 +4035,8 @@ function AdminUsers() {
                       value={u.role}
                       onChange={e => updateUser.mutate({ id: u.id, role: e.target.value })}
                     >
-                      <option value="user">会員</option>
-                      <option value="admin">管理者</option>
+                      <option value="user">회원</option>
+                      <option value="admin">관리자</option>
                     </select>
                   </td>
                   <td className="py-2.5 px-3 text-right price-text">{(u.points ?? 0).toLocaleString()}P</td>
@@ -4055,14 +4055,14 @@ function AdminUsers() {
                   </td>
                   <td className="py-2.5 px-3 text-muted-foreground text-xs">{formatDate(u.createdAt)}</td>
                   <td className="py-2.5 px-3 text-center">
-                    <Link href={`/admin/users/${u.id}`}><Button variant="outline" size="sm" className="h-7 px-2 text-xs">更新</Button></Link>
+                    <Link href={`/admin/users/${u.id}`}><Button variant="outline" size="sm" className="h-7 px-2 text-xs">수정</Button></Link>
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
-        {(data?.users ?? []).length === 0 && <p className="text-center py-8 text-sm text-muted-foreground">会員がいません</p>}
+        {(data?.users ?? []).length === 0 && <p className="text-center py-8 text-sm text-muted-foreground">회원이 없습니다</p>}
       </div>
 
       <Paginator page={page} totalPages={totalPages} onPageChange={setPage} className="mt-4" />
@@ -4078,14 +4078,14 @@ function AdminBoards() {
   const [editItem, setEditItem] = useState<any>(null);
   const [form, setForm] = useState({ slug: "", name: "", description: "", boardType: "free" as "free" | "review" | "qna" | "notice", isActive: 1, sortOrder: 0 });
 
-  const createMut = trpc.admin.createBoard.useMutation({ onSuccess: () => { utils.admin.boards.invalidate(); setDialogOpen(false); toast.success("掲示板を作成しました。"); } });
-  const updateMut = trpc.admin.updateBoard.useMutation({ onSuccess: () => { utils.admin.boards.invalidate(); setDialogOpen(false); toast.success("掲示板を更新しました。"); } });
-  const deleteMut = trpc.admin.deleteBoard.useMutation({ onSuccess: () => { utils.admin.boards.invalidate(); toast.success("掲示板を削除しました。"); } });
+  const createMut = trpc.admin.createBoard.useMutation({ onSuccess: () => { utils.admin.boards.invalidate(); setDialogOpen(false); toast.success("게시판이 생성되었습니다."); } });
+  const updateMut = trpc.admin.updateBoard.useMutation({ onSuccess: () => { utils.admin.boards.invalidate(); setDialogOpen(false); toast.success("게시판이 수정되었습니다."); } });
+  const deleteMut = trpc.admin.deleteBoard.useMutation({ onSuccess: () => { utils.admin.boards.invalidate(); toast.success("게시판이 삭제되었습니다."); } });
 
   const openCreate = () => { setEditItem(null); setForm({ slug: "", name: "", description: "", boardType: "free", isActive: 1, sortOrder: 0 }); setDialogOpen(true); };
   const openEdit = (b: any) => { setEditItem(b); setForm({ slug: b.slug, name: b.name, description: b.description ?? "", boardType: b.boardType, isActive: b.isActive, sortOrder: b.sortOrder }); setDialogOpen(true); };
   const handleSave = () => {
-    if (!form.slug || !form.name) { toast.error("スラッグと名前を入力してください。"); return; }
+    if (!form.slug || !form.name) { toast.error("슬러그와 이름을 입력해주세요."); return; }
     if (editItem) { updateMut.mutate({ id: editItem.id, ...form }); }
     else { createMut.mutate(form); }
   };
@@ -4095,13 +4095,13 @@ function AdminBoards() {
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold">掲示板管理</h1>
-        <Button onClick={openCreate} size="sm"><Plus className="w-4 h-4 mr-1" /> 掲示板の追加</Button>
+        <h1 className="text-2xl font-bold">게시판 관리</h1>
+        <Button onClick={openCreate} size="sm"><Plus className="w-4 h-4 mr-1" /> 게시판 추가</Button>
       </div>
       <div className="bg-card border rounded-xl overflow-hidden elegant-shadow">
         <table className="w-full">
           <thead><tr className="bg-secondary/50 text-xs text-muted-foreground">
-            <th className="text-left py-3 px-4">ID</th><th className="text-left py-3 px-4">氏名</th><th className="text-left py-3 px-4">スラッグ</th><th className="text-center py-3 px-4">種類</th><th className="text-center py-3 px-4">順序</th><th className="text-center py-3 px-4">ステータス</th><th className="text-center py-3 px-4">操作</th>
+            <th className="text-left py-3 px-4">ID</th><th className="text-left py-3 px-4">이름</th><th className="text-left py-3 px-4">슬러그</th><th className="text-center py-3 px-4">유형</th><th className="text-center py-3 px-4">순서</th><th className="text-center py-3 px-4">상태</th><th className="text-center py-3 px-4">작업</th>
           </tr></thead>
           <tbody className="divide-y">
             {(boardsList ?? []).map((b: any) => (
@@ -4111,7 +4111,7 @@ function AdminBoards() {
                 <td className="py-3 px-4 text-sm text-muted-foreground font-mono">{b.slug}</td>
                 <td className="py-3 px-4 text-center"><Badge variant="secondary" className="text-[10px]">{boardTypeLabel[b.boardType] ?? b.boardType}</Badge></td>
                 <td className="py-3 px-4 text-sm text-center">{b.sortOrder}</td>
-                <td className="py-3 px-4 text-center"><Badge variant={b.isActive ? "default" : "secondary"} className="text-[10px]">{b.isActive ? "有効" : "無効"}</Badge></td>
+                <td className="py-3 px-4 text-center"><Badge variant={b.isActive ? "default" : "secondary"} className="text-[10px]">{b.isActive ? "활성" : "비활성"}</Badge></td>
                 <td className="py-3 px-4 text-center">
                   <div className="flex items-center justify-center gap-1">
                     <Button variant="ghost" size="sm" onClick={() => openEdit(b)}><Pencil className="w-3.5 h-3.5" /></Button>
@@ -4122,32 +4122,32 @@ function AdminBoards() {
             ))}
           </tbody>
         </table>
-        {(boardsList ?? []).length === 0 && <p className="text-center py-8 text-sm text-muted-foreground">掲示板がありません</p>}
+        {(boardsList ?? []).length === 0 && <p className="text-center py-8 text-sm text-muted-foreground">게시판이 없습니다</p>}
       </div>
 
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent className="sm:max-w-md">
-          <DialogHeader><DialogTitle>{editItem ? "掲示板の編集" : "掲示板の追加"}</DialogTitle><DialogDescription>掲示板の情報を入力してください。</DialogDescription></DialogHeader>
+          <DialogHeader><DialogTitle>{editItem ? "게시판 수정" : "게시판 추가"}</DialogTitle><DialogDescription>게시판 정보를 입력하세요.</DialogDescription></DialogHeader>
           <div className="space-y-3">
-            <div><label className="text-sm font-medium">名前 *</label><Input value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} placeholder="掲示板名" /></div>
-            <div><label className="text-sm font-medium">スラッグ *</label><Input value={form.slug} onChange={e => setForm(f => ({ ...f, slug: e.target.value }))} placeholder="board-slug" /></div>
-            <div><label className="text-sm font-medium">説明</label><Input value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} placeholder="掲示板の説明" /></div>
+            <div><label className="text-sm font-medium">이름 *</label><Input value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} placeholder="게시판 이름" /></div>
+            <div><label className="text-sm font-medium">슬러그 *</label><Input value={form.slug} onChange={e => setForm(f => ({ ...f, slug: e.target.value }))} placeholder="board-slug" /></div>
+            <div><label className="text-sm font-medium">설명</label><Input value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} placeholder="게시판 설명" /></div>
             <div className="grid grid-cols-2 gap-3">
-              <div><label className="text-sm font-medium">種類</label>
+              <div><label className="text-sm font-medium">유형</label>
                 <select className="w-full border rounded-lg px-3 py-2 text-sm bg-background" value={form.boardType} onChange={e => setForm(f => ({ ...f, boardType: e.target.value as any }))}>
-                  <option value="free">自由掲示板</option><option value="review">お客様レビュー</option><option value="qna">Q&A</option><option value="notice">お知らせ</option>
+                  <option value="free">자유게시판</option><option value="review">고객 리뷰</option><option value="qna">Q&A</option><option value="notice">공지사항</option>
                 </select>
               </div>
-              <div><label className="text-sm font-medium">表示順</label><Input type="number" value={form.sortOrder} onChange={e => setForm(f => ({ ...f, sortOrder: Number(e.target.value) }))} /></div>
+              <div><label className="text-sm font-medium">정렬 순서</label><Input type="number" value={form.sortOrder} onChange={e => setForm(f => ({ ...f, sortOrder: Number(e.target.value) }))} /></div>
             </div>
             <div className="flex items-center gap-2">
               <input type="checkbox" checked={form.isActive === 1} onChange={e => setForm(f => ({ ...f, isActive: e.target.checked ? 1 : 0 }))} />
-              <label className="text-sm">有効化</label>
+              <label className="text-sm">활성화</label>
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setDialogOpen(false)}>キャンセル</Button>
-            <Button onClick={handleSave} disabled={createMut.isPending || updateMut.isPending}>{editItem ? "更新" : "作成"}</Button>
+            <Button variant="outline" onClick={() => setDialogOpen(false)}>취소</Button>
+            <Button onClick={handleSave} disabled={createMut.isPending || updateMut.isPending}>{editItem ? "수정" : "생성"}</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -4169,11 +4169,11 @@ function AdminLoginBanners() {
   const createMut = trpc.admin.createLoginBanner.useMutation({ onSuccess: () => done("로그인 배너가 추가되었습니다."), onError: onErr });
   const updateMut = trpc.admin.updateLoginBanner.useMutation({ onSuccess: () => done("로그인 배너가 수정되었습니다."), onError: onErr });
   const toggleMut = trpc.admin.updateLoginBanner.useMutation({ onSuccess: () => utils.admin.loginBanners.invalidate(), onError: onErr });
-  const deleteMut = trpc.admin.deleteLoginBanner.useMutation({ onSuccess: () => { utils.admin.loginBanners.invalidate(); toast.success("削除しました。"); }, onError: onErr });
+  const deleteMut = trpc.admin.deleteLoginBanner.useMutation({ onSuccess: () => { utils.admin.loginBanners.invalidate(); toast.success("삭제되었습니다."); }, onError: onErr });
 
   const upload = async (file: File) => {
     if (!file.type.startsWith("image/")) { toast.error("이미지 파일만 업로드할 수 있습니다."); return; }
-    if (file.size > 5 * 1024 * 1024) { toast.error("ファイルサイズは5MB以下にしてください。"); return; }
+    if (file.size > 5 * 1024 * 1024) { toast.error("파일 크기는 5MB 이하여야 합니다."); return; }
     setUploading(true);
     try {
       const base64 = await new Promise<string>((resolve, reject) => { const r = new FileReader(); r.onload = () => resolve(String(r.result).split(",")[1]); r.onerror = reject; r.readAsDataURL(file); });
@@ -4194,40 +4194,40 @@ function AdminLoginBanners() {
     <div className="bg-card border rounded-xl p-5 mt-8 elegant-shadow">
       <div className="flex items-center justify-between mb-1">
         <h2 className="text-base font-semibold">로그인 페이지 이벤트 배너</h2>
-        <Button size="sm" onClick={startCreate}><Plus className="w-4 h-4 mr-1" /> バナーの追加</Button>
+        <Button size="sm" onClick={startCreate}><Plus className="w-4 h-4 mr-1" /> 배너 추가</Button>
       </div>
       <p className="text-xs text-muted-foreground mb-4">로그인 페이지 왼쪽에 표시됩니다. 활성 배너가 2개 이상이면 5초마다 자동으로 넘어갑니다. 활성 배너가 없으면 기본 문구 화면이 나옵니다. 권장 이미지: 세로로 긴 비율(예: 900×1000px). 이미지는 영역을 꽉 채우도록 잘려서 표시됩니다.</p>
       {open && (
         <div className="border rounded-lg p-4 mb-4 space-y-3 bg-secondary/20">
-          <div><label className="text-sm font-medium">タイトル *</label><Input value={form.title} onChange={e => setForm(f => ({ ...f, title: e.target.value }))} placeholder="배너 제목 (이미지 대체 텍스트로 사용)" /></div>
+          <div><label className="text-sm font-medium">제목 *</label><Input value={form.title} onChange={e => setForm(f => ({ ...f, title: e.target.value }))} placeholder="배너 제목 (이미지 대체 텍스트로 사용)" /></div>
           <div>
             <label className="text-sm font-medium">이미지 *</label>
             <div className="flex gap-2 items-center">
               <Input value={form.imageUrl} onChange={e => setForm(f => ({ ...f, imageUrl: e.target.value }))} placeholder="파일 선택으로 업로드하거나 이미지 URL 입력" className="flex-1" />
               <label className="inline-flex items-center px-3 py-2 text-sm border rounded-lg cursor-pointer hover:bg-accent whitespace-nowrap bg-background">
-                {uploading ? "アップロード中..." : "파일 선택"}
+                {uploading ? "업로드 중..." : "파일 선택"}
                 <input type="file" accept="image/*" className="hidden" disabled={uploading} onChange={e => { const f = e.target.files?.[0]; if (f) upload(f); e.target.value = ""; }} />
               </label>
             </div>
-            {form.imageUrl && <img src={form.imageUrl} alt="プレビュー" className="h-48 mt-2 rounded-lg border object-cover bg-secondary/30" onError={(e) => (e.currentTarget.style.display = "none")} />}
+            {form.imageUrl && <img src={form.imageUrl} alt="미리보기" className="h-48 mt-2 rounded-lg border object-cover bg-secondary/30" onError={(e) => (e.currentTarget.style.display = "none")} />}
           </div>
           <div><label className="text-sm font-medium">링크 URL</label><Input value={form.linkUrl} onChange={e => setForm(f => ({ ...f, linkUrl: e.target.value }))} placeholder="클릭 시 이동할 주소 (예: /events 또는 https://...) — 비우면 클릭되지 않음" /></div>
           <div className="grid grid-cols-2 gap-3">
             <div><label className="text-sm font-medium">정렬 순서 (작을수록 먼저)</label><Input type="number" value={form.sortOrder} onChange={e => setForm(f => ({ ...f, sortOrder: Number(e.target.value) }))} /></div>
             <div className="flex items-center gap-2 pt-6">
               <input type="checkbox" checked={form.isActive === 1} onChange={e => setForm(f => ({ ...f, isActive: e.target.checked ? 1 : 0 }))} />
-              <label className="text-sm">有効化</label>
+              <label className="text-sm">활성화</label>
             </div>
           </div>
           <div className="flex gap-2 justify-end">
-            <Button variant="outline" size="sm" onClick={() => { setOpen(false); setEditId(null); setForm(blank); }}>キャンセル</Button>
-            <Button size="sm" onClick={save} disabled={createMut.isPending || updateMut.isPending}>{editId ? "更新を保存" : "追加"}</Button>
+            <Button variant="outline" size="sm" onClick={() => { setOpen(false); setEditId(null); setForm(blank); }}>취소</Button>
+            <Button size="sm" onClick={save} disabled={createMut.isPending || updateMut.isPending}>{editId ? "수정 저장" : "추가"}</Button>
           </div>
         </div>
       )}
       <table className="w-full">
         <thead><tr className="bg-secondary/50 text-xs text-muted-foreground">
-          <th className="text-left py-2 px-3">タイトル</th><th className="text-left py-2 px-3">画像</th><th className="text-left py-2 px-3">リンク</th><th className="text-center py-2 px-3">順序</th><th className="text-center py-2 px-3">ステータス</th><th className="text-center py-2 px-3">操作</th>
+          <th className="text-left py-2 px-3">제목</th><th className="text-left py-2 px-3">이미지</th><th className="text-left py-2 px-3">링크</th><th className="text-center py-2 px-3">순서</th><th className="text-center py-2 px-3">상태</th><th className="text-center py-2 px-3">작업</th>
         </tr></thead>
         <tbody className="divide-y">
           {(list ?? []).map((b: any) => (
@@ -4236,7 +4236,7 @@ function AdminLoginBanners() {
               <td className="py-2 px-3"><img src={b.imageUrl} alt="" className="h-12 w-10 object-cover rounded border bg-secondary/30" onError={(e) => (e.currentTarget.style.visibility = "hidden")} /></td>
               <td className="py-2 px-3 text-xs text-muted-foreground max-w-[220px] truncate">{b.linkUrl || "-"}</td>
               <td className="py-2 px-3 text-sm text-center">{b.sortOrder}</td>
-              <td className="py-2 px-3 text-center"><button onClick={() => toggleMut.mutate({ id: b.id, isActive: b.isActive ? 0 : 1 })}><Badge variant={b.isActive ? "default" : "secondary"} className="text-[10px] cursor-pointer">{b.isActive ? "有効" : "無効"}</Badge></button></td>
+              <td className="py-2 px-3 text-center"><button onClick={() => toggleMut.mutate({ id: b.id, isActive: b.isActive ? 0 : 1 })}><Badge variant={b.isActive ? "default" : "secondary"} className="text-[10px] cursor-pointer">{b.isActive ? "활성" : "비활성"}</Badge></button></td>
               <td className="py-2 px-3 text-center">
                 <Button variant="ghost" size="sm" onClick={() => startEdit(b)}><Pencil className="w-3.5 h-3.5" /></Button>
                 <Button variant="ghost" size="sm" className="text-destructive" onClick={() => { if (confirm("삭제하시겠습니까?")) deleteMut.mutate({ id: b.id }); }}><Trash2 className="w-3.5 h-3.5" /></Button>
@@ -4276,7 +4276,7 @@ function AdminExhibitions() {
     onError: onErr,
   });
   const toggleMut = trpc.admin.setExhibitionActive.useMutation({ onSuccess: () => utils.admin.exhibitions.invalidate(), onError: onErr });
-  const deleteMut = trpc.admin.deleteExhibition.useMutation({ onSuccess: () => { utils.admin.exhibitions.invalidate(); toast.success("削除しました。"); }, onError: onErr });
+  const deleteMut = trpc.admin.deleteExhibition.useMutation({ onSuccess: () => { utils.admin.exhibitions.invalidate(); toast.success("삭제되었습니다."); }, onError: onErr });
 
   const startNew = () => { setForm({ title: "", subtitle: "", isActive: 1, sortOrder: ((list ?? []).reduce((m: number, x: any) => Math.max(m, x.sortOrder), 0)) + 10 }); setItems([]); setQ(""); setLoadedId(null); setEditing("new"); };
   const startEdit = (id: number) => { setItems([]); setQ(""); setLoadedId(null); setEditing(id); };
@@ -4299,14 +4299,14 @@ function AdminExhibitions() {
     return (
       <div>
         <div className="flex items-center gap-3 mb-6">
-          <Button variant="ghost" size="sm" onClick={() => setEditing(null)}><ArrowLeft className="w-4 h-4 mr-1" /> 一覧へ</Button>
+          <Button variant="ghost" size="sm" onClick={() => setEditing(null)}><ArrowLeft className="w-4 h-4 mr-1" /> 목록으로</Button>
           <h1 className="text-2xl font-bold">{editing === "new" ? "기획전 추가" : "기획전 수정"}</h1>
         </div>
-        {loading ? <p className="text-sm text-muted-foreground">読み込み中...</p> : (
+        {loading ? <p className="text-sm text-muted-foreground">불러오는 중...</p> : (
           <div className="space-y-4 max-w-4xl">
             <div className="border rounded-xl p-5 bg-card space-y-3">
-              <div><label className="text-sm font-medium">기획전 제목 * <span className="text-xs text-muted-foreground font-normal">(쇼핑몰에 그대로 표시됩니다 — 일본어로 입력)</span></label><Input value={form.title} onChange={e => setForm(f => ({ ...f, title: e.target.value }))} placeholder="例) 春のビタミン特集" /></div>
-              <div><label className="text-sm font-medium">부제목 <span className="text-xs text-muted-foreground font-normal">(제목 아래 작은 글씨, 비워도 됨)</span></label><Input value={form.subtitle} onChange={e => setForm(f => ({ ...f, subtitle: e.target.value }))} placeholder="例) 今おすすめの商品をピックアップしました" /></div>
+              <div><label className="text-sm font-medium">기획전 제목 * <span className="text-xs text-muted-foreground font-normal">(쇼핑몰에 그대로 표시됩니다 — 일본어로 입력)</span></label><Input value={form.title} onChange={e => setForm(f => ({ ...f, title: e.target.value }))} placeholder="예) 봄철 비타민 특집" /></div>
+              <div><label className="text-sm font-medium">부제목 <span className="text-xs text-muted-foreground font-normal">(제목 아래 작은 글씨, 비워도 됨)</span></label><Input value={form.subtitle} onChange={e => setForm(f => ({ ...f, subtitle: e.target.value }))} placeholder="예) 지금 추천하는 상품을 골라보세요" /></div>
               <div className="grid grid-cols-2 gap-3">
                 <div><label className="text-sm font-medium">노출 순서 (작을수록 위)</label><Input type="number" value={form.sortOrder} onChange={e => setForm(f => ({ ...f, sortOrder: Number(e.target.value) }))} /></div>
                 <div className="flex items-center gap-2 pt-6"><input type="checkbox" checked={form.isActive === 1} onChange={e => setForm(f => ({ ...f, isActive: e.target.checked ? 1 : 0 }))} /><label className="text-sm">쇼핑몰에 노출</label></div>
@@ -4336,13 +4336,13 @@ function AdminExhibitions() {
                 <Input value={q} onChange={e => setQ(e.target.value)} placeholder="추가할 상품명 검색" />
                 {term && (
                   <div className="mt-2 border rounded-lg divide-y max-h-80 overflow-auto">
-                    {isFetching && results.length === 0 ? <p className="text-sm text-muted-foreground p-3">検索中...</p> : results.length === 0 ? <p className="text-sm text-muted-foreground p-3">検索結果がありません。</p> : results.map((p: any) => {
+                    {isFetching && results.length === 0 ? <p className="text-sm text-muted-foreground p-3">검색 중...</p> : results.length === 0 ? <p className="text-sm text-muted-foreground p-3">검색 결과가 없습니다。</p> : results.map((p: any) => {
                       const added = items.some(x => x.id === p.id);
                       return (
                         <div key={p.id} className="flex items-center gap-3 p-2">
                           {p.thumbnail ? <img src={proxyImage(p.thumbnail)} alt="" className="w-10 h-10 rounded object-cover bg-muted" /> : <div className="w-10 h-10 rounded bg-muted" />}
                           <div className="flex-1 min-w-0"><p className="text-sm truncate">{p.name}</p><p className="text-xs text-muted-foreground">{p.id}{p.status === "soldout" ? " · 품절" : ""}</p></div>
-                          <Button type="button" variant="outline" size="sm" disabled={added} onClick={() => add(p)}>{added ? "추가됨" : "追加"}</Button>
+                          <Button type="button" variant="outline" size="sm" disabled={added} onClick={() => add(p)}>{added ? "추가됨" : "추가"}</Button>
                         </div>
                       );
                     })}
@@ -4351,8 +4351,8 @@ function AdminExhibitions() {
               </div>
             </div>
             <div className="flex gap-2 justify-end">
-              <Button variant="outline" onClick={() => setEditing(null)}>キャンセル</Button>
-              <Button onClick={save} disabled={saveMut.isPending}>{saveMut.isPending ? "保存中..." : "저장 (바로 반영)"}</Button>
+              <Button variant="outline" onClick={() => setEditing(null)}>취소</Button>
+              <Button onClick={save} disabled={saveMut.isPending}>{saveMut.isPending ? "저장 중..." : "저장 (바로 반영)"}</Button>
             </div>
           </div>
         )}
@@ -4366,11 +4366,11 @@ function AdminExhibitions() {
         <h1 className="text-2xl font-bold">기획전 관리</h1>
         <Button size="sm" onClick={startNew}><Plus className="w-4 h-4 mr-1" /> 기획전 추가</Button>
       </div>
-      <p className="text-sm text-muted-foreground mb-6">쇼핑몰 메인 페이지(히어로 아래)에 "新着商品" 같은 상품 섹션으로 노출됩니다. 저장하면 바로 반영됩니다.</p>
+      <p className="text-sm text-muted-foreground mb-6">쇼핑몰 메인 페이지(히어로 아래)에 "신상품" 같은 상품 섹션으로 노출됩니다. 저장하면 바로 반영됩니다.</p>
       <div className="bg-card border rounded-xl overflow-hidden elegant-shadow">
         <table className="w-full">
           <thead><tr className="bg-secondary/50 text-xs text-muted-foreground">
-            <th className="text-center py-3 px-3 w-16">順序</th><th className="text-left py-3 px-4">タイトル</th><th className="text-left py-3 px-4">부제목</th><th className="text-center py-3 px-3">상품 수</th><th className="text-center py-3 px-3">ステータス</th><th className="text-center py-3 px-3">操作</th>
+            <th className="text-center py-3 px-3 w-16">순서</th><th className="text-left py-3 px-4">제목</th><th className="text-left py-3 px-4">부제목</th><th className="text-center py-3 px-3">상품 수</th><th className="text-center py-3 px-3">상태</th><th className="text-center py-3 px-3">작업</th>
           </tr></thead>
           <tbody className="divide-y">
             {(list ?? []).map((e: any) => (
@@ -4399,7 +4399,7 @@ function AdminBanners() {
   const { data: bannersList } = trpc.admin.banners.useQuery();
   const { data: topBannerData } = trpc.admin.getTopBannerText.useQuery();
   const [topBannerText, setTopBannerText] = useState("");
-  const setTopBannerMut = trpc.admin.setTopBannerText.useMutation({ onSuccess: () => toast.success("上部バナーのテキストを保存しました。") });
+  const setTopBannerMut = trpc.admin.setTopBannerText.useMutation({ onSuccess: () => toast.success("상단 배너 텍스트가 저장되었습니다.") });
 
   useEffect(() => {
     if (topBannerData?.text !== undefined) setTopBannerText(topBannerData.text);
@@ -4414,7 +4414,7 @@ function AdminBanners() {
   const [uploadingKey, setUploadingKey] = useState<"imageUrl" | "mobileImageUrl" | null>(null);
   const uploadBannerFile = async (file: File, key: "imageUrl" | "mobileImageUrl") => {
     if (!file.type.startsWith("image/")) { toast.error("이미지 파일만 업로드할 수 있습니다."); return; }
-    if (file.size > 5 * 1024 * 1024) { toast.error("ファイルサイズは5MB以下にしてください。"); return; }
+    if (file.size > 5 * 1024 * 1024) { toast.error("파일 크기는 5MB 이하여야 합니다."); return; }
     setUploadingKey(key);
     try {
       const base64 = await new Promise<string>((resolve, reject) => { const r = new FileReader(); r.onload = () => resolve(String(r.result).split(",")[1]); r.onerror = reject; r.readAsDataURL(file); });
@@ -4425,15 +4425,15 @@ function AdminBanners() {
     finally { setUploadingKey(null); }
   };
 
-  const createMut = trpc.admin.createBanner.useMutation({ onSuccess: () => { utils.admin.banners.invalidate(); setDialogOpen(false); toast.success("バナーを作成しました。"); } });
-  const updateMut = trpc.admin.updateBanner.useMutation({ onSuccess: () => { utils.admin.banners.invalidate(); setDialogOpen(false); toast.success("バナーを更新しました。"); } });
-  const deleteMut = trpc.admin.deleteBanner.useMutation({ onSuccess: () => { utils.admin.banners.invalidate(); toast.success("バナーを削除しました。"); } });
+  const createMut = trpc.admin.createBanner.useMutation({ onSuccess: () => { utils.admin.banners.invalidate(); setDialogOpen(false); toast.success("배너가 생성되었습니다."); } });
+  const updateMut = trpc.admin.updateBanner.useMutation({ onSuccess: () => { utils.admin.banners.invalidate(); setDialogOpen(false); toast.success("배너가 수정되었습니다."); } });
+  const deleteMut = trpc.admin.deleteBanner.useMutation({ onSuccess: () => { utils.admin.banners.invalidate(); toast.success("배너가 삭제되었습니다."); } });
   const toggleActive = trpc.admin.updateBanner.useMutation({ onSuccess: () => { utils.admin.banners.invalidate(); } });
 
   const openCreate = () => { setEditItem(null); setForm({ title: "", imageUrl: "", mobileImageUrl: "", linkUrl: "", isActive: 1, sortOrder: 0 }); setDialogOpen(true); };
   const openEdit = (b: any) => { setEditItem(b); setForm({ title: b.title, imageUrl: b.imageUrl, mobileImageUrl: b.mobileImageUrl ?? "", linkUrl: b.linkUrl ?? "", isActive: b.isActive, sortOrder: b.sortOrder }); setDialogOpen(true); };
   const handleSave = () => {
-    if (!form.title || !form.imageUrl) { toast.error("タイトルと画像URLを入力してください。"); return; }
+    if (!form.title || !form.imageUrl) { toast.error("제목과 이미지 URL을 입력해주세요."); return; }
     if (editItem) { updateMut.mutate({ id: editItem.id, ...form }); }
     else { createMut.mutate(form); }
   };
@@ -4441,29 +4441,29 @@ function AdminBanners() {
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold">バナー管理</h1>
-        <Button onClick={openCreate} size="sm"><Plus className="w-4 h-4 mr-1" /> バナーの追加</Button>
+        <h1 className="text-2xl font-bold">배너 관리</h1>
+        <Button onClick={openCreate} size="sm"><Plus className="w-4 h-4 mr-1" /> 배너 추가</Button>
       </div>
 
       {/* 상단 공지 배너 텍스트 */}
       <div className="bg-card border rounded-xl p-5 mb-6 elegant-shadow">
-        <h2 className="text-base font-semibold mb-3">上部お知らせバナーのテキスト</h2>
-        <p className="text-xs text-muted-foreground mb-3">サイトの最上部に表示されるお知らせ文です。絵文字も使用できます。</p>
+        <h2 className="text-base font-semibold mb-3">상단 공지 배너 텍스트</h2>
+        <p className="text-xs text-muted-foreground mb-3">사이트 최상단에 표시되는 공지 문구입니다. 이모지 포함 가능.</p>
         <div className="flex gap-2">
           <Input
             value={topBannerText}
             onChange={e => setTopBannerText(e.target.value)}
-            placeholder="🌿 インド直送 海外直送専門ショップ · ソウルモノ"
+            placeholder="🌿 인도 직배송 해외직구 전문 쇼핑몰 · 탈모학교"
             className="flex-1"
           />
-          <Button onClick={() => setTopBannerMut.mutate({ text: topBannerText })} disabled={setTopBannerMut.isPending}>保存</Button>
+          <Button onClick={() => setTopBannerMut.mutate({ text: topBannerText })} disabled={setTopBannerMut.isPending}>저장</Button>
         </div>
-        <div className="mt-2 text-xs text-muted-foreground">プレビュー: <span className="bg-[#3b2a1a] text-[#e8d5b0] px-3 py-1 rounded text-xs">{topBannerText || "🌿 인도 직배송 해외직구 전문 쇼핑몰 · 탈모학교"}</span></div>
+        <div className="mt-2 text-xs text-muted-foreground">미리보기: <span className="bg-[#3b2a1a] text-[#e8d5b0] px-3 py-1 rounded text-xs">{topBannerText || "🌿 인도 직배송 해외직구 전문 쇼핑몰 · 탈모학교"}</span></div>
       </div>
       <div className="bg-card border rounded-xl overflow-hidden elegant-shadow">
         <table className="w-full">
           <thead><tr className="bg-secondary/50 text-xs text-muted-foreground">
-            <th className="text-left py-3 px-4">ID</th><th className="text-left py-3 px-4">タイトル</th><th className="text-left py-3 px-4">画像</th><th className="text-center py-3 px-4">順序</th><th className="text-center py-3 px-4">ステータス</th><th className="text-center py-3 px-4">操作</th>
+            <th className="text-left py-3 px-4">ID</th><th className="text-left py-3 px-4">제목</th><th className="text-left py-3 px-4">이미지</th><th className="text-center py-3 px-4">순서</th><th className="text-center py-3 px-4">상태</th><th className="text-center py-3 px-4">작업</th>
           </tr></thead>
           <tbody className="divide-y">
             {(bannersList ?? []).map((b: any) => (
@@ -4474,7 +4474,7 @@ function AdminBanners() {
                 <td className="py-3 px-4 text-sm text-center">{b.sortOrder}</td>
                 <td className="py-3 px-4 text-center">
                   <button onClick={() => toggleActive.mutate({ id: b.id, isActive: b.isActive ? 0 : 1 })}>
-                    <Badge variant={b.isActive ? "default" : "secondary"} className="text-[10px] cursor-pointer">{b.isActive ? "有効" : "無効"}</Badge>
+                    <Badge variant={b.isActive ? "default" : "secondary"} className="text-[10px] cursor-pointer">{b.isActive ? "활성" : "비활성"}</Badge>
                   </button>
                 </td>
                 <td className="py-3 px-4 text-center">
@@ -4487,20 +4487,20 @@ function AdminBanners() {
             ))}
           </tbody>
         </table>
-        {(bannersList ?? []).length === 0 && <p className="text-center py-8 text-sm text-muted-foreground">バナーがありません</p>}
+        {(bannersList ?? []).length === 0 && <p className="text-center py-8 text-sm text-muted-foreground">배너가 없습니다</p>}
       </div>
 
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent className="sm:max-w-lg max-h-[90vh] overflow-y-auto">
-          <DialogHeader><DialogTitle>{editItem ? "バナーの編集" : "バナーの追加"}</DialogTitle><DialogDescription>バナーの情報を入力してください。</DialogDescription></DialogHeader>
+          <DialogHeader><DialogTitle>{editItem ? "배너 수정" : "배너 추가"}</DialogTitle><DialogDescription>배너 정보를 입력하세요.</DialogDescription></DialogHeader>
           <div className="space-y-3">
-            <div><label className="text-sm font-medium">タイトル *</label><Input value={form.title} onChange={e => setForm(f => ({ ...f, title: e.target.value }))} placeholder="배너 제목" /></div>
+            <div><label className="text-sm font-medium">제목 *</label><Input value={form.title} onChange={e => setForm(f => ({ ...f, title: e.target.value }))} placeholder="배너 제목" /></div>
             <div>
               <label className="text-sm font-medium">PC 이미지 * <span className="text-xs text-muted-foreground font-normal">(권장 1800×600px, 가로 3:1 — 화면이 작아져도 이 비율 그대로 축소됩니다)</span></label>
               <div className="flex gap-2 items-center">
                 <Input value={form.imageUrl} onChange={e => setForm(f => ({ ...f, imageUrl: e.target.value }))} placeholder="파일 선택으로 업로드하거나 이미지 URL 입력" className="flex-1" />
                 <label className="inline-flex items-center px-3 py-2 text-sm border rounded-lg cursor-pointer hover:bg-accent whitespace-nowrap">
-                  {uploadingKey === "imageUrl" ? "アップロード中..." : "파일 선택"}
+                  {uploadingKey === "imageUrl" ? "업로드 중..." : "파일 선택"}
                   <input type="file" accept="image/*" className="hidden" disabled={uploadingKey !== null} onChange={e => { const f = e.target.files?.[0]; if (f) uploadBannerFile(f, "imageUrl"); e.target.value = ""; }} />
                 </label>
               </div>
@@ -4511,7 +4511,7 @@ function AdminBanners() {
               <div className="flex gap-2 items-center">
                 <Input value={form.mobileImageUrl} onChange={e => setForm(f => ({ ...f, mobileImageUrl: e.target.value }))} placeholder="파일 선택으로 업로드하거나 이미지 URL 입력" className="flex-1" />
                 <label className="inline-flex items-center px-3 py-2 text-sm border rounded-lg cursor-pointer hover:bg-accent whitespace-nowrap">
-                  {uploadingKey === "mobileImageUrl" ? "アップロード中..." : "파일 선택"}
+                  {uploadingKey === "mobileImageUrl" ? "업로드 중..." : "파일 선택"}
                   <input type="file" accept="image/*" className="hidden" disabled={uploadingKey !== null} onChange={e => { const f = e.target.files?.[0]; if (f) uploadBannerFile(f, "mobileImageUrl"); e.target.value = ""; }} />
                 </label>
               </div>
@@ -4519,16 +4519,16 @@ function AdminBanners() {
             </div>
             <div><label className="text-sm font-medium">링크 URL</label><Input value={form.linkUrl} onChange={e => setForm(f => ({ ...f, linkUrl: e.target.value }))} placeholder="클릭 시 이동할 URL" /></div>
             <div className="grid grid-cols-2 gap-3">
-              <div><label className="text-sm font-medium">表示順</label><Input type="number" value={form.sortOrder} onChange={e => setForm(f => ({ ...f, sortOrder: Number(e.target.value) }))} /></div>
+              <div><label className="text-sm font-medium">정렬 순서</label><Input type="number" value={form.sortOrder} onChange={e => setForm(f => ({ ...f, sortOrder: Number(e.target.value) }))} /></div>
               <div className="flex items-center gap-2 pt-6">
                 <input type="checkbox" checked={form.isActive === 1} onChange={e => setForm(f => ({ ...f, isActive: e.target.checked ? 1 : 0 }))} />
-                <label className="text-sm">有効化</label>
+                <label className="text-sm">활성화</label>
               </div>
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setDialogOpen(false)}>キャンセル</Button>
-            <Button onClick={handleSave} disabled={createMut.isPending || updateMut.isPending}>{editItem ? "更新" : "作成"}</Button>
+            <Button variant="outline" onClick={() => setDialogOpen(false)}>취소</Button>
+            <Button onClick={handleSave} disabled={createMut.isPending || updateMut.isPending}>{editItem ? "수정" : "생성"}</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -4549,9 +4549,9 @@ function AdminKeywords() {
   const [newCount, setNewCount] = useState(0);
   const [newSort, setNewSort] = useState(0);
 
-  const updateMut = trpc.admin.updateKeyword.useMutation({ onSuccess: () => { utils.admin.keywords.invalidate(); setEditingId(null); toast.success("更新しました。"); } });
-  const addMut = trpc.admin.addKeyword.useMutation({ onSuccess: () => { utils.admin.keywords.invalidate(); setNewKeyword(""); setNewCount(0); setNewSort(0); toast.success("キーワードを追加しました。"); } });
-  const deleteMut = trpc.admin.deleteKeyword.useMutation({ onSuccess: () => { utils.admin.keywords.invalidate(); toast.success("削除しました。"); } });
+  const updateMut = trpc.admin.updateKeyword.useMutation({ onSuccess: () => { utils.admin.keywords.invalidate(); setEditingId(null); toast.success("수정되었습니다."); } });
+  const addMut = trpc.admin.addKeyword.useMutation({ onSuccess: () => { utils.admin.keywords.invalidate(); setNewKeyword(""); setNewCount(0); setNewSort(0); toast.success("키워드가 추가되었습니다."); } });
+  const deleteMut = trpc.admin.deleteKeyword.useMutation({ onSuccess: () => { utils.admin.keywords.invalidate(); toast.success("삭제되었습니다."); } });
   const batchSortMut = trpc.admin.batchUpdateKeywordsSortOrder.useMutation({ onSuccess: () => utils.admin.keywords.invalidate() });
 
   const startEdit = (k: any) => { setEditingId(k.id); setEditCount(k.searchCount); setEditSort(k.sortOrder ?? 0); };
@@ -4588,7 +4588,7 @@ function AdminKeywords() {
     setLocalKeywords(reordered.map((k, i) => ({ ...k, sortOrder: (n - i) * 10 })));
     setDragIdx(null); setDragOverIdx(null);
     batchSortMut.mutate(updates);
-    toast.success("検索キーワードの順序を保存しました");
+    toast.success("검색어 순서가 저장되었습니다");
   };
   const onDragEnd = () => { setDragIdx(null); setDragOverIdx(null); };
 
@@ -4596,22 +4596,22 @@ function AdminKeywords() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold mb-6">検索キーワード統計</h1>
+      <h1 className="text-2xl font-bold mb-6">검색어 통계</h1>
       <div className="mb-4 flex items-center gap-2 flex-wrap">
-        <Input className="max-w-[200px]" placeholder="新しいキーワード" value={newKeyword} onChange={e => setNewKeyword(e.target.value)} />
-        <Input className="w-20" type="number" placeholder="回数" value={newCount} onChange={e => setNewCount(Number(e.target.value))} />
-        <Input className="w-20" type="number" placeholder="順位" value={newSort} onChange={e => setNewSort(Number(e.target.value))} />
-        <Button size="sm" onClick={() => { if (!newKeyword.trim()) return; addMut.mutate({ keyword: newKeyword, searchCount: newCount, sortOrder: newSort }); }}><Plus className="w-4 h-4 mr-1" />追加</Button>
+        <Input className="max-w-[200px]" placeholder="새 키워드" value={newKeyword} onChange={e => setNewKeyword(e.target.value)} />
+        <Input className="w-20" type="number" placeholder="횟수" value={newCount} onChange={e => setNewCount(Number(e.target.value))} />
+        <Input className="w-20" type="number" placeholder="순위" value={newSort} onChange={e => setNewSort(Number(e.target.value))} />
+        <Button size="sm" onClick={() => { if (!newKeyword.trim()) return; addMut.mutate({ keyword: newKeyword, searchCount: newCount, sortOrder: newSort }); }}><Plus className="w-4 h-4 mr-1" />추가</Button>
       </div>
       <div className="mb-2 flex items-center gap-2 text-xs text-muted-foreground bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800 rounded-lg px-3 py-2">
         <GripVertical className="w-3.5 h-3.5 text-amber-600 flex-shrink-0" />
-        <span>行をドラッグして検索キーワードの表示順を調整してください。ドロップ時に自動保存されます。</span>
+        <span>행을 드래그해서 검색어 노출 순서를 조절하세요. 드롭 즉시 자동 저장됩니다.</span>
       </div>
       <div className="bg-card border rounded-xl overflow-hidden elegant-shadow">
         <table className="w-full">
           <thead><tr className="bg-secondary/50 text-xs text-muted-foreground">
             <th className="py-3 px-2 w-8"></th>
-            <th className="text-center py-3 px-4">順位</th><th className="text-left py-3 px-4">検索キーワード</th><th className="text-right py-3 px-4">検索回数</th><th className="text-right py-3 px-4">手動順位</th><th className="text-center py-3 px-4">操作</th>
+            <th className="text-center py-3 px-4">순위</th><th className="text-left py-3 px-4">검색어</th><th className="text-right py-3 px-4">검색 횟수</th><th className="text-right py-3 px-4">수동순위</th><th className="text-center py-3 px-4">작업</th>
           </tr></thead>
           <tbody className="divide-y">
             {displayList.map((k: any, i: number) => (
@@ -4637,8 +4637,8 @@ function AdminKeywords() {
                     <td className="py-3 px-4 text-right"><Input className="w-20 ml-auto text-right" type="number" value={editSort} onChange={e => setEditSort(Number(e.target.value))} /></td>
                     <td className="py-3 px-4 text-center">
                       <div className="flex items-center justify-center gap-1">
-                        <Button variant="ghost" size="sm" onClick={() => updateMut.mutate({ id: k.id, searchCount: editCount, sortOrder: editSort })}>保存</Button>
-                        <Button variant="ghost" size="sm" onClick={() => setEditingId(null)}>キャンセル</Button>
+                        <Button variant="ghost" size="sm" onClick={() => updateMut.mutate({ id: k.id, searchCount: editCount, sortOrder: editSort })}>저장</Button>
+                        <Button variant="ghost" size="sm" onClick={() => setEditingId(null)}>취소</Button>
                       </div>
                     </td>
                   </>
@@ -4691,9 +4691,9 @@ function AdminCoupons() {
     assignUserIds: [] as number[],
   };
   const [form, setForm] = useState(defaultForm);
-  const createMut = trpc.coupon.adminCreate.useMutation({ onSuccess: () => { utils.coupon.adminList.invalidate(); setShowDialog(false); toast.success("クーポンを作成しました"); } });
-  const updateMut = trpc.coupon.adminUpdate.useMutation({ onSuccess: () => { utils.coupon.adminList.invalidate(); setShowDialog(false); toast.success("クーポンを更新しました"); } });
-  const deleteMut = trpc.coupon.adminDelete.useMutation({ onSuccess: () => { utils.coupon.adminList.invalidate(); toast.success("クーポンを削除しました"); } });
+  const createMut = trpc.coupon.adminCreate.useMutation({ onSuccess: () => { utils.coupon.adminList.invalidate(); setShowDialog(false); toast.success("쿠폰이 생성되었습니다"); } });
+  const updateMut = trpc.coupon.adminUpdate.useMutation({ onSuccess: () => { utils.coupon.adminList.invalidate(); setShowDialog(false); toast.success("쿠폰이 수정되었습니다"); } });
+  const deleteMut = trpc.coupon.adminDelete.useMutation({ onSuccess: () => { utils.coupon.adminList.invalidate(); toast.success("쿠폰이 삭제되었습니다"); } });
   const issueMut = trpc.coupon.adminIssueCoupon.useMutation({ onSuccess: (d) => { toast.success(`${d.issued}명에게 쿠폰이 발급되었습니다`); } });
   const issueToAllMut = trpc.coupon.adminIssueToAll.useMutation({ onSuccess: (d) => { toast.success(`전체 회원 ${d.total}명 중 ${d.issued}명에게 발급 완료 (기발급 제외)`); } });
 
@@ -4729,7 +4729,7 @@ function AdminCoupons() {
     setShowDialog(true);
   };
   const handleSave = () => {
-    if (!form.code || !form.name) { toast.error("クーポンコードと名前を入力してください"); return; }
+    if (!form.code || !form.name) { toast.error("쿠폰 코드와 이름을 입력해주세요"); return; }
     const payload = {
       ...form,
       discountValue: Number(form.discountValue),
@@ -4760,19 +4760,19 @@ function AdminCoupons() {
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl font-bold">クーポン管理</h2>
-        <Button onClick={openCreate} size="sm"><Plus className="w-4 h-4 mr-1" /> クーポンの作成</Button>
+        <h2 className="text-2xl font-bold">쿠폰 관리</h2>
+        <Button onClick={openCreate} size="sm"><Plus className="w-4 h-4 mr-1" /> 쿠폰 생성</Button>
       </div>
       <div className="bg-card border rounded-xl overflow-hidden overflow-x-auto">
         <table className="w-full text-sm">
           <thead className="bg-secondary/30"><tr>
-            <th className="p-3 text-left">コード</th><th className="p-3 text-left">氏名</th>
-            <th className="p-3 text-left">割引</th><th className="p-3 text-left">適用対象</th>
-            <th className="p-3 text-left">発行対象</th><th className="p-3 text-left">期間</th>
-            <th className="p-3 text-center">使用/全体</th>
-            <th className="p-3 text-center">1人あたりの上限</th>
-            <th className="p-3 text-center">ステータス</th>
-            <th className="p-3 text-center">操作</th>
+            <th className="p-3 text-left">코드</th><th className="p-3 text-left">이름</th>
+            <th className="p-3 text-left">할인</th><th className="p-3 text-left">적용대상</th>
+            <th className="p-3 text-left">발급대상</th><th className="p-3 text-left">기간</th>
+            <th className="p-3 text-center">사용/전체</th>
+            <th className="p-3 text-center">1인당 한도</th>
+            <th className="p-3 text-center">상태</th>
+            <th className="p-3 text-center">작업</th>
           </tr></thead>
           <tbody className="divide-y">
             {data?.coupons.map(c => (
@@ -4785,7 +4785,7 @@ function AdminCoupons() {
                 <td className="p-3 text-xs">{new Date(c.startDate).toLocaleString("ko-KR", { year:"numeric", month:"2-digit", day:"2-digit", hour:"2-digit", minute:"2-digit", hour12:false })} ~ {new Date(c.endDate).toLocaleString("ko-KR", { year:"numeric", month:"2-digit", day:"2-digit", hour:"2-digit", minute:"2-digit", hour12:false })}</td>
                 <td className="p-3 text-center">{c.usedCount}/{c.totalQuantity === -1 ? "∞" : c.totalQuantity}</td>
                 <td className="p-3 text-center text-sm">{c.perUserLimit != null ? `${c.perUserLimit}회` : "∞"}</td>
-                <td className="p-3 text-center"><Badge variant={c.isActive ? "default" : "secondary"}>{c.isActive ? "有効" : "無効"}</Badge></td>
+                <td className="p-3 text-center"><Badge variant={c.isActive ? "default" : "secondary"}>{c.isActive ? "활성" : "비활성"}</Badge></td>
                 <td className="p-3 text-center">
                   <div className="flex gap-1 justify-center">
                     <Button variant="outline" size="sm" className="h-7 text-xs px-2 text-primary border-primary/40 hover:bg-primary/10"
@@ -4800,44 +4800,44 @@ function AdminCoupons() {
               </tr>
             ))}
             {(!data?.coupons || data.coupons.length === 0) && !isLoading && (
-              <tr><td colSpan={9} className="p-8 text-center text-muted-foreground">登録されたクーポンはありません</td></tr>
+              <tr><td colSpan={9} className="p-8 text-center text-muted-foreground">등록된 쿠폰이 없습니다</td></tr>
             )}
           </tbody>
         </table>
       </div>
       <Dialog open={showDialog} onOpenChange={setShowDialog}>
         <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto">
-          <DialogHeader><DialogTitle>{editId ? "クーポンの編集" : "クーポンの作成"}</DialogTitle><DialogDescription>クーポン情報を入力してください</DialogDescription></DialogHeader>
+          <DialogHeader><DialogTitle>{editId ? "쿠폰 수정" : "쿠폰 생성"}</DialogTitle><DialogDescription>쿠폰 정보를 입력하세요</DialogDescription></DialogHeader>
           <div className="space-y-4">
             <div className="grid grid-cols-2 gap-3">
-              <div><label className="text-sm font-medium">クーポンコード *</label><Input value={form.code} onChange={e => setForm(f => ({ ...f, code: e.target.value }))} placeholder="WELCOME10" /></div>
-              <div><label className="text-sm font-medium">クーポン名 *</label><Input value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} placeholder="新規会員10%割引" /></div>
+              <div><label className="text-sm font-medium">쿠폰 코드 *</label><Input value={form.code} onChange={e => setForm(f => ({ ...f, code: e.target.value }))} placeholder="WELCOME10" /></div>
+              <div><label className="text-sm font-medium">쿠폰명 *</label><Input value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} placeholder="신규회원 10% 할인" /></div>
             </div>
-            <div><label className="text-sm font-medium">説明</label><Input value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} placeholder="クーポンの説明" /></div>
+            <div><label className="text-sm font-medium">설명</label><Input value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} placeholder="쿠폰 설명" /></div>
             <div className="grid grid-cols-2 gap-3">
-              <div><label className="text-sm font-medium">割引タイプ</label>
+              <div><label className="text-sm font-medium">할인 유형</label>
                 <select className="w-full border rounded-md p-2 text-sm" value={form.discountType} onChange={e => setForm(f => ({ ...f, discountType: e.target.value as any }))}>
-                  <option value="percent">割合 (%)</option><option value="fixed">定額 (円)</option>
+                  <option value="percent">비율 (%)</option><option value="fixed">정액 (원)</option>
                 </select>
               </div>
-              <div><label className="text-sm font-medium">割引値</label><Input type="number" value={form.discountValue} onChange={e => setForm(f => ({ ...f, discountValue: Number(e.target.value) }))} /></div>
+              <div><label className="text-sm font-medium">할인값</label><Input type="number" value={form.discountValue} onChange={e => setForm(f => ({ ...f, discountValue: Number(e.target.value) }))} /></div>
             </div>
             <div className="grid grid-cols-2 gap-3">
-              <div><label className="text-sm font-medium">最低注文金額</label><Input type="number" value={form.minOrderAmount} onChange={e => setForm(f => ({ ...f, minOrderAmount: Number(e.target.value) }))} /></div>
-              <div><label className="text-sm font-medium">最大割引額</label><Input type="number" value={form.maxDiscountAmount} onChange={e => setForm(f => ({ ...f, maxDiscountAmount: e.target.value }))} placeholder="無制限" /></div>
+              <div><label className="text-sm font-medium">최소 주문금액</label><Input type="number" value={form.minOrderAmount} onChange={e => setForm(f => ({ ...f, minOrderAmount: Number(e.target.value) }))} /></div>
+              <div><label className="text-sm font-medium">최대 할인액</label><Input type="number" value={form.maxDiscountAmount} onChange={e => setForm(f => ({ ...f, maxDiscountAmount: e.target.value }))} placeholder="무제한" /></div>
             </div>
             <div className="grid grid-cols-2 gap-3">
-              <div><label className="text-sm font-medium">開始日時</label><Input type="datetime-local" value={form.startDate} onChange={e => setForm(f => ({ ...f, startDate: e.target.value }))} /></div>
-              <div><label className="text-sm font-medium">終了日時</label><Input type="datetime-local" value={form.endDate} onChange={e => setForm(f => ({ ...f, endDate: e.target.value }))} /></div>
+              <div><label className="text-sm font-medium">시작일시</label><Input type="datetime-local" value={form.startDate} onChange={e => setForm(f => ({ ...f, startDate: e.target.value }))} /></div>
+              <div><label className="text-sm font-medium">종료일시</label><Input type="datetime-local" value={form.endDate} onChange={e => setForm(f => ({ ...f, endDate: e.target.value }))} /></div>
             </div>
             <div className="grid grid-cols-3 gap-3">
               <div>
-                <label className="text-sm font-medium">発行数量</label>
+                <label className="text-sm font-medium">발급 수량</label>
                 <Input type="number" value={form.totalQuantity} onChange={e => setForm(f => ({ ...f, totalQuantity: Number(e.target.value) }))} />
-                <p className="text-xs text-muted-foreground mt-1">-1 = 無制限</p>
+                <p className="text-xs text-muted-foreground mt-1">-1 = 무제한</p>
               </div>
               <div>
-                <label className="text-sm font-medium">1人あたりの使用回数</label>
+                <label className="text-sm font-medium">1인당 사용 횟수</label>
                 <div className="flex items-center gap-2 mt-1">
                   <input
                     type="checkbox"
@@ -4846,7 +4846,7 @@ function AdminCoupons() {
                     onChange={e => setForm(f => ({ ...f, perUserLimit: e.target.checked ? 1 : null }))}
                     className="rounded"
                   />
-                  <label htmlFor="perUserLimitCheck" className="text-sm text-muted-foreground">上限を設定</label>
+                  <label htmlFor="perUserLimitCheck" className="text-sm text-muted-foreground">제한 설정</label>
                 </div>
                 {form.perUserLimit != null && (
                   <Input
@@ -4855,23 +4855,23 @@ function AdminCoupons() {
                     value={form.perUserLimit}
                     onChange={e => setForm(f => ({ ...f, perUserLimit: Math.max(1, Number(e.target.value)) }))}
                     className="mt-1"
-                    placeholder="例: 1"
+                    placeholder="예: 1"
                   />
                 )}
-                {form.perUserLimit == null && <p className="text-xs text-muted-foreground mt-1">無制限</p>}
+                {form.perUserLimit == null && <p className="text-xs text-muted-foreground mt-1">무제한</p>}
               </div>
               <div className="flex items-end gap-2 pb-5">
-                <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={form.isActive === 1} onChange={e => setForm(f => ({ ...f, isActive: e.target.checked ? 1 : 0 }))} /> 有効化</label>
+                <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={form.isActive === 1} onChange={e => setForm(f => ({ ...f, isActive: e.target.checked ? 1 : 0 }))} /> 활성화</label>
               </div>
             </div>
 
             <div className="border-t pt-4">
-              <h3 className="text-sm font-semibold mb-3">適用対象 (商品)</h3>
+              <h3 className="text-sm font-semibold mb-3">적용 대상 (상품)</h3>
               <div className="flex gap-2 mb-3">
                 {(["all", "category", "product"] as const).map(t => (
                   <button key={t} type="button" className={`px-3 py-1.5 text-xs rounded-full border transition-colors ${form.targetType === t ? "bg-primary text-primary-foreground border-primary" : "bg-secondary/50 border-border hover:bg-secondary"}`}
                     onClick={() => setForm(f => ({ ...f, targetType: t }))}>
-                    {t === "all" ? "すべての商品" : t === "category" ? "특정 카테고리" : "특정 상품"}
+                    {t === "all" ? "전체 상품" : t === "category" ? "특정 카테고리" : "특정 상품"}
                   </button>
                 ))}
               </div>
@@ -4891,7 +4891,7 @@ function AdminCoupons() {
               )}
               {form.targetType === "product" && (
                 <div className="space-y-2">
-                  <Input placeholder="商品を検索..." value={productSearch} onChange={e => setProductSearch(e.target.value)} className="text-sm" />
+                  <Input placeholder="상품 검색..." value={productSearch} onChange={e => setProductSearch(e.target.value)} className="text-sm" />
                   <div className="max-h-40 overflow-y-auto border rounded-lg">
                     {(productsQuery.data?.products ?? []).map((p: any) => (
                       <label key={p.id} className={`flex items-center gap-2 px-3 py-2 text-xs border-b last:border-0 cursor-pointer hover:bg-secondary/30 ${form.targetProductIds.includes(p.id) ? "bg-primary/5" : ""}`}>
@@ -4908,18 +4908,18 @@ function AdminCoupons() {
             </div>
 
             <div className="border-t pt-4">
-              <h3 className="text-sm font-semibold mb-3">発行対象 (会員)</h3>
+              <h3 className="text-sm font-semibold mb-3">발급 대상 (회원)</h3>
               <div className="flex gap-2 mb-3">
                 {(["all", "specific"] as const).map(t => (
                   <button key={t} type="button" className={`px-3 py-1.5 text-xs rounded-full border transition-colors ${form.assignType === t ? "bg-primary text-primary-foreground border-primary" : "bg-secondary/50 border-border hover:bg-secondary"}`}
                     onClick={() => setForm(f => ({ ...f, assignType: t }))}>
-                    {t === "all" ? "全会員" : "特定の会員"}
+                    {t === "all" ? "전체 회원" : "특정 회원"}
                   </button>
                 ))}
               </div>
               {form.assignType === "specific" && (
                 <div className="space-y-2">
-                  <Input placeholder="会員を検索 (氏名/ID)..." value={userSearch} onChange={e => setUserSearch(e.target.value)} className="text-sm" />
+                  <Input placeholder="회원 검색 (이름/아이디)..." value={userSearch} onChange={e => setUserSearch(e.target.value)} className="text-sm" />
                   <div className="max-h-40 overflow-y-auto border rounded-lg">
                     {(usersQuery.data?.users ?? []).map((u: any) => (
                       <label key={u.id} className={`flex items-center gap-2 px-3 py-2 text-xs border-b last:border-0 cursor-pointer hover:bg-secondary/30 ${form.assignUserIds.includes(u.id) ? "bg-primary/5" : ""}`}>
@@ -4936,8 +4936,8 @@ function AdminCoupons() {
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setShowDialog(false)}>キャンセル</Button>
-            <Button onClick={handleSave} disabled={createMut.isPending || updateMut.isPending}>保存</Button>
+            <Button variant="outline" onClick={() => setShowDialog(false)}>취소</Button>
+            <Button onClick={handleSave} disabled={createMut.isPending || updateMut.isPending}>저장</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -4968,9 +4968,9 @@ function AdminPromoCodes() {
     targetCategoryIds: [] as number[],
   };
   const [form, setForm] = useState(defaultForm);
-  const createMut = trpc.promoCode.adminCreate.useMutation({ onSuccess: () => { utils.promoCode.adminList.invalidate(); setShowDialog(false); toast.success("プロモコードを作成しました"); } });
-  const updateMut = trpc.promoCode.adminUpdate.useMutation({ onSuccess: () => { utils.promoCode.adminList.invalidate(); setShowDialog(false); toast.success("プロモコードを更新しました"); } });
-  const deleteMut = trpc.promoCode.adminDelete.useMutation({ onSuccess: () => { utils.promoCode.adminList.invalidate(); toast.success("プロモコードを削除しました"); } });
+  const createMut = trpc.promoCode.adminCreate.useMutation({ onSuccess: () => { utils.promoCode.adminList.invalidate(); setShowDialog(false); toast.success("프로모코드가 생성되었습니다"); } });
+  const updateMut = trpc.promoCode.adminUpdate.useMutation({ onSuccess: () => { utils.promoCode.adminList.invalidate(); setShowDialog(false); toast.success("프로모코드가 수정되었습니다"); } });
+  const deleteMut = trpc.promoCode.adminDelete.useMutation({ onSuccess: () => { utils.promoCode.adminList.invalidate(); toast.success("프로모코드가 삭제되었습니다"); } });
 
   const parseIds = (s: string | null | undefined): number[] => s ? s.split(",").map(Number).filter(Boolean) : [];
 
@@ -5003,7 +5003,7 @@ function AdminPromoCodes() {
     setShowDialog(true);
   };
   const handleSave = () => {
-    if (!form.code || !form.name) { toast.error("コードと名前を入力してください"); return; }
+    if (!form.code || !form.name) { toast.error("코드와 이름을 입력해주세요"); return; }
     const payload = {
       ...form,
       discountValue: Number(form.discountValue),
@@ -5023,19 +5023,19 @@ function AdminPromoCodes() {
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl font-bold">プロモコード管理</h2>
-        <Button onClick={openCreate} size="sm"><Plus className="w-4 h-4 mr-1" /> プロモコードの作成</Button>
+        <h2 className="text-2xl font-bold">프로모코드 관리</h2>
+        <Button onClick={openCreate} size="sm"><Plus className="w-4 h-4 mr-1" /> 프로모코드 생성</Button>
       </div>
       <div className="bg-card border rounded-xl overflow-hidden overflow-x-auto">
         <table className="w-full text-sm">
           <thead className="bg-secondary/30"><tr>
-            <th className="p-3 text-left">コード</th><th className="p-3 text-left">氏名</th>
-            <th className="p-3 text-left">割引</th><th className="p-3 text-left">適用対象</th>
-            <th className="p-3 text-left">期間</th>
-            <th className="p-3 text-center">使用/全体</th>
-            <th className="p-3 text-center">1人あたりの上限</th>
-            <th className="p-3 text-center">ステータス</th>
-            <th className="p-3 text-center">操作</th>
+            <th className="p-3 text-left">코드</th><th className="p-3 text-left">이름</th>
+            <th className="p-3 text-left">할인</th><th className="p-3 text-left">적용대상</th>
+            <th className="p-3 text-left">기간</th>
+            <th className="p-3 text-center">사용/전체</th>
+            <th className="p-3 text-center">1인당 한도</th>
+            <th className="p-3 text-center">상태</th>
+            <th className="p-3 text-center">작업</th>
           </tr></thead>
           <tbody className="divide-y">
             {data?.map((c: any) => (
@@ -5047,7 +5047,7 @@ function AdminPromoCodes() {
                 <td className="p-3 text-xs">{new Date(c.startDate).toLocaleString("ko-KR", { year:"numeric", month:"2-digit", day:"2-digit", hour:"2-digit", minute:"2-digit", hour12:false })} ~ {new Date(c.endDate).toLocaleString("ko-KR", { year:"numeric", month:"2-digit", day:"2-digit", hour:"2-digit", minute:"2-digit", hour12:false })}</td>
                 <td className="p-3 text-center">{c.usedCount}/{c.totalUsageLimit === -1 ? "∞" : c.totalUsageLimit}</td>
                 <td className="p-3 text-center text-sm">{c.perUserLimit}회</td>
-                <td className="p-3 text-center"><Badge variant={c.isActive ? "default" : "secondary"}>{c.isActive ? "有効" : "無効"}</Badge></td>
+                <td className="p-3 text-center"><Badge variant={c.isActive ? "default" : "secondary"}>{c.isActive ? "활성" : "비활성"}</Badge></td>
                 <td className="p-3 text-center">
                   <div className="flex gap-1 justify-center">
                     <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => openEdit(c)}><Pencil className="w-3.5 h-3.5" /></Button>
@@ -5057,58 +5057,58 @@ function AdminPromoCodes() {
               </tr>
             ))}
             {(!data || data.length === 0) && !isLoading && (
-              <tr><td colSpan={9} className="p-8 text-center text-muted-foreground">登録されたプロモコードはありません</td></tr>
+              <tr><td colSpan={9} className="p-8 text-center text-muted-foreground">등록된 프로모코드가 없습니다</td></tr>
             )}
           </tbody>
         </table>
       </div>
       <Dialog open={showDialog} onOpenChange={setShowDialog}>
         <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto">
-          <DialogHeader><DialogTitle>{editId ? "プロモコードの編集" : "プロモコードの作成"}</DialogTitle><DialogDescription>プロモコード情報を入力してください</DialogDescription></DialogHeader>
+          <DialogHeader><DialogTitle>{editId ? "프로모코드 수정" : "프로모코드 생성"}</DialogTitle><DialogDescription>프로모코드 정보를 입력하세요</DialogDescription></DialogHeader>
           <div className="space-y-4">
             <div className="grid grid-cols-2 gap-3">
-              <div><label className="text-sm font-medium">コード *</label><Input value={form.code} onChange={e => setForm(f => ({ ...f, code: e.target.value }))} placeholder="SUMMER20" /></div>
-              <div><label className="text-sm font-medium">名前 *</label><Input value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} placeholder="夏の割引20%" /></div>
+              <div><label className="text-sm font-medium">코드 *</label><Input value={form.code} onChange={e => setForm(f => ({ ...f, code: e.target.value }))} placeholder="SUMMER20" /></div>
+              <div><label className="text-sm font-medium">이름 *</label><Input value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} placeholder="여름 할인 20%" /></div>
             </div>
-            <div><label className="text-sm font-medium">説明</label><Input value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} placeholder="プロモコードの説明" /></div>
+            <div><label className="text-sm font-medium">설명</label><Input value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} placeholder="프로모코드 설명" /></div>
             <div className="grid grid-cols-2 gap-3">
-              <div><label className="text-sm font-medium">割引タイプ</label>
+              <div><label className="text-sm font-medium">할인 유형</label>
                 <select className="w-full border rounded-md p-2 text-sm" value={form.discountType} onChange={e => setForm(f => ({ ...f, discountType: e.target.value as any }))}>
-                  <option value="percent">割合 (%)</option><option value="fixed">定額 (円)</option>
+                  <option value="percent">비율 (%)</option><option value="fixed">정액 (원)</option>
                 </select>
               </div>
-              <div><label className="text-sm font-medium">割引値</label><Input type="number" value={form.discountValue} onChange={e => setForm(f => ({ ...f, discountValue: Number(e.target.value) }))} /></div>
+              <div><label className="text-sm font-medium">할인값</label><Input type="number" value={form.discountValue} onChange={e => setForm(f => ({ ...f, discountValue: Number(e.target.value) }))} /></div>
             </div>
             <div className="grid grid-cols-2 gap-3">
-              <div><label className="text-sm font-medium">最低注文金額</label><Input type="number" value={form.minOrderAmount} onChange={e => setForm(f => ({ ...f, minOrderAmount: Number(e.target.value) }))} /></div>
-              <div><label className="text-sm font-medium">最大割引額</label><Input type="number" value={form.maxDiscountAmount} onChange={e => setForm(f => ({ ...f, maxDiscountAmount: e.target.value }))} placeholder="無制限" /></div>
+              <div><label className="text-sm font-medium">최소 주문금액</label><Input type="number" value={form.minOrderAmount} onChange={e => setForm(f => ({ ...f, minOrderAmount: Number(e.target.value) }))} /></div>
+              <div><label className="text-sm font-medium">최대 할인액</label><Input type="number" value={form.maxDiscountAmount} onChange={e => setForm(f => ({ ...f, maxDiscountAmount: e.target.value }))} placeholder="무제한" /></div>
             </div>
             <div className="grid grid-cols-2 gap-3">
-              <div><label className="text-sm font-medium">開始日時</label><Input type="datetime-local" value={form.startDate} onChange={e => setForm(f => ({ ...f, startDate: e.target.value }))} /></div>
-              <div><label className="text-sm font-medium">終了日時</label><Input type="datetime-local" value={form.endDate} onChange={e => setForm(f => ({ ...f, endDate: e.target.value }))} /></div>
+              <div><label className="text-sm font-medium">시작일시</label><Input type="datetime-local" value={form.startDate} onChange={e => setForm(f => ({ ...f, startDate: e.target.value }))} /></div>
+              <div><label className="text-sm font-medium">종료일시</label><Input type="datetime-local" value={form.endDate} onChange={e => setForm(f => ({ ...f, endDate: e.target.value }))} /></div>
             </div>
             <div className="grid grid-cols-3 gap-3">
               <div>
-                <label className="text-sm font-medium">最大使用回数</label>
+                <label className="text-sm font-medium">최대 사용 횟수</label>
                 <Input type="number" value={form.totalUsageLimit} onChange={e => setForm(f => ({ ...f, totalUsageLimit: Number(e.target.value) }))} />
-                <p className="text-xs text-muted-foreground mt-1">-1 = 無制限</p>
+                <p className="text-xs text-muted-foreground mt-1">-1 = 무제한</p>
               </div>
               <div>
-                <label className="text-sm font-medium">1人あたりの使用回数</label>
+                <label className="text-sm font-medium">1인당 사용 횟수</label>
                 <Input type="number" min={1} value={form.perUserLimit} onChange={e => setForm(f => ({ ...f, perUserLimit: Math.max(1, Number(e.target.value)) }))} />
               </div>
               <div className="flex items-end gap-2 pb-5">
-                <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={form.isActive === 1} onChange={e => setForm(f => ({ ...f, isActive: e.target.checked ? 1 : 0 }))} /> 有効化</label>
+                <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={form.isActive === 1} onChange={e => setForm(f => ({ ...f, isActive: e.target.checked ? 1 : 0 }))} /> 활성화</label>
               </div>
             </div>
             <div className="border-t pt-4">
-              <h3 className="text-sm font-semibold mb-3">適用対象 (商品)</h3>
+              <h3 className="text-sm font-semibold mb-3">적용 대상 (상품)</h3>
               <div className="flex gap-2 mb-3">
                 {(["all", "category", "product"] as const).map(t => (
                   <button key={t} type="button"
                     className={`px-3 py-1.5 text-xs rounded-full border transition-colors ${form.targetMode === t ? "bg-primary text-primary-foreground border-primary" : "bg-secondary/50 border-border hover:bg-secondary"}`}
                     onClick={() => setForm(f => ({ ...f, targetMode: t, targetCategoryIds: t === "category" ? f.targetCategoryIds : [], targetProductIds: t === "product" ? f.targetProductIds : [] }))}>
-                    {t === "all" ? "すべての商品" : t === "category" ? "특정 카테고리" : "특정 상품"}
+                    {t === "all" ? "전체 상품" : t === "category" ? "특정 카테고리" : "특정 상품"}
                   </button>
                 ))}
               </div>
@@ -5128,7 +5128,7 @@ function AdminPromoCodes() {
               )}
               {form.targetMode === "product" && (
                 <div className="space-y-2">
-                  <Input placeholder="商品を検索..." value={productSearch} onChange={e => setProductSearch(e.target.value)} className="text-sm" />
+                  <Input placeholder="상품 검색..." value={productSearch} onChange={e => setProductSearch(e.target.value)} className="text-sm" />
                   <div className="max-h-40 overflow-y-auto border rounded-lg">
                     {(productsQuery.data?.products ?? []).map((p: any) => (
                       <label key={p.id} className={`flex items-center gap-2 px-3 py-2 text-xs border-b last:border-0 cursor-pointer hover:bg-secondary/30 ${form.targetProductIds.includes(p.id) ? "bg-primary/5" : ""}`}>
@@ -5145,8 +5145,8 @@ function AdminPromoCodes() {
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setShowDialog(false)}>キャンセル</Button>
-            <Button onClick={handleSave} disabled={createMut.isPending || updateMut.isPending}>保存</Button>
+            <Button variant="outline" onClick={() => setShowDialog(false)}>취소</Button>
+            <Button onClick={handleSave} disabled={createMut.isPending || updateMut.isPending}>저장</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -5179,7 +5179,7 @@ function AdminQnAItem({ post, onInvalidate }: { post: QnAPost; onInvalidate: () 
 
   const answerQnA = trpc.community.answerProductQnA.useMutation({
     onSuccess: () => {
-      toast.success("回答を登録しました");
+      toast.success("답변이 등록되었습니다");
       setAnswerContent("");
       onInvalidate();
       utils.community.productQnAReplies.invalidate({ postId: post.id });
@@ -5212,7 +5212,7 @@ function AdminQnAItem({ post, onInvalidate }: { post: QnAPost; onInvalidate: () 
             <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-primary text-primary-foreground text-[10px] font-bold shrink-0">Q</span>
             <p className="font-medium text-sm">{post.title}</p>
             <Badge className={`text-[10px] px-1.5 py-0 shrink-0 ${isAnswered ? "bg-emerald-100 text-emerald-700 border-emerald-200" : "bg-rose-100 text-rose-600 border-rose-200"}`}>
-              {isAnswered ? "回答済み" : "未回答"}
+              {isAnswered ? "답변완료" : "미답변"}
             </Badge>
           </div>
           <p className="text-xs text-muted-foreground mt-1 line-clamp-1">{post.content}</p>
@@ -5228,7 +5228,7 @@ function AdminQnAItem({ post, onInvalidate }: { post: QnAPost; onInvalidate: () 
       {isExpanded && (
         <div className="border-t bg-muted/20 p-4 space-y-4">
           <div className="bg-card rounded-lg p-3 border">
-            <p className="text-xs font-semibold text-muted-foreground mb-1">質問内容</p>
+            <p className="text-xs font-semibold text-muted-foreground mb-1">질문 내용</p>
             <p className="text-sm whitespace-pre-wrap">{post.content}</p>
           </div>
 
@@ -5240,7 +5240,7 @@ function AdminQnAItem({ post, onInvalidate }: { post: QnAPost; onInvalidate: () 
                     {c.isAdmin ? "A" : "U"}
                   </span>
                   <div className="flex-1 min-w-0">
-                    {c.isAdmin && <p className="text-[11px] font-semibold text-emerald-700 dark:text-emerald-400 mb-0.5">管理者の回答</p>}
+                    {c.isAdmin && <p className="text-[11px] font-semibold text-emerald-700 dark:text-emerald-400 mb-0.5">관리자 답변</p>}
                     <p className="text-sm whitespace-pre-wrap">{c.content}</p>
                     <p className="text-xs text-muted-foreground mt-1">{formatDateTime(c.createdAt)}</p>
                   </div>
@@ -5250,11 +5250,11 @@ function AdminQnAItem({ post, onInvalidate }: { post: QnAPost; onInvalidate: () 
           )}
 
           <div className="space-y-2">
-            <p className="text-xs font-semibold text-muted-foreground">管理者の回答を作成</p>
+            <p className="text-xs font-semibold text-muted-foreground">관리자 답변 작성</p>
             <textarea
               className="w-full border rounded-lg p-3 text-sm bg-background resize-none focus:outline-none focus:ring-2 focus:ring-primary/30"
               rows={4}
-              placeholder="回答内容を入力してください"
+              placeholder="답변 내용을 입력하세요"
               value={answerContent}
               onChange={e => setAnswerContent(e.target.value)}
             />
@@ -5320,7 +5320,7 @@ function AdminProductQnA() {
         <div className="relative w-64">
           <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
           <Input
-            placeholder="商品名、タイトル、投稿者で検索"
+            placeholder="상품명, 제목, 작성자 검색"
             value={search}
             onChange={e => setSearch(e.target.value)}
             className="pl-9 h-9 text-sm"
@@ -5333,7 +5333,7 @@ function AdminProductQnA() {
       ) : filteredPosts.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-20 gap-3 text-muted-foreground">
           <HelpCircle className="w-12 h-12 opacity-20" />
-          <p className="text-lg font-medium">{search.trim() ? "検索結果がありません" : onlyUnanswered ? "미답변 Q&A가 없습니다" : "Q&A가 없습니다"}</p>
+          <p className="text-lg font-medium">{search.trim() ? "검색 결과가 없습니다" : onlyUnanswered ? "미답변 Q&A가 없습니다" : "Q&A가 없습니다"}</p>
         </div>
       ) : (
         <div className="space-y-3">
@@ -5369,7 +5369,7 @@ function AdminReviews() {
   );
   const createReply = trpc.community.createReviewReply.useMutation({
     onSuccess: () => {
-      toast.success("回答を登録しました");
+      toast.success("답변이 등록되었습니다");
       setReplyContent("");
       utils.community.reviewReplies.invalidate();
       utils.community.adminReviews.invalidate();
@@ -5378,7 +5378,7 @@ function AdminReviews() {
   });
   const deleteReply = trpc.community.deleteReviewReply.useMutation({
     onSuccess: () => {
-      toast.success("回答を削除しました");
+      toast.success("답변이 삭제되었습니다");
       utils.community.reviewReplies.invalidate();
       utils.community.adminReviews.invalidate();
     },
@@ -5401,12 +5401,12 @@ function AdminReviews() {
 
   return (
     <div>
-      <h2 className="text-2xl font-bold mb-6">レビュー管理</h2>
+      <h2 className="text-2xl font-bold mb-6">리뷰 관리</h2>
       <div className="flex items-center justify-between mb-4 gap-4">
         <div className="relative w-64">
           <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
           <Input
-            placeholder="商品名、タイトル、投稿者で検索"
+            placeholder="상품명, 제목, 작성자 검색"
             value={search}
             onChange={e => setSearch(e.target.value)}
             className="pl-9 h-9 text-sm"
@@ -5416,10 +5416,10 @@ function AdminReviews() {
       <div className="bg-card border rounded-xl overflow-hidden">
         <table className="w-full text-sm">
           <thead className="bg-secondary/30"><tr>
-            <th className="p-3 text-left">ID</th><th className="p-3 text-left">商品</th><th className="p-3 text-left">タイトル</th>
-            <th className="p-3 text-left">投稿者</th><th className="p-3 text-center">評価</th>
-            <th className="p-3 text-center">回答</th><th className="p-3 text-left">投稿日</th>
-            <th className="p-3 text-center">操作</th>
+            <th className="p-3 text-left">ID</th><th className="p-3 text-left">상품</th><th className="p-3 text-left">제목</th>
+            <th className="p-3 text-left">작성자</th><th className="p-3 text-center">별점</th>
+            <th className="p-3 text-center">답변</th><th className="p-3 text-left">작성일</th>
+            <th className="p-3 text-center">작업</th>
           </tr></thead>
           <tbody className="divide-y">
             {filteredReviews.map(r => (
@@ -5438,13 +5438,13 @@ function AdminReviews() {
                   {r.userEmail && <div className="text-xs text-muted-foreground">{r.userEmail}</div>}
                 </td>
                 <td className="p-3 text-center">{r.rating ? `${"★".repeat(r.rating)}` : "-"}</td>
-                <td className="p-3 text-center"><Badge variant={r.replyCount > 0 ? "default" : "outline"}>{r.replyCount > 0 ? `${r.replyCount}건` : "未回答"}</Badge></td>
+                <td className="p-3 text-center"><Badge variant={r.replyCount > 0 ? "default" : "outline"}>{r.replyCount > 0 ? `${r.replyCount}건` : "미답변"}</Badge></td>
                 <td className="p-3 text-xs">{formatDate(r.createdAt)}</td>
                 <td className="p-3 text-center"><Button variant="ghost" size="sm" onClick={(e) => { e.stopPropagation(); setSelectedReview(r); }}><Eye className="w-4 h-4" /></Button></td>
               </tr>
             ))}
             {filteredReviews.length === 0 && !isLoading && (
-              <tr><td colSpan={8} className="p-8 text-center text-muted-foreground">{search.trim() ? "検索結果がありません" : "レビューがありません"}</td></tr>
+              <tr><td colSpan={8} className="p-8 text-center text-muted-foreground">{search.trim() ? "검색 결과가 없습니다" : "리뷰가 없습니다"}</td></tr>
             )}
           </tbody>
         </table>
@@ -5452,7 +5452,7 @@ function AdminReviews() {
 
       <Dialog open={!!selectedReview} onOpenChange={(open) => { if (!open) setSelectedReview(null); }}>
         <DialogContent className="max-w-lg max-h-[80vh] overflow-y-auto">
-          <DialogHeader><DialogTitle>レビュー詳細 / 回答</DialogTitle><DialogDescription>レビューに管理者の回答を投稿できます</DialogDescription></DialogHeader>
+          <DialogHeader><DialogTitle>리뷰 상세 / 답변</DialogTitle><DialogDescription>리뷰에 관리자 답변을 달 수 있습니다</DialogDescription></DialogHeader>
           {selectedReview && (
             <div className="space-y-4">
               {/* 상품 정보 */}
@@ -5466,7 +5466,7 @@ function AdminReviews() {
                 )}
                 <div className="min-w-0">
                   <p className="text-sm font-semibold truncate">{selectedReview.productName ?? "상품명 없음"}</p>
-                  <p className="text-xs text-muted-foreground">商品レビュー</p>
+                  <p className="text-xs text-muted-foreground">상품 리뷰</p>
                 </div>
               </div>
 
@@ -5487,7 +5487,7 @@ function AdminReviews() {
                   {replies.map(reply => (
                     <div key={reply.id} className="bg-primary/5 border border-primary/10 rounded-lg p-3">
                       <div className="flex items-center justify-between mb-1">
-                        <span className="text-xs font-medium text-primary">管理者の回答</span>
+                        <span className="text-xs font-medium text-primary">관리자 답변</span>
                         <div className="flex items-center gap-2">
                           <span className="text-xs text-muted-foreground">{formatDate(reply.createdAt)}</span>
                           <Button variant="ghost" size="icon" className="h-6 w-6 text-destructive" onClick={() => deleteReply.mutate({ id: reply.id })}><Trash2 className="w-3 h-3" /></Button>
@@ -5501,11 +5501,11 @@ function AdminReviews() {
 
               {/* Write reply */}
               <div>
-                <label className="text-sm font-medium block mb-1.5">回答を作成</label>
-                <Textarea value={replyContent} onChange={e => setReplyContent(e.target.value)} placeholder="レビューへの回答を入力してください..." rows={3} />
+                <label className="text-sm font-medium block mb-1.5">답변 작성</label>
+                <Textarea value={replyContent} onChange={e => setReplyContent(e.target.value)} placeholder="리뷰에 대한 답변을 작성하세요..." rows={3} />
                 <div className="flex justify-end mt-2">
                   <Button size="sm" disabled={!replyContent.trim() || createReply.isPending} onClick={() => createReply.mutate({ postId: selectedReview.id, content: replyContent.trim() })}>
-                    {createReply.isPending ? "登録中..." : "回答を登録"}
+                    {createReply.isPending ? "등록 중..." : "답변 등록"}
                   </Button>
                 </div>
               </div>
@@ -5543,7 +5543,7 @@ function AdminShipping() {
 
   const registerShipment = trpc.shipping.adminCreateShipment.useMutation({
     onSuccess: () => {
-      toast.success("追跡番号を登録しました。");
+      toast.success("운송장이 등록되었습니다.");
       setSingleDialogOpen(false);
       setTrackingNumber("");
       setDeliveryMemo("");
@@ -5568,7 +5568,7 @@ function AdminShipping() {
 
   const updateStatus = trpc.shipping.adminUpdateShipmentStatus.useMutation({
     onSuccess: () => {
-      toast.success("配送ステータスを変更しました。");
+      toast.success("배송 상태가 변경되었습니다.");
       utils.shipping.adminShipments.invalidate();
       utils.shipping.adminShippingStats.invalidate();
     },
@@ -5611,7 +5611,7 @@ function AdminShipping() {
 
   const handleBulkRefresh = () => {
     if (selectedShipmentIds.length === 0) {
-      toast.error("再読み込みする配送案件を選択してください。");
+      toast.error("새로고침할 배송건을 선택해주세요.");
       return;
     }
     setBulkRefreshProgress({ total: selectedShipmentIds.length, done: 0, running: true });
@@ -5627,32 +5627,32 @@ function AdminShipping() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold">配送管理</h2>
+        <h2 className="text-2xl font-bold">배송 관리</h2>
         <div className="flex gap-2">
-          <Button variant="outline" onClick={() => setBulkDialogOpen(true)} className="gap-2"><Upload className="w-4 h-4" />一括登録</Button>
+          <Button variant="outline" onClick={() => setBulkDialogOpen(true)} className="gap-2"><Upload className="w-4 h-4" />일괄 등록</Button>
         </div>
       </div>
 
       {/* Stats Cards */}
       <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
         <div className="bg-card border rounded-xl p-4">
-          <div className="flex items-center gap-2 text-muted-foreground text-sm mb-1"><Clock className="w-4 h-4" />発送待ち</div>
+          <div className="flex items-center gap-2 text-muted-foreground text-sm mb-1"><Clock className="w-4 h-4" />발송 대기</div>
           <p className="text-2xl font-bold">{stats?.pending ?? 0}</p>
         </div>
         <div className="bg-card border rounded-xl p-4">
-          <div className="flex items-center gap-2 text-blue-600 text-sm mb-1"><Truck className="w-4 h-4" />配送中</div>
+          <div className="flex items-center gap-2 text-blue-600 text-sm mb-1"><Truck className="w-4 h-4" />배송 중</div>
           <p className="text-2xl font-bold text-blue-600">{stats?.shipping ?? 0}</p>
         </div>
         <div className="bg-card border border-rose-200 dark:border-rose-800 rounded-xl p-4">
-          <div className="flex items-center gap-2 text-rose-600 text-sm mb-1"><AlertCircle className="w-4 h-4" />通関検査</div>
+          <div className="flex items-center gap-2 text-rose-600 text-sm mb-1"><AlertCircle className="w-4 h-4" />통관검사</div>
           <p className="text-2xl font-bold text-rose-600">{stats?.customsHold ?? 0}</p>
         </div>
         <div className="bg-card border rounded-xl p-4">
-          <div className="flex items-center gap-2 text-emerald-600 text-sm mb-1"><CheckCircle2 className="w-4 h-4" />配達完了</div>
+          <div className="flex items-center gap-2 text-emerald-600 text-sm mb-1"><CheckCircle2 className="w-4 h-4" />배달 완료</div>
           <p className="text-2xl font-bold text-emerald-600">{stats?.delivered ?? 0}</p>
         </div>
         <div className="bg-card border rounded-xl p-4">
-          <div className="flex items-center gap-2 text-destructive text-sm mb-1"><AlertCircle className="w-4 h-4" />配送失敗</div>
+          <div className="flex items-center gap-2 text-destructive text-sm mb-1"><AlertCircle className="w-4 h-4" />배송 실패</div>
           <p className="text-2xl font-bold text-destructive">{stats?.failed ?? 0}</p>
         </div>
       </div>
@@ -5681,7 +5681,7 @@ function AdminShipping() {
       {/* Shipments List */}
       <div>
         <div className="flex items-center gap-2 mb-4 flex-wrap">
-          <h3 className="font-semibold">配送一覧</h3>
+          <h3 className="font-semibold">배송 목록</h3>
           {selectedShipmentIds.length > 0 && (
             <Button
               size="sm"
@@ -5699,7 +5699,7 @@ function AdminShipping() {
           <div className="flex gap-1 ml-auto">
             {["all", "ready", "in_transit", "import_customs", "out_for_delivery", "delivered", "failed"].map(s => (
               <button key={s} onClick={() => { setStatusFilter(s); setPage(1); setSelectedShipmentIds([]); }} className={`px-2.5 py-1 rounded-full text-xs font-medium ${statusFilter === s ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground hover:bg-accent"}`}>
-                {s === "all" ? "すべて" : shipmentStatusLabels[s] || s}
+                {s === "all" ? "전체" : shipmentStatusLabels[s] || s}
               </button>
             ))}
           </div>
@@ -5710,7 +5710,7 @@ function AdminShipping() {
           <div className="mb-4 bg-blue-50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-800 rounded-lg p-3">
             <div className="flex items-center gap-2 mb-2">
               <RotateCcw className="w-4 h-4 text-blue-600 animate-spin" />
-              <span className="text-sm font-medium text-blue-700 dark:text-blue-300">配送情報を一括再読み込み中...</span>
+              <span className="text-sm font-medium text-blue-700 dark:text-blue-300">배송 정보 일괄 새로고침 중...</span>
               <span className="text-xs text-blue-500 ml-auto">{bulkRefreshProgress.total}건 처리 중</span>
             </div>
             <div className="w-full bg-blue-200 dark:bg-blue-800 rounded-full h-1.5">
@@ -5731,7 +5731,7 @@ function AdminShipping() {
                     className="rounded"
                   />
                 </th>
-                <th className="p-3 text-left">注文番号</th><th className="p-3 text-left">配送業者</th><th className="p-3 text-left">追跡番号</th><th className="p-3 text-center">ステータス</th><th className="p-3 text-center">登録日</th><th className="p-3 text-center">操作</th>
+                <th className="p-3 text-left">주문번호</th><th className="p-3 text-left">택배사</th><th className="p-3 text-left">운송장 번호</th><th className="p-3 text-center">상태</th><th className="p-3 text-center">등록일</th><th className="p-3 text-center">작업</th>
               </tr>
             </thead>
             <tbody>
@@ -5746,7 +5746,7 @@ function AdminShipping() {
                     />
                   </td>
                   <td className="p-3 font-mono text-xs">#{s.orderId}</td>
-                  <td className="p-3">国際配送</td>
+                  <td className="p-3">국제배송</td>
                   <td className="p-3 text-xs">{s.trackingNumber}</td>
                   <td className="p-3 text-center">
                     <span className={`text-xs px-2 py-0.5 rounded-full ${s.status === "delivered" ? "bg-emerald-100 text-emerald-700" : s.status === "failed" ? "bg-red-100 text-red-700" : s.status === "import_customs" ? "bg-rose-100 text-rose-700" : "bg-blue-100 text-blue-700"}`}>
@@ -5766,7 +5766,7 @@ function AdminShipping() {
                   </td>
                 </tr>
               ))}
-              {(shipmentsData?.shipments ?? []).length === 0 && <tr><td colSpan={7} className="p-8 text-center text-muted-foreground">配送データがありません</td></tr>}
+              {(shipmentsData?.shipments ?? []).length === 0 && <tr><td colSpan={7} className="p-8 text-center text-muted-foreground">배송 데이터가 없습니다</td></tr>}
             </tbody>
           </table>
         </div>
@@ -5775,19 +5775,19 @@ function AdminShipping() {
       {/* Single Register Dialog */}
       <Dialog open={singleDialogOpen} onOpenChange={setSingleDialogOpen}>
         <DialogContent>
-          <DialogHeader><DialogTitle>追跡番号を登録</DialogTitle></DialogHeader>
+          <DialogHeader><DialogTitle>운송장 등록</DialogTitle></DialogHeader>
           <div className="space-y-4">
             <div className="bg-blue-50 dark:bg-blue-950/20 rounded-lg p-3 text-sm text-blue-700 dark:text-blue-300 flex items-center gap-2">
               <Truck className="w-4 h-4" />
               국제배송으로 자동 등록됩니다.
             </div>
             <div>
-              <label className="text-sm font-medium mb-1.5 block">追跡番号</label>
-              <Input value={trackingNumber} onChange={(e) => setTrackingNumber(e.target.value)} placeholder="追跡番号を入力 (例: EE123456789JP)" />
+              <label className="text-sm font-medium mb-1.5 block">운송장 번호</label>
+              <Input value={trackingNumber} onChange={(e) => setTrackingNumber(e.target.value)} placeholder="운송장 번호 입력 (예: EE123456789KR)" />
             </div>
             <Button className="w-full" disabled={!trackingNumber || registerShipment.isPending}
               onClick={() => selectedOrderId && registerShipment.mutate({ orderId: selectedOrderId, trackingNumber })}>
-              {registerShipment.isPending ? "登録中..." : "追跡番号を登録"}
+              {registerShipment.isPending ? "등록 중..." : "운송장 등록"}
             </Button>
           </div>
         </DialogContent>
@@ -5796,7 +5796,7 @@ function AdminShipping() {
       {/* Bulk Register Dialog */}
       <Dialog open={bulkDialogOpen} onOpenChange={setBulkDialogOpen}>
         <DialogContent className="max-w-2xl">
-          <DialogHeader><DialogTitle>追跡番号の一括登録</DialogTitle><DialogDescription>発送待ちの注文に追跡番号を一括で登録します。</DialogDescription></DialogHeader>
+          <DialogHeader><DialogTitle>일괄 운송장 등록</DialogTitle><DialogDescription>발송 대기 중인 주문에 운송장을 일괄 등록합니다.</DialogDescription></DialogHeader>
           <div className="space-y-4">
             <div className="bg-blue-50 dark:bg-blue-950/20 rounded-lg p-3 text-sm text-blue-700 dark:text-blue-300 flex items-center gap-2">
               <Truck className="w-4 h-4" />
@@ -5808,7 +5808,7 @@ function AdminShipping() {
                 return (
                   <div key={order.id} className="flex items-center gap-3 bg-muted/50 rounded-lg p-2">
                     <span className="text-xs font-mono w-20 shrink-0">#{String(order.id).padStart(6, '0')}</span>
-                    <Input placeholder="追跡番号" className="h-8 text-xs" value={entry?.trackingNumber ?? ""}
+                    <Input placeholder="운송장 번호" className="h-8 text-xs" value={entry?.trackingNumber ?? ""}
                       onChange={(e) => {
                         const val = e.target.value;
                         setBulkEntries(prev => {
@@ -5820,14 +5820,14 @@ function AdminShipping() {
                   </div>
                 );
               })}
-              {(pendingData?.orders ?? []).length === 0 && <p className="text-sm text-muted-foreground text-center py-4">発送待ちの注文はありません</p>}
+              {(pendingData?.orders ?? []).length === 0 && <p className="text-sm text-muted-foreground text-center py-4">발송 대기 주문이 없습니다</p>}
             </div>
             <Button className="w-full" disabled={bulkEntries.filter(e => e.trackingNumber).length === 0 || bulkRegister.isPending}
               onClick={() => {
                 const entries = bulkEntries.filter(e => e.trackingNumber);
                 bulkRegister.mutate({ shipments: entries });
               }}>
-              {bulkRegister.isPending ? "登録中..." : `${bulkEntries.filter(e => e.trackingNumber).length}건 일괄 등록`}
+              {bulkRegister.isPending ? "등록 중..." : `${bulkEntries.filter(e => e.trackingNumber).length}건 일괄 등록`}
             </Button>
           </div>
         </DialogContent>
@@ -5847,7 +5847,7 @@ function AdminReturns() {
 
   const updateReturn = trpc.shipping.adminUpdateReturnRequest.useMutation({
     onSuccess: () => {
-      toast.success("ステータスを変更しました。");
+      toast.success("상태가 변경되었습니다.");
       setSelectedReturn(null);
       utils.shipping.adminReturnRequests.invalidate();
     },
@@ -5862,12 +5862,12 @@ function AdminReturns() {
 
   return (
     <div className="space-y-6">
-      <h2 className="text-2xl font-bold">返品/交換管理</h2>
+      <h2 className="text-2xl font-bold">반품/교환 관리</h2>
 
       <div className="flex gap-1 mb-4">
         {["all", "requested", "approved", "collecting", "collected", "completed", "rejected"].map(s => (
           <button key={s} onClick={() => { setStatusFilter(s); setPage(1); }} className={`px-2.5 py-1 rounded-full text-xs font-medium ${statusFilter === s ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground hover:bg-accent"}`}>
-            {s === "all" ? "すべて" : returnStatusLabels[s] || s}
+            {s === "all" ? "전체" : returnStatusLabels[s] || s}
           </button>
         ))}
       </div>
@@ -5875,7 +5875,7 @@ function AdminReturns() {
       <div className="border rounded-xl overflow-hidden">
         <table className="w-full text-sm">
           <thead className="bg-muted/50">
-            <tr><th className="p-3 text-left">ID</th><th className="p-3 text-left">種類</th><th className="p-3 text-left">注文番号</th><th className="p-3 text-left">理由</th><th className="p-3 text-center">ステータス</th><th className="p-3 text-center">申請日</th><th className="p-3 text-center">操作</th></tr>
+            <tr><th className="p-3 text-left">ID</th><th className="p-3 text-left">유형</th><th className="p-3 text-left">주문번호</th><th className="p-3 text-left">사유</th><th className="p-3 text-center">상태</th><th className="p-3 text-center">신청일</th><th className="p-3 text-center">작업</th></tr>
           </thead>
           <tbody>
             {(data?.requests ?? []).map(r => (
@@ -5889,7 +5889,7 @@ function AdminReturns() {
                 <td className="p-3 text-center"><Button variant="ghost" size="sm" onClick={() => { setSelectedReturn(r); setAdminMemo((r as any).adminMemo || ""); }}><Eye className="w-4 h-4" /></Button></td>
               </tr>
             ))}
-            {(data?.requests ?? []).length === 0 && <tr><td colSpan={7} className="p-8 text-center text-muted-foreground">返品/交換の申請はありません</td></tr>}
+            {(data?.requests ?? []).length === 0 && <tr><td colSpan={7} className="p-8 text-center text-muted-foreground">반품/교환 요청이 없습니다</td></tr>}
           </tbody>
         </table>
       </div>
@@ -5897,22 +5897,22 @@ function AdminReturns() {
       {/* Return Detail Dialog */}
       <Dialog open={!!selectedReturn} onOpenChange={() => setSelectedReturn(null)}>
         <DialogContent>
-          <DialogHeader><DialogTitle>返品/交換の詳細</DialogTitle></DialogHeader>
+          <DialogHeader><DialogTitle>반품/교환 상세</DialogTitle></DialogHeader>
           {selectedReturn && (
             <div className="space-y-4">
               <div className="grid grid-cols-2 gap-3 text-sm">
-                <div><span className="text-muted-foreground">種類</span><p className="font-medium">{returnTypeLabels[selectedReturn.type]}</p></div>
-                <div><span className="text-muted-foreground">注文番号</span><p className="font-medium">#{selectedReturn.orderId}</p></div>
-                <div className="col-span-2"><span className="text-muted-foreground">理由</span><p className="font-medium">{selectedReturn.reason}</p></div>
-                {selectedReturn.detailReason && <div className="col-span-2"><span className="text-muted-foreground">詳細な理由</span><p className="text-sm">{selectedReturn.detailReason}</p></div>}
+                <div><span className="text-muted-foreground">유형</span><p className="font-medium">{returnTypeLabels[selectedReturn.type]}</p></div>
+                <div><span className="text-muted-foreground">주문번호</span><p className="font-medium">#{selectedReturn.orderId}</p></div>
+                <div className="col-span-2"><span className="text-muted-foreground">사유</span><p className="font-medium">{selectedReturn.reason}</p></div>
+                {selectedReturn.detailReason && <div className="col-span-2"><span className="text-muted-foreground">상세 사유</span><p className="text-sm">{selectedReturn.detailReason}</p></div>}
               </div>
               <Separator />
               <div>
-                <label className="text-sm font-medium mb-1.5 block">管理者メモ</label>
+                <label className="text-sm font-medium mb-1.5 block">관리자 메모</label>
                 <Textarea value={adminMemo} onChange={(e) => setAdminMemo(e.target.value)} rows={2} />
               </div>
               <div>
-                <label className="text-sm font-medium mb-1.5 block">ステータス変更</label>
+                <label className="text-sm font-medium mb-1.5 block">상태 변경</label>
                 <div className="flex gap-2 flex-wrap">
                   {["approved", "collecting", "collected", "completed", "rejected"].map(s => (
                     <Button key={s} size="sm" variant={selectedReturn.status === s ? "default" : "outline"}
@@ -5934,7 +5934,7 @@ function AdminReturns() {
 // ─── Admin Shipping Policy ───
 function AdminShippingPolicy() {
   const { data: settingsData, isLoading } = trpc.admin.getSettings.useQuery();
-  const updateSetting = trpc.admin.upsertSetting.useMutation({ onSuccess: () => toast.success("送料ポリシーを保存しました。"), onError: (e) => toast.error(e.message) });
+  const updateSetting = trpc.admin.upsertSetting.useMutation({ onSuccess: () => toast.success("배송비 정책이 저장되었습니다."), onError: (e) => toast.error(e.message) });
 
   const getVal = (key: string, fallback: string) =>
     settingsData?.find((s: any) => s.key === key)?.value ?? fallback;
@@ -5959,10 +5959,10 @@ function AdminShippingPolicy() {
 
   const handleSave = async () => {
     await Promise.all([
-      updateSetting.mutateAsync({ key: "shippingMethod", value: method, label: "配送方法" }),
-      updateSetting.mutateAsync({ key: "shippingFee", value: fee, label: "送料" }),
+      updateSetting.mutateAsync({ key: "shippingMethod", value: method, label: "배송 방법" }),
+      updateSetting.mutateAsync({ key: "shippingFee", value: fee, label: "배송비" }),
       updateSetting.mutateAsync({ key: "shippingAdditionalFee", value: additionalFee, label: "추가 품목당 배송비" }),
-      updateSetting.mutateAsync({ key: "shippingDays", value: days, label: "配送予定日" }),
+      updateSetting.mutateAsync({ key: "shippingDays", value: days, label: "예상 배송일" }),
       updateSetting.mutateAsync({ key: "shippingNote", value: note, label: "배송 안내" }),
     ]);
   };
@@ -5971,7 +5971,7 @@ function AdminShippingPolicy() {
 
   return (
     <div className="space-y-5">
-      <h1 className="text-2xl font-bold mb-6">送料ポリシー</h1>
+      <h1 className="text-2xl font-bold mb-6">배송비 정책</h1>
 
       <div className="bg-card border rounded-xl p-5 space-y-4">
         <h2 className="text-base font-semibold flex items-center gap-2">
@@ -5981,55 +5981,55 @@ function AdminShippingPolicy() {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label className="text-sm font-medium block mb-1">配送方法</label>
+            <label className="text-sm font-medium block mb-1">배송 방법</label>
             <input
               className="w-full border rounded-lg px-3 py-2 text-sm bg-background"
               value={method}
               onChange={(e) => setMethod(e.target.value)}
-              placeholder="例: 国際配送"
+              placeholder="예: 국제배송"
             />
           </div>
           <div>
-            <label className="text-sm font-medium block mb-1">送料</label>
+            <label className="text-sm font-medium block mb-1">배송비</label>
             <div className="flex items-center gap-2">
               <input
                 className="w-full border rounded-lg px-3 py-2 text-sm bg-background"
                 value={fee}
                 onChange={(e) => setFee(e.target.value)}
-                placeholder="例: 0 または 無料"
+                placeholder="예: 0 또는 무료"
               />
             </div>
-            <p className="text-xs text-muted-foreground mt-1">0 または「無料」と入力すると、送料無料として表示されます。</p>
+            <p className="text-xs text-muted-foreground mt-1">0 또는 "무료"로 입력하면 무료배송으로 표시됩니다.</p>
           </div>
           <div>
-            <label className="text-sm font-medium block mb-1">追加数量あたりの送料 (2点目から)</label>
+            <label className="text-sm font-medium block mb-1">추가 수량당 배송비 (2번째 상품부터)</label>
             <input
               className="w-full border rounded-lg px-3 py-2 text-sm bg-background"
               value={additionalFee}
               onChange={(e) => setAdditionalFee(e.target.value)}
-              placeholder="例: 590"
+              placeholder="예: 590"
             />
-            <p className="text-xs text-muted-foreground mt-1">注文商品の数量が2点以上の場合、2点目から1点ごとに加算される送料です。</p>
+            <p className="text-xs text-muted-foreground mt-1">주문 상품 수량이 2개 이상일 때, 2번째 상품부터 1개당 추가되는 배송비입니다.</p>
           </div>
           <div>
-            <label className="text-sm font-medium block mb-1">配送予定日</label>
+            <label className="text-sm font-medium block mb-1">예상 배송일</label>
             <input
               className="w-full border rounded-lg px-3 py-2 text-sm bg-background"
               value={days}
               onChange={(e) => setDays(e.target.value)}
-              placeholder="例: 10〜14日 (営業日基準)"
+              placeholder="예: 10~14일 (영업일기준)"
             />
           </div>
         </div>
 
         <div>
-          <label className="text-sm font-medium block mb-1">配送案内文</label>
+          <label className="text-sm font-medium block mb-1">배송 안내 문구</label>
           <textarea
             className="w-full border rounded-lg px-3 py-2 text-sm bg-background resize-none"
             rows={3}
             value={note}
             onChange={(e) => setNote(e.target.value)}
-            placeholder="配送案内メッセージを入力してください。"
+            placeholder="배송 안내 메시지를 입력하세요."
           />
         </div>
 
@@ -6041,7 +6041,7 @@ function AdminShippingPolicy() {
 
       {/* 미리보기 */}
       <div className="bg-card border rounded-xl p-5">
-        <h2 className="text-base font-semibold mb-3">プレビュー</h2>
+        <h2 className="text-base font-semibold mb-3">미리보기</h2>
         <div className="bg-card border rounded-xl p-4 ring-2 ring-primary">
           <div className="flex items-center gap-3 mb-3">
             <div className="w-10 h-10 rounded-full bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center">
@@ -6054,17 +6054,17 @@ function AdminShippingPolicy() {
           </div>
           <div className="grid grid-cols-3 gap-3 text-sm mb-3">
             <div className="bg-muted/50 rounded-lg p-2.5">
-              <span className="text-xs text-muted-foreground">配送方法</span>
+              <span className="text-xs text-muted-foreground">배송 방법</span>
               <p className="font-semibold mt-0.5 text-sm">{method}</p>
             </div>
             <div className="bg-muted/50 rounded-lg p-2.5">
-              <span className="text-xs text-muted-foreground">送料 (1点 / 追加1点ごと)</span>
+              <span className="text-xs text-muted-foreground">배송비 (1개 / 추가 1개당)</span>
               <p className={`font-semibold mt-0.5 text-sm ${fee === "0" || fee.toLowerCase() === "무료" ? "text-emerald-600" : ""}`}>
-                {fee === "0" || fee.toLowerCase() === "무료" ? "無料" : `${Number(fee).toLocaleString()}엔 / +${Number(additionalFee || 0).toLocaleString()}엔`}
+                {fee === "0" || fee.toLowerCase() === "무료" ? "무료" : `${Number(fee).toLocaleString()}엔 / +${Number(additionalFee || 0).toLocaleString()}엔`}
               </p>
             </div>
             <div className="bg-muted/50 rounded-lg p-2.5">
-              <span className="text-xs text-muted-foreground">配送予定日</span>
+              <span className="text-xs text-muted-foreground">예상 배송일</span>
               <p className="font-semibold mt-0.5 text-sm">{days}</p>
             </div>
           </div>
@@ -6100,7 +6100,7 @@ function AdminRefundManagement() {
   const updateClaim = trpc.order.adminUpdateClaim.useMutation({
     onSuccess: () => {
       utils.order.adminClaimList.invalidate();
-      toast.success("保存しました");
+      toast.success("저장되었습니다");
     },
     onError: (e) => toast.error(e.message),
   });
@@ -6132,7 +6132,7 @@ function AdminRefundManagement() {
       ) : !data || data.items.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-20 gap-3 text-muted-foreground">
           <CheckCircle2 className="w-12 h-12 text-emerald-400" />
-          <p className="text-lg font-medium">{statusFilter === "전체" ? "申請履歴はありません" : `'${statusFilter}' 상태인 요청이 없습니다`}</p>
+          <p className="text-lg font-medium">{statusFilter === "전체" ? "요청 내역이 없습니다" : `'${statusFilter}' 상태인 요청이 없습니다`}</p>
         </div>
       ) : (
         <div className="space-y-3">
@@ -6160,7 +6160,7 @@ function AdminRefundManagement() {
                     {c.userName}{c.userPhone ? ` · ${c.userPhone}` : ""}{c.userEmail ? ` (${c.userEmail})` : ""}
                   </p>
                   <div className="text-xs text-muted-foreground bg-muted/50 rounded px-2 py-1 mt-1">
-                    <span className="font-medium">申請理由: </span>{c.reason}
+                    <span className="font-medium">요청사유: </span>{c.reason}
                   </div>
                   <p className="text-xs text-muted-foreground">
                     접수일: {formatDateTime(c.createdAt)}
@@ -6169,7 +6169,7 @@ function AdminRefundManagement() {
                   <div className="mt-2">
                     <textarea
                       className="w-full text-xs border rounded px-2 py-1.5 min-h-[52px] resize-y bg-background"
-                      placeholder="管理者メモ (お客様には表示されません)"
+                      placeholder="관리자 메모 (고객에게는 보이지 않음)"
                       value={memoDraft}
                       onChange={(e) => setMemoDrafts((prev) => ({ ...prev, [c.id]: e.target.value }))}
                     />
@@ -6188,7 +6188,7 @@ function AdminRefundManagement() {
                 </div>
                 <div className="flex flex-row sm:flex-col items-center sm:items-end gap-2 sm:gap-3 shrink-0">
                   <div className="text-right">
-                    <p className="text-xs text-muted-foreground">注文金額</p>
+                    <p className="text-xs text-muted-foreground">주문금액</p>
                     <p className="text-lg font-bold text-rose-600">{formatPrice(c.totalAmount)}</p>
                   </div>
                   <select
@@ -6258,7 +6258,7 @@ export default function AdminDashboard() {
         <Route path="/admin/gnu-api-sync" component={AdminGnuApiSync} />
         <Route path="/admin/action-logs" component={AdminActionLogs} />
         <Route path="/admin/visitor-stats" component={AdminVisitorStats} />
-        <Route>{() => <div className="flex flex-col items-center justify-center py-20 gap-4"><AlertCircle className="w-12 h-12 text-muted-foreground" /><h2 className="text-xl font-bold">ページが見つかりません</h2><p className="text-muted-foreground">お探しの管理ページは存在しません。</p><Link href="/admin"><Button variant="outline"><ArrowLeft className="w-4 h-4 mr-2" />ダッシュボードへ</Button></Link></div>}</Route>
+        <Route>{() => <div className="flex flex-col items-center justify-center py-20 gap-4"><AlertCircle className="w-12 h-12 text-muted-foreground" /><h2 className="text-xl font-bold">페이지를 찾을 수 없습니다</h2><p className="text-muted-foreground">요청하신 관리자 페이지가 존재하지 않습니다.</p><Link href="/admin"><Button variant="outline"><ArrowLeft className="w-4 h-4 mr-2" />대시보드로</Button></Link></div>}</Route>
       </Switch>
     </AdminLayout>
   );

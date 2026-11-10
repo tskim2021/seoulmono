@@ -89,7 +89,7 @@ export default function AdminChatbotQna() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.categoryId) {
-      toast.error("カテゴリーを選択してください。");
+      toast.error("카테고리를 선택해주세요.");
       return;
     }
     try {
@@ -98,15 +98,15 @@ export default function AdminChatbotQna() {
           id: editingQna.id,
           ...formData,
         });
-        toast.success("Q&Aを更新しました。");
+        toast.success("문답이 수정되었습니다.");
       } else {
         await createMutation.mutateAsync(formData);
-        toast.success("Q&Aを追加しました。");
+        toast.success("문답이 추가되었습니다.");
       }
       setDialogOpen(false);
       refetch();
     } catch (error) {
-      toast.error("操作に失敗しました。");
+      toast.error("작업에 실패했습니다.");
     }
   };
 
@@ -114,10 +114,10 @@ export default function AdminChatbotQna() {
     if (!confirm("이 문답을 삭제하시겠습니까?")) return;
     try {
       await deleteMutation.mutateAsync({ id });
-      toast.success("Q&Aを削除しました。");
+      toast.success("문답이 삭제되었습니다.");
       refetch();
     } catch (error) {
-      toast.error("削除に失敗しました。");
+      toast.error("삭제에 실패했습니다.");
     }
   };
 
@@ -161,7 +161,7 @@ export default function AdminChatbotQna() {
         <CardHeader>
           <div className="flex items-center justify-between">
             <div>
-              <CardTitle>Q&A一覧</CardTitle>
+              <CardTitle>문답 목록</CardTitle>
               <CardDescription>
                 카테고리별로 필터링하여 문답을 관리할 수 있습니다.
               </CardDescription>
@@ -173,7 +173,7 @@ export default function AdminChatbotQna() {
                 onChange={(e) => setSelectedCategory(e.target.value === "all" ? "all" : Number(e.target.value))}
                 className="px-3 py-2 border rounded-md text-sm"
               >
-                <option value="all">すべてのカテゴリー</option>
+                <option value="all">전체 카테고리</option>
                 {categories?.filter((c) => !c.parentId).map((cat) => (
                   <optgroup key={cat.id} label={cat.name}>
                     <option value={cat.id}>{cat.name}</option>
@@ -194,19 +194,19 @@ export default function AdminChatbotQna() {
           {filteredQna.length === 0 ? (
             <div className="text-center py-12 text-muted-foreground">
               <MessageSquareText className="w-12 h-12 mx-auto mb-4 opacity-50" />
-              <p>登録されたQ&Aがありません。</p>
-              <p className="text-sm mt-1">Q&Aを追加して、チャットボットの応答を構成してください。</p>
+              <p>등록된 문답이 없습니다.</p>
+              <p className="text-sm mt-1">문답을 추가하여 챗봇 응답을 구성하세요.</p>
             </div>
           ) : (
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>カテゴリー</TableHead>
-                  <TableHead>質問</TableHead>
-                  <TableHead>回答 (プレビュー)</TableHead>
-                  <TableHead className="text-center">表示順</TableHead>
-                  <TableHead className="text-center">ステータス</TableHead>
-                  <TableHead className="text-right">操作</TableHead>
+                  <TableHead>카테고리</TableHead>
+                  <TableHead>질문</TableHead>
+                  <TableHead>답변 (미리보기)</TableHead>
+                  <TableHead className="text-center">정렬순서</TableHead>
+                  <TableHead className="text-center">상태</TableHead>
+                  <TableHead className="text-right">작업</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -226,7 +226,7 @@ export default function AdminChatbotQna() {
                     <TableCell className="text-center">{qna.sortOrder}</TableCell>
                     <TableCell className="text-center">
                       <Badge variant={qna.isActive ? "default" : "secondary"}>
-                        {qna.isActive ? "有効" : "無効"}
+                        {qna.isActive ? "활성" : "비활성"}
                       </Badge>
                     </TableCell>
                     <TableCell className="text-right">
@@ -258,14 +258,14 @@ export default function AdminChatbotQna() {
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>{editingQna ? "Q&Aの編集" : "Q&Aの追加"}</DialogTitle>
+            <DialogTitle>{editingQna ? "문답 수정" : "문답 추가"}</DialogTitle>
             <DialogDescription>
-              챗봇이 응답할 질문과 답변을 {editingQna ? "更新" : "追加"}합니다. 답변은 마크다운 형식을 지원합니다.
+              챗봇이 응답할 질문과 답변을 {editingQna ? "수정" : "추가"}합니다. 답변은 마크다운 형식을 지원합니다.
             </DialogDescription>
           </DialogHeader>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="categoryId">カテゴリー *</Label>
+              <Label htmlFor="categoryId">카테고리 *</Label>
               <select
                 id="categoryId"
                 value={formData.categoryId}
@@ -273,7 +273,7 @@ export default function AdminChatbotQna() {
                 className="w-full px-3 py-2 border rounded-md"
                 required
               >
-                <option value={0}>カテゴリーを選択してください</option>
+                <option value={0}>카테고리를 선택하세요</option>
                 {categories?.filter((c) => !c.parentId).map((cat) => (
                   <>
                     <option key={cat.id} value={cat.id}>
@@ -292,28 +292,28 @@ export default function AdminChatbotQna() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="question">質問 *</Label>
+              <Label htmlFor="question">질문 *</Label>
               <Input
                 id="question"
                 value={formData.question}
                 onChange={(e) => setFormData({ ...formData, question: e.target.value })}
-                placeholder="例: 送料はいくらですか？"
+                placeholder="예: 배송비는 얼마인가요?"
                 required
               />
             </div>
 
             <Tabs defaultValue="edit" className="w-full">
               <TabsList className="grid w-full grid-cols-2">
-                <TabsTrigger value="edit">編集</TabsTrigger>
-                <TabsTrigger value="preview">プレビュー</TabsTrigger>
+                <TabsTrigger value="edit">편집</TabsTrigger>
+                <TabsTrigger value="preview">미리보기</TabsTrigger>
               </TabsList>
               <TabsContent value="edit" className="space-y-2">
-                <Label htmlFor="answer">回答 (Markdown対応) *</Label>
+                <Label htmlFor="answer">답변 (마크다운 지원) *</Label>
                 <Textarea
                   id="answer"
                   value={formData.answer}
                   onChange={(e) => setFormData({ ...formData, answer: e.target.value })}
-                  placeholder="回答内容を入力してください。Markdown形式を使用できます。&#10;&#10;例:&#10;送料は以下のとおりです:&#10;- 3万円以上: **送料無料**&#10;- 3万円未満: 3,000円"
+                  placeholder="답변 내용을 입력하세요. 마크다운 형식을 사용할 수 있습니다.&#10;&#10;예:&#10;배송비는 다음과 같습니다:&#10;- 3만원 이상: **무료배송**&#10;- 3만원 미만: 3,000원"
                   rows={12}
                   required
                   className="font-mono text-sm"
@@ -323,14 +323,14 @@ export default function AdminChatbotQna() {
                 </p>
               </TabsContent>
               <TabsContent value="preview" className="space-y-2">
-                <Label>回答プレビュー</Label>
+                <Label>답변 미리보기</Label>
                 <div className="border rounded-md p-4 min-h-[300px] bg-muted/30">
                   {formData.answer ? (
                     <div className="prose prose-sm max-w-none dark:prose-invert">
                       <Streamdown>{formData.answer}</Streamdown>
                     </div>
                   ) : (
-                    <p className="text-sm text-muted-foreground">回答を入力するとプレビューが表示されます。</p>
+                    <p className="text-sm text-muted-foreground">답변을 입력하면 미리보기가 표시됩니다.</p>
                   )}
                 </div>
               </TabsContent>
@@ -338,7 +338,7 @@ export default function AdminChatbotQna() {
 
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="sortOrder">表示順</Label>
+                <Label htmlFor="sortOrder">정렬 순서</Label>
                 <Input
                   id="sortOrder"
                   type="number"
@@ -348,7 +348,7 @@ export default function AdminChatbotQna() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="isActive">有効化</Label>
+                <Label htmlFor="isActive">활성화</Label>
                 <div className="flex items-center h-10">
                   <Switch
                     id="isActive"
@@ -356,7 +356,7 @@ export default function AdminChatbotQna() {
                     onCheckedChange={(checked) => setFormData({ ...formData, isActive: checked ? 1 : 0 })}
                   />
                   <span className="ml-2 text-sm text-muted-foreground">
-                    {formData.isActive ? "有効" : "無効"}
+                    {formData.isActive ? "활성" : "비활성"}
                   </span>
                 </div>
               </div>

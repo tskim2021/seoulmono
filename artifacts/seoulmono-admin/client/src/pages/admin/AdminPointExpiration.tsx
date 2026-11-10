@@ -13,7 +13,7 @@ export default function AdminPointExpiration() {
   const setMonthsMut = trpc.user.adminSetPointExpirationMonths.useMutation({
     onSuccess: () => {
       utils.user.getPointExpirationMonths.invalidate();
-      toast.success("ポイント有効期限ポリシーを保存しました。");
+      toast.success("포인트 만료 정책이 저장되었습니다.");
     },
     onError: (err) => toast.error(err.message),
   });
@@ -41,7 +41,7 @@ export default function AdminPointExpiration() {
 
   const handleSave = () => {
     if (expirationMonths < 1 || expirationMonths > 120) {
-      toast.error("有効期間は1〜120か月の範囲で設定してください。");
+      toast.error("만료 기간은 1~120개월 사이로 설정해주세요.");
       return;
     }
     setMonthsMut.mutate({ months: expirationMonths });
@@ -63,8 +63,8 @@ export default function AdminPointExpiration() {
   return (
     <div className="container max-w-4xl py-8">
       <div className="mb-6">
-        <h1 className="text-2xl font-bold mb-2">ポイント有効期限設定</h1>
-        <p className="text-muted-foreground">ポイント付与後、自動的に失効するまでの期間を設定します。</p>
+        <h1 className="text-2xl font-bold mb-2">포인트 만료 설정</h1>
+        <p className="text-muted-foreground">포인트 적립 후 자동 소멸되는 기간을 설정합니다.</p>
       </div>
 
       <div className="space-y-6">
@@ -72,13 +72,13 @@ export default function AdminPointExpiration() {
         <Card className="p-6">
           <div className="flex items-center gap-2 mb-4">
             <Calendar className="w-5 h-5 text-primary" />
-            <h2 className="text-lg font-semibold">有効期間設定</h2>
+            <h2 className="text-lg font-semibold">만료 기간 설정</h2>
           </div>
           <Separator className="mb-4" />
 
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium mb-1.5">ポイント有効期間</label>
+              <label className="block text-sm font-medium mb-1.5">포인트 만료 기간</label>
               <div className="flex items-center gap-2">
                 <Input
                   type="number"
@@ -88,7 +88,7 @@ export default function AdminPointExpiration() {
                   min={1}
                   max={120}
                 />
-                <span className="text-sm text-muted-foreground">か月</span>
+                <span className="text-sm text-muted-foreground">개월</span>
               </div>
               <p className="text-xs text-muted-foreground mt-1">
                 포인트 적립일로부터 {expirationMonths}개월 후 자동 소멸됩니다.
@@ -97,10 +97,10 @@ export default function AdminPointExpiration() {
 
             {/* 미리보기 */}
             <div className="bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
-              <p className="text-sm font-medium text-blue-900 dark:text-blue-200 mb-2">適用例</p>
+              <p className="text-sm font-medium text-blue-900 dark:text-blue-200 mb-2">적용 예시</p>
               <div className="text-sm text-blue-700 dark:text-blue-400 space-y-1">
-                <p>• 2026년 1월 1일 적립 → {new Date(new Date(2026, 0, 1).setMonth(expirationMonths)).toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' })} 期限切れ</p>
-                <p>• 2026년 6월 15일 적립 → {new Date(new Date(2026, 5, 15).setMonth(5 + expirationMonths)).toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' })} 期限切れ</p>
+                <p>• 2026년 1월 1일 적립 → {new Date(new Date(2026, 0, 1).setMonth(expirationMonths)).toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' })} 만료</p>
+                <p>• 2026년 6월 15일 적립 → {new Date(new Date(2026, 5, 15).setMonth(5 + expirationMonths)).toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' })} 만료</p>
               </div>
             </div>
 
@@ -115,7 +115,7 @@ export default function AdminPointExpiration() {
         <Card className="p-6">
           <div className="flex items-center gap-2 mb-4">
             <Clock className="w-5 h-5 text-orange-600" />
-            <h2 className="text-lg font-semibold">手動失効処理</h2>
+            <h2 className="text-lg font-semibold">수동 만료 처리</h2>
           </div>
           <Separator className="mb-4" />
 
@@ -124,11 +124,11 @@ export default function AdminPointExpiration() {
               <div className="flex items-start gap-2">
                 <AlertCircle className="w-5 h-5 text-orange-600 mt-0.5 shrink-0" />
                 <div className="text-sm text-orange-700 dark:text-orange-400">
-                  <p className="font-medium mb-1">失効処理のご案内</p>
+                  <p className="font-medium mb-1">만료 처리 안내</p>
                   <ul className="space-y-1 list-disc list-inside">
-                    <li>有効期限が過ぎたポイントを即時に差し引きます。</li>
-                    <li>自動バッチ処理が実行されなかった場合にご利用ください。</li>
-                    <li>処理されたポイントは復元できません。</li>
+                    <li>만료일이 지난 포인트를 즉시 차감합니다.</li>
+                    <li>자동 배치 작업이 실행되지 않았을 때 사용하세요.</li>
+                    <li>처리된 포인트는 복구할 수 없습니다.</li>
                   </ul>
                 </div>
               </div>
@@ -154,7 +154,7 @@ export default function AdminPointExpiration() {
         <Card className="p-6">
           <div className="flex items-center gap-2 mb-4">
             <Bell className="w-5 h-5 text-blue-600" />
-            <h2 className="text-lg font-semibold">失効予定通知テスト</h2>
+            <h2 className="text-lg font-semibold">만료 예정 알림 테스트</h2>
           </div>
           <Separator className="mb-4" />
 
@@ -163,11 +163,11 @@ export default function AdminPointExpiration() {
               <div className="flex items-start gap-2">
                 <AlertCircle className="w-5 h-5 text-blue-600 mt-0.5 shrink-0" />
                 <div className="text-sm text-blue-700 dark:text-blue-400">
-                  <p className="font-medium mb-1">通知テストのご案内</p>
+                  <p className="font-medium mb-1">알림 테스트 안내</p>
                   <ul className="space-y-1 list-disc list-inside">
-                    <li>7日以内に失効予定のポイントがあるユーザーへ通知を送信します。</li>
-                    <li>メールとプッシュ通知が同時に送信されます。</li>
-                    <li>通常運用時は毎日午前9時に自動実行されます。</li>
+                    <li>7일 이내 만료 예정 포인트가 있는 사용자에게 알림을 발송합니다.</li>
+                    <li>이메일 및 푸시 알림이 동시에 발송됩니다.</li>
+                    <li>정상 운영 시 매일 오전 9시에 자동 실행됩니다.</li>
                   </ul>
                 </div>
               </div>
@@ -191,23 +191,23 @@ export default function AdminPointExpiration() {
 
         {/* 안내 사항 */}
         <Card className="p-6 bg-muted/50">
-          <h3 className="text-sm font-semibold mb-3">参考事項</h3>
+          <h3 className="text-sm font-semibold mb-3">참고 사항</h3>
           <ul className="text-sm text-muted-foreground space-y-2">
             <li className="flex items-start gap-2">
               <span className="text-primary mt-0.5">•</span>
-              <span>ポイント付与(earn)および管理者付与(admin)の場合のみ有効期限が設定されます。</span>
+              <span>포인트 적립(earn) 및 관리자 지급(admin) 시에만 만료일이 설정됩니다.</span>
             </li>
             <li className="flex items-start gap-2">
               <span className="text-primary mt-0.5">•</span>
-              <span>使用(use)および返金(refund)ポイントは失効しません。</span>
+              <span>사용(use) 및 환불(refund) 포인트는 만료되지 않습니다.</span>
             </li>
             <li className="flex items-start gap-2">
               <span className="text-primary mt-0.5">•</span>
-              <span>失効ポリシーの変更は、以降に付与されるポイントから適用されます。</span>
+              <span>만료 정책 변경은 이후 적립되는 포인트부터 적용됩니다.</span>
             </li>
             <li className="flex items-start gap-2">
               <span className="text-primary mt-0.5">•</span>
-              <span>ユーザーはマイページで失効予定ポイントを確認できます。</span>
+              <span>사용자는 마이페이지에서 만료 예정 포인트를 확인할 수 있습니다.</span>
             </li>
           </ul>
         </Card>

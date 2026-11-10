@@ -7,7 +7,7 @@ import { RefreshCcw, JapaneseYen } from "lucide-react";
 import { toast } from "sonner";
 
 function getShopToken(): string | null {
-  return localStorage.getItem("allddaom_token");
+  return localStorage.getItem("seoulmono_token");
 }
 
 async function callShopApi(path: string, init?: RequestInit) {
@@ -56,7 +56,7 @@ export default function AdminPricingSettings() {
   const saveRate = async () => {
     const rateNum = parseFloat(rate);
     if (!rateNum || rateNum <= 0) {
-      toast.error("正しい為替レートを入力してください。");
+      toast.error("올바른 환율 값을 입력해 주세요.");
       return;
     }
     try {
@@ -65,7 +65,7 @@ export default function AdminPricingSettings() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ rate: rateNum }),
       });
-      toast.success("為替レートを保存しました。");
+      toast.success("환율이 저장되었습니다.");
       refresh();
     } catch (err: any) {
       toast.error(err.message || "저장에 실패했습니다.");
@@ -122,15 +122,15 @@ export default function AdminPricingSettings() {
           <div className="grid grid-cols-3 gap-4 text-center">
             <div>
               <p className="text-2xl font-bold">{status ? status.total : "-"}</p>
-              <p className="text-xs text-muted-foreground mt-1">すべての商品</p>
+              <p className="text-xs text-muted-foreground mt-1">전체 상품</p>
             </div>
             <div>
               <p className="text-2xl font-bold text-emerald-600">{status ? status.converted : "-"}</p>
-              <p className="text-xs text-muted-foreground mt-1">変換済み</p>
+              <p className="text-xs text-muted-foreground mt-1">변환 완료</p>
             </div>
             <div>
               <p className="text-2xl font-bold text-amber-600">{status ? status.pending : "-"}</p>
-              <p className="text-xs text-muted-foreground mt-1">未変換</p>
+              <p className="text-xs text-muted-foreground mt-1">미변환</p>
             </div>
           </div>
 
@@ -145,7 +145,7 @@ export default function AdminPricingSettings() {
                 id="jpy-rate"
                 type="number"
                 step="0.0001"
-                placeholder="例: 0.1147"
+                placeholder="예: 0.1147"
                 value={rate}
                 onChange={(e) => setRate(e.target.value)}
               />
@@ -156,7 +156,7 @@ export default function AdminPricingSettings() {
           </div>
 
           <Button className="w-full" onClick={convertNow} disabled={converting || loading}>
-            {converting ? "変換中..." : "今すぐ円に変換する"}
+            {converting ? "변환 중..." : "지금 엔화로 변환하기"}
           </Button>
 
           <Button variant="ghost" size="sm" onClick={refresh} disabled={loading} className="w-full">

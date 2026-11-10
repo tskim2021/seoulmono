@@ -11,7 +11,7 @@ export default function AdminPointSettings() {
   const { data, isLoading } = trpc.admin.getPointSettings.useQuery();
   const categories = trpc.admin.categories.useQuery();
   const updateSettings = trpc.admin.updatePointSettings.useMutation({
-    onSuccess: () => toast.success("ポイント設定を保存しました。"),
+    onSuccess: () => toast.success("포인트 설정이 저장되었습니다."),
     onError: (e) => toast.error(e.message),
   });
   const bulkUpdate = trpc.admin.bulkUpdateProductPointRate.useMutation({
@@ -22,7 +22,7 @@ export default function AdminPointSettings() {
   const utils = trpc.useUtils();
   const { data: currentMonths, isLoading: expirationLoading } = trpc.user.getPointExpirationMonths.useQuery();
   const setMonthsMut = trpc.user.adminSetPointExpirationMonths.useMutation({
-    onSuccess: () => { utils.user.getPointExpirationMonths.invalidate(); toast.success("ポイント有効期限ポリシーを保存しました。"); },
+    onSuccess: () => { utils.user.getPointExpirationMonths.invalidate(); toast.success("포인트 만료 정책이 저장되었습니다."); },
     onError: (err) => toast.error(err.message),
   });
   const expirePointsMut = trpc.user.adminExpirePoints.useMutation({
@@ -59,7 +59,7 @@ export default function AdminPointSettings() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold mb-6">ポイント設定</h1>
+      <h1 className="text-2xl font-bold mb-6">포인트 설정</h1>
 
       <div className="space-y-5">
         {/* ── 적립 설정 ── */}
@@ -70,8 +70,8 @@ export default function AdminPointSettings() {
           </h2>
           <div className="space-y-5">
             <div>
-              <label className="text-sm font-medium block mb-1.5">会員登録ポイント</label>
-              <p className="text-xs text-muted-foreground mb-2">新規会員登録時に自動で付与されるポイント</p>
+              <label className="text-sm font-medium block mb-1.5">회원가입 포인트</label>
+              <p className="text-xs text-muted-foreground mb-2">신규 회원 가입 시 자동으로 지급되는 포인트</p>
               <div className="flex items-center gap-2 flex-wrap">
                 <div className="flex items-center gap-2">
                   <Input type="number" min={0} value={regPoints} onChange={(e) => setRegPoints(e.target.value)} placeholder="0" className="w-28" />
@@ -90,8 +90,8 @@ export default function AdminPointSettings() {
             </div>
 
             <div>
-              <label className="text-sm font-medium block mb-1.5">商品ポイントの基本付与率</label>
-              <p className="text-xs text-muted-foreground mb-2">新規登録される商品の基本ポイント付与率(%)</p>
+              <label className="text-sm font-medium block mb-1.5">기본 상품 포인트 적립률</label>
+              <p className="text-xs text-muted-foreground mb-2">새로 등록되는 상품의 기본 포인트 적립률(%)</p>
               <div className="flex items-center gap-2 max-w-xs">
                 <Input type="number" min={0} max={100} value={defaultRate} onChange={(e) => setDefaultRate(e.target.value)} className="w-28" />
                 <span className="text-sm text-muted-foreground">%</span>
@@ -111,13 +111,13 @@ export default function AdminPointSettings() {
             <Package className="w-4 h-4 text-amber-600" />
             상품 포인트 적립률 일괄 변경
           </h2>
-          <p className="text-xs text-muted-foreground mb-3">カテゴリー別または全商品のポイント付与率を一括で変更します。</p>
+          <p className="text-xs text-muted-foreground mb-3">카테고리별 또는 전체 상품의 포인트 적립률을 한 번에 변경합니다.</p>
           <div className="flex flex-col sm:flex-row gap-2">
             <select className="border rounded px-2 py-1.5 text-sm bg-background w-full sm:w-40"
               value={bulkCategoryId ?? ""}
               onChange={(e) => setBulkCategoryId(e.target.value ? Number(e.target.value) : undefined)}
             >
-              <option value="">すべての商品</option>
+              <option value="">전체 상품</option>
               {(categories.data ?? []).map((c: any) => <option key={c.id} value={c.id}>{c.name}</option>)}
             </select>
             <div className="flex items-center gap-2">
@@ -140,16 +140,16 @@ export default function AdminPointSettings() {
             <Calendar className="w-4 h-4 text-primary" />
             포인트 만료 설정
           </h2>
-          <p className="text-xs text-muted-foreground mb-4">ポイント付与後、自動的に失効するまでの期間を設定します。</p>
+          <p className="text-xs text-muted-foreground mb-4">포인트 적립 후 자동 소멸되는 기간을 설정합니다.</p>
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium mb-1.5">ポイント有効期間</label>
+              <label className="block text-sm font-medium mb-1.5">포인트 만료 기간</label>
               <div className="flex items-center gap-2">
                 <Input type="number" value={expirationMonths}
                   onChange={(e) => setExpirationMonths(Math.max(1, Math.min(120, Number(e.target.value))))}
                   className="w-28" min={1} max={120}
                 />
-                <span className="text-sm text-muted-foreground">か月</span>
+                <span className="text-sm text-muted-foreground">개월</span>
               </div>
               <p className="text-xs text-muted-foreground mt-1">
                 포인트 적립일로부터 {expirationMonths}개월 후 자동 소멸됩니다.
@@ -157,15 +157,15 @@ export default function AdminPointSettings() {
             </div>
 
             <div className="bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-lg p-3">
-              <p className="text-xs font-medium text-blue-900 dark:text-blue-200 mb-1.5">適用例</p>
+              <p className="text-xs font-medium text-blue-900 dark:text-blue-200 mb-1.5">적용 예시</p>
               <div className="text-xs text-blue-700 dark:text-blue-400 space-y-0.5">
-                <p>• 2026년 1월 1일 적립 → {new Date(new Date(2026, 0, 1).setMonth(expirationMonths)).toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' })} 期限切れ</p>
-                <p>• 2026년 6월 15일 적립 → {new Date(new Date(2026, 5, 15).setMonth(5 + expirationMonths)).toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' })} 期限切れ</p>
+                <p>• 2026년 1월 1일 적립 → {new Date(new Date(2026, 0, 1).setMonth(expirationMonths)).toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' })} 만료</p>
+                <p>• 2026년 6월 15일 적립 → {new Date(new Date(2026, 5, 15).setMonth(5 + expirationMonths)).toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' })} 만료</p>
               </div>
             </div>
 
             <Button size="sm"
-              onClick={() => { if (expirationMonths < 1 || expirationMonths > 120) { toast.error("有効期間は1〜120か月の範囲で設定してください。"); return; } setMonthsMut.mutate({ months: expirationMonths }); }}
+              onClick={() => { if (expirationMonths < 1 || expirationMonths > 120) { toast.error("만료 기간은 1~120개월 사이로 설정해주세요."); return; } setMonthsMut.mutate({ months: expirationMonths }); }}
               disabled={setMonthsMut.isPending}
             >
               {setMonthsMut.isPending ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Save className="w-4 h-4 mr-2" />}
@@ -185,8 +185,8 @@ export default function AdminPointSettings() {
               <div className="flex items-start gap-1.5">
                 <AlertCircle className="w-4 h-4 text-orange-600 mt-0.5 shrink-0" />
                 <ul className="text-xs text-orange-700 dark:text-orange-400 space-y-0.5 list-disc list-inside">
-                  <li>有効期限が過ぎたポイントを即時に差し引きます。</li>
-                  <li>処理されたポイントは復元できません。</li>
+                  <li>만료일이 지난 포인트를 즉시 차감합니다.</li>
+                  <li>처리된 포인트는 복구할 수 없습니다.</li>
                 </ul>
               </div>
             </div>
@@ -206,8 +206,8 @@ export default function AdminPointSettings() {
             </h2>
             <div className="bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-lg p-3 mb-3">
               <ul className="text-xs text-blue-700 dark:text-blue-400 space-y-0.5 list-disc list-inside">
-                <li>7日以内に失効予定のユーザーへ通知を送信</li>
-                <li>毎日午前9時に自動実行</li>
+                <li>7일 이내 만료 예정 사용자에게 알림 발송</li>
+                <li>매일 오전 9시 자동 실행</li>
               </ul>
             </div>
             <Button variant="outline" size="sm" className="w-full"

@@ -93,10 +93,10 @@ export default function AdminActionLogs() {
           <div className="w-44">
             <Select value={adminIdFilter} onValueChange={v => { setAdminIdFilter(v); setPage(1); }}>
               <SelectTrigger className="h-8 text-xs">
-                <SelectValue placeholder="管理者を選択" />
+                <SelectValue placeholder="관리자 선택" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">すべての管理者</SelectItem>
+                <SelectItem value="all">전체 관리자</SelectItem>
                 {admins?.map(a => (
                   <SelectItem key={a.id} value={String(a.id)}>{a.name}</SelectItem>
                 ))}
@@ -106,10 +106,10 @@ export default function AdminActionLogs() {
           <div className="w-52">
             <Select value={actionFilter} onValueChange={v => { setActionFilter(v); setPage(1); }}>
               <SelectTrigger className="h-8 text-xs">
-                <SelectValue placeholder="操作の種類" />
+                <SelectValue placeholder="처리 유형" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">すべての操作</SelectItem>
+                <SelectItem value="all">전체 처리</SelectItem>
                 {Object.entries(ACTION_LABELS).map(([k, v]) => (
                   <SelectItem key={k} value={k}>{v}</SelectItem>
                 ))}
@@ -147,23 +147,23 @@ export default function AdminActionLogs() {
       {/* 로그 테이블 */}
       <Card className="overflow-hidden">
         {isLoading ? (
-          <div className="flex items-center justify-center h-32 text-sm text-muted-foreground">読み込み中...</div>
+          <div className="flex items-center justify-center h-32 text-sm text-muted-foreground">불러오는 중...</div>
         ) : !data?.rows?.length ? (
           <div className="flex flex-col items-center justify-center h-32 gap-2 text-muted-foreground">
             <ClipboardList className="w-8 h-8 opacity-30" />
-            <p className="text-sm">操作履歴がありません</p>
+            <p className="text-sm">처리 이력이 없습니다</p>
           </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b bg-muted/40 text-xs text-muted-foreground">
-                  <th className="px-4 py-2 text-left font-medium w-40">操作日時</th>
-                  <th className="px-4 py-2 text-left font-medium w-28">管理者</th>
-                  <th className="px-4 py-2 text-left font-medium w-36">操作の種類</th>
-                  <th className="px-4 py-2 text-left font-medium w-20">対象</th>
-                  <th className="px-4 py-2 text-left font-medium">内容</th>
-                  <th className="px-4 py-2 text-center font-medium w-14">詳細</th>
+                  <th className="px-4 py-2 text-left font-medium w-40">처리 시각</th>
+                  <th className="px-4 py-2 text-left font-medium w-28">관리자</th>
+                  <th className="px-4 py-2 text-left font-medium w-36">처리 유형</th>
+                  <th className="px-4 py-2 text-left font-medium w-20">대상</th>
+                  <th className="px-4 py-2 text-left font-medium">내용</th>
+                  <th className="px-4 py-2 text-center font-medium w-14">상세</th>
                 </tr>
               </thead>
               <tbody>

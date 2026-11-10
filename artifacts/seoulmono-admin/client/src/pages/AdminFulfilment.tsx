@@ -10,12 +10,12 @@ import { formatPrice } from '@/lib/utils';
 type TabKey = 'new' | 'prep' | 'ship' | 'done' | 'cancel' | 'unpaid' | 'all';
 const TABS: { key: TabKey; label: string }[] = [
   { key: 'new', label: '신규 (결제완료)' },
-  { key: 'prep', label: "準備中" },
-  { key: 'ship', label: "配送中" },
-  { key: 'done', label: "配送完了" },
+  { key: 'prep', label: "준비중" },
+  { key: 'ship', label: "배송중" },
+  { key: 'done', label: "배송완료" },
   { key: 'cancel', label: '취소·반품' },
   { key: 'unpaid', label: '미결제(옛 주문)' },
-  { key: 'all', label: "すべて" },
+  { key: 'all', label: "전체" },
 ];
 const NORM: Record<string, string> = { 배송준비: '상품준비중', 처리중: '상품준비중', 입금확인: '결제완료', 주문완료: '결제완료', 취소: '주문취소' };
 const STATUS_COLOR: Record<string, string> = {
@@ -48,7 +48,7 @@ function fmtUtcToKst(s: string): string {
 
 function EventLog({ odId }: { odId: string }) {
   const { data } = trpc.fulfilment.events.useQuery({ odId });
-  if (!data) return <p className='text-xs text-muted-foreground'>読み込み中...</p>;
+  if (!data) return <p className='text-xs text-muted-foreground'>로딩 중...</p>;
   if (!data.length) return <p className='text-xs text-muted-foreground'>이력이 없습니다.</p>;
   return (
     <ul className='text-xs space-y-1'>
@@ -160,7 +160,7 @@ export default function AdminFulfilment() {
           <Input className='h-8 w-56 text-sm' placeholder='주문번호·이름·메일 검색' value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
             onKeyDown={(e) => { if (e.key === 'Enter') { setSearch(searchInput.trim()); setPage(1); } }} />
-          <Button size='sm' variant='outline' className='h-8' onClick={() => { setSearch(searchInput.trim()); setPage(1); }}>検索</Button>
+          <Button size='sm' variant='outline' className='h-8' onClick={() => { setSearch(searchInput.trim()); setPage(1); }}>검색</Button>
           <Button size='sm' variant='outline' className='h-8' disabled={reconcile.isPending} onClick={async () => {
             try {
               const r: any = await reconcile.mutateAsync();
@@ -184,7 +184,7 @@ export default function AdminFulfilment() {
         ))}
       </div>
 
-      {isLoading ? <p className='text-sm text-muted-foreground py-8 text-center'>読み込み中...</p>
+      {isLoading ? <p className='text-sm text-muted-foreground py-8 text-center'>로딩 중...</p>
         : orders.length === 0 ? <p className='text-sm text-muted-foreground py-8 text-center'>해당하는 주문이 없습니다.</p>
         : <div className='space-y-3'>
           {orders.map((o) => {
@@ -204,7 +204,7 @@ export default function AdminFulfilment() {
                 <div className='grid md:grid-cols-3 gap-4 text-sm'>
                   <div>
                     <p className='text-xs text-muted-foreground mb-1 flex items-center gap-2'>받는 사람 (일본)
-                      <button className='text-primary hover:underline' onClick={() => copyRecipient(o)}>コピー</button>
+                      <button className='text-primary hover:underline' onClick={() => copyRecipient(o)}>복사</button>
                     </p>
                     <p className='font-medium'>{o.recipient.name || o.name}</p>
                     <p>{o.recipient.phone}</p>
@@ -214,7 +214,7 @@ export default function AdminFulfilment() {
                     <p className='text-xs text-muted-foreground mt-1'>{o.email || '(메일 주소 없음)'}</p>
                   </div>
                   <div>
-                    <p className='text-xs text-muted-foreground mb-1'>商品</p>
+                    <p className='text-xs text-muted-foreground mb-1'>상품</p>
                     {o.items.map((it: any) => (
                       <p key={it.ctId} className='text-sm'>{it.name}{it.option ? ` (${it.option})` : ''} × {it.qty}</p>
                     ))}
@@ -223,15 +223,15 @@ export default function AdminFulfilment() {
                   </div>
                   <div>
                     <p className='text-xs text-muted-foreground mb-1'>송장</p>
-                    {o.shipments.length === 0 && <p className='text-xs text-muted-foreground'>なし</p>}
+                    {o.shipments.length === 0 && <p className='text-xs text-muted-foreground'>없음</p>}
                     {o.shipments.map((s: any) => (
                       <div key={s.id} className='text-sm mb-1'>
                         <span className='font-mono'>{s.trackingNo}</span> <span className='text-xs text-muted-foreground'>{s.carrierLabel} · {NOTIFY_LABEL[s.notifyState] || s.notifyState}</span>
                         {['배송중', '배송완료'].includes(st) && (
                           <span className='ml-2 space-x-2'>
-                            <button className='text-xs text-primary hover:underline' onClick={() => openDialog({ type: 'edit', order: o, shipment: s })}>編集</button>
+                            <button className='text-xs text-primary hover:underline' onClick={() => openDialog({ type: 'edit', order: o, shipment: s })}>수정</button>
                             <button className='text-xs text-primary hover:underline' onClick={() => ask('고객에게 발송 안내 메일을 다시 보낼까요?', () => run(o, 'resend_mail', { shipment_id: s.id }, '메일을 다시 보냈습니다.'))}>메일 재발송</button>
-                            {st === '배송중' && <button className='text-xs text-red-600 hover:underline' onClick={() => ask(`송장 ${s.trackingNo} 을(를) 삭제할까요? 고객에게 이미 보낸 메일은 취소되지 않습니다.`, () => run(o, 'remove_shipment', { shipment_id: s.id }, '송장을 삭제했습니다.'))}>削除</button>}
+                            {st === '배송중' && <button className='text-xs text-red-600 hover:underline' onClick={() => ask(`송장 ${s.trackingNo} 을(를) 삭제할까요? 고객에게 이미 보낸 메일은 취소되지 않습니다.`, () => run(o, 'remove_shipment', { shipment_id: s.id }, '송장을 삭제했습니다.'))}>삭제</button>}
                           </span>
                         )}
                       </div>
@@ -245,8 +245,8 @@ export default function AdminFulfilment() {
                   {st === '배송중' && <Button size='sm' variant='outline' onClick={() => openDialog({ type: 'add', order: o })}>송장 추가</Button>}
                   {st === '배송중' && <Button size='sm' onClick={() => ask('배송완료로 처리할까요? 고객의 주문 화면에도 배송완료로 표시됩니다.', () => run(o, 'deliver', {}, '배송완료 처리되었습니다.'))}>배송완료 처리</Button>}
                   {['배송중', '배송완료', '반품'].includes(st) && isStripeOrder(o) && <Button size='sm' variant='outline' onClick={() => openDialog({ type: 'refund', order: o })}>부분 환불</Button>}
-                  {['결제완료', '상품준비중', '배송중', '배송완료'].includes(st) || !paid ? (st !== '주문취소' && st !== '반품' && <Button size='sm' variant='outline' className='border-red-300 text-red-600' onClick={() => openDialog({ type: 'cancel', order: o })}>注文キャンセル{paid ? '·환불' : ''}</Button>) : null}
-                  <Button size='sm' variant='ghost' onClick={() => openDialog({ type: 'note', order: o })}>メモ</Button>
+                  {['결제완료', '상품준비중', '배송중', '배송완료'].includes(st) || !paid ? (st !== '주문취소' && st !== '반품' && <Button size='sm' variant='outline' className='border-red-300 text-red-600' onClick={() => openDialog({ type: 'cancel', order: o })}>주문 취소{paid ? '·환불' : ''}</Button>) : null}
+                  <Button size='sm' variant='ghost' onClick={() => openDialog({ type: 'note', order: o })}>메모</Button>
                   <Button size='sm' variant='ghost' onClick={() => setOpenLog(openLog === o.odId ? null : o.odId)}>이력</Button>
                 </div>
                 {openLog === o.odId && <div className='mt-3 pt-3 border-t'><EventLog odId={o.odId} /></div>}
@@ -277,7 +277,7 @@ export default function AdminFulfilment() {
           <div className='space-y-3 text-sm'>
             {['ship', 'add', 'edit'].includes(dialog?.type || '') && (<>
               <div>
-                <label className='text-xs text-muted-foreground'>配送方法</label>
+                <label className='text-xs text-muted-foreground'>배송 방법</label>
                 <select className='w-full border rounded px-2 py-1.5 h-9 bg-background' value={carrier} onChange={(e) => setCarrier(e.target.value)}>
                   {carriers.map((c) => <option key={c.code} value={c.code}>{c.label}</option>)}
                 </select>
@@ -285,7 +285,7 @@ export default function AdminFulfilment() {
               {carrier === 'other' && (
                 <div>
                   <label className='text-xs text-muted-foreground'>택배사명 (고객 메일에 그대로 표시, 일본어 권장)</label>
-                  <Input value={carrierName} onChange={(e) => setCarrierName(e.target.value)} placeholder='例: DHL' />
+                  <Input value={carrierName} onChange={(e) => setCarrierName(e.target.value)} placeholder='예: DHL' />
                 </div>
               )}
               <div>
@@ -336,8 +336,8 @@ export default function AdminFulfilment() {
             {dialog?.type === 'note' && <Textarea value={note} onChange={(e) => setNote(e.target.value)} className='min-h-[100px]' />}
           </div>
           <DialogFooter>
-            <Button variant='outline' size='sm' onClick={() => setDialog(null)}>閉じる</Button>
-            <Button size='sm' disabled={act.isPending} onClick={submit}>{act.isPending ? "処理中..." : "確認"}</Button>
+            <Button variant='outline' size='sm' onClick={() => setDialog(null)}>닫기</Button>
+            <Button size='sm' disabled={act.isPending} onClick={submit}>{act.isPending ? "처리 중..." : "확인"}</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

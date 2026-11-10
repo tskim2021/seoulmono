@@ -18,65 +18,65 @@ type TemplateType = "generic" | "order_confirm" | "payment_confirm" | "shipping_
 const TEMPLATE_DEFS: { type: TemplateType; label: string; icon: React.ElementType; desc: string; badge?: string }[] = [
   {
     type: "generic",
-    label: "一般通知",
+    label: "일반 알림",
     icon: Bell,
-    desc: "汎用メールテンプレート (スタイルの基準)",
+    desc: "범용 이메일 템플릿 (스타일 기준)",
   },
   {
     type: "order_confirm",
-    label: "ご注文受付 / お振込のご案内",
+    label: "주문 접수 / 입금 안내",
     icon: ShoppingBag,
-    desc: "銀行振込での注文時に振込先口座を案内",
-    badge: "自動送信",
+    desc: "가상계좌 주문 시 입금 계좌 안내",
+    badge: "자동 발송",
   },
   {
     type: "payment_confirm",
-    label: "入金確認完了",
+    label: "입금 확인 완료",
     icon: CheckCircle,
-    desc: "入金確認後の発送開始のご案内",
-    badge: "自動送信",
+    desc: "입금 확인 후 배송 시작 안내",
+    badge: "자동 발송",
   },
   {
     type: "shipping_start",
-    label: "発送開始",
+    label: "배송 시작",
     icon: Truck,
-    desc: "商品の発送および追跡番号のご案内",
-    badge: "自動送信",
+    desc: "상품 발송 및 송장번호 안내",
+    badge: "자동 발송",
   },
   {
     type: "review_request",
-    label: "レビューのお願い",
+    label: "리뷰 요청",
     icon: Star,
-    desc: "配送完了後のレビュー投稿のご案内",
-    badge: "自動送信",
+    desc: "배송 완료 후 리뷰 작성 유도",
+    badge: "자동 발송",
   },
   {
     type: "customs_hold",
-    label: "通関検査のご案内",
+    label: "통관검사 안내",
     icon: AlertTriangle,
-    desc: "通関検査の対象となった場合の返送のご案内",
-    badge: "自動送信",
+    desc: "통관검사 대상 선정 시 반송 안내",
+    badge: "자동 발송",
   },
   {
     type: "welcome",
-    label: "会員登録のお礼",
+    label: "회원가입 환영",
     icon: UserPlus,
-    desc: "新規会員登録完了時のウェルカムメール",
-    badge: "自動送信",
+    desc: "신규 회원가입 완료 시 환영 메일",
+    badge: "자동 발송",
   },
   {
     type: "auto_cancel",
-    label: "注文の自動キャンセル",
+    label: "주문 자동 취소",
     icon: XCircle,
-    desc: "入金期限切れ時の自動キャンセルのご案内",
-    badge: "自動送信",
+    desc: "입금 기한 만료 시 자동 취소 안내",
+    badge: "자동 발송",
   },
   {
     type: "point_expire",
-    label: "ポイント失効予定",
+    label: "포인트 소멸 예정",
     icon: Timer,
-    desc: "失効予定ポイントのご案内",
-    badge: "自動送信",
+    desc: "소멸 예정 포인트 안내",
+    badge: "자동 발송",
   },
 ];
 
@@ -100,23 +100,23 @@ function TemplatePreviewPane({ type }: { type: TemplateType }) {
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <div className="space-y-1">
-          <p className="text-sm text-muted-foreground">実際に送信されるメールのデザインをプレビューします。(サンプルデータ使用)</p>
+          <p className="text-sm text-muted-foreground">실제 발송되는 이메일 디자인을 미리 확인합니다. (샘플 데이터 기준)</p>
           {data?.subject && (
             <div className="flex items-center gap-2">
-              <span className="text-xs text-muted-foreground">件名:</span>
+              <span className="text-xs text-muted-foreground">제목:</span>
               <code className="text-xs bg-secondary px-2 py-0.5 rounded">{data.subject}</code>
             </div>
           )}
         </div>
         <Button variant="outline" size="sm" onClick={() => refetch()} className="gap-1.5">
           <RefreshCw className="w-3.5 h-3.5" />
-          再読み込み
+          새로고침
         </Button>
       </div>
 
       {isLoading ? (
         <div className="border rounded-xl h-[600px] flex items-center justify-center bg-secondary/20">
-          <div className="text-sm text-muted-foreground animate-pulse">テンプレートを読み込み中...</div>
+          <div className="text-sm text-muted-foreground animate-pulse">템플릿 로딩 중...</div>
         </div>
       ) : (
         <div className="border rounded-xl overflow-hidden bg-gray-50 shadow-inner">
@@ -124,13 +124,13 @@ function TemplatePreviewPane({ type }: { type: TemplateType }) {
             <div className="w-3 h-3 rounded-full bg-red-400" />
             <div className="w-3 h-3 rounded-full bg-yellow-400" />
             <div className="w-3 h-3 rounded-full bg-green-400" />
-            <span className="ml-2 text-xs text-gray-500">メールプレビュー</span>
+            <span className="ml-2 text-xs text-gray-500">이메일 미리보기</span>
           </div>
           <iframe
             ref={iframeRef}
             className="w-full"
             style={{ height: "640px", border: "none" }}
-            title="メールプレビュー"
+            title="이메일 미리보기"
             sandbox="allow-same-origin"
           />
         </div>
@@ -164,12 +164,12 @@ export default function AdminEmailTemplate() {
 
   const updateTemplate = trpc.admin.updateEmailTemplate.useMutation({
     onSuccess: () => {
-      toast.success("メールテンプレートを保存しました");
+      toast.success("이메일 템플릿이 저장되었습니다");
       utils.admin.getEmailTemplate.invalidate();
       utils.admin.previewEmailTemplate.invalidate();
     },
     onError: (error) => {
-      toast.error(`保存に失敗しました: ${error.message}`);
+      toast.error(`저장 실패: ${error.message}`);
     },
   });
 
@@ -177,7 +177,7 @@ export default function AdminEmailTemplate() {
     try {
       JSON.parse(form.footerLinks);
     } catch {
-      toast.error("フッターリンクのJSON形式が正しくありません");
+      toast.error("푸터 링크 JSON 형식이 올바르지 않습니다");
       return;
     }
     updateTemplate.mutate(form);
@@ -191,10 +191,10 @@ export default function AdminEmailTemplate() {
       <div>
         <h2 className="text-2xl font-bold flex items-center gap-2">
           <Mail className="w-6 h-6" />
-          メールテンプレート
+          이메일 템플릿
         </h2>
         <p className="text-sm text-muted-foreground mt-1">
-          送信されるメールのデザインと内容を設定し、プレビューで確認します
+          발송되는 이메일의 디자인과 내용을 설정하고 미리 확인합니다
         </p>
       </div>
 
@@ -210,7 +210,7 @@ export default function AdminEmailTemplate() {
             }`}
           >
             <Settings className="w-4 h-4" />
-            テンプレート設定
+            템플릿 설정
           </button>
 
           <div className="flex items-center px-2 text-muted-foreground/30">
@@ -249,7 +249,7 @@ export default function AdminEmailTemplate() {
             <div>
               <Label className="flex items-center gap-2 mb-2">
                 <Image className="w-4 h-4" />
-                ロゴURL
+                로고 URL
               </Label>
               <Input
                 value={form.logoUrl}
@@ -257,14 +257,14 @@ export default function AdminEmailTemplate() {
                 placeholder="https://talmoschool.com/shop/logo.png"
               />
               <p className="text-xs text-muted-foreground mt-1">
-                メールヘッダーに表示するロゴ画像のURL (空欄の場合はデフォルトのロゴを使用)
+                이메일 헤더에 표시될 로고 이미지 URL (비워두면 기본 로고 사용)
               </p>
             </div>
 
             <div>
               <Label className="flex items-center gap-2 mb-2">
                 <Palette className="w-4 h-4" />
-                メインカラー
+                주요 색상
               </Label>
               <div className="flex gap-2">
                 <Input
@@ -281,44 +281,44 @@ export default function AdminEmailTemplate() {
                 />
               </div>
               <p className="text-xs text-muted-foreground mt-1">
-                ボタンおよび強調色 (Hexコード)。一般通知、ご注文受付メールに適用されます。
+                버튼 및 강조 색상 (Hex 코드). 일반 알림, 주문 접수 이메일에 적용됩니다.
               </p>
             </div>
 
             <div>
               <Label className="flex items-center gap-2 mb-2">
                 <FileText className="w-4 h-4" />
-                フッターテキスト
+                푸터 텍스트
               </Label>
               <Input
                 value={form.footerText}
                 onChange={(e) => setForm({ ...form, footerText: e.target.value })}
-                placeholder="ソウルモノ - コミュニティEコマースプラットフォーム"
+                placeholder="탈모학교 - 커뮤니티 이커머스 플랫폼"
               />
               <p className="text-xs text-muted-foreground mt-1">
-                メール下部に表示するテキスト
+                이메일 하단에 표시될 텍스트
               </p>
             </div>
 
             <div>
               <Label className="flex items-center gap-2 mb-2">
                 <FileText className="w-4 h-4" />
-                フッターリンク (JSON)
+                푸터 링크 (JSON)
               </Label>
               <Textarea
                 value={form.footerLinks}
                 onChange={(e) => setForm({ ...form, footerLinks: e.target.value })}
-                placeholder='[{"text":"利用規約","url":"/terms"},{"text":"プライバシーポリシー","url":"/privacy"}]'
+                placeholder='[{"text":"이용약관","url":"/terms"},{"text":"개인정보처리방침","url":"/privacy"}]'
                 rows={3}
               />
               <p className="text-xs text-muted-foreground mt-1">
-                フッターに表示するリンク一覧 (JSON配列形式)
+                푸터에 표시될 링크 목록 (JSON 배열 형식)
               </p>
             </div>
 
             <div className="flex gap-2">
               <Button onClick={handleSubmit} disabled={updateTemplate.isPending}>
-                {updateTemplate.isPending ? "保存中..." : "保存する"}
+                {updateTemplate.isPending ? "저장 중..." : "저장하기"}
               </Button>
               <Button
                 variant="outline"
@@ -332,7 +332,7 @@ export default function AdminEmailTemplate() {
                   })
                 }
               >
-                リセット
+                초기화
               </Button>
             </div>
           </Card>
@@ -341,10 +341,10 @@ export default function AdminEmailTemplate() {
           <Card className="p-6">
             <h3 className="font-semibold mb-1 flex items-center gap-2">
               <Eye className="w-4 h-4" />
-              メールテンプレート一覧
+              이메일 템플릿 목록
             </h3>
             <p className="text-sm text-muted-foreground mb-4">
-              上のタブをクリックすると、各メールを実際のサンプルデータでプレビューできます。
+              위 탭을 클릭하면 각 이메일을 실제 샘플 데이터로 미리 확인할 수 있습니다.
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {TEMPLATE_DEFS.map((def) => {
@@ -404,7 +404,7 @@ export default function AdminEmailTemplate() {
             </p>
             <Button variant="outline" size="sm" onClick={() => setActiveTab("settings")} className="gap-1.5">
               <Settings className="w-3.5 h-3.5" />
-              設定へ
+              설정으로
             </Button>
           </div>
         </div>

@@ -26,7 +26,7 @@ export default function AdminProductExcelUpload() {
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, "상품목록");
     XLSX.writeFile(wb, "상품_업로드_템플릿.xlsx");
-    toast.success("テンプレートをダウンロードしました");
+    toast.success("템플릿이 다운로드되었습니다");
   };
 
   // 파일 선택
@@ -35,12 +35,12 @@ export default function AdminProductExcelUpload() {
     if (!selectedFile) return;
 
     if (!selectedFile.name.match(/\.(xlsx|xls|csv)$/)) {
-      toast.error("Excelファイル(.xlsx, .xls, .csv)のみアップロードできます");
+      toast.error("엑셀 파일(.xlsx, .xls, .csv)만 업로드 가능합니다");
       return;
     }
 
     if (selectedFile.size > 10 * 1024 * 1024) {
-      toast.error("ファイルサイズは10MB以下にしてください");
+      toast.error("파일 크기는 10MB 이하여야 합니다");
       return;
     }
 
@@ -91,7 +91,7 @@ export default function AdminProductExcelUpload() {
   // 업로드 실행
   const handleUpload = async () => {
     if (!validationResult || !validationResult.success) {
-      toast.error("先に検証を完了してください");
+      toast.error("먼저 유효성 검증을 완료해주세요");
       return;
     }
 
@@ -112,8 +112,8 @@ export default function AdminProductExcelUpload() {
   return (
     <div className="container py-8 max-w-5xl">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold mb-2">商品Excel一括アップロード</h1>
-        <p className="text-muted-foreground">Excelファイルで複数の商品を一括登録できます</p>
+        <h1 className="text-3xl font-bold mb-2">상품 대량 엑셀 업로드</h1>
+        <p className="text-muted-foreground">엑셀 파일로 여러 상품을 한 번에 등록할 수 있습니다</p>
       </div>
 
       {/* 템플릿 다운로드 */}
@@ -124,7 +124,7 @@ export default function AdminProductExcelUpload() {
               <FileSpreadsheet className="w-5 h-5" />
               엑셀 템플릿 다운로드
             </h3>
-            <p className="text-sm text-muted-foreground">正しい形式のExcelファイルをダウンロードして作成してください</p>
+            <p className="text-sm text-muted-foreground">올바른 형식의 엑셀 파일을 다운로드하여 작성하세요</p>
           </div>
           <Button onClick={handleDownloadTemplate} variant="outline">
             <Download className="w-4 h-4 mr-2" />
@@ -135,7 +135,7 @@ export default function AdminProductExcelUpload() {
 
       {/* 파일 업로드 */}
       <Card className="p-6 mb-6">
-        <h3 className="font-semibold mb-4">1. Excelファイルを選択</h3>
+        <h3 className="font-semibold mb-4">1. 엑셀 파일 선택</h3>
         <div className="flex items-center gap-4">
           <input
             ref={fileInputRef}
@@ -161,7 +161,7 @@ export default function AdminProductExcelUpload() {
       {/* 미리보기 */}
       {previewData.length > 0 && (
         <Card className="p-6 mb-6">
-          <h3 className="font-semibold mb-4">2. データプレビュー (最大10件)</h3>
+          <h3 className="font-semibold mb-4">2. 데이터 미리보기 (최대 10개)</h3>
           <div className="overflow-x-auto">
             <table className="w-full text-sm border">
               <thead className="bg-muted">
@@ -188,7 +188,7 @@ export default function AdminProductExcelUpload() {
           </div>
           <div className="mt-4">
             <Button onClick={handleValidate} disabled={parseMutation.isPending}>
-              {parseMutation.isPending ? "検証中..." : "検証する"}
+              {parseMutation.isPending ? "검증 중..." : "유효성 검증"}
             </Button>
           </div>
         </Card>
@@ -197,22 +197,22 @@ export default function AdminProductExcelUpload() {
       {/* 검증 결과 */}
       {validationResult && (
         <Card className="p-6 mb-6">
-          <h3 className="font-semibold mb-4">3. 検証結果</h3>
+          <h3 className="font-semibold mb-4">3. 검증 결과</h3>
           <div className="space-y-3">
             <div className="flex items-center gap-2">
-              <span className="text-sm text-muted-foreground">全行数:</span>
+              <span className="text-sm text-muted-foreground">전체 행:</span>
               <span className="font-medium">{validationResult.totalRows}개</span>
             </div>
             <div className="flex items-center gap-2">
               <CheckCircle2 className="w-4 h-4 text-green-600" />
-              <span className="text-sm text-muted-foreground">有効な行:</span>
+              <span className="text-sm text-muted-foreground">유효한 행:</span>
               <span className="font-medium text-green-600">{validationResult.validRows}개</span>
             </div>
             {validationResult.errorRows > 0 && (
               <>
                 <div className="flex items-center gap-2">
                   <XCircle className="w-4 h-4 text-destructive" />
-                  <span className="text-sm text-muted-foreground">エラー行:</span>
+                  <span className="text-sm text-muted-foreground">오류 행:</span>
                   <span className="font-medium text-destructive">{validationResult.errorRows}개</span>
                 </div>
                 <div className="mt-4 p-4 bg-destructive/10 rounded-lg">
@@ -235,7 +235,7 @@ export default function AdminProductExcelUpload() {
           {validationResult.success && (
             <div className="mt-4">
               <Button onClick={handleUpload} disabled={uploading}>
-                {uploading ? "アップロード中..." : `${validationResult.validRows}개 상품 업로드`}
+                {uploading ? "업로드 중..." : `${validationResult.validRows}개 상품 업로드`}
               </Button>
             </div>
           )}
@@ -245,22 +245,22 @@ export default function AdminProductExcelUpload() {
       {/* 업로드 결과 */}
       {uploadResult && (
         <Card className="p-6">
-          <h3 className="font-semibold mb-4">4. アップロード結果</h3>
+          <h3 className="font-semibold mb-4">4. 업로드 결과</h3>
           <div className="space-y-3">
             <div className="flex items-center gap-2">
               <CheckCircle2 className="w-4 h-4 text-green-600" />
-              <span className="text-sm text-muted-foreground">成功:</span>
+              <span className="text-sm text-muted-foreground">성공:</span>
               <span className="font-medium text-green-600">{uploadResult.successCount}건</span>
             </div>
             {uploadResult.failCount > 0 && (
               <>
                 <div className="flex items-center gap-2">
                   <XCircle className="w-4 h-4 text-destructive" />
-                  <span className="text-sm text-muted-foreground">失敗:</span>
+                  <span className="text-sm text-muted-foreground">실패:</span>
                   <span className="font-medium text-destructive">{uploadResult.failCount}건</span>
                 </div>
                 <div className="mt-4 p-4 bg-destructive/10 rounded-lg">
-                  <h4 className="font-medium mb-2">失敗詳細</h4>
+                  <h4 className="font-medium mb-2">실패 상세</h4>
                   <div className="space-y-2 text-sm">
                     {uploadResult.results
                       .filter((r: any) => !r.success)

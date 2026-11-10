@@ -41,7 +41,7 @@ export default function AdminInquiries() {
 
   const createReply = trpc.admin.createInquiryReply.useMutation({
     onSuccess: () => {
-      toast.success("回答を登録しました");
+      toast.success("답변이 등록되었습니다");
       setReplyText("");
       utils.admin.getInquiryReplies.invalidate({ postId: selectedPost?.id });
       utils.admin.getInquiries.invalidate();
@@ -50,7 +50,7 @@ export default function AdminInquiries() {
   });
   const updateReply = trpc.admin.updateInquiryReply.useMutation({
     onSuccess: () => {
-      toast.success("回答を更新しました");
+      toast.success("답변이 수정되었습니다");
       setEditReply(null);
       utils.admin.getInquiryReplies.invalidate({ postId: selectedPost?.id });
     },
@@ -58,7 +58,7 @@ export default function AdminInquiries() {
   });
   const markAnswered = trpc.admin.markInquiryAnswered.useMutation({
     onSuccess: () => {
-      toast.success("対応完了にしました");
+      toast.success("상담완료 처리되었습니다");
       utils.admin.getInquiries.invalidate();
       utils.admin.getInquiryReplies.invalidate({ postId: selectedPost?.id });
     },
@@ -66,7 +66,7 @@ export default function AdminInquiries() {
   });
   const deleteReply = trpc.admin.deleteInquiryReply.useMutation({
     onSuccess: () => {
-      toast.success("回答を削除しました");
+      toast.success("답변이 삭제되었습니다");
       utils.admin.getInquiryReplies.invalidate({ postId: selectedPost?.id });
       utils.admin.getInquiries.invalidate();
     },
@@ -78,9 +78,9 @@ export default function AdminInquiries() {
   const totalPages = Math.ceil(total / 20);
 
   const statusTabs: { label: string; value: StatusFilter; color?: string }[] = [
-    { label: "すべて", value: "all" },
-    { label: "回答待ち", value: "pending", color: "text-amber-600" },
-    { label: "回答済み", value: "answered", color: "text-emerald-600" },
+    { label: "전체", value: "all" },
+    { label: "답변 대기", value: "pending", color: "text-amber-600" },
+    { label: "답변 완료", value: "answered", color: "text-emerald-600" },
   ];
 
   const handleSearch = (e: React.FormEvent) => {
@@ -99,7 +99,7 @@ export default function AdminInquiries() {
     <div className="p-6 space-y-4">
       <div className="flex items-center gap-2">
         <MessageSquareText className="w-5 h-5 text-primary" />
-        <h1 className="text-xl font-bold">お問い合わせ管理</h1>
+        <h1 className="text-xl font-bold">1:1 문의 관리</h1>
         {total > 0 && <Badge variant="secondary">{total}건</Badge>}
       </div>
 
@@ -122,12 +122,12 @@ export default function AdminInquiries() {
                   </p>
                 </div>
                 {selectedPost.needsHuman
-                  ? <Badge className="bg-orange-100 text-orange-700 border-0 shrink-0">担当者の回答待ち</Badge>
+                  ? <Badge className="bg-orange-100 text-orange-700 border-0 shrink-0">상담사 답변 대기중</Badge>
                   : selectedPost.isAnswered
-                    ? <Badge className="bg-emerald-100 text-emerald-700 border-0 shrink-0">対応完了</Badge>
+                    ? <Badge className="bg-emerald-100 text-emerald-700 border-0 shrink-0">상담완료</Badge>
                     : selectedPost.hasHumanReply
-                      ? <Badge className="bg-teal-100 text-teal-700 border-0 shrink-0">担当者回答登録済み</Badge>
-                      : <Badge className="bg-amber-100 text-amber-700 border-0 shrink-0">回答待ち</Badge>
+                      ? <Badge className="bg-teal-100 text-teal-700 border-0 shrink-0">상담사 답변 등록</Badge>
+                      : <Badge className="bg-amber-100 text-amber-700 border-0 shrink-0">답변 대기</Badge>
                 }
               </div>
             </CardHeader>
@@ -151,7 +151,7 @@ export default function AdminInquiries() {
               답변 내역 {replies.length > 0 && `(${replies.length}건)`}
             </h2>
             {repliesLoading ? (
-              <div className="text-sm text-muted-foreground py-4 text-center">読み込み中...</div>
+              <div className="text-sm text-muted-foreground py-4 text-center">불러오는 중...</div>
             ) : replies.length === 0 ? (
               <div className="text-sm text-muted-foreground py-4 text-center bg-secondary/30 rounded-lg">
                 아직 답변이 없습니다
@@ -163,8 +163,8 @@ export default function AdminInquiries() {
                     <div className="flex items-center justify-between mb-2">
                       <div className="flex items-center gap-2">
                         {reply.isAutoReply
-                          ? <Badge className="bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300 border-0 text-xs gap-1"><Bot className="w-3 h-3" />自動応答</Badge>
-                          : <Badge className="bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300 border-0 text-xs gap-1"><User className="w-3 h-3" />担当者</Badge>
+                          ? <Badge className="bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300 border-0 text-xs gap-1"><Bot className="w-3 h-3" />자동응답</Badge>
+                          : <Badge className="bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300 border-0 text-xs gap-1"><User className="w-3 h-3" />상담사</Badge>
                         }
                         <span className="text-xs text-muted-foreground">{formatDateTime(reply.createdAt)}</span>
                       </div>
@@ -209,11 +209,11 @@ export default function AdminInquiries() {
           {/* 새 답변 작성 */}
           <Card className="border-primary/20">
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-semibold text-primary">新しい回答を作成</CardTitle>
+              <CardTitle className="text-sm font-semibold text-primary">새 답변 작성</CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
               <Textarea
-                placeholder="お客様に送る回答を入力してください..."
+                placeholder="고객에게 보낼 답변을 작성하세요..."
                 value={replyText}
                 onChange={e => setReplyText(e.target.value)}
                 rows={5}
@@ -225,7 +225,7 @@ export default function AdminInquiries() {
                   disabled={!replyText.trim() || createReply.isPending}
                 >
                   <Send className="w-4 h-4 mr-2" />
-                  {createReply.isPending ? "登録中..." : "回答を登録"}
+                  {createReply.isPending ? "등록 중..." : "답변 등록"}
                 </Button>
                 {!selectedPost.isAnswered && (
                   <Button
@@ -234,7 +234,7 @@ export default function AdminInquiries() {
                     disabled={markAnswered.isPending}
                   >
                     <CheckCircle2 className="w-4 h-4 mr-2" />
-                    {markAnswered.isPending ? "処理中..." : "対応完了"}
+                    {markAnswered.isPending ? "처리 중..." : "상담완료"}
                   </Button>
                 )}
               </div>
@@ -248,7 +248,7 @@ export default function AdminInquiries() {
           <div className="flex flex-col sm:flex-row gap-3">
             <form onSubmit={handleSearch} className="flex gap-2 flex-1">
               <Input
-                placeholder="タイトルで検索..."
+                placeholder="제목으로 검색..."
                 value={searchInput}
                 onChange={e => setSearchInput(e.target.value)}
                 className="flex-1"
@@ -280,11 +280,11 @@ export default function AdminInquiries() {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead className="w-12 text-center">番号</TableHead>
-                    <TableHead>タイトル</TableHead>
-                    <TableHead className="w-28">投稿者</TableHead>
-                    <TableHead className="w-36">投稿日時</TableHead>
-                    <TableHead className="w-24 text-center">ステータス</TableHead>
+                    <TableHead className="w-12 text-center">번호</TableHead>
+                    <TableHead>제목</TableHead>
+                    <TableHead className="w-28">작성자</TableHead>
+                    <TableHead className="w-36">작성일시</TableHead>
+                    <TableHead className="w-24 text-center">상태</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -297,7 +297,7 @@ export default function AdminInquiries() {
                   ) : posts.length === 0 ? (
                     <TableRow>
                       <TableCell colSpan={6} className="text-center py-12 text-muted-foreground">
-                        {search ? `"${search}" 검색 결과가 없습니다` : "お問い合わせがありません"}
+                        {search ? `"${search}" 검색 결과가 없습니다` : "문의가 없습니다"}
                       </TableCell>
                     </TableRow>
                   ) : (
@@ -317,12 +317,12 @@ export default function AdminInquiries() {
                         <TableCell className="text-xs text-muted-foreground">{formatDateTime(post.createdAt)}</TableCell>
                         <TableCell className="text-center">
                           {post.needsHuman
-                            ? <Badge className="bg-orange-100 text-orange-700 border-0 text-xs">担当者待ち</Badge>
+                            ? <Badge className="bg-orange-100 text-orange-700 border-0 text-xs">상담사대기</Badge>
                             : post.isAnswered
-                              ? <Badge className="bg-emerald-100 text-emerald-700 border-0 text-xs">対応完了</Badge>
+                              ? <Badge className="bg-emerald-100 text-emerald-700 border-0 text-xs">상담완료</Badge>
                               : post.hasHumanReply
-                                ? <Badge className="bg-teal-100 text-teal-700 border-0 text-xs">担当者回答</Badge>
-                                : <Badge className="bg-amber-100 text-amber-700 border-0 text-xs">待機中</Badge>
+                                ? <Badge className="bg-teal-100 text-teal-700 border-0 text-xs">상담사답변</Badge>
+                                : <Badge className="bg-amber-100 text-amber-700 border-0 text-xs">대기중</Badge>
                           }
                         </TableCell>
                       </TableRow>

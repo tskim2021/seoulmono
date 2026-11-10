@@ -60,10 +60,10 @@ export default function AdminFAQ() {
     try {
       if (selectedFaq) {
         await updateFaq.mutateAsync({ id: selectedFaq.id, ...formData });
-        toast.success("FAQを更新しました。");
+        toast.success("FAQ가 수정되었습니다.");
       } else {
         await createFaq.mutateAsync(formData);
-        toast.success("FAQを追加しました。");
+        toast.success("FAQ가 추가되었습니다.");
       }
       setDialogOpen(false);
       refetch();
@@ -76,7 +76,7 @@ export default function AdminFAQ() {
     if (!confirm("정말 삭제하시겠습니까? 고객 화면에서도 사라집니다.")) return;
     try {
       await deleteFaq.mutateAsync({ id });
-      toast.success("FAQを削除しました。");
+      toast.success("FAQ가 삭제되었습니다.");
       refetch();
     } catch (error: any) {
       toast.error(error?.message || "오류가 발생했습니다.");
@@ -106,14 +106,14 @@ export default function AdminFAQ() {
               </DialogTrigger>
               <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
                 <DialogHeader>
-                  <DialogTitle>{selectedFaq ? "FAQの編集" : "FAQの追加"}</DialogTitle>
+                  <DialogTitle>{selectedFaq ? "FAQ 수정" : "FAQ 추가"}</DialogTitle>
                 </DialogHeader>
                 <div className="space-y-4">
                   <div>
-                    <label className="text-sm font-medium">カテゴリー</label>
+                    <label className="text-sm font-medium">카테고리</label>
                     <Select value={formData.category} onValueChange={(value) => setFormData({ ...formData, category: value })}>
                       <SelectTrigger>
-                        <SelectValue placeholder="カテゴリーを選択" />
+                        <SelectValue placeholder="카테고리 선택" />
                       </SelectTrigger>
                       <SelectContent>
                         {FAQ_CATEGORIES.map((cat) => (
@@ -130,7 +130,7 @@ export default function AdminFAQ() {
                       <Input
                         value={formData.questionJa}
                         onChange={(e) => setFormData({ ...formData, questionJa: e.target.value })}
-                        placeholder="例：配送にはどのくらいかかりますか？"
+                        placeholder="예: 배송에는 얼마나 걸리나요?"
                         maxLength={500}
                       />
                     </div>
@@ -139,7 +139,7 @@ export default function AdminFAQ() {
                       <Textarea
                         value={formData.answerJa}
                         onChange={(e) => setFormData({ ...formData, answerJa: e.target.value })}
-                        placeholder="回答を入力してください（改行できます）"
+                        placeholder="답변을 입력하세요 (줄바꿈 가능)"
                         rows={6}
                       />
                     </div>
@@ -169,7 +169,7 @@ export default function AdminFAQ() {
 
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <label className="text-sm font-medium">表示順</label>
+                      <label className="text-sm font-medium">정렬 순서</label>
                       <Input
                         type="number"
                         value={formData.sortOrder}
@@ -177,21 +177,21 @@ export default function AdminFAQ() {
                       />
                     </div>
                     <div>
-                      <label className="text-sm font-medium">有効化</label>
+                      <label className="text-sm font-medium">활성화</label>
                       <Select value={formData.isActive.toString()} onValueChange={(value) => setFormData({ ...formData, isActive: parseInt(value) })}>
                         <SelectTrigger>
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="1">有効</SelectItem>
-                          <SelectItem value="0">無効</SelectItem>
+                          <SelectItem value="1">활성</SelectItem>
+                          <SelectItem value="0">비활성</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
                   </div>
                   <div className="flex justify-end gap-2">
-                    <Button variant="outline" onClick={() => setDialogOpen(false)}>キャンセル</Button>
-                    <Button onClick={handleSubmit}>保存</Button>
+                    <Button variant="outline" onClick={() => setDialogOpen(false)}>취소</Button>
+                    <Button onClick={handleSubmit}>저장</Button>
                   </div>
                 </div>
               </DialogContent>
@@ -202,10 +202,10 @@ export default function AdminFAQ() {
           <div className="mb-4">
             <Select value={filterCategory || "all"} onValueChange={(value) => setFilterCategory(value === "all" ? undefined : value)}>
               <SelectTrigger className="w-48">
-                <SelectValue placeholder="すべてのカテゴリー" />
+                <SelectValue placeholder="전체 카테고리" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">すべてのカテゴリー</SelectItem>
+                <SelectItem value="all">전체 카테고리</SelectItem>
                 {FAQ_CATEGORIES.map((cat) => (
                   <SelectItem key={cat} value={cat}>{cat}</SelectItem>
                 ))}
@@ -216,11 +216,11 @@ export default function AdminFAQ() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>カテゴリー</TableHead>
+                <TableHead>카테고리</TableHead>
                 <TableHead>질문 (고객 화면 기준)</TableHead>
-                <TableHead className="text-center">並び替え</TableHead>
-                <TableHead className="text-center">ステータス</TableHead>
-                <TableHead className="text-right">操作</TableHead>
+                <TableHead className="text-center">조회수</TableHead>
+                <TableHead className="text-center">정렬</TableHead>
+                <TableHead className="text-right">상태</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>

@@ -42,9 +42,9 @@ export default function AdminCSLookup() {
       utils.admin.userDetailFull.invalidate({ id: selectedUserId! });
       setPointAmount(0);
       setPointDesc("");
-      toast.success("ポイントを付与しました。");
+      toast.success("포인트가 지급되었습니다.");
     },
-    onError: () => toast.error("ポイントの付与に失敗しました。"),
+    onError: () => toast.error("포인트 지급에 실패했습니다."),
   });
 
   const handleSearch = () => {
@@ -69,7 +69,7 @@ export default function AdminCSLookup() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold">顧客統合検索</h1>
+      <h1 className="text-2xl font-bold">고객 통합 조회</h1>
 
       {/* ═══ 검색창 ═══ */}
       <div className="bg-card border rounded-xl p-5 elegant-shadow">
@@ -82,7 +82,7 @@ export default function AdminCSLookup() {
             <Input
               ref={inputRef}
               className="pl-9"
-              placeholder="例) 山田太郎 / yamada@email.com / 09012345678 / 注文番号"
+              placeholder="예) 홍길동 / hong@email.com / 01012345678 / 주문번호"
               value={query}
               onChange={e => setQuery(e.target.value)}
               onKeyDown={e => e.key === "Enter" && handleSearch()}
@@ -95,7 +95,7 @@ export default function AdminCSLookup() {
       </div>
 
       {searchResult.isLoading && (
-        <div className="text-center py-8 text-muted-foreground text-sm">検索中...</div>
+        <div className="text-center py-8 text-muted-foreground text-sm">검색 중...</div>
       )}
 
       {/* ═══ 검색 결과 ─ 회원 목록 ═══ */}
@@ -124,7 +124,7 @@ export default function AdminCSLookup() {
                       <div className="flex items-center gap-2">
                         <span className="font-medium text-sm">{u.name ?? "-"}</span>
                         <Badge variant="secondary" className="text-[10px]">{getGradeLabel(u.grade)}</Badge>
-                        {u.role === "admin" && <Badge className="text-[10px]">管理者</Badge>}
+                        {u.role === "admin" && <Badge className="text-[10px]">관리자</Badge>}
                       </div>
                       <div className="flex items-center gap-3 text-xs text-muted-foreground mt-0.5">
                         <span className="flex items-center gap-1"><Mail className="w-3 h-3" />{u.email ?? "-"}</span>
@@ -134,15 +134,15 @@ export default function AdminCSLookup() {
                   </div>
                   <div className="flex items-center gap-6 text-sm">
                     <div className="text-right">
-                      <div className="text-muted-foreground text-xs">注文</div>
+                      <div className="text-muted-foreground text-xs">주문</div>
                       <div className="font-medium">{(u.orderCount ?? 0)}건</div>
                     </div>
                     <div className="text-right">
-                      <div className="text-muted-foreground text-xs">決済額</div>
+                      <div className="text-muted-foreground text-xs">결제액</div>
                       <div className="font-medium price-text">{formatPrice(u.totalPaid ?? 0)}</div>
                     </div>
                     <div className="text-right">
-                      <div className="text-muted-foreground text-xs">ポイント</div>
+                      <div className="text-muted-foreground text-xs">포인트</div>
                       <div className="font-medium">{(u.points ?? 0).toLocaleString()}P</div>
                     </div>
                     <ChevronRight className="w-4 h-4 text-muted-foreground" />
@@ -160,7 +160,7 @@ export default function AdminCSLookup() {
           className="bg-card border rounded-xl p-4 hover:bg-accent/10 cursor-pointer elegant-shadow"
           onClick={() => handleSelectUser((data as any).user.id)}
         >
-          <p className="text-xs text-muted-foreground mb-1">注文番号から顧客を確認しました</p>
+          <p className="text-xs text-muted-foreground mb-1">주문번호로 고객 확인됨</p>
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 rounded-full bg-secondary flex items-center justify-center">
               <User className="w-4 h-4 text-muted-foreground" />
@@ -202,7 +202,7 @@ export default function AdminCSLookup() {
                     <User className="w-4 h-4" /> 회원 정보
                   </h2>
                   <Badge variant={displayUser.role === "admin" ? "default" : "secondary"}>
-                    {displayUser.role === "admin" ? "管理者" : "一般会員"}
+                    {displayUser.role === "admin" ? "관리자" : "일반 회원"}
                   </Badge>
                 </div>
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
@@ -224,13 +224,13 @@ export default function AdminCSLookup() {
                   <div className="flex items-center gap-2 flex-wrap">
                     <Input
                       type="number"
-                      placeholder="金額 (マイナス可)"
+                      placeholder="금액 (음수 가능)"
                       className="max-w-[140px] h-8 text-sm"
                       value={pointAmount || ""}
                       onChange={e => setPointAmount(Number(e.target.value))}
                     />
                     <Input
-                      placeholder="理由"
+                      placeholder="사유"
                       className="max-w-[260px] h-8 text-sm"
                       value={pointDesc}
                       onChange={e => setPointDesc(e.target.value)}
@@ -239,7 +239,7 @@ export default function AdminCSLookup() {
                       size="sm"
                       className="h-8"
                       onClick={() => {
-                        if (!pointAmount || !pointDesc) { toast.error("金額と理由を入力してください。"); return; }
+                        if (!pointAmount || !pointDesc) { toast.error("금액과 사유를 입력해주세요."); return; }
                         addPoints.mutate({ userId: selectedUserId!, amount: pointAmount, description: pointDesc });
                       }}
                       disabled={addPoints.isPending}
@@ -257,19 +257,19 @@ export default function AdminCSLookup() {
                   <span className="text-sm font-normal text-muted-foreground">({ordersTotal}건)</span>
                 </h2>
                 {orders.length === 0 ? (
-                  <p className="text-sm text-muted-foreground text-center py-6">注文履歴がありません。</p>
+                  <p className="text-sm text-muted-foreground text-center py-6">주문 내역이 없습니다.</p>
                 ) : (
                   <div className="overflow-x-auto">
                     <table className="w-full text-sm">
                       <thead>
                         <tr className="bg-secondary/50 text-xs text-muted-foreground">
-                          <th className="text-left py-2 px-3">注文番号</th>
-                          <th className="text-center py-2 px-3">ステータス</th>
-                          <th className="text-left py-2 px-3">商品</th>
-                          <th className="text-right py-2 px-3">決済金額</th>
-                          <th className="text-left py-2 px-3">受取人</th>
-                          <th className="text-left py-2 px-3">注文日</th>
-                          <th className="text-center py-2 px-3">操作</th>
+                          <th className="text-left py-2 px-3">주문번호</th>
+                          <th className="text-center py-2 px-3">상태</th>
+                          <th className="text-left py-2 px-3">상품</th>
+                          <th className="text-right py-2 px-3">결제금액</th>
+                          <th className="text-left py-2 px-3">수령인</th>
+                          <th className="text-left py-2 px-3">주문일</th>
+                          <th className="text-center py-2 px-3">관리</th>
                         </tr>
                       </thead>
                       <tbody className="divide-y">
@@ -306,7 +306,7 @@ export default function AdminCSLookup() {
               </div>
             </>
           ) : (
-            <div className="text-center py-8 text-sm text-muted-foreground">会員情報を取得できません。</div>
+            <div className="text-center py-8 text-sm text-muted-foreground">회원 정보를 불러올 수 없습니다.</div>
           )}
         </div>
       )}

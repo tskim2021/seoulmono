@@ -52,7 +52,7 @@ export default function AdminChatbotConversations() {
 
       <Card>
         <CardHeader>
-          <CardTitle>会話一覧</CardTitle>
+          <CardTitle>대화 목록</CardTitle>
           <CardDescription>
             최근 대화 이력이 최신순으로 표시됩니다.
           </CardDescription>
@@ -61,7 +61,7 @@ export default function AdminChatbotConversations() {
           {conversations.length === 0 ? (
             <div className="text-center py-12 text-muted-foreground">
               <MessageSquare className="w-12 h-12 mx-auto mb-4 opacity-50" />
-              <p>会話履歴がありません。</p>
+              <p>대화 이력이 없습니다.</p>
             </div>
           ) : (
             <>
@@ -73,7 +73,7 @@ export default function AdminChatbotConversations() {
                         {conv.userId ? (
                           <Badge variant="outline">사용자 ID: {conv.userId}</Badge>
                         ) : (
-                          <Badge variant="secondary">匿名</Badge>
+                          <Badge variant="secondary">익명</Badge>
                         )}
                         {conv.productId && (
                           <Badge variant="outline">상품 ID: {conv.productId}</Badge>

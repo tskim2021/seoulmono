@@ -31,13 +31,13 @@ ChartJS.register(
 );
 
 const INTERVAL_OPTIONS = [
-  { value: 1, label: "毎時" },
-  { value: 2, label: "2時間" },
-  { value: 3, label: "3時間" },
-  { value: 6, label: "6時間" },
-  { value: 12, label: "12時間" },
-  { value: 24, label: "24時間 (1日)" },
-  { value: 48, label: "48時間 (2日)" },
+  { value: 1, label: "매시간" },
+  { value: 2, label: "2시간" },
+  { value: 3, label: "3시간" },
+  { value: 6, label: "6시간" },
+  { value: 12, label: "12시간" },
+  { value: 24, label: "24시간 (1일)" },
+  { value: 48, label: "48시간 (2일)" },
 ];
 
 export default function AdminShippingDashboard() {
@@ -56,9 +56,9 @@ export default function AdminShippingDashboard() {
   const updateScheduler = trpc.shipping.updateSchedulerConfig.useMutation({
     onSuccess: (data) => {
       refetchConfig();
-      toast.success("スケジューラー設定を保存しました。");
+      toast.success("스케줄러 설정이 저장되었습니다.");
     },
-    onError: () => toast.error("スケジューラー設定の変更に失敗しました。"),
+    onError: () => toast.error("스케줄러 설정 변경에 실패했습니다."),
   });
   const runSyncNow = trpc.shipping.runSyncNow.useMutation({
     onSuccess: (data) => {
@@ -70,7 +70,7 @@ export default function AdminShippingDashboard() {
     },
     onError: () => {
       setSyncRunning(false);
-      toast.error("配送同期の実行に失敗しました。");
+      toast.error("배송 동기화 실행에 실패했습니다.");
     },
   });
 
@@ -78,7 +78,7 @@ export default function AdminShippingDashboard() {
     setRefreshing(true);
     await refetch();
     setRefreshing(false);
-    toast.success("配送状況を更新しました。");
+    toast.success("배송 현황이 업데이트되었습니다.");
   };
 
   const handleRunSyncNow = () => {
@@ -101,7 +101,7 @@ export default function AdminShippingDashboard() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold">配送状況ダッシュボード</h1>
+        <h1 className="text-3xl font-bold">배송 현황 대시보드</h1>
         <Button
           onClick={handleRefresh}
           disabled={refreshing}
@@ -118,7 +118,7 @@ export default function AdminShippingDashboard() {
         <Card className="p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-muted-foreground">配送準備中</p>
+              <p className="text-sm text-muted-foreground">배송 준비중</p>
               <p className="text-3xl font-bold mt-2">{summary?.pending ?? 0}</p>
             </div>
             <Package className="w-10 h-10 text-blue-500 opacity-50" />
@@ -128,7 +128,7 @@ export default function AdminShippingDashboard() {
         <Card className="p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-muted-foreground">配送中</p>
+              <p className="text-sm text-muted-foreground">배송중</p>
               <p className="text-3xl font-bold mt-2">{summary?.inTransit ?? 0}</p>
             </div>
             <Truck className="w-10 h-10 text-orange-500 opacity-50" />
@@ -138,7 +138,7 @@ export default function AdminShippingDashboard() {
         <Card className="p-6 border-rose-200">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-rose-600">通関検査待ち</p>
+              <p className="text-sm font-medium text-rose-600">통관검사 대기</p>
               <p className="text-3xl font-bold mt-2 text-rose-600">{summary?.customsHold ?? 0}</p>
             </div>
             <ShieldAlert className="w-10 h-10 text-rose-500 opacity-50" />
@@ -148,7 +148,7 @@ export default function AdminShippingDashboard() {
         <Card className="p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-muted-foreground">配送完了</p>
+              <p className="text-sm text-muted-foreground">배송 완료</p>
               <p className="text-3xl font-bold mt-2">{summary?.delivered ?? 0}</p>
             </div>
             <CheckCircle className="w-10 h-10 text-green-500 opacity-50" />
@@ -158,7 +158,7 @@ export default function AdminShippingDashboard() {
         <Card className="p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-muted-foreground">配送失敗・遅延</p>
+              <p className="text-sm text-muted-foreground">배송 실패/지연</p>
               <p className="text-3xl font-bold mt-2">{summary?.failed ?? 0}</p>
             </div>
             <AlertCircle className="w-10 h-10 text-red-500 opacity-50" />
@@ -173,12 +173,12 @@ export default function AdminShippingDashboard() {
             <AlertCircle className="w-5 h-5 text-orange-600" />
             <h2 className="text-xl font-semibold text-orange-900">배송 지연 주문 ({delayedShipments.length}건)</h2>
           </div>
-          <p className="text-sm text-orange-700 mb-4">3日以上配送準備中の注文があります。ご確認ください。</p>
+          <p className="text-sm text-orange-700 mb-4">3일 이상 배송 준비 상태인 주문이 있습니다. 확인이 필요합니다.</p>
           <div className="space-y-2">
             {delayedShipments.map((shipment: any) => (
               <div key={shipment.id} className="flex items-center justify-between p-3 bg-white border border-orange-200 rounded-lg">
                 <div className="flex-1">
-                  <p className="font-medium text-sm">注文番号: {formatOrderNumber(shipment.orderNumber)}</p>
+                  <p className="font-medium text-sm">주문번호: {formatOrderNumber(shipment.orderNumber)}</p>
                   <p className="text-xs text-muted-foreground">고객: {shipment.user?.name} ({shipment.user?.email})</p>
                   <p className="text-xs text-muted-foreground">운송장: {shipment.trackingNumber || "미등록"}</p>
                 </div>
@@ -200,7 +200,7 @@ export default function AdminShippingDashboard() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
         {/* 국제배송 성과 */}
         <Card className="p-6">
-          <h2 className="text-xl font-semibold mb-4">国際配送の実績</h2>
+          <h2 className="text-xl font-semibold mb-4">국제배송 성과</h2>
           {carrierPerformance && carrierPerformance.length > 0 ? (
             <div className="space-y-3">
               {carrierPerformance.map((carrier: any) => (
@@ -211,15 +211,15 @@ export default function AdminShippingDashboard() {
                   </div>
                   <div className="grid grid-cols-3 gap-2 text-sm">
                     <div>
-                      <p className="text-muted-foreground">成功率</p>
+                      <p className="text-muted-foreground">성공률</p>
                       <p className="font-medium">{carrier.successRate}%</p>
                     </div>
                     <div>
-                      <p className="text-muted-foreground">平均配送日数</p>
+                      <p className="text-muted-foreground">평균 배송일</p>
                       <p className="font-medium">{carrier.avgDeliveryDays ? `${Number(carrier.avgDeliveryDays).toFixed(1)}일` : "N/A"}</p>
                     </div>
                     <div>
-                      <p className="text-muted-foreground">配達完了</p>
+                      <p className="text-muted-foreground">배달완료</p>
                       <p className="font-medium">{carrier.deliveredShipments}건</p>
                     </div>
                   </div>
@@ -227,13 +227,13 @@ export default function AdminShippingDashboard() {
               ))}
             </div>
           ) : (
-            <p className="text-muted-foreground">データがありません。</p>
+            <p className="text-muted-foreground">데이터가 없습니다.</p>
           )}
         </Card>
         
         {/* 국가별 배송 소요 시간 */}
         <Card className="p-6">
-          <h2 className="text-xl font-semibold mb-4">国別の配送所要時間</h2>
+          <h2 className="text-xl font-semibold mb-4">국가별 배송 소요 시간</h2>
           {regionPerformance && regionPerformance.length > 0 ? (
             <div className="space-y-3">
               {regionPerformance.map((region: any, idx: number) => (
@@ -247,14 +247,14 @@ export default function AdminShippingDashboard() {
               ))}
             </div>
           ) : (
-            <p className="text-muted-foreground">データがありません。</p>
+            <p className="text-muted-foreground">데이터가 없습니다.</p>
           )}
         </Card>
       </div>
       
       {/* 월별 배송 실적 */}
       <Card className="p-6 mb-6">
-        <h2 className="text-xl font-semibold mb-4">月別配送実績 (直近6か月)</h2>
+        <h2 className="text-xl font-semibold mb-4">월별 배송 실적 (최근 6개월)</h2>
         {monthlyStats && monthlyStats.length > 0 ? (
           <>
             {/* 차트 */}
@@ -264,7 +264,7 @@ export default function AdminShippingDashboard() {
                   labels: monthlyStats.map((stat: any) => stat.month),
                   datasets: [
                     {
-                      label: "配達完了",
+                      label: "배달완료",
                       data: monthlyStats.map((stat: any) => stat.delivered),
                       borderColor: "rgb(34, 197, 94)",
                       backgroundColor: "rgba(34, 197, 94, 0.1)",
@@ -272,7 +272,7 @@ export default function AdminShippingDashboard() {
                       tension: 0.4,
                     },
                     {
-                      label: "配送中",
+                      label: "배송중",
                       data: monthlyStats.map((stat: any) => stat.inTransit),
                       borderColor: "rgb(249, 115, 22)",
                       backgroundColor: "rgba(249, 115, 22, 0.1)",
@@ -280,7 +280,7 @@ export default function AdminShippingDashboard() {
                       tension: 0.4,
                     },
                     {
-                      label: "失敗",
+                      label: "실패",
                       data: monthlyStats.map((stat: any) => stat.failed),
                       borderColor: "rgb(239, 68, 68)",
                       backgroundColor: "rgba(239, 68, 68, 0.1)",
@@ -318,12 +318,12 @@ export default function AdminShippingDashboard() {
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b">
-                    <th className="text-left py-2">月</th>
-                    <th className="text-right py-2">配送合計</th>
-                    <th className="text-right py-2">配達完了</th>
-                    <th className="text-right py-2">配送中</th>
-                    <th className="text-right py-2">失敗</th>
-                    <th className="text-right py-2">成功率</th>
+                    <th className="text-left py-2">월</th>
+                    <th className="text-right py-2">총 배송</th>
+                    <th className="text-right py-2">배달완료</th>
+                    <th className="text-right py-2">배송중</th>
+                    <th className="text-right py-2">실패</th>
+                    <th className="text-right py-2">성공률</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -342,7 +342,7 @@ export default function AdminShippingDashboard() {
             </div>
           </>
         ) : (
-          <p className="text-muted-foreground">データがありません。</p>
+          <p className="text-muted-foreground">데이터가 없습니다.</p>
         )}
       </Card>
       
@@ -350,7 +350,7 @@ export default function AdminShippingDashboard() {
       <Card className="p-6">
         <div className="flex items-center gap-2 mb-6">
           <Settings2 className="w-5 h-5 text-muted-foreground" />
-          <h2 className="text-xl font-semibold">配送同期スケジューラー</h2>
+          <h2 className="text-xl font-semibold">배송 동기화 스케줄러</h2>
         </div>
         <p className="text-sm text-muted-foreground mb-6">
           17track API를 통해 배송 상태를 자동으로 새로고침하는 주기를 설정합니다. 배송 완료, 통관검사 등의 상태 변경이 감지되면 고객에게 자동으로 알림과 이메일이 발송됩니다.
@@ -359,7 +359,7 @@ export default function AdminShippingDashboard() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {/* 활성화 토글 */}
           <div className="space-y-3">
-            <h3 className="text-sm font-medium text-muted-foreground">自動同期</h3>
+            <h3 className="text-sm font-medium text-muted-foreground">자동 동기화</h3>
             <div className="flex items-center gap-3">
               <Switch
                 checked={schedulerConfig?.enabled ?? true}
@@ -367,14 +367,14 @@ export default function AdminShippingDashboard() {
                 disabled={updateScheduler.isPending}
               />
               <span className={`text-sm font-medium ${schedulerConfig?.enabled !== false ? 'text-emerald-600' : 'text-muted-foreground'}`}>
-                {schedulerConfig?.enabled !== false ? "有効化" : "無効化"}
+                {schedulerConfig?.enabled !== false ? '활성화' : '비활성화'}
               </span>
             </div>
           </div>
 
           {/* 동기화 주기 선택 */}
           <div className="space-y-3">
-            <h3 className="text-sm font-medium text-muted-foreground">同期間隔</h3>
+            <h3 className="text-sm font-medium text-muted-foreground">동기화 주기</h3>
             <div className="flex flex-wrap gap-2">
               {INTERVAL_OPTIONS.map(opt => (
                 <button
@@ -395,7 +395,7 @@ export default function AdminShippingDashboard() {
 
           {/* 수동 실행 */}
           <div className="space-y-3">
-            <h3 className="text-sm font-medium text-muted-foreground">手動実行</h3>
+            <h3 className="text-sm font-medium text-muted-foreground">수동 실행</h3>
             <Button
               onClick={handleRunSyncNow}
               disabled={syncRunning}
@@ -404,7 +404,7 @@ export default function AdminShippingDashboard() {
               className="gap-1.5"
             >
               <Play className={`w-3.5 h-3.5 ${syncRunning ? 'animate-pulse' : ''}`} />
-              {syncRunning ? "同期中..." : "今すぐ実行"}
+              {syncRunning ? '동기화 중...' : '지금 실행'}
             </Button>
           </div>
         </div>
@@ -414,7 +414,7 @@ export default function AdminShippingDashboard() {
           <div className="mt-6 pt-4 border-t">
             <div className="flex items-center gap-2 text-sm">
               <Clock className="w-4 h-4 text-muted-foreground" />
-              <span className="text-muted-foreground">最終実行:</span>
+              <span className="text-muted-foreground">마지막 실행:</span>
               <span className="font-medium">
                 {new Date(schedulerConfig.lastRunAt).toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' })}
               </span>
@@ -430,13 +430,13 @@ export default function AdminShippingDashboard() {
 
       {/* 최근 배송 목록 */}
       <Card className="p-6">
-        <h2 className="text-xl font-semibold mb-4">最近の配送一覧</h2>
+        <h2 className="text-xl font-semibold mb-4">최근 배송 목록</h2>
         {summary?.recentShipments && summary.recentShipments.length > 0 ? (
           <div className="space-y-3">
             {summary.recentShipments.map((shipment: any) => (
               <div key={shipment.id} className="flex items-center justify-between p-3 border rounded-lg">
                 <div className="flex-1">
-                  <p className="font-medium">注文番号: {formatOrderNumber(shipment.orderNumber)}</p>
+                  <p className="font-medium">주문번호: {formatOrderNumber(shipment.orderNumber)}</p>
                   <p className="text-sm text-muted-foreground">운송장: {shipment.trackingNumber}</p>
                   <p className="text-xs text-muted-foreground">{shipment.carrier?.name}</p>
                 </div>
@@ -450,7 +450,7 @@ export default function AdminShippingDashboard() {
                     shipment.status === "customs_arrival" ? "bg-amber-100 text-amber-800" :
                     "bg-gray-100 text-gray-800"
                   }`}>
-                    {shipment.status === "delivered" ? "配達完了" :
+                    {shipment.status === "delivered" ? "배달완료" :
                      shipment.status === "out_for_delivery" ? "현지배송" :
                      shipment.status === "in_transit" || shipment.status === "in_transit_intl" ? "국제운송" :
                      shipment.status === "export_customs" ? "출발국 통관" :
@@ -467,7 +467,7 @@ export default function AdminShippingDashboard() {
             ))}
           </div>
         ) : (
-          <p className="text-center text-muted-foreground py-8">配送履歴がありません。</p>
+          <p className="text-center text-muted-foreground py-8">배송 내역이 없습니다.</p>
         )}
       </Card>
     </div>

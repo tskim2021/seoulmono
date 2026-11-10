@@ -45,9 +45,9 @@ export default function AdminChatbotSettings() {
         ...formData,
         systemPromptOverride: formData.systemPromptOverride || null,
       });
-      toast.success("チャットボット設定を保存しました。");
+      toast.success("챗봇 설정이 저장되었습니다.");
     } catch (error) {
-      toast.error("設定の保存に失敗しました。");
+      toast.error("설정 저장에 실패했습니다.");
     }
   };
 
@@ -74,7 +74,7 @@ export default function AdminChatbotSettings() {
       <form onSubmit={handleSubmit} className="space-y-6">
         <Card>
           <CardHeader>
-            <CardTitle>チャットボットを有効化</CardTitle>
+            <CardTitle>챗봇 활성화</CardTitle>
             <CardDescription>
               챗봇 위젯의 표시 여부를 설정합니다.
             </CardDescription>
@@ -82,7 +82,7 @@ export default function AdminChatbotSettings() {
           <CardContent>
             <div className="flex items-center justify-between">
               <div>
-                <Label htmlFor="isEnabled" className="font-medium">チャットボットを有効化</Label>
+                <Label htmlFor="isEnabled" className="font-medium">챗봇 활성화</Label>
                 <p className="text-sm text-muted-foreground">
                   활성화 시 쇼핑몰에 챗봇 위젯이 표시됩니다.
                 </p>
@@ -98,19 +98,19 @@ export default function AdminChatbotSettings() {
 
         <Card>
           <CardHeader>
-            <CardTitle>あいさつ文設定</CardTitle>
+            <CardTitle>인사말 설정</CardTitle>
             <CardDescription>
               챗봇을 열었을 때 표시되는 환영 메시지입니다.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="greetingMessage">あいさつメッセージ</Label>
+              <Label htmlFor="greetingMessage">인사말 메시지</Label>
               <Textarea
                 id="greetingMessage"
                 value={formData.greetingMessage}
                 onChange={(e) => setFormData({ ...formData, greetingMessage: e.target.value })}
-                placeholder="こんにちは！ソウルモノのAIアシスタントです。どのようなご用件でしょうか？"
+                placeholder="안녕하세요! 탈모학교 AI 상담사입니다. 무엇을 도와드릴까요?"
                 rows={3}
               />
             </div>
@@ -119,19 +119,19 @@ export default function AdminChatbotSettings() {
 
         <Card>
           <CardHeader>
-            <CardTitle>システムプロンプト</CardTitle>
+            <CardTitle>시스템 프롬프트</CardTitle>
             <CardDescription>
               AI에게 전달되는 역할 및 정책 지시문입니다. 비워두면 기본 프롬프트가 사용됩니다.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="systemPromptOverride">システムプロンプト (任意)</Label>
+              <Label htmlFor="systemPromptOverride">시스템 프롬프트 (선택사항)</Label>
               <Textarea
                 id="systemPromptOverride"
                 value={formData.systemPromptOverride}
                 onChange={(e) => setFormData({ ...formData, systemPromptOverride: e.target.value })}
-                placeholder="デフォルトのプロンプトを使用する場合は空欄のままにしてください"
+                placeholder="기본 프롬프트를 사용하려면 비워두세요"
                 rows={8}
                 className="font-mono text-xs"
               />
@@ -144,14 +144,14 @@ export default function AdminChatbotSettings() {
 
         <Card>
           <CardHeader>
-            <CardTitle>会話設定</CardTitle>
+            <CardTitle>대화 설정</CardTitle>
             <CardDescription>
               대화 턴수 및 응답 불가 시 안내 메시지를 설정합니다.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="maxTurns">最大会話ターン数</Label>
+              <Label htmlFor="maxTurns">최대 대화 턴수</Label>
               <Input
                 id="maxTurns"
                 type="number"
@@ -168,12 +168,12 @@ export default function AdminChatbotSettings() {
             <Separator />
 
             <div className="space-y-2">
-              <Label htmlFor="responseUnavailableMessage">回答不可時の案内メッセージ</Label>
+              <Label htmlFor="responseUnavailableMessage">응답 불가 안내 메시지</Label>
               <Textarea
                 id="responseUnavailableMessage"
                 value={formData.responseUnavailableMessage}
                 onChange={(e) => setFormData({ ...formData, responseUnavailableMessage: e.target.value })}
-                placeholder="申し訳ございません。該当のご質問に対する回答が見つかりませんでした。"
+                placeholder="죄송합니다. 해당 질문에 대한 답변을 찾을 수 없습니다."
                 rows={3}
               />
               <p className="text-xs text-muted-foreground">
@@ -185,7 +185,7 @@ export default function AdminChatbotSettings() {
 
         <Card>
           <CardHeader>
-            <CardTitle>運営時間</CardTitle>
+            <CardTitle>운영 시간</CardTitle>
             <CardDescription>
               챗봇의 운영 시간을 설정합니다. 운영 시간 외에는 안내 메시지가 표시됩니다.
             </CardDescription>
@@ -193,7 +193,7 @@ export default function AdminChatbotSettings() {
           <CardContent className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="operatingHoursStart">開始時間</Label>
+                <Label htmlFor="operatingHoursStart">시작 시간</Label>
                 <Input
                   id="operatingHoursStart"
                   type="time"
@@ -202,7 +202,7 @@ export default function AdminChatbotSettings() {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="operatingHoursEnd">終了時間</Label>
+                <Label htmlFor="operatingHoursEnd">종료 시간</Label>
                 <Input
                   id="operatingHoursEnd"
                   type="time"
